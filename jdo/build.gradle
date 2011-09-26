@@ -1,0 +1,20 @@
+apply from: '../commons.gradle'
+
+dependencies {
+  webapp "$basename:$basename-core-webapp:$version"
+  
+  providedCompile "javax.servlet:servlet-api:$servlet_spec"
+  providedCompile "javax.servlet:jsp-api:$jsp_spec"
+  compile "$basename:$basename-core:$version"
+  
+  compile "rhino:js:1.6R7"
+  compile "com.google.code.gson:gson:1.7.1"
+  compile "com.yahoo.platform.yui:yuicompressor:2.4.2"
+  
+  providedCompile "javax.jdo:jdo2-api:2.3-eb"
+  providedCompile "org.datanucleus:datanucleus-core:3.0.0-m6"
+  providedCompile "org.datanucleus:datanucleus-api-jdo:3.0.0-m6"
+  providedCompile "org.datanucleus:datanucleus-enhancer:3.0.0-m6"
+}
+
+compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 

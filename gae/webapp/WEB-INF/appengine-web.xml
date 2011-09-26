@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+
+	<application></application>
+	<version>1</version>
+
+	<sessions-enabled>true</sessions-enabled>
+	
+	<static-files>
+		<include path="/ckeditor/**.*" expiration="30d" />
+		<include path="/editor/**.*" expiration="1h" />
+		<include path="/t/**.*" expiration="30d" />
+		<include path="/favicon.ico" expiration="30d" />
+		<!-- 
+		<include path="/css/**.*" expiration="10m" />
+		<include path="/img/**.*" expiration="7d" />
+		<include path="/js/**.*" expiration="1h" />
+		 -->
+	</static-files>
+
+	<static-error-handlers>
+		<handler file="/t/e/defaultError.html" />
+		<handler file="/t/e/overQuotaError.html" error-code="over_quota" />
+		<handler file="/t/e/denialError.html" error-code="dos_api_denial" />
+		<handler file="/t/e/timeoutError.html" error-code="timeout" />
+	</static-error-handlers>
+	
+	<admin-console>
+		<page name="Tangram Statistics" url="/s/stats" />
+		<page name="Tangram Clear Caches" url="/s/clear/caches/caches?tangramAdminUser=12" />
+		<page name="Tangram Clear Google Sessions" url="/s/clear/sessions?tangramAdminUser=12" />
+	</admin-console>
+
+	<!-- Configure java.util.logging -->
+	<system-properties>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+	</system-properties>
+	
+</appengine-web-app>

@@ -1,0 +1,30 @@
+package org.tangram.util;
+
+import java.util.AbstractList;
+import java.util.List;
+
+import org.tangram.content.BeanFactory;
+import org.tangram.content.Content;
+
+public class LazyContentList extends AbstractList<Content> {
+    
+    private BeanFactory beanFactory;
+    
+    private List<String> ids; 
+    
+    public LazyContentList(BeanFactory beanFactory, List<String>ids) {
+        this.beanFactory = beanFactory;
+        this.ids = ids;
+    } // ComaLazyList()
+
+    @Override
+    public Content get(int index) {
+        return beanFactory.getBean(ids.get(index));
+    } // get()
+
+    @Override
+    public int size() {
+        return ids.size();
+    } // size()
+
+} // ComaLazyList

@@ -1,0 +1,34 @@
+apply from: '../commons.gradle'
+
+dependencies {
+  webapp  "$basename:$basename-jdo-webapp:$version"
+  
+  providedCompile "javax.servlet:servlet-api:$servlet_spec"
+  providedCompile "javax.servlet:jsp-api:$jsp_spec"
+  compile "$basename:$basename-jdo:$version"
+  
+  compile "org.springframework.security:spring-security-core:3.0.5.RELEASE"
+  compile "org.springframework.security:spring-security-config:3.0.5.RELEASE"
+  compile "org.springframework.security:spring-security-web:3.0.5.RELEASE"
+  
+  // TODO: Uggly hack to get rid if spring security's 3.0.3 dependency
+  compile "org.springframework:org.springframework.aop:$springframework_version"
+  compile "org.springframework:org.springframework.transaction:$springframework_version"
+  providedCompile "org.springframework:spring-core:3.0.3.RELEASE"
+  providedCompile "org.springframework:spring-aop:3.0.3.RELEASE"
+  providedCompile "org.springframework:spring-beans:3.0.3.RELEASE"
+  providedCompile "org.springframework:spring-context:3.0.3.RELEASE"
+  providedCompile "org.springframework:spring-expression:3.0.3.RELEASE"
+  providedCompile "org.springframework:spring-web:3.0.3.RELEASE"
+  providedCompile "org.springframework:spring-tx:3.0.3.RELEASE"
+  
+  compile "hsqldb:hsqldb:1.8.0.1"
+  compile "javax.jdo:jdo2-api:2.3-eb"
+  compile "org.datanucleus:datanucleus-api-jdo:3.0.0-m6"
+  compile "org.datanucleus:datanucleus-core:3.0.0-m6"
+  compile "org.datanucleus:datanucleus-rdbms:3.0.0-m6"
+  
+  providedCompile "org.datanucleus:datanucleus-enhancer:3.0.0-m6"
+}
+
+compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        
+    <!--  perhaps project specific -->
+
+	<bean name="interceptors" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<bean class="org.tangram.monitor.MeasureTimeInterceptor">
+					<property name="freeUrls">
+						<set>
+						</set>
+					</property>
+				</bean>
+				<bean class="org.tangram.rdbms.PasswordInterceptor">
+					<property name="freeUrls">
+						<set>
+						</set>
+					</property>
+					<property name="allowedUsers">
+						<set>
+							<value>martin@goellnitz.de</value>
+							<value>rod</value>
+							<value>peter</value>
+							<value>admin</value>
+						</set>
+					</property>
+					<property name="adminUsers">
+						<set>
+							<value>martin@goellnitz.de</value>
+							<value>admin</value>
+						</set>
+					</property>
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!--  generic -->
+
+	<bean id="beanFactory" class="org.tangram.rdbms.RdbmsBeanFactory">
+		<property name="basePackages">
+			<set>
+				<value>${bean.factory.application.base.package}</value>
+				<value>org.tangram.rdbms</value>
+			</set>
+		</property>
+		<property name="activateCaching" value="${bean.factory.activate.caching}" />
+		<property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
+		<property name="prefill" value="${tangram.caches.prefill}" />
+	</bean>
+
+	<!--  edit scenarios only  -->
+
+	<bean id="propertyConverter" class="org.tangram.rdbms.RdbmsPropertyConverter" />
+	
+</beans>

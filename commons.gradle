@@ -1,0 +1,143 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+version = '0.6-SNAPSHOT'
+
+basename = 'tangram'
+
+// perhaps this should go somewhere else
+localMavenRepository = "file://localhost/volatile/m2/repository/"
+
+// maybe needed for google appengine
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
+
+springframework_version = "3.0.5.RELEASE"
+servlet_spec = "2.5"
+jsp_spec = "2.0"
+groovy_version = "1.7.9"
+velocity_version = "1.6.4"
+
+appengine_version = "1.5.4"
+
+repositories {
+
+  mavenLocal()
+    
+  mavenRepo urls: [ "http://repo1.maven.org/maven2", "http://www.datanucleus.org/downloads/maven2", "http://repository.jboss.org/maven2", "http://repository.springsource.com/maven/bundles/release", "http://repository.codehaus.org", "http://fornax.itemis.de/nexus/content/repositories/thirdparty" ]
+  
+}
+
+// we want jars and wars - in most cases
+jar.enabled = true 
+
+webAppDirName = 'disabled'
+
+// our custom directory layout
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+        resources {
+            srcDir 'src'
+        }
+    }
+}
+
+archivesBaseName = basename+'-'+project.name
+
+configurations {
+  uploadArchives
+  libs 
+  webapp
+}
+
+artifacts {
+  archives war
+  libs jar
+}
+
+jar.doFirst {
+  // JDO Enhancing is not really done when we start this - sorry - so we wait a little
+  println "waiting 4s - which is normal in this project"
+  Thread.currentThread().sleep(4000)
+  println "..."
+}
+
+processResources.doFirst {
+  filename = "src/$basename/${project.name}-build.properties".toString()
+  Properties p = new Properties()
+  try {
+    FileInputStream fis = new FileInputStream(filename);
+    p.load(fis)
+    fis.close()
+  } catch (Exception e) {
+   // 
+  }
+  p.setProperty("version.date", ""+(new Date()))
+  p.setProperty("version.build", ""+(Integer.parseInt(p.getProperty("version.build", "0"))+1))
+  FileOutputStream fos = new FileOutputStream(filename)
+  p.save(fos, " Tangram Build and System Information")
+  fos.close()
+}
+
+/* TODO:
+ant.taskdef(name:"yui-compressor", 
+                 classname: "net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask",
+                 classpath: configurations.compile.asPath+";../core/lib/yui-compressor-ant-task-0.5.jar")
+*/
+
+war.doFirst {
+  // Strange way of overwriting things
+  if (configurations.webapp.dependencies.size() == 1) {
+    archiveFileName = configurations.webapp.asPath
+    idx = archiveFileName.indexOf(';')
+    if (idx >= 0) {
+      archiveFileName = archiveFileName.substring(0, idx)
+    } // if
+    println "unzipping $archiveFileName"
+    ant.unzip(src: archiveFileName, dest: "$buildDir/target")  
+  } // if
+  
+  // TODO: YUICompressor!
+  copy {
+    from 'webapp'
+    into "$buildDir/target"
+    include '**/**'
+  }
+  
+  into ('') {
+    from "$buildDir/target"
+    exclude 'WEB-INF/lib/**'
+  }
+}
+
+war {
+  classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
+}
+
+// just for debugging purposes
+war.doLast {
+  ant.unzip(src: war.archivePath, dest: "$buildDir/war")
+}
+
+uploadArchives {
+  repositories.mavenDeployer {
+      repository(url: localMavenRepository)
+      pom.artifactId = archivesBaseName+'-webapp'
+      pom.groupId = basename
+  }
+}
+
+uploadLibs {
+  repositories.mavenDeployer {
+      repository(url: localMavenRepository)
+      pom.groupId = basename
+  }
+}
+
+task upload(dependsOn: [uploadArchives, uploadLibs]) {
+}

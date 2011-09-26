@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/s/stats</url>
+    <description>Hit statistics page to keep tangram active</description>
+    <schedule>every 1 minutes</schedule>
+  </cron>
+  <!--  if sessions are used, this might be still a nice idea
+  <cron>
+    <url>/s/clear/sessions?tangramAdminUser=12</url>
+    <description>Clear all sessions every two days</description>
+    <schedule>every 48 hours</schedule>
+  </cron>
+   -->
+</cronentries>

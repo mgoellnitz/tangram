@@ -1,0 +1,61 @@
+package org.tangram.gae.extension;
+
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+
+import com.google.appengine.api.datastore.Text;
+
+@PersistenceCapable
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+public class ExtendedAttribute {
+
+    private String contentId;
+
+    private String customer;
+
+    private String key;
+
+    private Text value;
+
+
+    public String getContentId() {
+        return contentId;
+    }
+
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
+
+
+    public String getCustomer() {
+        return customer;
+    }
+
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+
+    public String getKey() {
+        return key;
+    }
+
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+
+    public Text getValue() {
+        return value;
+    }
+
+
+    public void setValue(Text value) {
+        this.value = value;
+    }
+
+} // ExtendedAttribute
