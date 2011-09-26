@@ -7,8 +7,8 @@ version = '0.6-SNAPSHOT'
 
 basename = 'tangram'
 
-// perhaps this should go somewhere else
-localMavenRepository = "file://localhost/volatile/m2/repository/"
+// TODO: perhaps this should go somewhere else
+localMavenRepository = "file://localhost/C:/volatile/m2/repository/"
 
 // maybe needed for google appengine
 sourceCompatibility = 1.5
