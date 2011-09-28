@@ -9,6 +9,8 @@ public class TangramJDO {
     private static Properties PROPERTIES = new Properties();
 
     /**
+    * TODO: May be it is a godd idea to move this to EditingController
+    *
      * writable properties which should not be altered by the upper layers or persisted
      */
     public static Set<String> SYSTEM_PROPERTIES;
