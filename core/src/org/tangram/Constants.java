@@ -19,13 +19,25 @@
 package org.tangram;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Constants {
+
+    private static final Log log = LogFactory.getLog(Constants.class);
 
     public static final String THIS = "self";
 
@@ -65,28 +77,49 @@ public class Constants {
 
     private static final int SUFFIX_LENGTH = "-build.properties".length();
 
-    private static Properties PROPERTIES = new Properties();
+
+    private static String[] getResourceListing(URL dirURL, String path) throws URISyntaxException, IOException {
+        if (dirURL!=null&&dirURL.getProtocol().equals("file")) {
+            /* A file path: easy enough */
+            return new File(dirURL.toURI()).list();
+        } // if
+
+        if (dirURL.getProtocol().equals("jar")) {
+            /* A JAR path */
+            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); // strip out only the JAR
+                                                                                           // file
+            JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+            Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries in jar
+            Set<String> result = new HashSet<String>(); // avoid duplicates in case it is a subdirectory
+            while (entries.hasMoreElements()) {
+                String name = entries.nextElement().getName();
+                if (name.startsWith(path)) { // filter according to the path
+                    result.add(name);
+                } // if
+            } // while
+            return result.toArray(new String[result.size()]);
+        } // if
+
+        throw new UnsupportedOperationException("Cannot list files for URL "+dirURL);
+    } // getResourceListing()
 
     static {
         try {
-            PROPERTIES.load(Constants.class.getClassLoader().getResourceAsStream("tangram/core-build.properties"));
-            Constants.class.getClassLoader().getResources("tangram/build.properties");
             Enumeration<URL> en = Constants.class.getClassLoader().getResources("tangram");
-            if (en.hasMoreElements()) {
+            while (en.hasMoreElements()) {
                 URL metaInf = en.nextElement();
-                File fileMetaInf = new File(metaInf.toURI());
-                String[] filenames = fileMetaInf.list();
+                String[] filenames = getResourceListing(metaInf, "tangram");
                 for (String s : filenames) {
                     if (s.endsWith("build.properties")) {
                         Properties p = new Properties();
-                        p.load(Constants.class.getClassLoader().getResourceAsStream("tangram/"+s));
-                        VERSIONS.put(s.substring(0, s.length()-SUFFIX_LENGTH),
+                        p.load(Constants.class.getClassLoader().getResourceAsStream(s));
+                        VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH),
                                 p.getProperty(Constants.PROPERTY_VERSION_BUILD));
                     } // if
                 } // for
-            } // if
+            } // while
         } catch (Exception e) {
-            e.printStackTrace(System.err);
+            log.error("{} error while reading all modules building properties", e);
         } // try/catch
         StringBuilder versionBuilder = new StringBuilder();
         versionBuilder.append(VERSION_MAJOR);
