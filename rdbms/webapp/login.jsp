@@ -9,9 +9,6 @@
 <head>
 <title>Tangram JDO Standalone System</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<%-- 
-<meta HTTP-EQUIV="REFRESH" content="0; url=<%=request.getParameter("return")%>">
- --%>
 <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print"/>
 <link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/e/favicon.ico" />
