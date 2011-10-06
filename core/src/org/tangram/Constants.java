@@ -24,11 +24,19 @@ public class Constants {
 
     public static Properties TANGRAM_PROPERTIES = new Properties();
 
-    public final static String THIS = "self";
+    static {
+        try {
+            TANGRAM_PROPERTIES.load(Constants.class.getClassLoader().getResourceAsStream("tangram/core-build.properties"));
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+        } // try/catch
+    } // static
+
+    public static final String THIS = "self";
 
     public static final String DEFAULT_VIEW = "NULL";
 
-    public final static String PARAMETER_VIEW = "v";
+    public static final String PARAMETER_VIEW = "v";
 
     public static final String PARAMETER_PROTECTION_LOGIN = "protection.login.button";
 
@@ -61,6 +69,6 @@ public class Constants {
 
     public static String getVersion() {
         return VERSION_MAJOR+"."+VERSION_MINOR+"."+TANGRAM_PROPERTIES.getProperty(PROPERTY_VERSION_BUILD);
-    }
+    } // getVersion()
 
 } // Constants
