@@ -8,7 +8,6 @@
 %><%@page import="org.springframework.beans.BeanWrapperImpl"
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.view.Utils"
-%><%@page import="org.tangram.jdo.TangramJDO"
 %><%@page import="org.tangram.jdo.edit.EditingController"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -38,7 +37,7 @@ Typ: </span>${self.class.package.name}.<span class="cms_editor_title">${self.cla
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
-    if (!TangramJDO.SYSTEM_PROPERTIES.contains(key)) {          
+    if (!EditingController.SYSTEM_PROPERTIES.contains(key)) {          
       if (desc.getWriteMethod() != null) {
         Object value = bw.getPropertyValue(key); 
         @SuppressWarnings("rawtypes")

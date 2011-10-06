@@ -6,5 +6,5 @@
 ><span class="cms_editor_title"><cms:include bean="${self}" view="name"/></span>
 <br/>${self.id} 
 <br/><a href="<cms:link bean="${self}" action="edit" />">Bearbeiten</a> 
-<c:if test="${! empty normalView}">| <a ${normalView}>Web Ansicht</a></c:if>
+<c:if test="${! empty normalView}">| <a <c:out value="${normalView}" />>Web Ansicht</a></c:if>
 <br/>

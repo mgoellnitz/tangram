@@ -22,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,9 +63,21 @@ public class EditingController extends RenderingController {
 
     public static final String PARAMETER_CLASS_NAME = "cms.editor.class.name";
 
+    /**
+     * writable properties which should not be altered by the upper layers or persisted
+     */
+    public static Set<String> SYSTEM_PROPERTIES;
+
+    static {
+        SYSTEM_PROPERTIES = new HashSet<String>();
+        SYSTEM_PROPERTIES.add("manager");
+        SYSTEM_PROPERTIES.add("beanFactory");
+    } // static
+
     @Autowired
     private PropertyConverter propertyConverter;
-    
+
+
     @Autowired
     public void setDefaultController(DefaultController defaultController) {
         // Automagically set edit view
@@ -72,7 +86,7 @@ public class EditingController extends RenderingController {
 
 
     @RequestMapping(value = "/store/id_{id}")
-    @SuppressWarnings({"rawtypes","unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public ModelAndView store(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {

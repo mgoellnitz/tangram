@@ -8,7 +8,6 @@
 %><%@page import="org.springframework.beans.BeanWrapperImpl"
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.view.Utils"
-%><%@page import="org.tangram.jdo.TangramJDO"
 %><%@page import="org.tangram.jdo.edit.EditingController"
 %><%@page import="org.springframework.beans.BeanUtils"
 %><%@page import="org.tangram.jdo.JdoContent"
@@ -40,7 +39,7 @@ Typ: ${self.class.package.name}.<span class="cms_editor_title">${self.class.simp
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
-    if (!TangramJDO.SYSTEM_PROPERTIES.contains(key)) {          
+    if (!EditingController.SYSTEM_PROPERTIES.contains(key)) {          
         if (desc.getWriteMethod() != null) {
     Object value = bw.getPropertyValue(key);
     @SuppressWarnings("unchecked")
@@ -72,7 +71,7 @@ if (c != null) {
     %><%=className %> ist kein<br/>gültiger Klassenname!<%
 } // if
 for (PropertyDescriptor p : ps) {
-    if (!TangramJDO.SYSTEM_PROPERTIES.contains(p.getName())) {
+    if (!EditingController.SYSTEM_PROPERTIES.contains(p.getName())) {
         String delimiter = "</span> :";
         if ((p.getName()+p.getPropertyType().getSimpleName()).length() > 18) {
             delimiter = "</span><br/>&#160;&#160;:";

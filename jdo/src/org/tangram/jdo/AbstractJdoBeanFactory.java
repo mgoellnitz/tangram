@@ -173,10 +173,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             statistics.increase("create bean");
             return bean;
         } finally {
-            /*
-             * // TODO: how about rollback? if (log.isDebugEnabled()) { log.debug("createBean() closing manager"); } //
-             * if manager.currentTransaction().commit();
-             */
         } // try/catch/finally
     } // createBean()
 
@@ -188,8 +184,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         try {
             Extent extent = manager.getExtent(cls, false);
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
-            // TODO: id is GAE specific!
-            // String order = "id asc";
+            // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
                 String order = orderProperty+" asc";
                 query.setOrdering(order);
