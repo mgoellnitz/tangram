@@ -75,47 +75,47 @@ public class Constants {
 
     public static final Map<String, String> VERSIONS = new HashMap<String, String>();
 
-    private static final int SUFFIX_LENGTH = "-build.properties".length();
+    private static final String PREFIX = "tangram";
+
+    private static final String SUFFIX = "-build.properties";
+
+    private static final int SUFFIX_LENGTH = SUFFIX.length();
 
 
-    private static String[] getResourceListing(URL dirURL, String path) throws URISyntaxException, IOException {
-        if (dirURL!=null&&dirURL.getProtocol().equals("file")) {
-            /* A file path: easy enough */
-            return new File(dirURL.toURI()).list();
+    private static String[] getResourceListing(URL pathUrl, String prefix, String suffix) throws URISyntaxException,
+            IOException {
+        if ("file".equals(pathUrl.getProtocol())) {
+            return new File(pathUrl.toURI()).list();
         } // if
 
-        if (dirURL.getProtocol().equals("jar")) {
-            /* A JAR path */
-            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); // strip out only the JAR
-                                                                                           // file
+        if ("jar".equals(pathUrl.getProtocol())) {
+            String jarPath = pathUrl.getPath().substring(5, pathUrl.getPath().indexOf("!")); // only the JAR file
             JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-            Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries in jar
-            Set<String> result = new HashSet<String>(); // avoid duplicates in case it is a subdirectory
+            Enumeration<JarEntry> entries = jar.entries();
+            Set<String> result = new HashSet<String>();
             while (entries.hasMoreElements()) {
                 String name = entries.nextElement().getName();
-                if (name.startsWith(path)) { // filter according to the path
+                if (name.startsWith(prefix)&&name.endsWith(suffix)) {
                     result.add(name);
                 } // if
             } // while
             return result.toArray(new String[result.size()]);
         } // if
 
-        throw new UnsupportedOperationException("Cannot list files for URL "+dirURL);
+        return new String[0];
     } // getResourceListing()
 
     static {
         try {
-            Enumeration<URL> en = Constants.class.getClassLoader().getResources("tangram");
+            Enumeration<URL> en = Constants.class.getClassLoader().getResources(PREFIX);
             while (en.hasMoreElements()) {
                 URL metaInf = en.nextElement();
-                String[] filenames = getResourceListing(metaInf, "tangram");
+                String[] filenames = getResourceListing(metaInf, PREFIX, SUFFIX);
                 for (String s : filenames) {
-                    if (s.endsWith("build.properties")) {
-                        Properties p = new Properties();
-                        p.load(Constants.class.getClassLoader().getResourceAsStream(s));
-                        VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH),
-                                p.getProperty(Constants.PROPERTY_VERSION_BUILD));
-                    } // if
+                    Properties p = new Properties();
+                    p.load(Constants.class.getClassLoader().getResourceAsStream(s));
+                    VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH),
+                            p.getProperty(Constants.PROPERTY_VERSION_BUILD));
                 } // for
             } // while
         } catch (Exception e) {
