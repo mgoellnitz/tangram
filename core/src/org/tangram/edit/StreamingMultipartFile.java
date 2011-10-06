@@ -24,27 +24,32 @@ public class StreamingMultipartFile implements MultipartFile {
     } // StreamingMultipartFile()
 
 
-    public String getName() {
+    @Override
+	public String getName() {
         return item.getName();
     }
 
 
-    public String getOriginalFilename() {
+    @Override
+	public String getOriginalFilename() {
         return item.getFieldName();
     }
 
 
-    public String getContentType() {
+    @Override
+	public String getContentType() {
         return item.getContentType();
     }
 
 
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
         return false;
     }
 
 
-    public long getSize() {
+    @Override
+	public long getSize() {
         if (size>0) {
             try {
                 return getBytes().length;
@@ -56,7 +61,8 @@ public class StreamingMultipartFile implements MultipartFile {
     } // getSize()
 
 
-    public byte[] getBytes() throws IOException {
+    @Override
+	public byte[] getBytes() throws IOException {
         if (bytes==null) {
             bytes = IOUtils.toByteArray(item.openStream());
         } // if
@@ -64,12 +70,14 @@ public class StreamingMultipartFile implements MultipartFile {
     } // getBytes()
 
 
-    public InputStream getInputStream() throws IOException {
+    @Override
+	public InputStream getInputStream() throws IOException {
         return item.openStream();
     } // getInputStream()
 
 
-    public void transferTo(File dest) throws IOException, IllegalStateException {
+    @Override
+	public void transferTo(File dest) throws IOException, IllegalStateException {
         throw new UnsupportedOperationException("transfer to file not implemented");
     }
     

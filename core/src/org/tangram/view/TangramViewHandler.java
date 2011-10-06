@@ -31,7 +31,8 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
     private boolean detectAllModelAwareViewResolvers = true;
 
 
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    @Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
@@ -77,13 +78,13 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() throws Exception {
         initViewResolvers(applicationContext);
     } // afterPropertiesSet()
 
 
     @Override
-    public View resolveView(String viewName, Map<String, Object> model, Locale locale, ServletRequest request)
+	public View resolveView(String viewName, Map<String, Object> model, Locale locale, ServletRequest request)
             throws IOException {
         View result = null;
 

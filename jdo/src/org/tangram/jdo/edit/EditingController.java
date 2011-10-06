@@ -54,7 +54,7 @@ public class EditingController extends RenderingController {
 
 
     @RequestMapping(value = "/store/id_{id}")
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"rawtypes","unchecked"})
     public ModelAndView store(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {

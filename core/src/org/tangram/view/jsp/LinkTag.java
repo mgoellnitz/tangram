@@ -40,17 +40,20 @@ public class LinkTag implements Tag, Serializable {
     private boolean handlers = false;
 
 
-    public void setPageContext(PageContext p) {
+    @Override
+	public void setPageContext(PageContext p) {
         context = p;
     }
 
 
-    public Tag getParent() {
+    @Override
+	public Tag getParent() {
         return parent;
     }
 
 
-    public void setParent(Tag t) {
+    @Override
+	public void setParent(Tag t) {
         parent = t;
     }
 
@@ -115,7 +118,8 @@ public class LinkTag implements Tag, Serializable {
     }
 
 
-    public int doStartTag() throws JspException {
+    @Override
+	public int doStartTag() throws JspException {
         return SKIP_BODY;
     } // doStartTag()
 
@@ -154,7 +158,8 @@ public class LinkTag implements Tag, Serializable {
     } // render()
 
 
-    public int doEndTag() throws JspException {
+    @Override
+	public int doEndTag() throws JspException {
         Writer out = context.getOut();
         HttpServletRequest request = (HttpServletRequest)(context.getRequest());
         HttpServletResponse response = (HttpServletResponse)(context.getResponse());
@@ -163,7 +168,8 @@ public class LinkTag implements Tag, Serializable {
     } // doEndTag()
 
 
-    public void release() {
+    @Override
+	public void release() {
         context = null;
         parent = null;
         bean = null;

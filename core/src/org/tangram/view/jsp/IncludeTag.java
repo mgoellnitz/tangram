@@ -39,17 +39,20 @@ public class IncludeTag implements Tag, Serializable {
     private String view = null;
 
 
-    public void setPageContext(PageContext p) {
+    @Override
+	public void setPageContext(PageContext p) {
         pc = p;
     }
 
 
-    public Tag getParent() {
+    @Override
+	public Tag getParent() {
         return parent;
     }
 
 
-    public void setParent(Tag t) {
+    @Override
+	public void setParent(Tag t) {
         parent = t;
     }
 
@@ -137,18 +140,21 @@ public class IncludeTag implements Tag, Serializable {
     } // render()
 
 
-    public int doStartTag() throws JspException {
+    @Override
+	public int doStartTag() throws JspException {
         return SKIP_BODY;
     } // doStartTag()
 
 
-    public int doEndTag() throws JspException {
+    @Override
+	public int doEndTag() throws JspException {
         ServletRequest req = pc.getRequest();
         ServletResponse resp = pc.getResponse();
 
         if (log.isDebugEnabled()) {
             log.debug("doEndTag("+Thread.currentThread().getId()+") view ******************* "+view);
         } // if
+        @SuppressWarnings("unchecked")
         Enumeration<String> names = pc.getAttributeNamesInScope(PageContext.REQUEST_SCOPE);
         while (names.hasMoreElements()) {
             String name = names.nextElement();
@@ -162,7 +168,8 @@ public class IncludeTag implements Tag, Serializable {
     } // doEndTag()
 
 
-    public void release() {
+    @Override
+	public void release() {
         pc = null;
         parent = null;
         bean = null;

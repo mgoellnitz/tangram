@@ -112,7 +112,8 @@ public class ClassRepository implements InitializingBean, BeanListener {
     } // attachMapToChanges()
 
 
-    public void reset() {
+    @Override
+	public void reset() {
         fillClasses();
         for (BeanListener listener : attachedListeners) {
             listener.reset();
@@ -121,7 +122,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() throws Exception {
         codeCache.addListener(this);
         reset();
     } // afterPropertiesSet()

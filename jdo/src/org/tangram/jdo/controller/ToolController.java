@@ -1,39 +1,39 @@
 package org.tangram.jdo.controller;
 
-import java.beans.PropertyDescriptor;
-import java.beans.XMLEncoder;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+//import java.beans.PropertyDescriptor;
+//import java.beans.XMLEncoder;
+//import java.io.ByteArrayInputStream;
+//import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+//import java.io.InputStreamReader;
+//import java.io.Reader;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+//import java.util.Map;
+// import java.util.Map.Entry;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.annotations.NotPersistent;
+// import javax.jdo.JDOHelper;
+// import javax.jdo.PersistenceManager;
+// import javax.jdo.PersistenceManagerFactory;
+// import javax.jdo.annotations.NotPersistent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
+// import org.springframework.beans.BeanWrapper;
+// import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+// import org.springframework.web.bind.annotation.RequestMethod;
+// import org.springframework.web.multipart.MultipartFile;
+// import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.content.CodeResource;
@@ -44,6 +44,7 @@ import org.tangram.monitor.StatisticsController;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
 
+/*
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -52,6 +53,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+*/
 
 @Controller
 public class ToolController extends RenderingController {

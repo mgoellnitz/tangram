@@ -19,6 +19,7 @@
 <body><%=request.getParameter("return")%>
 <%
 Principal principal = new Principal() {
+	@Override
     public String getName() {
         return "martin@goellnitz.de";
     } // getName()

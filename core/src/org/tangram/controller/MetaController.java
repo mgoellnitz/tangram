@@ -89,7 +89,8 @@ public class MetaController extends AbstractController implements InitializingBe
     } // createModel()
 
 
-    public void reset() {
+    @Override
+	public void reset() {
         schemes = new HashMap<String, LinkScheme>();
         for (Map.Entry<String, Class<LinkScheme>> entry : classRepository.get(LinkScheme.class).entrySet()) {
             try {
@@ -168,7 +169,7 @@ public class MetaController extends AbstractController implements InitializingBe
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()

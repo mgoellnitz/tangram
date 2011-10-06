@@ -55,6 +55,7 @@ public class OpenIDProtection extends Protection {
     } // getProviders()
 
 
+	@Override
     public String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return null;
     } // handleLogin()
@@ -67,13 +68,15 @@ public class OpenIDProtection extends Protection {
     } // isValidUser()
 
 
-    public boolean isContentVisible(HttpServletRequest request) throws Exception {
+    @Override
+	public boolean isContentVisible(HttpServletRequest request) throws Exception {
         User user = userService.getCurrentUser();
         return user!=null&&isValidUser(request, user);
     } // isTopicVisible()
 
 
-    public boolean needsAuthorization(HttpServletRequest request) {
+    @Override
+	public boolean needsAuthorization(HttpServletRequest request) {
         User user = UserServiceFactory.getUserService().getCurrentUser();
         return user==null
                 ||(user.getFederatedIdentity()==null&&(request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null));

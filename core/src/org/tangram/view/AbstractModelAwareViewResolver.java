@@ -23,13 +23,13 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     private final static View NOT_FOUND_DUMMY = new View() {
 
         @Override
-        public String getContentType() {
+		public String getContentType() {
             return null;
         }
 
 
         @Override
-        public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
+		public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
                 throws Exception {
         }
 
@@ -47,7 +47,8 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     private static Log log = LogFactory.getLog(AbstractModelAwareViewResolver.class);
 
 
-    public int getOrder() {
+    @Override
+	public int getOrder() {
         return order;
     }
 
@@ -140,7 +141,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
 
     @Override
-    public View resolveViewName(String viewName, Map<String, Object> model, Locale locale) throws IOException {
+	public View resolveViewName(String viewName, Map<String, Object> model, Locale locale) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("resolveViewName("+getClass().getSimpleName()+") "+viewName);
         } // if

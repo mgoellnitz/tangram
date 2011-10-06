@@ -45,7 +45,7 @@ public class StatisticsController implements Statistics {
 
 
     @Override
-    public void avg(String eventIdentifier, long value) {
+	public void avg(String eventIdentifier, long value) {
         String countKey = eventIdentifier+" count";
         increase(countKey);
         long median = (counter.containsKey(eventIdentifier) ? counter.get(eventIdentifier) : 0);

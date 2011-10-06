@@ -81,6 +81,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
     } // getFullViewName()
 
 
+	@Override
     public void reset() {
         getCache().clear();
     } // reset()

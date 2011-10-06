@@ -18,7 +18,6 @@ public class TangramJDO {
     static {
         // SYSTEM_PROPERTIES:
         SYSTEM_PROPERTIES = new HashSet<String>();
-        // TODO: This is JDO stuff!
         SYSTEM_PROPERTIES.add("manager");
         SYSTEM_PROPERTIES.add("beanFactory");
         // PROPERTIES:

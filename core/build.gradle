@@ -15,6 +15,8 @@ dependencies {
   compile "org.springframework:org.springframework.web.servlet:$springframework_version"
   compile "org.apache.velocity:velocity:$velocity_version"
   compile "org.codehaus.groovy:groovy:$groovy_version"
+  compile "rhino:js:1.6R7"
+  compile "com.yahoo.platform.yui:yuicompressor:2.4.2"
   compile "commons-logging:commons-logging:1.1.1"
   compile "commons-fileupload:commons-fileupload:1.2"
   compile "commons-io:commons-io:2.0.1"

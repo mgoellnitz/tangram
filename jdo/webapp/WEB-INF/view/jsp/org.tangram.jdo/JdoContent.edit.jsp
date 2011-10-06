@@ -43,11 +43,12 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     if (!TangramJDO.SYSTEM_PROPERTIES.contains(key)) {          
         if (desc.getWriteMethod() != null) {
     Object value = bw.getPropertyValue(key);
+    @SuppressWarnings("unchecked")
     Class<? extends Object> type = bw.getPropertyType(key);
 %><tr class="cms_editor_row"><td class="cms_editor_label_td"><%=key%>:
 <% 
 if ((Utils.getPropertyConverter(request).isTextType(type)) &&("code".equals(key)) && bw.isReadableProperty("mimeType") && (!(""+bw.getPropertyValue("mimeType")).equals("text/javascript")) && (!(""+bw.getPropertyValue("mimeType")).equals("text/css"))) {
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 Class c = null;
 String className = ""+bw.getPropertyValue("annotation");
 try {

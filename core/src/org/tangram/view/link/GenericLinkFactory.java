@@ -33,19 +33,22 @@ public class GenericLinkFactory implements LinkFactory {
     }
 
 
-    public void registerHandler(LinkHandler handler) {
+    @Override
+	public void registerHandler(LinkHandler handler) {
         handlers.add(handler);
     } // registerHandler()
 
 
-    public void unregisterHandler(LinkHandler handler) {
+    @Override
+	public void unregisterHandler(LinkHandler handler) {
         handlers.remove(handler);
     } // unregisterHandler()
 
     String prefix = null;
 
 
-    public String getPrefix(HttpServletRequest request) {
+    @Override
+	public String getPrefix(HttpServletRequest request) {
         if (prefix==null) {
             String contextPath = request.getContextPath();
             if (contextPath.length()==1) {
@@ -75,7 +78,7 @@ public class GenericLinkFactory implements LinkFactory {
 
 
     @Override
-    public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action,
+	public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action,
             String view) {
         if (bean==null) {
             throw new RuntimeException("No bean issued for link generation in action "+action+" for view "+view);

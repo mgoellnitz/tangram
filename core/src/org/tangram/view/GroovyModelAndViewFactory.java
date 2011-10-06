@@ -57,7 +57,8 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
     } // defineBeanShim()
 
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public void reset() {
         definedViewShims = new HashMap<String, List<Constructor<Shim>>>();
         definedBeanShims = new HashMap<String, List<Constructor<Shim>>>();
@@ -182,7 +183,7 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()

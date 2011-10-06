@@ -20,12 +20,14 @@ public abstract class AbstractShim<T extends Content> implements Shim {
     } // AbstractViewShim()
 
 
-    public String getAttributeName() {
+    @Override
+	public String getAttributeName() {
         return attributeName;
     } // getAttributeName()
 
 
-    public String getId() {
+    @Override
+	public String getId() {
         return delegate.getId();
     } // getDelegate()
 

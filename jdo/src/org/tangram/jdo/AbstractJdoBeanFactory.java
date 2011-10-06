@@ -60,7 +60,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
 
 
-    public PersistenceManager getManager() {
+    @Override
+	public PersistenceManager getManager() {
         return manager;
     }
 
@@ -111,19 +112,22 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     }
 
 
-    public JdoContent getBean(String id) {
+    @Override
+	public JdoContent getBean(String id) {
         return getBean(JdoContent.class, id);
     } // getBean()
 
 
-    public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
+    @Override
+	public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
         T bean = getBean(cls, id);
         manager.currentTransaction().begin();
         return bean;
     } // getBeanForUpdate()
 
 
-    public JdoContent getBeanForUpdate(String id) {
+    @Override
+	public JdoContent getBeanForUpdate(String id) {
         return getBeanForUpdate(JdoContent.class, id);
     } // getBeanForUpdate()
 
@@ -159,7 +163,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // createBean()
 
 
-    @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings({"rawtypes","unchecked"})
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty) {
         List<T> result = new ArrayList<T>();
         try {
@@ -201,7 +206,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // getCacheKey()
 
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings({"rawtypes", "unchecked"})
     public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty) {
         List<T> result = null;
         if (log.isInfoEnabled()) {
@@ -254,7 +260,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // getClass()
 
 
-    public void clearCacheFor(Class<? extends Content> cls) {
+    @Override
+	public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
         if (log.isWarnEnabled()) {
@@ -314,7 +321,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // addListener()
 
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {

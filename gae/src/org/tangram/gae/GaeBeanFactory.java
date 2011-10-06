@@ -43,7 +43,8 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     }
 
 
-    @SuppressWarnings("unchecked")
+    @Override
+	@SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String id) {
         if (activateCaching&&(cache.containsKey(id))) {
             statistics.increase("get bean cached");

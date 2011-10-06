@@ -23,7 +23,7 @@ public class UniqueUrlHook implements ControllerHook {
 
 
     @Override
-    public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
+	public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         Link link = null;
         try {
@@ -35,7 +35,7 @@ public class UniqueUrlHook implements ControllerHook {
             } // if
         } // try/catch
         if (link!=null) {
-            // TODO: is it sufficient not to decode both?
+            // If you run into trouble with encodings, this might be a place to search
             // String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8");
             // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8");
             String decodedUrl = link.getUrl();

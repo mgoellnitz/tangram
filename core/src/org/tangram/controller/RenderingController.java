@@ -94,7 +94,7 @@ public abstract class RenderingController implements LinkHandler {
 
 
     @Override
-    public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean,
+	public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean,
             String action, String view);
 
 } // RenderingController

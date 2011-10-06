@@ -19,7 +19,7 @@ if (bytes != null) {
   DateFormat httpDateFormat = appContext.getBean("httpHeaderDateFormat", DateFormat.class);
   httpDateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   Map viewSettings = appContext.getBean("viewSettings", Map.class);
   int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("imageCacheTime"));
   

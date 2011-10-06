@@ -24,7 +24,8 @@ public class Code extends GaeContent implements CodeResource {
     private Text code;
 
 
-    public String getAnnotation() {
+    @Override
+	public String getAnnotation() {
         return annotation;
     }
 
@@ -34,7 +35,8 @@ public class Code extends GaeContent implements CodeResource {
     }
 
 
-    public String getMimeType() {
+    @Override
+	public String getMimeType() {
         return mimeType;
     }
 
@@ -61,7 +63,8 @@ public class Code extends GaeContent implements CodeResource {
     } // getStream()
 
 
-    public long getSize() {
+    @Override
+	public long getSize() {
         return getCode().getValue().length();
     } // getSize()
     

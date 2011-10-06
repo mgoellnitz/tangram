@@ -40,12 +40,14 @@ public class StreamingMultipartResolver implements MultipartResolver {
     }
 
 
-    public boolean isMultipart(HttpServletRequest request) {
+    @Override
+	public boolean isMultipart(HttpServletRequest request) {
         return ServletFileUpload.isMultipartContent(request);
     }
 
 
-    public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException {
+    @Override
+	public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException {
         ServletFileUpload upload = new ServletFileUpload();
         upload.setFileSizeMax(maxUploadSize);
         String encoding = determineEncoding(request);
@@ -85,7 +87,8 @@ public class StreamingMultipartResolver implements MultipartResolver {
     } // resolveMultipart()
 
 
-    public void cleanupMultipart(MultipartHttpServletRequest request) {
+    @Override
+	public void cleanupMultipart(MultipartHttpServletRequest request) {
     }
 
 

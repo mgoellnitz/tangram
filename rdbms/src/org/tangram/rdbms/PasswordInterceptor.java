@@ -102,6 +102,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                 // String loginURL = userService.createLoginURL(thisURL);
                 String loginURL = "";
                 principal = new Principal() {
+                	@Override
                     public String getName() {
                         return "martin@goellnitz.de";
                     } // getName()

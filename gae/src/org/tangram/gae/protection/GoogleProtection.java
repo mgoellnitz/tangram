@@ -30,7 +30,8 @@ public class GoogleProtection extends Protection {
     }
 
 
-    public String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @Override
+	public String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return null;
     } // handleLogin()
 
@@ -48,13 +49,15 @@ public class GoogleProtection extends Protection {
     } // isValidUser()
 
 
-    public boolean isContentVisible(HttpServletRequest request) throws Exception {
+    @Override
+	public boolean isContentVisible(HttpServletRequest request) throws Exception {
         User user = UserServiceFactory.getUserService().getCurrentUser();
         return user==null ? false : (isValidDomain(user, request)&&isValidUser(user));
     } // isTopicVisible()
 
 
-    public boolean needsAuthorization(HttpServletRequest request) {
+    @Override
+	public boolean needsAuthorization(HttpServletRequest request) {
         User user = UserServiceFactory.getUserService().getCurrentUser();
         return user==null||( !isValidDomain(user, request));
     } // needsAuthorization()

@@ -41,7 +41,7 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     if (!TangramJDO.SYSTEM_PROPERTIES.contains(key)) {          
       if (desc.getWriteMethod() != null) {
         Object value = bw.getPropertyValue(key); 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("rawtypes")
         Class type = bw.getPropertyType(key);
 %><div class="cms_editor_row"><span class="cms_editor_label"><%=key%></span> (<%=type.getSimpleName()%>)<br/><%
     if (Utils.getPropertyConverter(request).isBlobType(type)) {

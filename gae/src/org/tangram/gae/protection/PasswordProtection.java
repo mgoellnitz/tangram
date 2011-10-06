@@ -43,7 +43,8 @@ public class PasswordProtection extends Protection {
     }
 
 
-    public String handleLogin(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+	public String handleLogin(HttpServletRequest request, HttpServletResponse response) {
         String result = null;
 
         String login = request.getParameter(PARAM_LOGIN);
@@ -64,14 +65,16 @@ public class PasswordProtection extends Protection {
     } // handleLogin()
 
 
-    public boolean isContentVisible(HttpServletRequest request) throws Exception {
+    @Override
+	public boolean isContentVisible(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         String sessionValue = ""+session.getAttribute(getProtectionKey());
         return sessionValue.equals(getLogin());
     } // isTopicVisible()
 
 
-    public boolean needsAuthorization(HttpServletRequest request) {
+    @Override
+	public boolean needsAuthorization(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return session.getAttribute(getProtectionKey())==null;
     } // needsAuthorization()

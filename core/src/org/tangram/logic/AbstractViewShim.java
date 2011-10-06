@@ -24,7 +24,8 @@ public class AbstractViewShim<T extends Content> extends AbstractShim<T> impleme
     } // AbstractViewShim()
 
 
-    public HttpSession getSession() {
+    @Override
+	public HttpSession getSession() {
         return session;
     }
 
@@ -34,7 +35,8 @@ public class AbstractViewShim<T extends Content> extends AbstractShim<T> impleme
     }
 
 
-    public HttpServletRequest getRequest() {
+    @Override
+	public HttpServletRequest getRequest() {
         return request;
     }
 
