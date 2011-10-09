@@ -68,7 +68,7 @@ jar.doFirst {
 }
 
 processResources.doFirst {
-  filename = "src/$basename/${project.name}-build.properties".toString()
+  filename = "${project.rootDir.absolutePath}/${project.name}/src/$basename/${project.name}-build.properties".toString()
   Properties p = new Properties()
   try {
     FileInputStream fis = new FileInputStream(filename);
@@ -91,6 +91,7 @@ ant.taskdef(name:"yui-compressor",
 */
 
 war.doFirst {
+  Thread.currentThread().sleep(10000)
   // Strange way of overwriting things
   if (configurations.webapp.dependencies.size() == 1) {
     archiveFileName = configurations.webapp.asPath
@@ -140,4 +141,16 @@ uploadLibs {
 }
 
 task upload(dependsOn: [uploadArchives, uploadLibs]) {
+}
+
+upload.doFirst {
+  System.out.println('*******  '+project.name+": "+upload.taskDependencies.values);
+}
+
+uploadArchives.doFirst {
+  System.out.println('******* start '+project.name+": "+uploadArchives.artifacts.files);
+}
+
+uploadArchives.doLast {
+  System.out.println('******* end '+project.name);
 }

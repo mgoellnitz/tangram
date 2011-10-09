@@ -23,6 +23,8 @@ compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.Enha
 dependencies {
   webapp "$basename:$basename-jdo-webapp:$version"
 
+  compile project(':jdo') 
+  
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"  
   compile "$basename:$basename-jdo:$version"
