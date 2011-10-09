@@ -34,7 +34,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
-		<url-pattern>/d/*</url-pattern>
+		<url-pattern>/s/*</url-pattern>
 	</servlet-mapping>
 
 	<filter>

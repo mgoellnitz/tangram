@@ -25,6 +25,12 @@ dependencies {
   providedCompile "javax.servlet:jsp-api:$jsp_spec"
   compile "$basename:$basename-jdo:$version"
   
+  compile "hsqldb:hsqldb:1.8.0.1"
+  compile "javax.jdo:jdo2-api:2.3-eb"
+  compile "org.datanucleus:datanucleus-api-jdo:3.0.0-m6"
+  compile "org.datanucleus:datanucleus-core:3.0.0-m6"
+  compile "org.datanucleus:datanucleus-rdbms:3.0.0-m6"
+  
   compile "org.springframework.security:spring-security-core:3.0.5.RELEASE"
   compile "org.springframework.security:spring-security-config:3.0.5.RELEASE"
   compile "org.springframework.security:spring-security-web:3.0.5.RELEASE"
@@ -40,13 +46,7 @@ dependencies {
   providedCompile "org.springframework:spring-web:3.0.3.RELEASE"
   providedCompile "org.springframework:spring-tx:3.0.3.RELEASE"
   
-  compile "hsqldb:hsqldb:1.8.0.1"
-  compile "javax.jdo:jdo2-api:2.3-eb"
-  compile "org.datanucleus:datanucleus-api-jdo:3.0.0-m6"
-  compile "org.datanucleus:datanucleus-core:3.0.0-m6"
-  compile "org.datanucleus:datanucleus-rdbms:3.0.0-m6"
-  
-  providedCompile "org.datanucleus:datanucleus-enhancer:3.0.0-m6"
+  compile "org.datanucleus:datanucleus-enhancer:3.0.0-m6"
 }
 
 compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
