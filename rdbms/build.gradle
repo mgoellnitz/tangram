@@ -26,6 +26,8 @@ dependencies {
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"
   compile "$basename:$basename-jdo:$version"
+  webapp project (':core')
+  compile project (':core')
   compile project (':jdo')
   
   // TODO: search for repo

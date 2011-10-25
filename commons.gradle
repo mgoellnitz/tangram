@@ -73,16 +73,6 @@ artifacts {
   libs jar
 }
 
-// Perhaps also move this to compileJava.doLast
-/*
-jar.doFirst {
-  // JDO Enhancing is not really done when we start this - sorry - so we wait a little
-  println "waiting 2s - which is normal in this project"
-  Thread.currentThread().sleep(2000)
-  println "..."
-}
-*/
-
 compileJava.doLast {
   filename = "${project.rootDir.absolutePath}/${project.name}/src/$basename/${project.name}-build.properties".toString()
   Properties p = new Properties()
