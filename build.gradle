@@ -1,3 +1,4 @@
+// set GRADLE_OPTS=-Dgradle.user.home=C:/volatile/gradle
 allprojects {
-  defaultTasks 'clean', 'upload'
+  defaultTasks 'upload'
 }

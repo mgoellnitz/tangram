@@ -8,26 +8,40 @@ version = '0.6-SNAPSHOT'
 basename = 'tangram'
 
 // TODO: perhaps this should go somewhere else
+targetMavenRepository = "file://localhost/C:/volatile/m2/repository/"
 localMavenRepository = "file://localhost/C:/volatile/m2/repository/"
 
 // maybe needed for google appengine
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-springframework_version = "3.0.5.RELEASE"
 servlet_spec = "2.5"
 jsp_spec = "2.0"
 groovy_version = "1.7.9"
 velocity_version = "1.6.4"
+springframework_version = "3.0.6.RELEASE"
+springsecurity_version = "3.0.7.RELEASE"
+// Datanucleus Version except for Google App Engine
+datanucleus_version= "3.0.0-m3"
 
 appengine_version = "1.5.4"
 
 repositories {
 
   mavenLocal()
-    
-  mavenRepo urls: [ "http://repo1.maven.org/maven2", "http://www.datanucleus.org/downloads/maven2", "http://repository.jboss.org/maven2", "http://repository.springsource.com/maven/bundles/release", "http://repository.codehaus.org", "http://fornax.itemis.de/nexus/content/repositories/thirdparty" ]
+
+  maven {
+    url targetMavenRepository;
   
+    artifactUrls localMavenRepository
+    artifactUrls "http://repo1.maven.org/maven2"
+    artifactUrls "http://www.datanucleus.org/downloads/maven2"
+    artifactUrls "http://repository.jboss.org/maven2"
+    artifactUrls "http://repository.springsource.com/maven/bundles/release"
+    artifactUrls "http://repository.codehaus.org"
+    artifactUrls "http://fornax.itemis.de/nexus/content/repositories/thirdparty"
+  }
+ 
 }
 
 // we want jars and wars - in most cases
@@ -50,7 +64,6 @@ sourceSets {
 archivesBaseName = basename+'-'+project.name
 
 configurations {
-  uploadArchives
   libs 
   webapp
 }
@@ -60,14 +73,17 @@ artifacts {
   libs jar
 }
 
+// Perhaps also move this to compileJava.doLast
+/*
 jar.doFirst {
   // JDO Enhancing is not really done when we start this - sorry - so we wait a little
-  println "waiting 4s - which is normal in this project"
-  Thread.currentThread().sleep(4000)
+  println "waiting 2s - which is normal in this project"
+  Thread.currentThread().sleep(2000)
   println "..."
 }
+*/
 
-processResources.doFirst {
+compileJava.doLast {
   filename = "${project.rootDir.absolutePath}/${project.name}/src/$basename/${project.name}-build.properties".toString()
   Properties p = new Properties()
   try {
@@ -82,6 +98,10 @@ processResources.doFirst {
   FileOutputStream fos = new FileOutputStream(filename)
   p.save(fos, " Tangram Build and System Information")
   fos.close()
+  // JDO Enhancing is not really done when we start this - sorry - so we wait a little
+  print "waiting 3s - which is normal in this project"
+  Thread.currentThread().sleep(3000)
+  println " - done"
 }
 
 /* TODO:
@@ -91,7 +111,6 @@ ant.taskdef(name:"yui-compressor",
 */
 
 war.doFirst {
-  Thread.currentThread().sleep(10000)
   // Strange way of overwriting things
   if (configurations.webapp.dependencies.size() == 1) {
     archiveFileName = configurations.webapp.asPath
@@ -126,31 +145,21 @@ war.doLast {
 }
 
 uploadArchives {
+  inputs.dir file("$buildDir/libs")
   repositories.mavenDeployer {
-      repository(url: localMavenRepository)
+      repository(url: targetMavenRepository)
       pom.artifactId = archivesBaseName+'-webapp'
       pom.groupId = basename
   }
 }
 
 uploadLibs {
+  inputs.dir file("$buildDir/libs")
   repositories.mavenDeployer {
-      repository(url: localMavenRepository)
+      repository(url: targetMavenRepository)
       pom.groupId = basename
   }
 }
 
 task upload(dependsOn: [uploadArchives, uploadLibs]) {
-}
-
-upload.doFirst {
-  System.out.println('*******  '+project.name+": "+upload.taskDependencies.values);
-}
-
-uploadArchives.doFirst {
-  System.out.println('******* start '+project.name+": "+uploadArchives.artifacts.files);
-}
-
-uploadArchives.doLast {
-  System.out.println('******* end '+project.name);
 }
