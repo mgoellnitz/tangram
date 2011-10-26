@@ -1,53 +1,64 @@
+/** user serviceable parts */
+// TODO: perhaps this should go somewhere else
+targetMavenRepository = "file://localhost/C:/volatile/m2/repository/"
+localMavenRepository = "file://localhost/C:/volatile/m2/repository/"
+/** end user serviceable parts */
+
+/* version section */
+servlet_spec = "2.5"
+jsp_spec = "2.0"
+groovy_version = "1.7.10"
+velocity_version = "1.7"
+// TODO: find repo for 2.8.2
+yui_version="2.4.6"
+rhino_version="1.7R3"
+// TODO: find repo for 1.8.1.3
+hsqldb_version="1.8.0.10"
+jdo_api="javax.jdo:jdo2-api:2.3-eb"
+
+springframework_version = "3.0.6.RELEASE"
+springsecurity_version = "3.0.7.RELEASE"
+// Datanucleus Version except for Google App Engine
+// TODO: Where is the 3.0.2 enhancer?
+datanucleus_version= "3.0.1"
+
+appengine_version = "1.5.5"
+/* version section end */
+
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
-
-version = '0.6-SNAPSHOT'
-
-basename = 'tangram'
-
-// TODO: perhaps this should go somewhere else
-targetMavenRepository = "file://localhost/C:/volatile/m2/repository/"
-localMavenRepository = "file://localhost/C:/volatile/m2/repository/"
-
-// maybe needed for google appengine
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
-
-servlet_spec = "2.5"
-jsp_spec = "2.0"
-groovy_version = "1.7.9"
-velocity_version = "1.6.4"
-springframework_version = "3.0.6.RELEASE"
-springsecurity_version = "3.0.7.RELEASE"
-// Datanucleus Version except for Google App Engine
-datanucleus_version= "3.0.0-m3"
-
-appengine_version = "1.5.4"
 
 repositories {
 
   mavenLocal()
 
   maven {
-    url targetMavenRepository;
+    url localMavenRepository;
   
     artifactUrls localMavenRepository
+    // most of the usual stuff
     artifactUrls "http://repo1.maven.org/maven2"
-    artifactUrls "http://www.datanucleus.org/downloads/maven2"
-    artifactUrls "http://repository.jboss.org/maven2"
+    // needed for latest spring framework and security versions
     artifactUrls "http://repository.springsource.com/maven/bundles/release"
+    // needed for latest datanucleus versions
+    artifactUrls "http://www.datanucleus.org/downloads/maven2"
+    /* maybe unused
+    artifactUrls "http://repository.jboss.org/maven2"
     artifactUrls "http://repository.codehaus.org"
     artifactUrls "http://fornax.itemis.de/nexus/content/repositories/thirdparty"
+    */
   }
  
 }
 
-// we want jars and wars - in most cases
-jar.enabled = true 
+version = '0.6-SNAPSHOT'
+basename = 'tangram'
 
-webAppDirName = 'disabled'
+// datanucleus enhancer doesnt support this, but it works!
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
 
 // our custom directory layout
 sourceSets {
@@ -61,19 +72,30 @@ sourceSets {
     }
 }
 
+// despite the short directory names we won't full blown archive names
 archivesBaseName = basename+'-'+project.name
 
+// avoid gradles default mimik to fiddle around with this directory
+webAppDirName = 'disabled'
+
+// we want jars and wars - in most cases
+jar.enabled = true 
+
+// needed for building jars and wars
 configurations {
   libs 
   webapp
 }
 
+// needed for building jars and wars
 artifacts {
   archives war
   libs jar
 }
 
 compileJava.doLast {
+  // update build number after build 
+  // do this here to avoid compiling without source changes since this here is a source change
   filename = "${project.rootDir.absolutePath}/${project.name}/src/$basename/${project.name}-build.properties".toString()
   Properties p = new Properties()
   try {
@@ -102,6 +124,9 @@ ant.taskdef(name:"yui-compressor",
 
 war.doFirst {
   // Strange way of overwriting things
+  for (o in configurations.webapp.dependencies) {
+    println o.class.name
+  } // for
   if (configurations.webapp.dependencies.size() == 1) {
     archiveFileName = configurations.webapp.asPath
     idx = archiveFileName.indexOf(';')

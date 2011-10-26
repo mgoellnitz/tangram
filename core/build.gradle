@@ -23,6 +23,7 @@ dependencies {
   providedCompile "javax.servlet:jsp-api:$jsp_spec"
   compile "taglibs:standard:1.1.2"
   compile "javax.servlet:jstl:1.1.2"
+  
   compile "org.springframework:org.springframework.core:$springframework_version"
   compile "org.springframework:org.springframework.asm:$springframework_version"
   compile "org.springframework:org.springframework.beans:$springframework_version"
@@ -31,12 +32,12 @@ dependencies {
   compile "org.springframework:org.springframework.expression:$springframework_version"
   compile "org.springframework:org.springframework.web:$springframework_version"
   compile "org.springframework:org.springframework.web.servlet:$springframework_version"
+  
   compile "org.apache.velocity:velocity:$velocity_version"
   compile "org.codehaus.groovy:groovy:$groovy_version"
-  compile "org.mozilla:rhino:1.7R3"
-  // TODO: find repo
-  // compile "com.yahoo.platform.yui:yuicompressor:2.8.2"
-  compile "com.yahoo.platform.yui:yuicompressor:2.4.6"
+  compile "org.mozilla:rhino:$rhino_version"
+  compile "com.yahoo.platform.yui:yuicompressor:$yui_version"
+  
   compile "commons-logging:commons-logging:1.1.1"
   compile "commons-fileupload:commons-fileupload:1.2"
   compile "commons-io:commons-io:2.0.1"

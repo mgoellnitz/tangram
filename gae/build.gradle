@@ -20,28 +20,28 @@ apply from: '../commons.gradle'
 
 compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
 
-// compileJava.dependsOn ':jdo:upload'
-
 dependencies {
   webapp "$basename:$basename-jdo-webapp:$version"
+  webapp project (':core')
 
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"  
   compile "$basename:$basename-jdo:$version"
-  webapp project (':core')
   compile project (':core')
   compile project (':jdo')
-  
-  compile "commons-lang:commons-lang:2.6"
-  compile "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:1.1.1"
-  compile "javax.jdo:jdo2-api:2.3-eb"
-  compile "org.datanucleus:datanucleus-core:1.1.5"
-  compile "org.datanucleus:datanucleus-jpa:1.1.5"  
-  compile "com.google.appengine.orm:datanucleus-appengine:1.0.8"
-  providedCompile "org.datanucleus:datanucleus-enhancer:1.1.4"
   
   compile "com.google.appengine:appengine-api-1.0-sdk:$appengine_version" 
   compile "com.google.appengine:appengine-api-labs:$appengine_version"
   compile "com.google.appengine:appengine-jsr107cache:$appengine_version"
+  
+  compile "$jdo_api"
+  compile "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:1.1.1"
+  compile "org.datanucleus:datanucleus-core:1.1.5"
+  compile "org.datanucleus:datanucleus-jpa:1.1.5"  
+  compile "com.google.appengine.orm:datanucleus-appengine:1.0.8"
   compile "net.sf.jsr107cache:jsr107cache:1.1"
+  
+  compile "commons-lang:commons-lang:2.6"
+  
+  providedCompile "org.datanucleus:datanucleus-enhancer:1.1.4"
 }

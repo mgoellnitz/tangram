@@ -18,8 +18,6 @@
  */
 apply from: '../commons.gradle'
 
-// compileJava.dependsOn ':core:upload'
-
 dependencies {
   webapp "$basename:$basename-core-webapp:$version"
 
@@ -28,12 +26,12 @@ dependencies {
   compile "$basename:$basename-core:$version"
   compile project (':core')
     
-  compile "com.google.code.gson:gson:1.7.1"
-  
-  providedCompile "javax.jdo:jdo2-api:2.3-eb"
+  compile "$jdo_api"
   providedCompile "org.datanucleus:datanucleus-core:$datanucleus_version"
   providedCompile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
   providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_version"
+  
+  compile "com.google.code.gson:gson:1.7.1"
 }
 
 compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
