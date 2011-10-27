@@ -7,10 +7,11 @@ localMavenRepository = "file://localhost/C:/volatile/m2/repository/"
 /* version section */
 servlet_spec = "2.5"
 jsp_spec = "2.0"
-groovy_version = "1.7.10"
+groovy_version = "1.8.3"
 velocity_version = "1.7"
 // TODO: find repo for 2.8.2
 yui_version="2.4.6"
+// TODO: yui compressor uses its own old version
 rhino_version="1.7R3"
 // TODO: find repo for 1.8.1.3
 hsqldb_version="1.8.0.10"
@@ -34,22 +35,20 @@ repositories {
 
   mavenLocal()
 
-  maven {
-    url localMavenRepository;
+  maven { url localMavenRepository }
   
-    artifactUrls localMavenRepository
-    // most of the usual stuff
-    artifactUrls "http://repo1.maven.org/maven2"
-    // needed for latest spring framework and security versions
-    artifactUrls "http://repository.springsource.com/maven/bundles/release"
-    // needed for latest datanucleus versions
-    artifactUrls "http://www.datanucleus.org/downloads/maven2"
-    /* maybe unused
-    artifactUrls "http://repository.jboss.org/maven2"
-    artifactUrls "http://repository.codehaus.org"
-    artifactUrls "http://fornax.itemis.de/nexus/content/repositories/thirdparty"
-    */
-  }
+  // most of the usual stuff
+  maven { url "http://repo1.maven.org/maven2" }
+  // needed for latest spring framework and security versions
+  maven { url "http://repository.springsource.com/maven/bundles/release" }
+  // needed for latest datanucleus versions
+  maven { url "http://www.datanucleus.org/downloads/maven2" }
+  
+  /* maybe unused
+  maven { url "http://repository.jboss.org/maven2" }
+  maven { url "http://repository.codehaus.org" }
+  maven { url "http://fornax.itemis.de/nexus/content/repositories/thirdparty" }
+  */
  
 }
 
@@ -123,19 +122,20 @@ ant.taskdef(name:"yui-compressor",
 */
 
 war.doFirst {
-  // Strange way of overwriting things
-  for (o in configurations.webapp.dependencies) {
-    println o.class.name
-  } // for
-  if (configurations.webapp.dependencies.size() == 1) {
-    archiveFileName = configurations.webapp.asPath
-    idx = archiveFileName.indexOf(';')
-    if (idx >= 0) {
-      archiveFileName = archiveFileName.substring(0, idx)
-    } // if
-    println "unzipping $archiveFileName"
-    ant.unzip(src: archiveFileName, dest: "$buildDir/target")  
-  } // if
+  // Strange way of overwriting things - it must be the first dependency
+  iter = configurations.webapp.dependencies.iterator()
+  if (iter.hasNext()) {
+    firstWebappDependency = iter.next()
+    if (firstWebappDependency instanceof org.gradle.api.artifacts.ExternalModuleDependency) {
+      archiveFileName = configurations.webapp.asPath
+      idx = archiveFileName.indexOf(';')
+      if (idx >= 0) {
+        archiveFileName = archiveFileName.substring(0, idx)
+      } // if
+      // println "unzipping $archiveFileName"
+      ant.unzip(src: archiveFileName, dest: "$buildDir/target")  
+    } // if 
+  } // if 
   
   // TODO: YUICompressor!
   copy {

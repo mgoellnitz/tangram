@@ -19,8 +19,6 @@
 apply from: '../commons.gradle'
 
 dependencies {
-  webapp project (':core')
-  
   webapp  "$basename:$basename-jdo-webapp:$version"
   webapp project (':core')
   
@@ -39,19 +37,6 @@ dependencies {
   compile "org.springframework.security:spring-security-core:$springsecurity_version"
   compile "org.springframework.security:spring-security-config:$springsecurity_version"
   compile "org.springframework.security:spring-security-web:$springsecurity_version"
-  
-  /*
-  // TODO: Uggly hack to get rid if spring security's 3.0.3 dependency
-  compile "org.springframework:org.springframework.aop:$springframework_version"
-  compile "org.springframework:org.springframework.transaction:$springframework_version"
-  providedCompile "org.springframework:spring-core:3.0.3.RELEASE"
-  providedCompile "org.springframework:spring-aop:3.0.3.RELEASE"
-  providedCompile "org.springframework:spring-beans:3.0.3.RELEASE"
-  providedCompile "org.springframework:spring-context:3.0.3.RELEASE"
-  providedCompile "org.springframework:spring-expression:3.0.3.RELEASE"
-  providedCompile "org.springframework:spring-web:3.0.3.RELEASE"
-  providedCompile "org.springframework:spring-tx:3.0.3.RELEASE"
-  */
   
   providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_version"
 }
