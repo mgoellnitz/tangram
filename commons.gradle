@@ -163,8 +163,9 @@ uploadArchives {
   inputs.dir file("$buildDir/libs")
   repositories.mavenDeployer {
       repository(url: targetMavenRepository)
-      pom.artifactId = archivesBaseName+'-webapp'
-      pom.groupId = basename
+      // TODO: change this when we know how to rename sub projects
+      // pom.artifactId = basename+'-'+project.name+'-webapp'
+      pom.artifactId = project.name+'-webapp'
   }
 }
 
@@ -172,7 +173,8 @@ uploadLibs {
   inputs.dir file("$buildDir/libs")
   repositories.mavenDeployer {
       repository(url: targetMavenRepository)
-      pom.groupId = basename
+      // TODO: remove this when we know how to rename sub projects
+      pom.artifactId = project.name
   }
 }
 

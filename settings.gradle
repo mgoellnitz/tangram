@@ -1,1 +1,3 @@
+rootProject.name = 'tangram'
+
 include 'core', 'jdo', 'gae', 'rdbms', 'coma'

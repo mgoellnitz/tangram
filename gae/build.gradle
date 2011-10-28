@@ -21,8 +21,7 @@ apply from: '../commons.gradle'
 compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
 
 dependencies {
-  webapp "$basename:$basename-jdo-webapp:$version"
-  webapp project (':core')
+  webapp project (':jdo')
 
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"  

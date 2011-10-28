@@ -19,7 +19,7 @@
 apply from: '../commons.gradle'
 
 dependencies {
-  webapp "$basename:$basename-core-webapp:$version"
+  webapp project (':core')
 
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"
