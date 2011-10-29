@@ -18,12 +18,13 @@
  */
 apply from: '../commons.gradle'
 
+war.dependsOn ':jdo:war'
+
 dependencies {
   webapp project (':jdo')
   
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"
-  compile project (':core')
   compile project (':jdo')
   
   compile "hsqldb:hsqldb:$hsqldb_version"

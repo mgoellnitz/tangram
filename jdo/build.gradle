@@ -18,6 +18,8 @@
  */
 apply from: '../commons.gradle'
 
+war.dependsOn ':core:war'
+
 dependencies {
   webapp project (':core')
 

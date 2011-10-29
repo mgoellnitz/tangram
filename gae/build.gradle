@@ -20,12 +20,13 @@ apply from: '../commons.gradle'
 
 compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
 
+war.dependsOn ':jdo:war'
+
 dependencies {
   webapp project (':jdo')
 
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"  
-  compile project (':core')
   compile project (':jdo')
   
   compile "com.google.appengine:appengine-api-1.0-sdk:$appengine_version" 

@@ -1,8 +1,21 @@
-/** user serviceable parts */
-// TODO: perhaps this should go somewhere else
-targetMavenRepository = "file://localhost/C:/volatile/m2/repository/"
-localMavenRepository = "file://localhost/C:/volatile/m2/repository/"
-/** end user serviceable parts */
+/**
+ * 
+ * Copyright 2011 Martin Goellnitz
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
 
 /* version section */
 servlet_spec = "2.5"
@@ -34,9 +47,9 @@ apply plugin: 'maven'
 repositories {
 
   mavenLocal()
-
-  maven { url localMavenRepository }
   
+  ivy { url "myvy" }
+
   // most of the usual stuff
   maven { url "http://repo1.maven.org/maven2" }
   // needed for latest spring framework and security versions
@@ -44,12 +57,6 @@ repositories {
   // needed for latest datanucleus versions
   maven { url "http://www.datanucleus.org/downloads/maven2" }
   
-  /* maybe unused
-  maven { url "http://repository.jboss.org/maven2" }
-  maven { url "http://repository.codehaus.org" }
-  maven { url "http://fornax.itemis.de/nexus/content/repositories/thirdparty" }
-  */
- 
 }
 
 version = '0.6-SNAPSHOT'
@@ -122,18 +129,21 @@ ant.taskdef(name:"yui-compressor",
 */
 
 war.doFirst {
-  // Strange way of overwriting things - it must be the first dependency
+  // Strange way of overwriting things - it must be the first webapp dependency
   iter = configurations.webapp.dependencies.iterator()
   if (iter.hasNext()) {
     firstWebappDependency = iter.next()
-    if (firstWebappDependency instanceof org.gradle.api.artifacts.ExternalModuleDependency) {
-      archiveFileName = configurations.webapp.asPath
+    if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+      archiveFileName = firstWebappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
+      /*
       idx = archiveFileName.indexOf(';')
       if (idx >= 0) {
         archiveFileName = archiveFileName.substring(0, idx)
       } // if
-      // println "unzipping $archiveFileName"
+      */
       ant.unzip(src: archiveFileName, dest: "$buildDir/target")  
+    } else {
+      println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
     } // if 
   } // if 
   
@@ -151,6 +161,20 @@ war.doFirst {
 }
 
 war {
+  // For some reason webapp files are not included in the inputs collection
+  FileTree tree = fileTree(dir: 'webapp')
+  inputs.files tree
+  // And also ther web-archive of the upstream project has to be added
+  iter = configurations.webapp.dependencies.iterator()
+  if (iter.hasNext()) {
+    firstWebappDependency = iter.next()
+    if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+      println "Adding "+firstWebappDependency.dependencyProject.war.outputs.files.singleFile.name
+      inputs.file firstWebappDependency.dependencyProject.war.outputs.files.singleFile
+    } else {
+      println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
+    } // if 
+  } // if 
   classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
 }
 
@@ -162,8 +186,9 @@ war.doLast {
 uploadArchives {
   inputs.dir file("$buildDir/libs")
   repositories.mavenDeployer {
-      repository(url: targetMavenRepository)
+      repository(url: repositories.mavenLocal().url)
       // TODO: change this when we know how to rename sub projects
+      // depends on http://issues.gradle.org/browse/GRADLE-1135
       // pom.artifactId = basename+'-'+project.name+'-webapp'
       pom.artifactId = project.name+'-webapp'
   }
@@ -172,11 +197,14 @@ uploadArchives {
 uploadLibs {
   inputs.dir file("$buildDir/libs")
   repositories.mavenDeployer {
-      repository(url: targetMavenRepository)
+      repository(url: repositories.mavenLocal().url)
       // TODO: remove this when we know how to rename sub projects
+      // depends on http://issues.gradle.org/browse/GRADLE-1135
       pom.artifactId = project.name
   }
 }
 
 task upload(dependsOn: [uploadArchives, uploadLibs]) {
 }
+
+println "project: "+project.name
