@@ -29,7 +29,7 @@
 Bearbeiten </span>| 
 Typ: ${self.class.package.name}.<span class="cms_editor_title">${self.class.simpleName}</span>
 | <span class="cms_editor_label">ID: </span>${self.id}
-<c:if test="${! empty normalView}">| <a <c:out value="${normalView}"/>>Web Ansicht</a></c:if> 
+<c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>>Web Ansicht</a></c:if> 
 | <a href="#" onclick="window.close();">[ X ]</a> 
 &#160; &#160; <input type="submit" value="    Sichern    " />
 </div>

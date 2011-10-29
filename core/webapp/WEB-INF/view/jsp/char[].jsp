@@ -8,7 +8,7 @@
 	import="org.tangram.Constants"%><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
-        // TOOD: this is mostly the same code as for Google App Engine
+  
         BeanFactory beanFactory = Utils.getBeanFactory(request);
         LinkFactory linkFactory = Utils.getLinkFactory(request);
         Pattern p = Pattern.compile("http://[a-zA-Z0-9:]*\"");

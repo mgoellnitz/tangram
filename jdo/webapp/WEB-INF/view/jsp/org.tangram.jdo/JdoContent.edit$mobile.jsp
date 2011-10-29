@@ -29,7 +29,7 @@ Objekt Bearbeiten
 <br/>
 Typ: </span>${self.class.package.name}.<span class="cms_editor_title">${self.class.simpleName}</span><br/>
 <span class="cms_editor_label">ID: </span>${self.id}
-<c:if test="${! empty normalView}"><br/><a <c:out value="${normalView}"/>>Web Ansicht</a></c:if>
+<c:if test="${! empty normalView}"><br/><a <c:out value="${normalView}" escapeXml="false" />>Web Ansicht</a></c:if>
 </div>
 <div class="cms_editor_table">
 <%

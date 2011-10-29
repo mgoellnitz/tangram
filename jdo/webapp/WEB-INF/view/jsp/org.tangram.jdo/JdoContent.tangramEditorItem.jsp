@@ -5,5 +5,5 @@
 %><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><li><div class="cms_editor_id_box">${self.id}</div> 
 | <a href="<cms:link bean="${self}" action="edit" />">Bearbeiten</a> 
-<c:if test="${! empty normalView}">| <a <c:out value="${normalView}"/>>Web Ansicht</a></c:if>
+<c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>>Web Ansicht</a></c:if>
 | <span class="cms_editor_title"><cms:include bean="${self}" view="name"/> </span></li>
