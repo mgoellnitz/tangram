@@ -3,7 +3,3 @@
 allprojects {
   defaultTasks 'upload'
 }
-
-doLast {
-  println "project: "+project.name
-}
