@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+    <tlibversion>1.0</tlibversion>
+    <jspversion>2.0</jspversion>
+    <shortname>Coma Tags</shortname>
+    <!-- TODO: invent new URI -->
+    <uri>http://www.coremedia.com/2004/objectserver-1.0-2.0</uri>
+    <info>Tangram Object Presenter Coma Tag Library</info>
+    <tag>
+        <name>include</name>
+        <tagclass>org.tangram.coma.tags.IncludeTag</tagclass>
+        <bodycontent>empty</bodycontent>
+        <info>Include bean with given view</info>
+        <attribute>
+            <name>view</name>
+            <required>false</required>
+        </attribute>
+        <attribute>
+            <name>self</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>link</name>
+        <tagclass>org.tangram.coma.tags.LinkTag</tagclass>
+        <bodycontent>empty</bodycontent>
+        <info>Create link string for given bean with (optional) view</info>
+        <attribute>
+            <name>target</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>view</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <function>
+        <name>contains</name>
+        <function-class>org.tangram.view.Functions</function-class>
+        <function-signature>
+            boolean contains(Collection collection, Object object)
+    </function-signature>
+    </function>
+</taglib>
