@@ -5,6 +5,7 @@
 %><%@page import="java.util.TimeZone"
 %><%@page import="java.text.DateFormat"
 %><%@page import="org.springframework.context.ApplicationContext"
+%><%@page import="org.springframework.web.servlet.DispatcherServlet"
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.rdbms.solution.ImageData"
 %><% ImageData imageData = (ImageData)(request.getAttribute(Constants.THIS));
@@ -15,7 +16,7 @@ if ((type == null) || (type.length() == 0)) {
 response.setContentType(type);
 byte[] bytes = imageData.getBytes();
 if (bytes != null) {
-  ApplicationContext appContext = (ApplicationContext)request.getAttribute(Constants.ATTRIBUTE_CONTEXT);
+  ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
   DateFormat httpDateFormat = appContext.getBean("httpHeaderDateFormat", DateFormat.class);
   httpDateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
 

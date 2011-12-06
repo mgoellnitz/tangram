@@ -58,19 +58,19 @@ public class IncludeTag implements Tag, Serializable {
 
 
     @Override
-	public void setPageContext(PageContext p) {
+    public void setPageContext(PageContext p) {
         pc = p;
     }
 
 
     @Override
-	public Tag getParent() {
+    public Tag getParent() {
         return parent;
     }
 
 
     @Override
-	public void setParent(Tag t) {
+    public void setParent(Tag t) {
         parent = t;
     }
 
@@ -134,7 +134,7 @@ public class IncludeTag implements Tag, Serializable {
     } // render()
 
 
-    private void render(ServletRequest request, ServletResponse resp, Writer out, Object bean, String view) {
+    public static void render(ServletRequest request, ServletResponse resp, Writer out, Object bean, String view) {
         if (bean==null) {
             return;
         } // if
@@ -159,16 +159,13 @@ public class IncludeTag implements Tag, Serializable {
 
 
     @Override
-	public int doStartTag() throws JspException {
+    public int doStartTag() throws JspException {
         return SKIP_BODY;
     } // doStartTag()
 
 
     @Override
-	public int doEndTag() throws JspException {
-        ServletRequest req = pc.getRequest();
-        ServletResponse resp = pc.getResponse();
-
+    public int doEndTag() throws JspException {
         if (log.isDebugEnabled()) {
             log.debug("doEndTag("+Thread.currentThread().getId()+") view ******************* "+view);
         } // if
@@ -181,13 +178,13 @@ public class IncludeTag implements Tag, Serializable {
             } // if
         } // while
 
-        render(req, resp, pc.getOut(), bean, view);
+        render(pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
         return EVAL_PAGE;
     } // doEndTag()
 
 
     @Override
-	public void release() {
+    public void release() {
         pc = null;
         parent = null;
         bean = null;
