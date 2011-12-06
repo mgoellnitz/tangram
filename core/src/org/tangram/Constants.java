@@ -63,8 +63,6 @@ public class Constants {
 
     public static final String ATTRIBUTE_ADMIN_USER = "tangramAdminUser";
 
-    public static final String ATTRIBUTE_CONTEXT = "org.springframework.web.servlet.DispatcherServlet.CONTEXT";
-
     public static final String PROPERTY_VERSION_BUILD = "version.build";
 
     public static final int RIP_CORD_COUNT = 10;

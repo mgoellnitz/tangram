@@ -25,6 +25,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.edit.PropertyConverter;
@@ -47,7 +48,7 @@ public class Utils {
 
     public static <T extends Object> T getBeanFromContext(Class<? extends T> cls, ServletRequest request) {
         T result = null;
-        ApplicationContext appContext = (ApplicationContext)request.getAttribute(Constants.ATTRIBUTE_CONTEXT);
+        ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         if (appContext!=null) {
             result = appContext.getBean(cls);
         } // if
