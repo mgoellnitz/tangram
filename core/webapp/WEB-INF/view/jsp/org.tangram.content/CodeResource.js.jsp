@@ -4,6 +4,7 @@
 %><%@page import="org.tangram.Constants"
 %><%@page import="com.yahoo.platform.yui.compressor.JavaScriptCompressor"
 %><%@page import="org.springframework.context.ApplicationContext"
+%><%@page import="org.springframework.web.servlet.DispatcherServlet"
 %><%@page import="java.io.InputStream"
 %><%@page import="java.io.InputStreamReader"
 %><%@page import="java.text.DateFormat"
@@ -14,7 +15,7 @@
 //hard code mimetype
 response.setContentType("text/javascript");
 
-ApplicationContext appContext = (ApplicationContext)request.getAttribute(Constants.ATTRIBUTE_CONTEXT);
+ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 DateFormat httpDateFormat = appContext.getBean("httpHeaderDateFormat", DateFormat.class);
 httpDateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
 

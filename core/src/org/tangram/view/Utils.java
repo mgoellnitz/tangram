@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.edit.PropertyConverter;
 import org.tangram.view.link.LinkFactory;

@@ -33,6 +33,7 @@ import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
@@ -102,13 +103,13 @@ public class IncludeTag implements Tag, Serializable {
     // TODO: duplicate code copied from core module
     @Override
     public int doEndTag() throws JspException {
-        ServletRequest req = pc.getRequest();
-        ServletResponse resp = pc.getResponse();
+        ServletRequest request = pc.getRequest();
+        ServletResponse response = pc.getResponse();
 
-        Object oldSelf = req.getAttribute(org.tangram.Constants.THIS);
-        req.setAttribute(org.tangram.Constants.THIS, theSelf);
+        Object oldSelf = request.getAttribute(org.tangram.Constants.THIS);
+        request.setAttribute(org.tangram.Constants.THIS, theSelf);
 
-        ApplicationContext appContext = (ApplicationContext)req.getAttribute(Constants.ATTRIBUTE_CONTEXT);
+        ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         String[] resolverNames = null;
         if (appContext!=null) {
             resolverNames = appContext.getBeanNamesForType(ModelAwareViewResolver.class);
@@ -121,8 +122,8 @@ public class IncludeTag implements Tag, Serializable {
             if (log.isInfoEnabled()) {
                 log.info("include() bean="+theSelf+" #"+view);
             } // if
-            ModelAndViewFactory mavf = Utils.getModelAndViewFactory(req);
-            ModelAndView mav = mavf.createModelAndView(theSelf, view, req, resp);
+            ModelAndViewFactory mavf = Utils.getModelAndViewFactory(request);
+            ModelAndView mav = mavf.createModelAndView(theSelf, view, request, response);
             View effectiveView = mav.getView();
             if (log.isInfoEnabled()) {
                 log.info("include() effectiveView="+effectiveView);
@@ -132,7 +133,7 @@ public class IncludeTag implements Tag, Serializable {
                 if (viewName==null) {
                     viewName = Constants.DEFAULT_VIEW;
                 } // if
-                // TODO: It's rather stupid to ask each and every view resolver
+                  // TODO: It's rather stupid to ask each and every view resolver
                 for (String resolverName : resolverNames) {
                     if (log.isInfoEnabled()) {
                         log.info("include() resolverName="+resolverName);
@@ -149,11 +150,11 @@ public class IncludeTag implements Tag, Serializable {
             if (out!=null) {
                 out.flush();
             } // if
-            effectiveView.render(mav.getModel(), (HttpServletRequest)req, (HttpServletResponse)resp);
+            effectiveView.render(mav.getModel(), (HttpServletRequest)request, (HttpServletResponse)response);
         } catch (Exception e) {
             log.error("include() ", e);
         } // try/catch
-        req.setAttribute(org.tangram.Constants.THIS, oldSelf);
+        request.setAttribute(org.tangram.Constants.THIS, oldSelf);
         return EVAL_PAGE;
     } // doEndTag()
 
