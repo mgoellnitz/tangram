@@ -260,7 +260,6 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                     ids.add(linkIndex, targetId);
                 } // while
                 for (Entry<String, List<String>> entry : linkLists.entrySet()) {
-                    // TODO: LazyContentList
                     properties.put(entry.getKey(), new LazyContentList(factory, entry.getValue()));
                 } // for
 
@@ -322,7 +321,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                         String xmlData = dataSet.getString("data");
                         data.append(xmlData);
                         if (log.isDebugEnabled()) {
-                            log.debug("getBean() "+propertyName+" "+dataSet.getInt("id")+" "
+                            log.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "
                                     +dataSet.getInt("segmentno")+" "+xmlData);
                         } // if
                     } // if
@@ -330,8 +329,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                         log.debug("getProperties() "+propertyName+" data="+data.toString());
                     } // if
 
-                    // urgent TODO: implement text converter
-                    properties.put(propertyName, text.toString());
+                    try {
+                        properties.put(propertyName, ComaTextConverter.convert(text, data));
+                    } catch (Exception e) {
+                        log.error("getProperties() ignoring richtext", e);
+                        properties.put(propertyName, text.toString());
+                    } // try/catch
                 } // while
             } // if
         } catch (SQLException se) {
