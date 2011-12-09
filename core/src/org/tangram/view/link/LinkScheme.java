@@ -30,14 +30,14 @@ public interface LinkScheme extends LinkHandler {
      * underlying implementations might want to use this
      * @param beanFactory
      */
-    public void setBeanFactory(BeanFactory beanFactory);
+    void setBeanFactory(BeanFactory beanFactory);
     
     /**
      * underlying implementations might want to use this
      * to deactivate views and URLs handled here in the default controller
      * @param beanFactory
      */
-    public void setDefaultController(DefaultController defaultController);
+    void setDefaultController(DefaultController defaultController);
     
     /**
      * return the id of the object to be show, null otherwise
@@ -46,6 +46,6 @@ public interface LinkScheme extends LinkHandler {
      * @param response for error handling
      * @return
      */
-    public TargetDescriptor parseLink(String url, HttpServletResponse response);
+    TargetDescriptor parseLink(String url, HttpServletResponse response);
 
 } // LinkScheme

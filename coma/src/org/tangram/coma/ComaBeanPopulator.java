@@ -20,6 +20,6 @@ package org.tangram.coma;
 
 public interface ComaBeanPopulator {
     
-    public void populate(ComaContent content);
+    void populate(ComaContent content);
 
 } // ComaBeanPopulator()

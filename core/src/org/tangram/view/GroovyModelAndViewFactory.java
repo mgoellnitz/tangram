@@ -54,7 +54,7 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
     private Map<String, List<Constructor<Shim>>> cachedBeanShims;
 
 
-    private final void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<Content> beanClass,
+    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<Content> beanClass,
             Constructor<Shim> shimClass) {
         List<Constructor<Shim>> shims = definedShims.get(beanClass.getName());
         if (shims==null) {
@@ -65,12 +65,12 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
     } // defineShim()
 
 
-    private final void defineViewShim(Class<Content> beanClass, Constructor<Shim> shimClass) {
+    private void defineViewShim(Class<Content> beanClass, Constructor<Shim> shimClass) {
         defineShim(definedViewShims, beanClass, shimClass);
     } // defineViewShim()
 
 
-    private final void defineBeanShim(Class<Content> beanClass, Constructor<Shim> shimClass) {
+    private void defineBeanShim(Class<Content> beanClass, Constructor<Shim> shimClass) {
         defineShim(definedBeanShims, beanClass, shimClass);
     } // defineBeanShim()
 

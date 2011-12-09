@@ -35,9 +35,9 @@ import java.util.jar.JarFile;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Constants {
+public final class Constants {
 
-    private static final Log log = LogFactory.getLog(Constants.class);
+    private static final Log LOG = LogFactory.getLog(Constants.class);
 
     public static final String THIS = "self";
 
@@ -117,7 +117,7 @@ public class Constants {
                 } // for
             } // while
         } catch (Exception e) {
-            log.error("{} error while reading all modules building properties", e);
+            LOG.error("{} error while reading all modules building properties", e);
         } // try/catch
         StringBuilder versionBuilder = new StringBuilder();
         versionBuilder.append(VERSION_MAJOR);
@@ -132,5 +132,12 @@ public class Constants {
     } // static
 
     public static final String VERSION;
+
+
+    /**
+     * just to protect this stuff from being instantiated
+     */
+    private Constants() {
+    } // Constants()
 
 } // Constants

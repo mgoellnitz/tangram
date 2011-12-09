@@ -30,7 +30,7 @@ import org.tangram.content.BeanFactory;
 import org.tangram.edit.PropertyConverter;
 import org.tangram.view.link.LinkFactory;
 
-public class Utils {
+public final class Utils {
 
     private static BeanFactory beanFactory = null;
 
@@ -133,5 +133,12 @@ public class Utils {
         } // if
         return uriPrefix;
     } // getUriPrefix()
+
+
+    /**
+     * just to protect this stuff from being instantiated
+     */
+    private Utils() {
+    } // Utils()
 
 } // Utils

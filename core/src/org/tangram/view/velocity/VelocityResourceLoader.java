@@ -21,7 +21,6 @@ package org.tangram.view.velocity;
 import java.io.InputStream;
 
 import org.apache.commons.collections.ExtendedProperties;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import org.tangram.content.BeanFactory;
@@ -43,7 +42,7 @@ public class VelocityResourceLoader extends ResourceLoader {
 
 
     @Override
-    public InputStream getResourceStream(String source) throws ResourceNotFoundException {
+    public InputStream getResourceStream(String source) {
         // TODO: Streamline this to be sure to use efficient caching
         InputStream result = null; // new ByteArrayInputStream("Oops!".getBytes());
         if ( !"VM_global_library.vm".equals(source)) {

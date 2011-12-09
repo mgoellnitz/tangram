@@ -41,14 +41,13 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     private final static View NOT_FOUND_DUMMY = new View() {
 
         @Override
-		public String getContentType() {
+        public String getContentType() {
             return null;
         }
 
 
         @Override
-		public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response)
-                throws Exception {
+        public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         }
 
     };
@@ -66,7 +65,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
 
     @Override
-	public int getOrder() {
+    public int getOrder() {
         return order;
     }
 
@@ -100,8 +99,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     protected abstract View checkResourceExists(View result);
 
 
-    protected View checkView(String view, String packageName, String simpleName, String key, Locale locale)
-            throws IOException {
+    protected View checkView(String view, String packageName, String simpleName, String key, Locale locale) throws IOException {
         View result = null;
 
         String path = getFullViewName(view, packageName, simpleName);
@@ -135,7 +133,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
         View view = null;
         Set<String> alreadyChecked = new HashSet<String>();
         while ((view==null)&&(cls!=null)) {
-            String pack = (cls.getPackage() == null) ? "" : cls.getPackage().getName();
+            String pack = (cls.getPackage()==null) ? "" : cls.getPackage().getName();
             view = checkView(viewName, pack, cls.getSimpleName(), key, locale);
             if (view==null) {
                 for (Class<? extends Object> c : cls.getInterfaces()) {
@@ -144,7 +142,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
                     } // if
                     if ( !(alreadyChecked.contains(c.getName()))) {
                         alreadyChecked.add(c.getName());
-                        String interfacePackage = (c.getPackage() == null) ? "" : c.getPackage().getName();
+                        String interfacePackage = (c.getPackage()==null) ? "" : c.getPackage().getName();
                         view = checkView(viewName, interfacePackage, c.getSimpleName(), key, locale);
                         if (view!=null) {
                             break;
@@ -159,7 +157,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
 
     @Override
-	public View resolveViewName(String viewName, Map<String, Object> model, Locale locale) throws IOException {
+    public View resolveViewName(String viewName, Map<String, Object> model, Locale locale) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("resolveViewName("+getClass().getSimpleName()+") "+viewName);
         } // if

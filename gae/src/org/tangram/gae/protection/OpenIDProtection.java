@@ -73,31 +73,30 @@ public class OpenIDProtection extends Protection {
     } // getProviders()
 
 
-	@Override
+    @Override
     public String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return null;
     } // handleLogin()
 
 
-    private final boolean isValidUser(HttpServletRequest request, User user) {
+    private boolean isValidUser(HttpServletRequest request, User user) {
         return (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)!=null)
-                ||((user.getFederatedIdentity()!=null)&&(StringUtils.hasText(allowedUsers) ? allowedUsers.indexOf(user
-                        .getNickname())>=0 : true));
+                ||((user.getFederatedIdentity()!=null)&&(StringUtils.hasText(allowedUsers) ? allowedUsers.indexOf(user.getNickname())>=0
+                        : true));
     } // isValidUser()
 
 
     @Override
-	public boolean isContentVisible(HttpServletRequest request) throws Exception {
+    public boolean isContentVisible(HttpServletRequest request) throws Exception {
         User user = userService.getCurrentUser();
         return user!=null&&isValidUser(request, user);
     } // isTopicVisible()
 
 
     @Override
-	public boolean needsAuthorization(HttpServletRequest request) {
+    public boolean needsAuthorization(HttpServletRequest request) {
         User user = UserServiceFactory.getUserService().getCurrentUser();
-        return user==null
-                ||(user.getFederatedIdentity()==null&&(request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null));
+        return user==null||(user.getFederatedIdentity()==null&&(request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null));
     } // needsAuthorization()
 
 

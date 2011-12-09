@@ -65,7 +65,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
                 log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
             } // if
             if (idx>=0) {
-                idx++ ;
+                idx++;
                 String suffix = annotation.substring(idx);
                 if ( !Character.isLowerCase(suffix.charAt(0))) {
                     try {

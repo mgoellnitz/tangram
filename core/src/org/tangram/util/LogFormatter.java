@@ -33,7 +33,7 @@ public class LogFormatter extends Formatter {
 
     private MessageFormat formatter;
 
-    private Object args[] = new Object[1];
+    private Object[] args = new Object[1];
 
 
     /**

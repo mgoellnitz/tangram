@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -50,7 +49,7 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
 
 
     @Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
@@ -85,8 +84,7 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
             } // if
         } else {
             try {
-                ModelAwareViewResolver vr = context.getBean(DispatcherServlet.VIEW_RESOLVER_BEAN_NAME,
-                        ModelAwareViewResolver.class);
+                ModelAwareViewResolver vr = context.getBean(DispatcherServlet.VIEW_RESOLVER_BEAN_NAME, ModelAwareViewResolver.class);
                 this.modelAwareViewResolvers = Collections.singletonList(vr);
             } catch (NoSuchBeanDefinitionException ex) {
                 // Ignore, we'll add a default ViewResolver later.
@@ -96,14 +94,13 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
 
 
     @Override
-	public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         initViewResolvers(applicationContext);
     } // afterPropertiesSet()
 
 
     @Override
-	public View resolveView(String viewName, Map<String, Object> model, Locale locale, ServletRequest request)
-            throws IOException {
+    public View resolveView(String viewName, Map<String, Object> model, Locale locale, ServletRequest request) throws IOException {
         View result = null;
 
         for (ModelAwareViewResolver viewResolver : this.modelAwareViewResolvers) {

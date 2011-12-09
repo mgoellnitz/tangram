@@ -27,18 +27,18 @@ import org.tangram.content.Content;
 
 public interface Protection extends ProtectedContent {
 
-    public String getProtectionKey();
+    String getProtectionKey();
 
 
-    public List<Content> getProtectedContents();
+    List<Content> getProtectedContents();
 
 
-    public String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 
-    public boolean isContentVisible(HttpServletRequest request) throws Exception;
+    boolean isContentVisible(HttpServletRequest request) throws Exception;
 
 
-    public boolean needsAuthorization(HttpServletRequest request);
+    boolean needsAuthorization(HttpServletRequest request);
 
 } // Protection

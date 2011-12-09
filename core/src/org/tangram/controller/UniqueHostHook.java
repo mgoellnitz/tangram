@@ -57,7 +57,7 @@ public class UniqueHostHook implements ControllerHook {
             Link redirectLink = linkFactory.createLink(request, response, descriptor.bean, descriptor.action,
                     descriptor.view);
             response.setHeader("Location", "http://"+primaryDomain+redirectLink.getUrl());
-            response.setStatus(301);
+            response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             return true;
         } // if
         return false;

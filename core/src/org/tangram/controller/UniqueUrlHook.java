@@ -63,7 +63,7 @@ public class UniqueUrlHook implements ControllerHook {
                     log.info("render() sending redirect for "+requestURI+" to "+decodedUrl);
                 } // if
                 response.setHeader("Location", link.getUrl());
-                response.setStatus(301);
+                response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 return true;
             } // if
         } // if
