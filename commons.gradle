@@ -58,7 +58,7 @@ repositories {
   
 }
 
-version = '0.6-SNAPSHOT'
+version = '0.6'
 basename = 'tangram'
 
 // datanucleus enhancer doesnt support this, but it works!
