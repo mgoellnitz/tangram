@@ -36,7 +36,7 @@ springsecurity_version = "3.0.7.RELEASE"
 // TODO: Where is the 3.0.2 enhancer?
 datanucleus_version= "3.0.1"
 
-appengine_version = "1.5.5"
+appengine_version = "1.6.0"
 /* version section end */
 
 apply plugin: 'java'
@@ -58,7 +58,7 @@ repositories {
   
 }
 
-version = '0.6'
+version = '0.7-SNAPSHOT'
 basename = 'tangram'
 
 // datanucleus enhancer doesnt support this, but it works!
