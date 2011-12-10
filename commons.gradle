@@ -43,14 +43,12 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
-apply plugin: 'code-quality'
+// apply plugin: 'code-quality'
 
 repositories {
 
   mavenLocal()
   
-  ivy { url "myvy" }
-
   // most of the usual stuff
   maven { url "http://repo1.maven.org/maven2" }
   // needed for latest spring framework and security versions
@@ -126,11 +124,62 @@ compileJava.doLast {
   println " - done"
 }
 
-/* TODO:
-ant.taskdef(name:"yui-compressor", 
-                 classname: "net.noha.tools.ant.yuicompressor.tasks.YuiCompressorTask",
-                 classpath: configurations.compile.asPath+";../core/lib/yui-compressor-ant-task-0.5.jar")
-*/
+// TODO: this looks a little bit redundnant...
+buildscript {
+    repositories {
+        mavenLocal()
+  
+        // most of the usual stuff
+        maven { url "http://repo1.maven.org/maven2" }
+    }
+
+    dependencies {
+        // TODO: how to use the yui_version variable above?
+        classpath "com.yahoo.platform.yui:yuicompressor:2.4.6"
+    }
+}
+
+class JavaScriptMinify extends FilterReader {
+
+    Reader inputReader
+
+    public JavaScriptMinify(Reader inputReader) {
+        super(inputReader);
+        if (inputReader!=null) {
+            try {
+                com.yahoo.platform.yui.compressor.JavaScriptCompressor jsc = new com.yahoo.platform.yui.compressor.JavaScriptCompressor(inputReader, null);
+                StringWriter out = new StringWriter();
+                jsc.compress(out, 80, false, false, false, false);
+                out.close();
+                super.in = new StringReader(out.getBuffer().toString());
+            } catch (Exception e) {
+                ; // who cares
+            } // try/catch
+        } // if
+    } // JavaScriptMinify()
+
+} // JavaScriptMinify
+
+class CSSMinify extends FilterReader {
+
+    Reader inputReader
+
+    public CSSMinify(Reader inputReader) {
+        super(inputReader);
+        if (inputReader!=null) {
+            try {
+                com.yahoo.platform.yui.compressor.CssCompressor csc = new com.yahoo.platform.yui.compressor.CssCompressor(inputReader);
+                StringWriter out = new StringWriter();
+                csc.compress(out, 0);
+                out.close();
+                super.in = new StringReader(out.getBuffer().toString());
+            } catch (Exception e) {
+                ; // who cares
+            } // try/catch
+        } // if
+    } // CSSMinify()
+
+} // CSSMinify
 
 war.doFirst {
   // Strange way of overwriting things - it must be the first webapp dependency
@@ -151,11 +200,25 @@ war.doFirst {
     } // if 
   } // if 
   
-  // TODO: YUICompressor!
   copy {
     from 'webapp'
     into "$buildDir/target"
     include '**/**'
+    // exclude '**/*.js'
+    exclude '**/*.css'
+  }
+  copy {
+    from 'webapp'
+    into "$buildDir/target"
+    include '**/*.js'
+    exclude 'editor/ckeditor/**'
+    filter(JavaScriptMinify)
+  }
+  copy {
+    from 'webapp'
+    into "$buildDir/target"
+    include '**/*.css'
+    filter(CSSMinify)
   }
   
   into ('') {
