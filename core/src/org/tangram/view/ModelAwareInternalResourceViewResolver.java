@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
@@ -139,7 +140,8 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
         if (simpleName.endsWith("[]")) {
             simpleName = simpleName.replace("[]", "_array");
         } // if
-        return packageName+"/"+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
+        String prefix = StringUtils.hasText(packageName) ? packageName+"/" : "";
+        return prefix+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
     } // getFullViewName()
 
 
