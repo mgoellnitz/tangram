@@ -61,6 +61,11 @@ input {
 	font-weight: bold;
 }
 
+.cms_editor_button {
+	font-size: 10pt;
+	padding: 0;
+}
+
 .cms_editor_howto {
 	margin-top: 10px;
 	font-weight: normal;

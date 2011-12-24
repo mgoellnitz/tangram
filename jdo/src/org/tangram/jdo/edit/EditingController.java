@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
@@ -62,6 +63,10 @@ public class EditingController extends RenderingController {
     public static final String EDIT_VIEW = "edit";
 
     public static final String PARAMETER_CLASS_NAME = "cms.editor.class.name";
+
+    public static final String PARAMETER_ID = "cms.editor.id";
+
+    public static final String PARAMETER_PROPERTY = "cms.editor.property.name";
 
     /**
      * writable properties which should not be altered by the upper layers or persisted
@@ -281,8 +286,7 @@ public class EditingController extends RenderingController {
                 contents = new ArrayList<Content>();
             } // if
             response.setContentType("text/html; charset=UTF-8");
-            return modelAndViewFactory.createModelAndView(contents, "tangramEditorList"+getVariant(request), request,
-                    response);
+            return modelAndViewFactory.createModelAndView(contents, "tangramEditorList"+getVariant(request), request, response);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
@@ -307,6 +311,42 @@ public class EditingController extends RenderingController {
     } // edit()
 
 
+    @RequestMapping(method = { RequestMethod.POST }, value = "/link")
+    public ModelAndView link(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName,
+            @RequestParam(value = PARAMETER_ID) String id, @RequestParam(value = PARAMETER_PROPERTY) String propertyName,
+            HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (log.isInfoEnabled()) {
+                log.info("link() creating new instance of type "+typeName);
+            } // if
+            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+                throw new Exception("User may not edit");
+            } // if
+            @SuppressWarnings("unchecked")
+            Class<Content> cls = (Class<Content>)(this.getClass().getClassLoader().loadClass(typeName));
+            Content content = beanFactory.createBean(cls);
+            if (log.isDebugEnabled()) {
+                log.debug("link() content="+content);
+                log.debug("link() id="+content.getId());
+            } // if
+            content.persist();
+
+            Content bean = beanFactory.getBeanForUpdate(Content.class, id);
+            BeanWrapper wrapper = new BeanWrapperImpl(bean);
+            Object listObject = wrapper.getPropertyValue(propertyName);
+            @SuppressWarnings("unchecked")
+            List<Object> list = (List<Object>)listObject;
+            list.add(content);
+            wrapper.setPropertyValue(propertyName, list);
+            bean.persist();
+
+            return modelAndViewFactory.createModelAndView(content, EDIT_VIEW+getVariant(request), request, response);
+        } catch (Exception e) {
+            return modelAndViewFactory.createModelAndView(e, request, response);
+        } // try/catch
+    } // link()
+
+
     private String getUrl(Object bean, String action, String view) {
         if ("store".equals(action)) {
             return "/store/id_"+((JdoContent)bean).getId();
@@ -317,7 +357,11 @@ public class EditingController extends RenderingController {
                 if ("list".equals(action)) {
                     return "/list";
                 } else {
-                    return null;
+                    if ("link".equals(action)) {
+                        return "/link";
+                    } else {
+                        return null;
+                    } // if
                 } // if
             } // if
         } // if

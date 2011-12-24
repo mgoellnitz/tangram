@@ -2,15 +2,15 @@
 	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" 
 %><?xml version="1.0" encoding="UTF-8" ?><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
-%><%@page import="java.util.List"
+%><%@page import="java.util.Collection"
 %><%@page import="java.beans.PropertyDescriptor"
 %><%@page import="org.springframework.beans.BeanWrapper"
 %><%@page import="org.springframework.beans.BeanWrapperImpl"
+%><%@page import="org.springframework.beans.BeanUtils"
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.view.Utils"
-%><%@page import="org.tangram.jdo.edit.EditingController"
-%><%@page import="org.springframework.beans.BeanUtils"
 %><%@page import="org.tangram.jdo.JdoContent"
+%><%@page import="org.tangram.jdo.edit.EditingController"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -31,11 +31,12 @@ Typ: ${self.class.package.name}.<span class="cms_editor_title">${self.class.simp
 | <span class="cms_editor_label">ID: </span>${self.id}
 <c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>>Web Ansicht</a></c:if> 
 | <a href="#" onclick="window.close();">[ X ]</a> 
-&#160; &#160; <input type="submit" value="    Sichern    " />
+&#160; &#160; <input type="submit" value="    Sichern    " class="cms_editor_button"/>
 </div>
 <table class="cms_editor_table">
 <%
-    BeanWrapper bw = new BeanWrapperImpl(request.getAttribute(Constants.THIS));
+int fid = 0; // form ids
+BeanWrapper bw = new BeanWrapperImpl(request.getAttribute(Constants.THIS));
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
@@ -144,13 +145,24 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
   } else {
 %>
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=Utils.getPropertyConverter(request).getEditString(value)%>" />
- (<%=type.getSimpleName()%>)
+ (<%=type.getSimpleName()%><%
+Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+if (elementClass != Object.class) {
+%>&lt;<%=elementClass.getSimpleName()%>&gt;<%
+} // if
+%>)
 <%
-if (value instanceof List) {
+if (value instanceof Collection) {
     request.setAttribute("propertyValue", value); 
 %><br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach>
+<a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
+<form method="post" id="f<%=fid++%>" action="<cms:link bean="${self}" action="link"/>">
+<input type="hidden" name="<%=EditingController.PARAMETER_CLASS_NAME%>" value="<%=elementClass.getName()%>"/>
+<input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
+<input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
+</form>
 <% } // if %>
 <%
 if (value instanceof JdoContent) {

@@ -61,3 +61,8 @@ input {
 .cms_editor_title {
 	font-weight: bold;
 }
+
+.cms_editor_button {
+	font-size: 9pt;
+	padding: 0;
+}
