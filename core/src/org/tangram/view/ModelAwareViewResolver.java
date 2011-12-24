@@ -27,6 +27,6 @@ import org.springframework.web.servlet.View;
 
 public interface ModelAwareViewResolver extends Ordered {
 
-    View resolveViewName(String viewName, Map<String, Object> model, Locale locale) throws IOException;
+    View resolveView(String viewName, Map<String, Object> model, Locale locale) throws IOException;
 
 } // ModelAwareViewResolver

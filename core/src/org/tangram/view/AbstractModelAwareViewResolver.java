@@ -93,7 +93,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     protected abstract String getFullViewName(String view, String packageName, String simpleName);
 
 
-    protected abstract View resolveViewName(String path, Locale locale) throws Exception;
+    protected abstract View resolveView(String path, Locale locale) throws Exception;
 
 
     protected abstract View checkResourceExists(View result);
@@ -107,7 +107,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
             log.info("checkView("+getClass().getSimpleName()+") view="+view+"  path="+path);
         } // if
         try {
-            result = resolveViewName(path, locale);
+            result = resolveView(path, locale);
             if (log.isDebugEnabled()) {
                 log.debug("checkView() resolved view "+result);
             } // if
@@ -157,7 +157,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
 
     @Override
-    public View resolveViewName(String viewName, Map<String, Object> model, Locale locale) throws IOException {
+    public View resolveView(String viewName, Map<String, Object> model, Locale locale) throws IOException {
         if (log.isDebugEnabled()) {
             log.debug("resolveViewName("+getClass().getSimpleName()+") "+viewName);
         } // if
@@ -188,6 +188,6 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
             cache.put(key, cacheView);
         } // if
         return view;
-    } // resolveViewName()
+    } // resolveView()
 
 } // AbstractModelAwareViewResolver

@@ -104,7 +104,7 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
         View result = null;
 
         for (ModelAwareViewResolver viewResolver : this.modelAwareViewResolvers) {
-            View view = viewResolver.resolveViewName(viewName, model, locale);
+            View view = viewResolver.resolveView(viewName, model, locale);
             if (view!=null) {
                 result = view;
                 break;

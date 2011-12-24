@@ -146,7 +146,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
 
 
     @Override
-    protected View resolveViewName(String path, Locale locale) throws Exception {
+    protected View resolveView(String path, Locale locale) throws Exception {
         return delegate.resolveViewName(path, locale);
     } // resolverViewName()
 
