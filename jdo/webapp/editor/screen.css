@@ -17,6 +17,10 @@ input {
 	background-color: #DFD080;
 }
 
+li {
+	margin-bottom: 2px;
+}
+
 .cms_editor_table {
 	margin-bottom: 15px;
 	width: 100%;
