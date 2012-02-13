@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,8 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
     private Map<String, Class<? extends Object>> classes;
 
+    private Map<String, String> compilationErrors;
+
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
 
     private static Log log = LogFactory.getLog(ClassRepository.class);
@@ -51,6 +54,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
     @SuppressWarnings("unchecked")
     private void fillClasses() {
+        compilationErrors = new HashMap<String,String>();
         classes = new HashMap<String, Class<? extends Object>>();
 
         Map<String, String> codes = new HashMap<String, String>();
@@ -65,7 +69,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
                 log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
             } // if
             if (idx>=0) {
-                idx++;
+                idx++ ;
                 String suffix = annotation.substring(idx);
                 if ( !Character.isLowerCase(suffix.charAt(0))) {
                     try {
@@ -90,11 +94,11 @@ public class ClassRepository implements InitializingBean, BeanListener {
                     } // if
                     Class<? extends Object> clazz = gcl.parseClass(code.getValue(), code.getKey()+".groovy");
                     classes.put(code.getKey(), clazz);
-                } catch (Throwable e) {
-                    // who cares
-                    if (log.isErrorEnabled()) {
-                        log.error("fillClasses()", e);
-                    } // if
+                } catch (CompilationFailedException cfe) {
+                    compilationErrors.put(code.getKey(), cfe.getMessage());
+                    log.error("fillClasses()", cfe);
+                } catch (Throwable t) {
+                    log.error("fillClasses() [not marked in source code]", t);
                 } // try/catch
             } // for
         } // while
@@ -123,6 +127,11 @@ public class ClassRepository implements InitializingBean, BeanListener {
     } // get()
 
 
+    public Map<String, String> getCompilationErrors() {
+        return compilationErrors;
+    }
+
+
     public void addListener(BeanListener listener) {
         synchronized (attachedListeners) {
             attachedListeners.add(listener);
@@ -131,7 +140,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
 
     @Override
-	public void reset() {
+    public void reset() {
         fillClasses();
         for (BeanListener listener : attachedListeners) {
             listener.reset();
@@ -140,7 +149,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
 
     @Override
-	public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         codeCache.addListener(this);
         reset();
     } // afterPropertiesSet()

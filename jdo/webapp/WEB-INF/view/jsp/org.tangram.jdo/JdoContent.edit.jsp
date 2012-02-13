@@ -33,6 +33,11 @@ Typ: ${self.class.package.name}.<span class="cms_editor_title">${self.class.simp
 | <a href="#" onclick="window.close();">[ X ]</a> 
 &#160; &#160; <input type="submit" value="    Sichern    " class="cms_editor_button"/>
 </div>
+<div style="color: #FF0000;">
+<pre><c:forEach items="${compilationErrors}" var="compilationError">
+<c:out value="${compilationError}"/>
+</c:forEach></pre>
+</div>
 <table class="cms_editor_table">
 <%
 int fid = 0; // form ids

@@ -18,6 +18,7 @@
  */
 package org.tangram.jdo.edit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,8 +26,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,13 +46,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
+import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.DefaultController;
 import org.tangram.controller.RenderingController;
 import org.tangram.edit.PropertyConverter;
 import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.jdo.JdoContent;
+import org.tangram.logic.ClassRepository;
 import org.tangram.view.link.Link;
+import org.tangram.view.link.LinkFactory;
 
 @Controller
 public class EditingController extends RenderingController {
@@ -81,13 +85,28 @@ public class EditingController extends RenderingController {
 
     @Autowired
     private PropertyConverter propertyConverter;
-
+    
+    @Autowired
+    private ClassRepository classRepository;
+    
+    @Autowired
+    private LinkFactory linkFactory;
+    
 
     @Autowired
     public void setDefaultController(DefaultController defaultController) {
         // Automagically set edit view
         defaultController.getCustomLinkViews().add("edit");
     } // setDefaultController()
+
+
+    private ModelAndView redirect(HttpServletRequest request, HttpServletResponse response, Content content) throws IOException {
+        // was:
+        // return modelAndViewFactory.createModelAndView(content, EDIT_VIEW+getVariant(request), request, response);
+        Link link = linkFactory.createLink(request, response, content, EDIT_VIEW, null);
+        response.sendRedirect(link.getUrl());
+        return null;
+    } // redirect()
 
 
     @RequestMapping(value = "/store/id_{id}")
@@ -195,7 +214,8 @@ public class EditingController extends RenderingController {
             if (log.isDebugEnabled()) {
                 log.debug("store() id="+id);
             } // if
-            return modelAndViewFactory.createModelAndView(bean, EDIT_VIEW+getVariant(request), request, response);
+            
+            return redirect(request, response, bean);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
@@ -242,7 +262,7 @@ public class EditingController extends RenderingController {
                 log.debug("create() id="+content.getId());
             } // if
             content.persist();
-            return modelAndViewFactory.createModelAndView(content, EDIT_VIEW+getVariant(request), request, response);
+            return redirect(request, response, content);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
@@ -304,6 +324,10 @@ public class EditingController extends RenderingController {
             } // if
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
+            if (content instanceof CodeResource) {
+                CodeResource code = (CodeResource)content;
+                request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
+            } // if            
             return modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
@@ -340,7 +364,7 @@ public class EditingController extends RenderingController {
             wrapper.setPropertyValue(propertyName, list);
             bean.persist();
 
-            return modelAndViewFactory.createModelAndView(content, EDIT_VIEW+getVariant(request), request, response);
+            return redirect(request, response, content);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
