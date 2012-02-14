@@ -38,6 +38,11 @@ import org.tangram.logic.ClassRepository;
 import org.tangram.logic.Shim;
 import org.tangram.logic.ViewShim;
 
+/**
+ * This ModelAndView factory implementation adds potential groovy based implementations of related codes as instances to
+ * the context.
+ * 
+ */
 public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implements InitializingBean, BeanListener {
 
     private static final Log log = LogFactory.getLog(GroovyModelAndViewFactory.class);
@@ -54,8 +59,7 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
     private Map<String, List<Constructor<Shim>>> cachedBeanShims;
 
 
-    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<Content> beanClass,
-            Constructor<Shim> shimClass) {
+    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<Content> beanClass, Constructor<Shim> shimClass) {
         List<Constructor<Shim>> shims = definedShims.get(beanClass.getName());
         if (shims==null) {
             shims = new ArrayList<Constructor<Shim>>();
@@ -76,7 +80,7 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
 
 
     @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public void reset() {
         definedViewShims = new HashMap<String, List<Constructor<Shim>>>();
         definedBeanShims = new HashMap<String, List<Constructor<Shim>>>();
@@ -201,7 +205,7 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
 
 
     @Override
-	public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()

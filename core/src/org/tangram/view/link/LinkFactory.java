@@ -21,6 +21,13 @@ package org.tangram.view.link;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * The link factory implementation deals with all the link handler available in our implementations.
+ * 
+ * It should be aware of the fact that there are "web application context names" to be prepended to the
+ * URLs returned in the Link instances from the underlying handler implementations.
+ *
+ */
 public interface LinkFactory {
 
     String getPrefix(HttpServletRequest request);

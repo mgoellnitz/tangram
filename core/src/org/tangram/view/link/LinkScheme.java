@@ -24,6 +24,14 @@ import org.tangram.content.BeanFactory;
 import org.tangram.controller.DefaultController;
 import org.tangram.view.TargetDescriptor;
 
+/**
+ * 
+ * In the class the link hanlder gets extended by the URL parsing elements
+ * 
+ * Implementing classes might need the bean factory and the default controller (to register which views are handled by
+ * this implementation)
+ *
+ */
 public interface LinkScheme extends LinkHandler {
     
     /**

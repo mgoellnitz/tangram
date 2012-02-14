@@ -27,11 +27,15 @@ import javax.servlet.ServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 
+/**
+ * In the very heart this is just a collection of helper classes, but together with the groovy-implementation
+ * it gets a powerful tool for populating contexts of velocity templates with useful stuff and methods.
+ *
+ */
 public class DefaultModelAndViewFactory implements ModelAndViewFactory {
 
-
     @Override
-	public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
+    public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(Constants.THIS, bean);
         model.put("request", request);
@@ -41,20 +45,20 @@ public class DefaultModelAndViewFactory implements ModelAndViewFactory {
 
 
     @Override
-	public ModelAndView createModelAndView(Map<String, Object> model, String view) {
+    public ModelAndView createModelAndView(Map<String, Object> model, String view) {
         return model==null ? null : (new ModelAndView(view==null ? Constants.DEFAULT_VIEW : view, model));
     } // createModelAndView()
 
 
     @Override
-	public ModelAndView createModelAndView(Object bean, String view, ServletRequest request, ServletResponse response) {
+    public ModelAndView createModelAndView(Object bean, String view, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = createModel(bean, request, response);
         return createModelAndView(model, view);
     } // createModelAndView()
 
 
     @Override
-	public ModelAndView createModelAndView(Object bean, ServletRequest request, ServletResponse response) {
+    public ModelAndView createModelAndView(Object bean, ServletRequest request, ServletResponse response) {
         return createModelAndView(bean, null, request, response);
     } // createModelAndView()
 

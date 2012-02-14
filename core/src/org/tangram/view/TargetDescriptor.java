@@ -18,6 +18,14 @@
  */
 package org.tangram.view;
 
+/**
+ * 
+ * A bean/pojo is a nice thing to display but by no means sufficient to tell exactly what to show.
+ * 
+ * Every object in tangram has a view (viewing method if you will) and might have an action ot issue
+ * on the bean. So we put these three together whenever we describe what is to be done and then shown.
+ *
+ */
 public class TargetDescriptor {
 
     public TargetDescriptor(Object bean, String view, String action) {
