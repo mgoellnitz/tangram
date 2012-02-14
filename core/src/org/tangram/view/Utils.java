@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.tangram.content.BeanFactory;
@@ -106,6 +107,9 @@ public final class Utils {
      * @throws UnsupportedEncodingException
      */
     public static String urlize(String title) throws UnsupportedEncodingException {
+        if (StringUtils.isEmpty(title)) {
+            return "-";
+        } // if
         String result = title.toLowerCase();
         result = result.replace(" - ", "-");
         result = result.replace("ä", "ae");
