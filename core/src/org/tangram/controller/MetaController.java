@@ -40,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
+import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
@@ -167,9 +168,6 @@ public class MetaController extends AbstractController implements InitializingBe
         if (method!=null) {
             LinkAction linkAction = method.getAnnotation(LinkAction.class);
             if (log.isInfoEnabled()) {
-                for (Annotation annotation : method.getAnnotations()) {
-                    log.info("callAction() annotation "+annotation);
-                } // for
                 log.info("callAction() linkAction="+linkAction);
                 log.info("callAction() method.getReturnType()="+method.getReturnType());
             } // if
@@ -183,28 +181,35 @@ public class MetaController extends AbstractController implements InitializingBe
                 Annotation[][] allAnnotations = method.getParameterAnnotations();
                 Class<? extends Object>[] parameterTypes = method.getParameterTypes();
                 int typeIndex = 0;
-                if (log.isInfoEnabled()) {
-                    log.info("callAction() A");
-                } // if
                 for (Annotation[] annotations : allAnnotations) {
                     Class<? extends Object> parameterType = parameterTypes[typeIndex++ ];
                     for (Annotation annotation : annotations) {
                         if (annotation instanceof ActionParameter) {
                             String parameterName = ((ActionParameter)annotation).name();
                             String value = request.getParameter(parameterName);
-                            // TODO convert value
                             if (log.isInfoEnabled()) {
                                 log.info("callAction() parameter "+parameterName+" should be of type "+parameterType.getName());
                             } // if
-                            parameters.add(value);
+                            Object derivedValue = value;
+                            if (Content.class.isAssignableFrom(parameterType)) {
+                                derivedValue = beanFactory.getBean(value);
+                                if (log.isInfoEnabled()) {
+                                    log.info("callAction() converting parameter "+parameterName+" to "+derivedValue.getClass());
+                                } // if
+                            } // if
+                            // TODO more type conversions
+                            parameters.add(derivedValue);
                         } // if
                     } // for
                 } // for
-                if (log.isInfoEnabled()) {
-                    log.info("callAction() A");
-                } // if
                 try {
+                    if (log.isInfoEnabled()) {
+                        log.info("callAction() calling method");
+                    } // if
                     descriptor = (TargetDescriptor)method.invoke(scheme, parameters.toArray());
+                    if (log.isInfoEnabled()) {
+                        log.info("callAction() result is "+descriptor);
+                    } // if
                 } catch (IllegalArgumentException e) {
                     log.error("callAction()", e);
                 } catch (IllegalAccessException e) {
@@ -250,9 +255,10 @@ public class MetaController extends AbstractController implements InitializingBe
                         } // if
                         Link link = callAction(request, response, descriptor, linkScheme);
                         if (log.isInfoEnabled()) {
-                            log.info("handleRequestInternal() receiced link "+link.getUrl());
+                            log.info("handleRequestInternal() received link "+link.getUrl());
                         } // if
                         response.sendRedirect(link.getUrl());
+                        return result;
                     } // if
                 } // if
             } catch (Exception ex) {
