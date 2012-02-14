@@ -18,9 +18,14 @@
  */
 package org.tangram.controller;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,8 +92,8 @@ public class MetaController extends AbstractController implements InitializingBe
      * @return
      * @throws Exception
      */
-    protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
         Map<String, Object> model = modelAndViewFactory.createModel(descriptor.bean, request, response);
         try {
             for (ControllerHook controllerHook : controllerHooks) {
@@ -108,7 +113,7 @@ public class MetaController extends AbstractController implements InitializingBe
 
 
     @Override
-	public void reset() {
+    public void reset() {
         schemes = new HashMap<String, LinkScheme>();
         for (Map.Entry<String, Class<LinkScheme>> entry : classRepository.get(LinkScheme.class).entrySet()) {
             try {
@@ -140,9 +145,85 @@ public class MetaController extends AbstractController implements InitializingBe
     } // fillSchemes()
 
 
+    private Link callAction(HttpServletRequest request, HttpServletResponse response, TargetDescriptor descriptor, LinkScheme scheme) {
+        // We don't want to access parameters via GET
+        Method[] methods = scheme.getClass().getMethods();
+        Method method = null;
+        for (Method m : methods) {
+            if (m.getName().equals(descriptor.action)) {
+                method = m;
+            } // if
+        } // for
+
+        if (log.isInfoEnabled()) {
+            log.info("callAction() method="+method);
+        } // if
+        
+        descriptor.action = null;
+        List<Object> parameters = new ArrayList<Object>();
+        if ( !request.getMethod().equals("POST")) {
+            method = null;
+        } // if
+        if (method!=null) {
+            LinkAction linkAction = method.getAnnotation(LinkAction.class);
+            if (log.isInfoEnabled()) {
+                for (Annotation annotation : method.getAnnotations()) {
+                    log.info("callAction() annotation "+annotation);
+                } // for
+                log.info("callAction() linkAction="+linkAction);
+                log.info("callAction() method.getReturnType()="+method.getReturnType());
+            } // if
+            if ( !TargetDescriptor.class.equals(method.getReturnType())) {
+                linkAction = null;
+            } // if
+            if (log.isInfoEnabled()) {
+                log.info("callAction() linkAction="+linkAction);
+            } // if
+            if (linkAction!=null) {
+                Annotation[][] allAnnotations = method.getParameterAnnotations();
+                Class<? extends Object>[] parameterTypes = method.getParameterTypes();
+                int typeIndex = 0;
+                if (log.isInfoEnabled()) {
+                    log.info("callAction() A");
+                } // if
+                for (Annotation[] annotations : allAnnotations) {
+                    Class<? extends Object> parameterType = parameterTypes[typeIndex++ ];
+                    for (Annotation annotation : annotations) {
+                        if (annotation instanceof ActionParameter) {
+                            String parameterName = ((ActionParameter)annotation).name();
+                            String value = request.getParameter(parameterName);
+                            // TODO convert value
+                            if (log.isInfoEnabled()) {
+                                log.info("callAction() parameter "+parameterName+" should be of type "+parameterType.getName());
+                            } // if
+                            parameters.add(value);
+                        } // if
+                    } // for
+                } // for
+                if (log.isInfoEnabled()) {
+                    log.info("callAction() A");
+                } // if
+                try {
+                    descriptor = (TargetDescriptor)method.invoke(scheme, parameters.toArray());
+                } catch (IllegalArgumentException e) {
+                    log.error("callAction()", e);
+                } catch (IllegalAccessException e) {
+                    log.error("callAction()", e);
+                } catch (InvocationTargetException e) {
+                    log.error("callAction()", e);
+                } // try/catch
+            } // if
+        } // if
+        Link link = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
+        if (log.isInfoEnabled()) {
+            log.info("callAction() link="+link);
+        } // if
+        return link;
+    } // callAction()
+
+
     @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String url = request.getRequestURI().substring(linkFactory.getPrefix(request).length());
         if (log.isDebugEnabled()) {
             log.debug("handleRequestInternal() "+url);
@@ -160,8 +241,19 @@ public class MetaController extends AbstractController implements InitializingBe
                         log.debug("handleRequestInternal() found bean "+descriptor.bean);
                     } // if
 
-                    Map<String, Object> model = createModel(descriptor, request, response);
-                    return modelAndViewFactory.createModelAndView(model, descriptor.view);
+                    if (descriptor.action==null) {
+                        Map<String, Object> model = createModel(descriptor, request, response);
+                        return modelAndViewFactory.createModelAndView(model, descriptor.view);
+                    } else {
+                        if (log.isInfoEnabled()) {
+                            log.info("handleRequestInternal() trying call action "+descriptor.action);
+                        } // if
+                        Link link = callAction(request, response, descriptor, linkScheme);
+                        if (log.isInfoEnabled()) {
+                            log.info("handleRequestInternal() receiced link "+link.getUrl());
+                        } // if
+                        response.sendRedirect(link.getUrl());
+                    } // if
                 } // if
             } catch (Exception ex) {
                 return modelAndViewFactory.createModelAndView(ex, request, response);
@@ -173,8 +265,7 @@ public class MetaController extends AbstractController implements InitializingBe
 
 
     @Override
-    public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action,
-            String view) {
+    public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
         Link result = null;
         for (LinkScheme linkScheme : schemes.values()) {
             result = linkScheme.createLink(request, response, bean, action, view);
@@ -187,7 +278,7 @@ public class MetaController extends AbstractController implements InitializingBe
 
 
     @Override
-	public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()
