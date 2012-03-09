@@ -194,7 +194,6 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
     public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = super.createModel(bean, request, response);
 
-        // Map<String, Object> model = result.getModel();
         Map<String, Object> shims = getShims((HttpServletRequest)request, bean);
         for (String key : shims.keySet()) {
             model.put(key, shims.get(key));

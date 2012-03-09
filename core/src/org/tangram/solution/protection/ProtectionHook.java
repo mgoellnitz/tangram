@@ -80,8 +80,7 @@ public class ProtectionHook implements ControllerHook {
     } // getRequiredProtections()
 
 
-    private String getFailingProtectionKey(HttpServletRequest request, Map<String, Protection> protections)
-            throws Exception {
+    private String getFailingProtectionKey(HttpServletRequest request, Map<String, Protection> protections) throws Exception {
         for (Protection p : protections.values()) {
             if ( !p.isContentVisible(request)) {
                 return p.getProtectionKey();
@@ -107,9 +106,8 @@ public class ProtectionHook implements ControllerHook {
 
 
     @Override
-	public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
+    public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        // for now only topics are protected
         Protection protection = null;
         String loginResult = null;
         if (descriptor.bean instanceof ProtectedContent) {
