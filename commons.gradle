@@ -20,7 +20,7 @@
 /* version section */
 servlet_spec = "2.5"
 jsp_spec = "2.0"
-groovy_version = "1.8.3"
+groovy_version = "1.8.6"
 velocity_version = "1.7"
 // TODO: find repo for 2.8.2
 yui_version="2.4.6"
@@ -36,7 +36,7 @@ springsecurity_version = "3.0.7.RELEASE"
 // TODO: Where is the 3.0.2 enhancer?
 datanucleus_version= "3.0.1"
 
-appengine_version = "1.6.2"
+appengine_version = "1.6.3"
 /* version section end */
 
 apply plugin: 'java'
@@ -51,6 +51,8 @@ repositories {
   
   // most of the usual stuff
   maven { url "http://repo1.maven.org/maven2" }
+  // For the latest groovy stuff
+  maven { url "http://repository.codehaus.org/org/codehaus/groovy" }
   // needed for latest spring framework and security versions
   maven { url "http://repository.springsource.com/maven/bundles/release" }
   // needed for latest datanucleus versions

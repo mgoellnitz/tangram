@@ -11,14 +11,14 @@ HOW-TO
 
 To make all this work you need
 
-- Java 6
-- Gradle 1.0 Milestone 6
-
-And Optionally 
-- Google App Engine
+- Java 6 (Update 26 maximum)
+- Gradle 1.0 Milestone 8a
 
 simply type
 
 gradle clean upload
 
 and then you can build and use your projects using tangram or the examples
+
+And Optionally Google App Engine but just if you want to use it for your target systems
+(Yes, you will want to install java AND python version)
