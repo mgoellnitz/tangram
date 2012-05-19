@@ -112,13 +112,13 @@ public final class Utils {
         } // if
         String result = title.toLowerCase();
         result = result.replace(" - ", "-");
-        result = result.replace("ä", "ae");
-        result = result.replace("ö", "oe");
-        result = result.replace("ü", "ue");
-        result = result.replace("Ä", "Ae");
-        result = result.replace("Ö", "Oe");
-        result = result.replace("Ü", "Ue");
-        result = result.replace("ß", "ss");
+        result = result.replace("Ã¤", "ae");
+        result = result.replace("Ã¶", "oe");
+        result = result.replace("Ã¼", "ue");
+        result = result.replace("Ã„", "Ae");
+        result = result.replace("Ã–", "Oe");
+        result = result.replace("Ãœ", "Ue");
+        result = result.replace("ÃŸ", "ss");
         char[] specials = { ',', ' ', ':', ';', '"', '?', '*' };
         for (char c : specials) {
             result = result.replace(c, '-');

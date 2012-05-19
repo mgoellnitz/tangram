@@ -121,8 +121,8 @@ compileJava.doLast {
   p.save(fos, " Tangram Build and System Information")
   fos.close()
   // JDO Enhancing is not really done when we start this - sorry - so we wait a little
-  print "waiting 3s - which is normal in this project"
-  Thread.currentThread().sleep(3000)
+  print "waiting 10s - which is normal in this project"
+  Thread.currentThread().sleep(10000)
   println " - done"
 }
 
