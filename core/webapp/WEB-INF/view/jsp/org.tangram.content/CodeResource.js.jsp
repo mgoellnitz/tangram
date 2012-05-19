@@ -5,6 +5,7 @@
 %><%@page import="com.yahoo.platform.yui.compressor.JavaScriptCompressor"
 %><%@page import="org.springframework.context.ApplicationContext"
 %><%@page import="org.springframework.web.servlet.DispatcherServlet"
+%><%@page import="java.io.PrintWriter"
 %><%@page import="java.io.InputStream"
 %><%@page import="java.io.InputStreamReader"
 %><%@page import="java.text.DateFormat"
@@ -34,7 +35,9 @@ if (is != null) {
     JavaScriptCompressor jsc = new JavaScriptCompressor(isr, null); 
     jsc.compress(out, 80, false, false, false, false);
   } catch (Exception e) {
-     out.write("/* Error while minifying JavasScript - sure that this is correct code? */");
+	 out.write("/* Error while minifying JavasScript - sure that this is correct code?\n");
+	 e.printStackTrace(new PrintWriter(out));
+	 out.write("\n*/\n");
      out.write(code.getCodeText());
   } // try/catch
 } // if
