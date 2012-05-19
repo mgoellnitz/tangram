@@ -53,8 +53,7 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
 %><tr class="cms_editor_row"><td class="cms_editor_label_td"><%=key%>:
 <% 
 if ((Utils.getPropertyConverter(request).isTextType(type)) &&("code".equals(key)) && bw.isReadableProperty("mimeType") && (!(""+bw.getPropertyValue("mimeType")).equals("text/javascript")) && (!(""+bw.getPropertyValue("mimeType")).equals("text/css"))) {
-@SuppressWarnings("rawtypes")
-Class c = null;
+Class<? extends Object> c = null;
 String className = ""+bw.getPropertyValue("annotation");
 try {
     c = Class.forName(className);
@@ -151,7 +150,7 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
 %>
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=Utils.getPropertyConverter(request).getEditString(value)%>" />
  (<%=type.getSimpleName()%><%
-Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getObjectType();
 if (elementClass != Object.class) {
 %>&lt;<%=elementClass.getSimpleName()%>&gt;<%
 } // if
