@@ -43,7 +43,7 @@ public class OpenIDProtection extends Protection {
     private static final Map<String, String> OPEN_ID_PROVIDERS;
     static {
         OPEN_ID_PROVIDERS = new HashMap<String, String>();
-        OPEN_ID_PROVIDERS.put("Google", "google.com/accounts/o8/id");
+        OPEN_ID_PROVIDERS.put("Google", "https://www.google.com/accounts/o8/id");
         OPEN_ID_PROVIDERS.put("Yahoo", "yahoo.com");
         OPEN_ID_PROVIDERS.put("MySpace", "myspace.com");
         OPEN_ID_PROVIDERS.put("AOL", "aol.com");

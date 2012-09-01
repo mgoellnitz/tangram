@@ -36,7 +36,7 @@ ext.springsecurity_version = "3.1.0.RELEASE"
 // TODO: Starting with 3.0.2 datanucleus doesn't provide consistent versions
 ext.datanucleus_version= "3.0.1"
 
-ext.appengine_version = "1.6.5"
+ext.appengine_version = "1.7.1"
 /* version section end */
 
 apply plugin: 'java'
