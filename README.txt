@@ -22,3 +22,11 @@ and then you can build and use your projects using tangram or the examples
 
 And Optionally Google App Engine but just if you want to use it for your target systems
 (Yes, you will want to install java AND python version)
+
+Eclipse preparation:
+
+  gradle eclipse
+  
+Then change all default output folders from .../bin to .../build/classes/main
+
+Add standard-1.1.2.jar to the classpath of jdo, rdbmd, gae, and coma projects
