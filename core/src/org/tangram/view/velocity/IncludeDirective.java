@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
+import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.tangram.view.Utils;
 import org.tangram.view.jsp.IncludeTag;
@@ -44,7 +45,7 @@ public class IncludeDirective extends Directive {
 
     @Override
     public int getType() {
-        return Directive.LINE;
+        return DirectiveConstants.LINE;
     } // getType()
 
 

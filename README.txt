@@ -11,8 +11,8 @@ HOW-TO
 
 To make all this work you need
 
-- Java 6 (Update 26 maximum)
-- Gradle 1.0 Milestone 8a
+- Java 6 (Update 26 maximum - 32 or 64 bit)
+- Gradle 1.2
 
 simply type
 

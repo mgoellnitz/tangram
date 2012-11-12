@@ -97,6 +97,7 @@ public final class Constants {
                     result.add(name);
                 } // if
             } // while
+            jar.close();
             return result.toArray(new String[result.size()]);
         } // if
 
