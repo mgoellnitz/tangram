@@ -28,11 +28,11 @@ dependencies {
   compile project (':core')
     
   compile "$jdo_api"
-  providedCompile "org.datanucleus:datanucleus-core:$datanucleus_version"
-  providedCompile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
-  providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_version"
+  // providedCompile "org.datanucleus:datanucleus-core:$datanucleus_version"
+  // providedCompile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
+  // providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
   
   compile "com.google.code.gson:gson:1.7.1"
 }
 
-compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
+// compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 

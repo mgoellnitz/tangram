@@ -20,7 +20,7 @@
 /* version section */
 ext.servlet_spec = "2.5"
 ext.jsp_spec = "2.0"
-ext.groovy_version = "1.8.6"
+ext.groovy_version = "2.0.2"
 ext.velocity_version = "1.7"
 // TODO: find repo for 2.8.2
 ext.yui_version="2.4.6"
@@ -30,11 +30,14 @@ ext.rhino_version="1.7R3"
 ext.hsqldb_version="1.8.0.10"
 ext.jdo_api="javax.jdo:jdo2-api:2.3-eb"
 
-ext.springframework_version = "3.1.1.RELEASE"
-ext.springsecurity_version = "3.1.0.RELEASE"
+ext.springframework_version = "3.1.2.RELEASE"
+ext.springsecurity_version = "3.1.2.RELEASE"
 // Datanucleus Version except for Google App Engine
 // TODO: Starting with 3.0.2 datanucleus doesn't provide consistent versions
-ext.datanucleus_version= "3.0.1"
+ext.datanucleus_version= "3.1.0-release"
+ext.datanucleus_enhancer_version= "3.1.0-release"
+// ext.datanucleus_version= "3.0.1"
+// ext.datanucleus_enhancer_version= "3.0.1"
 
 ext.appengine_version = "1.7.1"
 /* version section end */
@@ -67,6 +70,9 @@ ext.basename = 'tangram'
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
+// Project specific default output directory
+eclipse.classpath.conventionMapping.defaultOutputDir = { new File(project.projectDir, 'build/classes/main') }
+
 // our custom directory layout
 sourceSets {
     main {
@@ -75,6 +81,14 @@ sourceSets {
         }
         resources {
             srcDir 'src'
+        }
+    }
+    test {
+        java {
+            srcDir 'test'
+        }
+        resources {
+            srcDir 'test'
         }
     }
 }
@@ -106,6 +120,7 @@ artifacts {
 compileJava.doLast {
   // update build number after build 
   // do this here to avoid compiling without source changes since this here is a source change
+  println "Updating compile counter property files"
   ext.filename = "${project.rootDir.absolutePath}/${project.name}/src/$basename/${project.name}-build.properties".toString()
   Properties p = new Properties()
   try {
@@ -120,10 +135,6 @@ compileJava.doLast {
   FileOutputStream fos = new FileOutputStream(filename)
   p.save(fos, " Tangram Build and System Information")
   fos.close()
-  // JDO Enhancing is not really done when we start this - sorry - so we wait a little
-  print "waiting 10s - which is normal in this project"
-  Thread.currentThread().sleep(10000)
-  println " - done"
 }
 
 // TODO: this looks a little bit redundnant...
@@ -276,4 +287,4 @@ uploadLibs {
 task upload(dependsOn: [uploadArchives, uploadLibs]) {
 }
 
-println "project: "+project.name
+// println "project: "+project.name

@@ -27,6 +27,6 @@ Eclipse preparation:
 
   gradle eclipse
   
-Then change all default output folders from .../bin to .../build/classes/main
+(output folders are set to .../build/classes/main not to .../bin)
 
 Add standard-1.1.2.jar to the classpath of jdo, rdbmd, gae, and coma projects

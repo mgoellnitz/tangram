@@ -18,8 +18,6 @@
  */
 apply from: '../commons.gradle'
 
-compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
-
 war.dependsOn ':jdo:war'
 
 dependencies {
@@ -43,4 +41,13 @@ dependencies {
   compile "commons-lang:commons-lang:2.6"
   
   providedCompile "org.datanucleus:datanucleus-enhancer:1.1.4"
+}
+
+compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
+
+compileJava.doLast {
+  // JDO Enhancing is not really done when we start this - sorry - so we wait a little
+  print "waiting 10s - which is normal in this project"
+  Thread.currentThread().sleep(10000)
+  println " - done"
 }
