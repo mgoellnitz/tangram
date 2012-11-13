@@ -54,8 +54,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     @Autowired
     protected Statistics statistics;
 
-    public static final PersistenceManagerFactory pmfInstance = JDOHelper
-            .getPersistenceManagerFactory("transactions-optional");
+    public static final PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
     protected PersistenceManager manager = pmfInstance.getPersistenceManager();
 
@@ -79,7 +78,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-	public PersistenceManager getManager() {
+    public PersistenceManager getManager() {
         return manager;
     }
 
@@ -131,13 +130,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-	public JdoContent getBean(String id) {
+    public JdoContent getBean(String id) {
         return getBean(JdoContent.class, id);
     } // getBean()
 
 
     @Override
-	public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
+    public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
         T bean = getBean(cls, id);
         manager.currentTransaction().begin();
         return bean;
@@ -145,7 +144,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-	public JdoContent getBeanForUpdate(String id) {
+    public JdoContent getBeanForUpdate(String id) {
         return getBeanForUpdate(JdoContent.class, id);
     } // getBeanForUpdate()
 
@@ -178,7 +177,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-    @SuppressWarnings({"rawtypes","unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty) {
         List<T> result = new ArrayList<T>();
         try {
@@ -220,7 +219,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-	@SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty) {
         List<T> result = null;
         if (log.isInfoEnabled()) {
@@ -274,7 +273,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-	public void clearCacheFor(Class<? extends Content> cls) {
+    public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
         if (log.isWarnEnabled()) {
@@ -335,7 +334,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {
@@ -343,8 +342,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 tableNameMapping = new HashMap<String, Class<? extends Content>>();
 
                 try {
-                    ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(
-                            true);
+                    ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true);
                     provider.addIncludeFilter(new AssignableTypeFilter(JdoContent.class));
 
                     // scan

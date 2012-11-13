@@ -51,6 +51,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     private boolean encodeIds = true;
 
+
     public boolean isEncodeIds() {
         return encodeIds;
     }
@@ -62,7 +63,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
 
     @Override
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String id) {
         if (activateCaching&&(cache.containsKey(id))) {
             statistics.increase("get bean cached");
@@ -102,8 +103,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
             } // if
             Class<? extends Content> kindClass = tableNameMapping.get(kind);
             if ( !(cls.isAssignableFrom(kindClass))) {
-                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "
-                        +kindClass.getSimpleName());
+                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             result = (T)manager.getObjectById(kindClass, key);
             ((JdoContent)result).setManager(manager);
@@ -153,10 +153,10 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
                 try {
                     CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-                    Cache cache = cacheFactory.createCache(Collections.emptyMap());
+                    Cache jsrCache = cacheFactory.createCache(Collections.emptyMap());
 
                     String cacheKey = com.google.appengine.api.utils.SystemProperty.applicationVersion.get();
-                    Object co = cache.get(cacheKey);
+                    Object co = jsrCache.get(cacheKey);
                     if (co!=null) {
                         if (co instanceof List) {
                             List<String> classNames = (List<String>)co;
@@ -170,8 +170,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                             } // for
                         } // if
                     } else {
-                        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(
-                                true);
+                        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true);
                         provider.addIncludeFilter(new AssignableTypeFilter(JdoContent.class));
 
                         // scan
@@ -227,7 +226,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                         for (Class<?> cls : modelClasses) {
                             classNames.add(cls.getName());
                         } // for
-                        cache.put(cacheKey, classNames);
+                        jsrCache.put(cacheKey, classNames);
                     } // if
                 } catch (Exception e) {
                     log.error("getClasses() outer", e);
@@ -236,6 +235,5 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
         } // if
         return modelClasses;
     } // getClasses()
-
 
 } // GaeBeanFactory

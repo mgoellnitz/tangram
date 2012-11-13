@@ -89,7 +89,7 @@ public class ToolController extends RenderingController {
 
   
     @RequestMapping(value = "/clear/caches")
-    public ModelAndView clearCaches(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView clearCaches(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getParameter(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new IOException("User may not clear cache");
@@ -123,7 +123,7 @@ public class ToolController extends RenderingController {
 
 
     @RequestMapping(value = "/codes")
-    public ModelAndView codes(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView codes(HttpServletRequest request, HttpServletResponse response) {
         try {
             if ( !request.getRequestURI().endsWith(".zip")) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

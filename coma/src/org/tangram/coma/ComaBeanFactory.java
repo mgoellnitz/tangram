@@ -22,11 +22,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 
-public class ComaBeanFactory extends AbstractComaBeanFactory implements BeanFactory {
+public class ComaBeanFactory extends AbstractComaBeanFactory {
 
     @Override
     public Object createBlob(String id, String propertyName, String mimeType, long len, byte[] data) {

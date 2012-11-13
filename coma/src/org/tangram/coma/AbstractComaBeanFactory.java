@@ -40,7 +40,7 @@ import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
-public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implements BeanFactory, InitializingBean {
+public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implements InitializingBean {
 
     protected static Log log = LogFactory.getLog(AbstractComaBeanFactory.class);
 

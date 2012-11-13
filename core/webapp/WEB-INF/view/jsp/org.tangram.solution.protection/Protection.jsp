@@ -13,10 +13,8 @@
 <link rel="shortcut icon" href="/t/e/favicon.ico" />
 </head>
 <body>
-
 <div>
 <cms:include bean="${self}" view="login"/>
 </div>
-
 </body>
 </html>
