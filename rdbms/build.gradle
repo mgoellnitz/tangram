@@ -53,7 +53,7 @@ compileJava.doLast {
       ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: sourceSets['main'].output.classesDir.canonicalPath, destination: sourceSets['main'].output.classesDir.canonicalPath) {
         classpath {
           // for the log configuration...
-          pathelement(path: 'src')
+          pathelement(path: '.')
           // The classes to be enhanced need to be on the class path
           pathelement(path: sourceSets['main'].output.classesDir.canonicalPath)
           // this is the real class path for the tool (s.a.)
