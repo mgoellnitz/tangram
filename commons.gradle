@@ -33,11 +33,8 @@ ext.jdo_api="javax.jdo:jdo2-api:2.3-eb"
 ext.springframework_version = "3.1.2.RELEASE"
 ext.springsecurity_version = "3.1.2.RELEASE"
 // Datanucleus Version except for Google App Engine
-// TODO: Starting with 3.0.2 datanucleus doesn't provide consistent versions
 ext.datanucleus_version= "3.1.0-release"
 ext.datanucleus_enhancer_version= "3.1.0-release"
-// ext.datanucleus_version= "3.0.1"
-// ext.datanucleus_enhancer_version= "3.0.1"
 
 ext.appengine_version = "1.7.1"
 /* version section end */
