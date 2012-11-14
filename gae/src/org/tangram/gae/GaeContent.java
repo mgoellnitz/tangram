@@ -37,7 +37,6 @@ public abstract class GaeContent extends JdoContent {
     @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
     // This is not really unused - but the compiler thinks so.
     // We might want to redesign this to application IDs anyway
-    @SuppressWarnings("unused")
     private String id;
 
 } // GaeContent

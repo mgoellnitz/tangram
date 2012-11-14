@@ -21,49 +21,47 @@ apply from: '../commons.gradle'
 war.dependsOn ':jdo:war'
 
 dependencies {
-  webapp project (':jdo')
-  
-  providedCompile "javax.servlet:servlet-api:$servlet_spec"
-  providedCompile "javax.servlet:jsp-api:$jsp_spec"
-  compile project (':jdo')
-  
-  compile "hsqldb:hsqldb:$hsqldb_version"
-  compile "$jdo_api"
-  compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
-  compile "org.datanucleus:datanucleus-core:$datanucleus_version"
-  compile "org.datanucleus:datanucleus-rdbms:$datanucleus_version"
-  
-  compile "org.springframework.security:spring-security-core:$springsecurity_version"
-  compile "org.springframework.security:spring-security-config:$springsecurity_version"
-  compile "org.springframework.security:spring-security-web:$springsecurity_version"
-  
-  compile "log4j:log4j:1.2.17"
-  
-  compile "junit:junit:4.10"
-  
-  providedCompile "org.apache.ant:ant:1.8.4"
-  providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
+    webapp project (':jdo')
+
+    providedCompile "javax.servlet:servlet-api:$servlet_spec"
+    providedCompile "javax.servlet:jsp-api:$jsp_spec"
+    compile project (':jdo')
+
+    compile "hsqldb:hsqldb:$hsqldb_version"
+    compile "$jdo_api"
+    compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
+    compile "org.datanucleus:datanucleus-core:$datanucleus_version"
+    compile "org.datanucleus:datanucleus-rdbms:$datanucleus_version"
+
+    compile "org.springframework.security:spring-security-core:$springsecurity_version"
+    compile "org.springframework.security:spring-security-config:$springsecurity_version"
+    compile "org.springframework.security:spring-security-web:$springsecurity_version"
+
+    providedCompile "log4j:log4j:1.2.17"
+
+    testCompile "junit:junit:4.10"
+
+    providedCompile "org.apache.ant:ant:1.8.4"
+    providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
 }
 
-// compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
-
 compileJava.doLast {
-  try {
-      ant.taskdef(name: 'enhance', classpath: sourceSets['main'].compileClasspath.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
-      ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: sourceSets['main'].output.classesDir.canonicalPath, destination: sourceSets['main'].output.classesDir.canonicalPath) {
-        classpath {
-          // for the log configuration...
-          pathelement(path: '.')
-          // The classes to be enhanced need to be on the class path
-          pathelement(path: sourceSets['main'].output.classesDir.canonicalPath)
-          // this is the real class path for the tool (s.a.)
-          pathelement(path: sourceSets['main'].compileClasspath.asPath)
+    try {
+        ant.taskdef(name: 'enhance', classpath: sourceSets['main'].compileClasspath.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
+        ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: sourceSets['main'].output.classesDir.canonicalPath) {
+            classpath {
+                // for the log configuration...
+                pathelement(path: '.')
+                // The classes to be enhanced need to be on the class path
+                pathelement(path: sourceSets['main'].output.classesDir.canonicalPath)
+                // this is the real class path for the tool (s.a.)
+                pathelement(path: sourceSets['main'].compileClasspath.asPath)
+            }
+            fileset(dir: sourceSets['main'].output.classesDir.canonicalPath)
         }
-        fileset(dir: sourceSets['main'].output.classesDir.canonicalPath)
-      }
-  } catch(Exception e) {
-      println ''
-      e.printStackTrace(System.out);
-      throw new GradleException('An error occurred enhancing persistence capable classes.', e)
-  }
+    } catch(Exception e) {
+        println ''
+        e.printStackTrace(System.out);
+        throw new GradleException('An error occurred enhancing persistence capable classes.', e)
+    }
 }

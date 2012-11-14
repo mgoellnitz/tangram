@@ -36,7 +36,7 @@ ext.springsecurity_version = "3.1.2.RELEASE"
 ext.datanucleus_version= "3.1.0-release"
 ext.datanucleus_enhancer_version= "3.1.0-release"
 
-ext.appengine_version = "1.7.1"
+ext.appengine_version = "1.7.3"
 /* version section end */
 
 apply plugin: 'java'
@@ -106,6 +106,7 @@ jar.enabled = true
 configurations {
   libs 
   webapp
+  dn
 }
 
 // needed for building jars and wars

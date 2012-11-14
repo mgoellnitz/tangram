@@ -22,17 +22,11 @@ war.dependsOn ':core:war'
 
 dependencies {
   webapp project (':core')
-
-  providedCompile "javax.servlet:servlet-api:$servlet_spec"
-  providedCompile "javax.servlet:jsp-api:$jsp_spec"
   compile project (':core')
     
   compile "$jdo_api"
-  // providedCompile "org.datanucleus:datanucleus-core:$datanucleus_version"
-  // providedCompile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
-  // providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
-  
   compile "com.google.code.gson:gson:1.7.1"
+  
+  providedCompile "javax.servlet:servlet-api:$servlet_spec"
+  providedCompile "javax.servlet:jsp-api:$jsp_spec"
 }
-
-// compileJava.options.compilerArgs = ['-processor', 'org.datanucleus.enhancer.EnhancerProcessor'] 
