@@ -35,7 +35,7 @@ dependencies {
   
   compile "org.apache.velocity:velocity:$velocity_version"
   // TODO: Groovy-Compiler needs this but doesn't tell - check on every groovy update
-  compile "asm:asm-all:3.2"
+  // compile "asm:asm-all:3.2"
   compile "org.codehaus.groovy:groovy:$groovy_version"
   // compile "org.mozilla:rhino:$rhino_version"
   compile "com.yahoo.platform.yui:yuicompressor:$yui_version"
