@@ -151,6 +151,7 @@ public class MetaController extends AbstractController implements InitializingBe
         Method[] methods = target.getClass().getMethods();
         for (Method m : methods) {
             if (m.getName().equals(methodName)) {
+                // TODO: Did this ever work?
                 LinkAction linkAction = method.getAnnotation(LinkAction.class);
                 if (log.isInfoEnabled()) {
                     log.info("callAction() linkAction="+linkAction);
@@ -255,7 +256,7 @@ public class MetaController extends AbstractController implements InitializingBe
                         if (log.isInfoEnabled()) {
                             log.info("handleRequestInternal() trying call action "+descriptor.action);
                         } // if
-                        // TODO: find a less expensive way of digging out action calls
+                          // TODO: find a less expensive way of digging out action calls
                         Method method = findMethod(linkScheme, descriptor.action);
                         Link link = callAction(request, response, method, descriptor, linkScheme);
                         for (Object value : model.values()) {

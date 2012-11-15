@@ -140,8 +140,8 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
         if (simpleName.endsWith("[]")) {
             simpleName = simpleName.replace("[]", "_array");
         } // if
-        String prefix = StringUtils.hasText(packageName) ? packageName+"/" : "";
-        return prefix+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
+        String viewPrefix = StringUtils.hasText(packageName) ? packageName+"/" : "";
+        return viewPrefix+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
     } // getFullViewName()
 
 
