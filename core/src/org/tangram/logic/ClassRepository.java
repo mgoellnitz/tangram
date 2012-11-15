@@ -84,11 +84,6 @@ public class ClassRepository implements InitializingBean, BeanListener {
                 } // if
             } // if
         } // for
-        try {
-            gcl.close();
-        } catch (Exception e) {
-            log.error("could not close groovy class loader", e);
-        } // try/catch
 
         int i = Constants.RIP_CORD_COUNT;
         while (i-- >0&&codes.size()>classes.size()) {
