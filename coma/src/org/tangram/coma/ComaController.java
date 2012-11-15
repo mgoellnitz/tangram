@@ -87,6 +87,7 @@ public class ComaController extends RenderingController {
         if (content==null) {
             try {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
+                return null;
             } catch (IOException ioe) {
                 return Utils.getModelAndViewFactory(request).createModelAndView(ioe, null, request, response);
             } // try/catch

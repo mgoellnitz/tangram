@@ -70,6 +70,12 @@ public abstract class JdoContent implements Content {
 
 
     @Override
+    public int hashCode() {
+        return id.hashCode();
+    } // hashCode()
+
+
+    @Override
     public boolean equals(Object obj) {
         return (obj instanceof JdoContent) ? getId().equals(((JdoContent)obj).getId()) : super.equals(obj);
     } // equals()
