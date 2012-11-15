@@ -79,26 +79,26 @@ public class DocumentTypeResourceViewResolver extends ModelAwareInternalResource
             } // if
             String documentType = cc.getDocumentType();
             while ((view==null)&&(documentType!=null)) {
-                String packageName = packages.get(documentType);
-                if (packageName==null) {
-                    packageName = this.packageName;
+                String packName = packages.get(documentType);
+                if (packName==null) {
+                    packName = this.packageName;
                 } // if
                 if (log.isWarnEnabled()) {
-                    log.warn("lookupView() checking "+packageName+"/"+documentType+"#"+viewName);
+                    log.warn("lookupView() checking "+packName+"/"+documentType+"#"+viewName);
                 } // if
-                view = checkView(viewName, packageName, documentType, key, locale);
+                view = checkView(viewName, packName, documentType, key, locale);
                 if (log.isWarnEnabled()) {
                     log.warn("lookupView() result "+view);
                 } // if
-                // TODO: How about fake interfaces?
-                // if (view==null) {
-                // for (Class<? extends Object> c : cls.getInterfaces()) {
-                // view = checkView(viewName, c.getPackage().getName(), c.getSimpleName(), key, locale);
-                // if (view!=null) {
-                // break;
-                // } // if
-                // } // for
-                // } // if
+                  // TODO: How about fake interfaces?
+                  // if (view==null) {
+                  // for (Class<? extends Object> c : cls.getInterfaces()) {
+                  // view = checkView(viewName, c.getPackage().getName(), c.getSimpleName(), key, locale);
+                  // if (view!=null) {
+                  // break;
+                  // } // if
+                  // } // for
+                  // } // if
                 documentType = parents.get(documentType);
             } // while
         } // if

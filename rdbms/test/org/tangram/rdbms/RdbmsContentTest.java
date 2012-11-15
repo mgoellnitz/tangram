@@ -21,4 +21,4 @@ public class RdbmsContentTest {
         Assert.isTrue(flag, "Classes not enhanced - output unusable");
     } // testIsEnhanced()
 
-} // RdbmsContentTest
+}

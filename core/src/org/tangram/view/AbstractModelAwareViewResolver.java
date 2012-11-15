@@ -99,7 +99,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     protected abstract View checkResourceExists(View result);
 
 
-    protected View checkView(String view, String packageName, String simpleName, String key, Locale locale) throws IOException {
+    protected View checkView(String view, String packageName, String simpleName, String key, Locale locale) {
         View result = null;
 
         String path = getFullViewName(view, packageName, simpleName);
