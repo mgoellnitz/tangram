@@ -242,7 +242,7 @@ war {
   // For some reason webapp files are not included in the inputs collection
   FileTree tree = fileTree(dir: 'webapp')
   inputs.files tree
-  // And also ther web-archive of the upstream project has to be added
+  // And also the web-archive of the upstream project has to be added
   Object iter = configurations.webapp.dependencies.iterator()
   if (iter.hasNext()) {
     firstWebappDependency = iter.next()
