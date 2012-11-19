@@ -64,13 +64,13 @@ public class LogFormatter extends Formatter {
             sb.append(record.getLoggerName());
         } // if
         String methodName = record.getSourceMethodName();
+        String message = formatMessage(record);
         if (methodName!=null) {
             sb.append(".");
             sb.append(methodName);
-        } // if
-        String message = formatMessage(record);
-        if (message.startsWith(methodName)) {
-            message = message.substring(methodName.length());
+            if (message.startsWith(methodName)) {
+                message = message.substring(methodName.length());
+            } // if
         } // if
         if (message.startsWith("(")) {
         } else {

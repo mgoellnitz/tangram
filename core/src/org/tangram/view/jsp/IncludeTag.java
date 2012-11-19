@@ -129,7 +129,9 @@ public class IncludeTag implements Tag, Serializable {
             effectiveView.render(mav.getModel(), (HttpServletRequest)request, (HttpServletResponse)response);
         } catch (Exception e) {
             log.error("render() #"+view, e);
-            out.write(e.getLocalizedMessage());
+            if (out != null) {
+                out.write(e.getLocalizedMessage());
+            } // if
         } // try/catch
     } // render()
 

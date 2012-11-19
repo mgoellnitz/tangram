@@ -264,7 +264,6 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                 } // for
 
                 // select blobs
-                // TODO: introduce special blob type and probably streaming
                 s = dbConnection.createStatement();
                 query = "SELECT * FROM blobs WHERE documentid = "+id+" AND documentversion = "+version
                         +" ORDER BY propertyname ASC";
