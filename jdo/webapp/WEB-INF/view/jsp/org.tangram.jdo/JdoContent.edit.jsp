@@ -150,14 +150,12 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
 %>
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=Utils.getPropertyConverter(request).getEditString(value)%>" />
  (<%=type.getSimpleName()%><%
-Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getObjectType();
-if (elementClass != Object.class) {
-%>&lt;<%=elementClass.getSimpleName()%>&gt;<%
-} // if
-%>)
-<%
 if (value instanceof Collection) {
-    request.setAttribute("propertyValue", value); 
+  Class<? extends Object>  elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+  if (elementClass != Object.class) {
+%>&lt;<%=elementClass.getSimpleName()%>&gt;)<%
+  } // if
+  request.setAttribute("propertyValue", value); 
 %><br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach>
@@ -167,8 +165,10 @@ if (value instanceof Collection) {
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
 </form>
-<% } // if %>
-<%
+<% 
+} else {
+%>)<%
+} // if 
 if (value instanceof JdoContent) {
     request.setAttribute("item", value); 
 %><br/>

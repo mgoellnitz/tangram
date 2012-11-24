@@ -44,7 +44,12 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
         Object value = bw.getPropertyValue(key); 
         @SuppressWarnings("rawtypes")
         Class type = bw.getPropertyType(key);
-%><div class="cms_editor_row"><span class="cms_editor_label"><%=key%></span> (<%=type.getSimpleName()%>)<br/><%
+%><div class="cms_editor_row"><span class="cms_editor_label"><%=key%></span> (<%=type.getSimpleName()%><% 
+if (value instanceof Collection) {
+	Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+	%>&lt;<%=elementClass.getSimpleName()%>&gt;<%
+} // if
+%>)<br/><%
     if (Utils.getPropertyConverter(request).isBlobType(type)) {
       long blobLength = Utils.getPropertyConverter(request).getBlobLength(bw.getPropertyValue(key));
 %><div class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</div><%
@@ -59,8 +64,8 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
 %>
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=Utils.getPropertyConverter(request).getEditString(value)%>" />
 <%
-Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
 if (value instanceof Collection) {
+	Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
     request.setAttribute("propertyValue", value); 
 %><br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
