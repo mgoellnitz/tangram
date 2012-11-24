@@ -154,14 +154,14 @@ public class MetaController extends AbstractController implements InitializingBe
                 // TODO: Did this ever work?
                 LinkAction linkAction = method.getAnnotation(LinkAction.class);
                 if (log.isInfoEnabled()) {
-                    log.info("callAction() linkAction="+linkAction);
-                    log.info("callAction() method.getReturnType()="+method.getReturnType());
+                    log.info("findMethod() linkAction="+linkAction);
+                    log.info("findMethod() method.getReturnType()="+method.getReturnType());
                 } // if
                 if ( !TargetDescriptor.class.equals(method.getReturnType())) {
                     linkAction = null;
                 } // if
                 if (log.isInfoEnabled()) {
-                    log.info("callAction() linkAction="+linkAction);
+                    log.info("findMethod() linkAction="+linkAction);
                 } // if
                 if (linkAction!=null) {
                     method = m;
