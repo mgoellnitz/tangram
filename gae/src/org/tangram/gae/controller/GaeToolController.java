@@ -59,7 +59,7 @@ public class GaeToolController extends RenderingController {
 
 
     @RequestMapping(value = "/clear/sessions")
-    public ModelAndView clearSessions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView clearSessions(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getParameter(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new IOException("User may not clear cache");

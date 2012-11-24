@@ -62,14 +62,14 @@ public class PasswordProtection extends Protection {
 
 
     @Override
-	public String handleLogin(HttpServletRequest request, HttpServletResponse response) {
+    public String handleLogin(HttpServletRequest request, HttpServletResponse response) {
         String result = null;
 
-        String login = request.getParameter(PARAM_LOGIN);
-        String password = request.getParameter(PARAM_PASSWORD);
+        String passedOverLogin = request.getParameter(PARAM_LOGIN);
+        String passedOverPwd = request.getParameter(PARAM_PASSWORD);
 
-        if ((login!=null)&&(password!=null)) {
-            if (login.equals(getLogin())&&password.equals(getPassword())) {
+        if ((passedOverLogin!=null)&&(passedOverPwd!=null)) {
+            if (passedOverLogin.equals(getLogin())&&passedOverPwd.equals(getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute(getProtectionKey(), getLogin());
             } else {
@@ -84,7 +84,7 @@ public class PasswordProtection extends Protection {
 
 
     @Override
-	public boolean isContentVisible(HttpServletRequest request) throws Exception {
+    public boolean isContentVisible(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         String sessionValue = ""+session.getAttribute(getProtectionKey());
         return sessionValue.equals(getLogin());
@@ -92,7 +92,7 @@ public class PasswordProtection extends Protection {
 
 
     @Override
-	public boolean needsAuthorization(HttpServletRequest request) {
+    public boolean needsAuthorization(HttpServletRequest request) {
         HttpSession session = request.getSession();
         return session.getAttribute(getProtectionKey())==null;
     } // needsAuthorization()
