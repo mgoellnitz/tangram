@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class ComaTextConverter {
 
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ComaTextConverter.class);
 
     private static byte[] hexValues = new byte['g'];
