@@ -30,6 +30,10 @@ import org.tangram.content.Content;
 
 import com.google.appengine.api.datastore.Text;
 
+/*
+ * TODO: Move to a more specific package to be able to have fewer packages scanned by Tangrams model autodetection
+ */
+
 @PersistenceCapable
 @Inheritance(customStrategy = "complete-table")
 public class Code extends GaeContent implements CodeResource {
