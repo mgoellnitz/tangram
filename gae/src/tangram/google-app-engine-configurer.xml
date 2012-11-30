@@ -27,7 +27,6 @@
 		<property name="basePackages">
 			<set>
 				<value>${bean.factory.application.base.package}</value>
-				<value>org.tangram.jdo.gae</value>
 				<value>org.tangram.gae</value>
 			</set>
 		</property>
