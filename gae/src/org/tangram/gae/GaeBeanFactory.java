@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2012 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,15 +18,11 @@
  */
 package org.tangram.gae;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheFactory;
@@ -34,9 +30,6 @@ import net.sf.jsr107cache.CacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
 import org.tangram.jdo.JdoContent;
@@ -145,12 +138,9 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Collection<Class<? extends Content>> getClasses() {
+    public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
-            if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
-
+            if (allClasses==null) {
                 try {
                     CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
                     Cache jsrCache = cacheFactory.createCache(Collections.emptyMap());
@@ -159,81 +149,32 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                     Object co = jsrCache.get(cacheKey);
                     if (co!=null) {
                         if (co instanceof List) {
+                            allClasses = new ArrayList<Class<? extends Content>>();
+                            tableNameMapping = new HashMap<String, Class<? extends Content>>();
                             List<String> classNames = (List<String>)co;
                             for (String beanClassName : classNames) {
                                 Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
                                 if (log.isInfoEnabled()) {
-                                    log.info("getClasses() # "+cls.getName());
+                                    log.info("getAllClasses() # "+cls.getName());
                                 } // if
                                 tableNameMapping.put(cls.getSimpleName(), cls);
-                                modelClasses.add(cls);
+                                allClasses.add(cls);
                             } // for
                         } // if
                     } else {
-                        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true);
-                        provider.addIncludeFilter(new AssignableTypeFilter(JdoContent.class));
-
-                        // scan
-                        Set<BeanDefinition> components = new HashSet<BeanDefinition>();
-                        for (String pack : getBasePackages()) {
-                            try {
-                                if (log.isInfoEnabled()) {
-                                    log.info("getClasses() "+pack+" "+components.size());
-                                } // if
-                                components.addAll(provider.findCandidateComponents(pack));
-                            } catch (Exception e) {
-                                log.error("getClasses() inner "+e.getMessage());
-                            } // try/catch
-                        } // for
-                        if (log.isInfoEnabled()) {
-                            log.info("getClasses() size()="+components.size());
-                        } // if
-                        for (BeanDefinition component : components) {
-                            try {
-                                String beanClassName = component.getBeanClassName();
-                                if (log.isDebugEnabled()) {
-                                    log.debug("getClasses() component.getBeanClassName()="+beanClassName);
-                                } // if
-                                Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
-                                if ( !((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
-                                    if (JdoContent.class.isAssignableFrom(cls)) {
-                                        if (log.isInfoEnabled()) {
-                                            log.info("getClasses() * "+cls.getName());
-                                        } // if
-                                        tableNameMapping.put(cls.getSimpleName(), cls);
-                                        modelClasses.add(cls);
-                                    } else {
-                                        if (log.isDebugEnabled()) {
-                                            log.debug("getClasses() "+cls.getName());
-                                        } // if
-                                    } // if
-                                } // if
-                            } catch (Exception e) {
-                                log.error("getClasses() inner", e);
-                            } // try/catch
-                        } // for
-                        Comparator<Class<?>> comp = new Comparator<Class<?>>() {
-
-                            @Override
-                            public int compare(Class<?> o1, Class<?> o2) {
-                                return o1.getName().compareTo(o2.getName());
-                            } // compareTo()
-
-                        };
-                        Collections.sort(modelClasses, comp);
-
+                        super.getAllClasses();
                         List<String> classNames = new ArrayList<String>();
-                        for (Class<?> cls : modelClasses) {
+                        for (Class<?> cls : allClasses) {
                             classNames.add(cls.getName());
                         } // for
                         jsrCache.put(cacheKey, classNames);
                     } // if
                 } catch (Exception e) {
-                    log.error("getClasses() outer", e);
+                    log.error("getAllClasses() cached gae wrapper", e);
                 } // try/catch
             } // if
-        } // if
-        return modelClasses;
-    } // getClasses()
+        } // synchronized
+        return allClasses;
+    } // getAllClasses()
 
 } // GaeBeanFactory

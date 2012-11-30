@@ -335,7 +335,8 @@ public class EditingController extends RenderingController {
     } // edit()
 
 
-    @RequestMapping(method = { RequestMethod.POST }, value = "/link")
+    // Changed to method get for new class selection mimik
+    @RequestMapping(method = { RequestMethod.GET }, value = "/link")
     public ModelAndView link(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName,
             @RequestParam(value = PARAMETER_ID) String id, @RequestParam(value = PARAMETER_PROPERTY) String propertyName,
             HttpServletRequest request, HttpServletResponse response) {

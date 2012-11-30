@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2012 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 package org.tangram.jdo;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 
@@ -30,7 +32,23 @@ public interface JdoBeanFactory extends BeanFactory {
     String postprocessPlainId(Object id);
 
 
+    /**
+     * Get all classes related with models - also the abstract ones
+     * 
+     * @return
+     */
+    Collection<Class<? extends Content>> getAllClasses();
+
+
+    /**
+     * Get non abstract model classes
+     * 
+     * @return
+     */
     Collection<Class<? extends Content>> getClasses();
+
+
+    Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap();
 
 
     /**
@@ -42,7 +60,8 @@ public interface JdoBeanFactory extends BeanFactory {
      * @throws Exception
      */
     void clearCacheFor(Class<? extends Content> cls);
-    
+
+
     PersistenceManager getManager();
 
 } // JdoBeanFactory

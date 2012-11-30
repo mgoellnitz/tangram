@@ -76,6 +76,10 @@ li {
 	font-size: 10pt;
 }
 
+.cms_editor_inline {
+	display: inline;
+}
+
 .cms_editor_id_box {
 	float: left;
 	width: 250px;

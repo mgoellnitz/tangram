@@ -3,6 +3,7 @@
 %><?xml version="1.0" encoding="UTF-8" ?><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection"
+%><%@page import="java.lang.reflect.Modifier"
 %><%@page import="java.beans.PropertyDescriptor"
 %><%@page import="org.springframework.beans.BeanWrapper"
 %><%@page import="org.springframework.beans.BeanWrapperImpl"
@@ -152,20 +153,26 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
  (<%=type.getSimpleName()%><%
 if (value instanceof Collection) {
   Class<? extends Object>  elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+  boolean abstractClass = (elementClass.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT;
   if (elementClass != Object.class) {
-%>&lt;<%=elementClass.getSimpleName()%>&gt;)<%
+%>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
   } // if
   request.setAttribute("propertyValue", value); 
 %><br/><c:forEach items="${propertyValue}" var="item">
- <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
-</c:forEach>
-<a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
-<form method="post" id="f<%=fid++%>" action="<cms:link bean="${self}" action="link"/>">
-<input type="hidden" name="<%=EditingController.PARAMETER_CLASS_NAME%>" value="<%=elementClass.getName()%>"/>
+<a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
+</c:forEach><%request.setAttribute("elementClass", elementClass);%>
+<c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
+<form method="get" id="f<%=fid++%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
-</form>
-<% 
+</form><select name="<%=EditingController.PARAMETER_CLASS_NAME%>">
+<c:forEach items="${self.beanFactory.implementingClassesMap[elementClass]}" var="c"
+><option value="${c.name}">${c.simpleName}</option>
+</c:forEach
+></select>
+<a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
+</c:if>
+<%
 } else {
 %>)<%
 } // if 

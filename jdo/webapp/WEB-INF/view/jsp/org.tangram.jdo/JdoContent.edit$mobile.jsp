@@ -3,6 +3,7 @@
 %><?xml version="1.0" encoding="UTF-8" ?><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection"
+%><%@page import="java.lang.reflect.Modifier"
 %><%@page import="java.beans.PropertyDescriptor"
 %><%@page import="org.springframework.beans.BeanWrapper"
 %><%@page import="org.springframework.beans.BeanWrapperImpl"
@@ -47,7 +48,8 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
 %><div class="cms_editor_row"><span class="cms_editor_label"><%=key%></span> (<%=type.getSimpleName()%><% 
 if (value instanceof Collection) {
 	Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
-	%>&lt;<%=elementClass.getSimpleName()%>&gt;<%
+	boolean abstractClass = (elementClass.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT;
+	%>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
 } // if
 %>)<br/><%
     if (Utils.getPropertyConverter(request).isBlobType(type)) {
@@ -66,18 +68,20 @@ if (value instanceof Collection) {
 <%
 if (value instanceof Collection) {
 	Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+	boolean abstractClass = (elementClass.getModifiers() | Modifier.ABSTRACT) == Modifier.ABSTRACT;
     request.setAttribute("propertyValue", value); 
 %><br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
-</c:forEach>
-<a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
+</c:forEach><%
+    if (!abstractClass) {
+%><a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
 <form method="post" id="f<%=fid++%>" action="<cms:link bean="${self}" action="link"/>">
 <input type="hidden" name="<%=EditingController.PARAMETER_CLASS_NAME%>" value="<%=elementClass.getName()%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
 </form>
-<% } // if %>
-<%
+<%  } // if 
+} // if 
 if (value instanceof JdoContent) {
     request.setAttribute("item", value); 
 %><br/>

@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2012 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import javax.jdo.Query;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -59,6 +60,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     protected PersistenceManager manager = pmfInstance.getPersistenceManager();
 
     protected List<Class<? extends Content>> modelClasses = null;
+
+    protected List<Class<? extends Content>> allClasses = null;
 
     protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
@@ -282,17 +285,19 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         try {
             for (Class<? extends Content> c : attachedListeners.keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isWarnEnabled()) {
-                    log.warn("clearCache() "+c.getSimpleName()+"? "+assignableFrom);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCache() "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     List<BeanListener> listeners = attachedListeners.get(c);
-                    if (log.isWarnEnabled()) {
-                        log.warn("clearCache() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                    if (log.isInfoEnabled()) {
+                        log.info("clearCache() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
                     } // if
-                    for (BeanListener listener : listeners) {
-                        listener.reset();
-                    } // for
+                    if (listeners!=null) {
+                        for (BeanListener listener : listeners) {
+                            listener.reset();
+                        } // for
+                    } // if
                 } // if
             } // for
 
@@ -301,8 +306,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 String key = (String)keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isWarnEnabled()) {
-                    log.warn("clearCache("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCache("+key+") "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     removeKeys.add(key);
@@ -335,14 +340,23 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Class<? extends Content>> getClasses() {
+    public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
-            if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
+            if (allClasses==null) {
+                allClasses = new ArrayList<Class<? extends Content>>();
                 tableNameMapping = new HashMap<String, Class<? extends Content>>();
 
                 try {
-                    ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true);
+                    /*
+                     * new: we also want abstract classes and interfaces here, so override "isCandidateComponent()" to
+                     * leave out beanDefinition.getMetadata().isConcrete()
+                     */
+                    ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true) {
+                        @Override
+                        protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+                            return (beanDefinition.getMetadata().isIndependent());
+                        }
+                    };
                     provider.addIncludeFilter(new AssignableTypeFilter(JdoContent.class));
 
                     // scan
@@ -350,61 +364,103 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                     for (String pack : basePackages) {
                         try {
                             if (log.isInfoEnabled()) {
-                                log.info("getClasses() "+pack+" "+components.size());
+                                log.info("getAllClasses() "+pack+" "+components.size());
                             } // if
                             components.addAll(provider.findCandidateComponents(pack));
                         } catch (Exception e) {
-                            log.error("getClasses() inner "+e.getMessage());
+                            log.error("getAllClasses() inner "+e.getMessage());
                         } // try/catch
                     } // for
                     if (log.isInfoEnabled()) {
-                        log.info("getClasses() size()="+components.size());
+                        log.info("getAllClasses() size()="+components.size());
                     } // if
                     for (BeanDefinition component : components) {
                         try {
                             String beanClassName = component.getBeanClassName();
                             if (log.isDebugEnabled()) {
-                                log.debug("getClasses() component.getBeanClassName()="+beanClassName);
+                                log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                             } // if
                             Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
-                            if ( !((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
-                                if (JdoContent.class.isAssignableFrom(cls)) {
-                                    if (log.isInfoEnabled()) {
-                                        log.info("getClasses() * "+cls.getName());
-                                    } // if
-                                    tableNameMapping.put(cls.getSimpleName(), cls);
-                                    modelClasses.add(cls);
-                                } else {
-                                    if (log.isDebugEnabled()) {
-                                        log.debug("getClasses() "+cls.getName());
-                                    } // if
+                            if (JdoContent.class.isAssignableFrom(cls)) {
+                                if (log.isInfoEnabled()) {
+                                    log.info("getAllClasses() * "+cls.getName());
+                                } // if
+                                tableNameMapping.put(cls.getSimpleName(), cls);
+                                allClasses.add(cls);
+                            } else {
+                                if (log.isDebugEnabled()) {
+                                    log.debug("getAllClasses() "+cls.getName());
                                 } // if
                             } // if
                         } catch (Exception e) {
-                            log.error("getClasses() inner", e);
+                            log.error("getAllClasses() inner", e);
                         } // try/catch
                     } // for
-                    Comparator<Class<?>> comp = new Comparator<Class<?>>() {
-
-                        @Override
-                        public int compare(Class<?> o1, Class<?> o2) {
-                            return o1.getName().compareTo(o2.getName());
-                        } // compareTo()
-
-                    };
-                    Collections.sort(modelClasses, comp);
-
-                    List<String> classNames = new ArrayList<String>();
-                    for (Class<?> cls : modelClasses) {
-                        classNames.add(cls.getName());
-                    } // for
                 } catch (Exception e) {
-                    log.error("getClasses() outer", e);
+                    log.error("getAllClasses() outer", e);
                 } // try/catch
+            } // if
+        } // if
+        return allClasses;
+    } // getAllClasses()
+
+
+    @Override
+    public Collection<Class<? extends Content>> getClasses() {
+        synchronized (this) {
+            if (modelClasses==null) {
+                modelClasses = new ArrayList<Class<? extends Content>>();
+                for (Class<? extends Content> cls : getAllClasses()) {
+                    if ( !((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                        modelClasses.add(cls);
+                    } // if
+                } // for
+                Comparator<Class<?>> comp = new Comparator<Class<?>>() {
+
+                    @Override
+                    public int compare(Class<?> o1, Class<?> o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    } // compareTo()
+
+                };
+                Collections.sort(modelClasses, comp);
             } // if
         } // if
         return modelClasses;
     } // getClasses()
+
+
+    private List<Class<? extends Content>> getImplementingClasses(Class<? extends Content> baseClass) {
+        List<Class<? extends Content>> result = new ArrayList<Class<? extends Content>>();
+
+        for (Class<? extends Content> c : getClasses()) {
+            if ((c.getModifiers()&Modifier.ABSTRACT)==0) {
+                if (baseClass.isAssignableFrom(c)) {
+                    result.add(c);
+                } // if
+            } // if
+        } // for
+
+        return result;
+    } // getImplementingClassNames()
+
+
+    /**
+     * just to support JSP weak calling of methods with no parameters
+     * 
+     * @param baseClass
+     * @return
+     */
+    @Override
+    public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
+        Map<Class<? extends Content>, List<Class<? extends Content>>> result = new HashMap<Class<? extends Content>, List<Class<? extends Content>>>();
+
+        for (Class<? extends Content> c : getAllClasses()) {
+            result.put(c, getImplementingClasses(c));
+        } // for
+
+        return result;
+    } // getImplementingClassMap()
 
 
     @Override
