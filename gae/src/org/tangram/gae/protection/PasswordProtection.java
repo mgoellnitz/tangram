@@ -88,7 +88,7 @@ public class PasswordProtection extends Protection {
         HttpSession session = request.getSession();
         String sessionValue = ""+session.getAttribute(getProtectionKey());
         return sessionValue.equals(getLogin());
-    } // isTopicVisible()
+    } // isContentVisible()
 
 
     @Override

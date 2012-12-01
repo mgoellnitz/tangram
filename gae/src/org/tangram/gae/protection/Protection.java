@@ -51,7 +51,7 @@ public abstract class Protection extends GaeContent implements org.tangram.solut
 
 
     @Override
-	public String getProtectionKey() {
+    public String getProtectionKey() {
         return protectionKey;
     }
 
@@ -62,7 +62,7 @@ public abstract class Protection extends GaeContent implements org.tangram.solut
 
 
     @Override
-	public List<Content> getProtectedContents() {
+    public List<Content> getProtectedContents() {
         return getContents(Content.class, protectedContentIds);
     }
 
