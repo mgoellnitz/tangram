@@ -162,17 +162,17 @@ if (value instanceof Collection) {
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach><%request.setAttribute("elementClass", elementClass);%>
 <c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
-<form method="get" id="f<%=fid++%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
+<form method="get" id="f<%=fid%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
-</form><select name="<%=EditingController.PARAMETER_CLASS_NAME%>">
+<select name="<%=EditingController.PARAMETER_CLASS_NAME%>">
 <c:forEach items="${self.beanFactory.implementingClassesMap[elementClass]}" var="c"
 ><option value="${c.name}">${c.simpleName}</option>
 </c:forEach
 ></select>
-<a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
-</c:if>
-<%
+</form>
+<a href="javascript:document.getElementById('f<%=fid++%>').submit()">[Neues Element]</a>
+</c:if><%
 } else {
 %>)<%
 } // if 

@@ -72,15 +72,18 @@ if (value instanceof Collection) {
     request.setAttribute("propertyValue", value); 
 %><br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
-</c:forEach><%
-    if (!abstractClass) {
-%><a href="javascript:document.getElementById('f<%=fid%>').submit()">[Neues Element]</a>
-<form method="post" id="f<%=fid++%>" action="<cms:link bean="${self}" action="link"/>">
-<input type="hidden" name="<%=EditingController.PARAMETER_CLASS_NAME%>" value="<%=elementClass.getName()%>"/>
+</c:forEach><%request.setAttribute("elementClass", elementClass);%>
+<c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
+<form method="get" id="f<%=fid%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
+<select name="<%=EditingController.PARAMETER_CLASS_NAME%>">
+<c:forEach items="${self.beanFactory.implementingClassesMap[elementClass]}" var="c"
+><option value="${c.name}">${c.simpleName}</option>
+</c:forEach
+></select>
 </form>
-<%  } // if 
+<a href="javascript:document.getElementById('f<%=fid++%>').submit()">[Neues Element]</a></c:if><%  
 } // if 
 if (value instanceof JdoContent) {
     request.setAttribute("item", value); 
