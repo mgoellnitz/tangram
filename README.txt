@@ -3,16 +3,26 @@ SUMMARY
 Tangram is a framework for the object oriented web rendering of java beans. 
 It comes with limited CMS functionality by using JDO as a source and presenting 
 a more or less generic editor for that situation. JDO can be used in conjunction 
-with Google App Engine or stand alone with relational database systems.
+with Google App Engine or stand alone with relational database systems. 
+Additionally the use of CoreMedia CMS repositories as data source is possible.
 
-Examples are presented for JDO with RDBMS SQLite and another backend system.
+Object Oriented Templating can be used with static JSP Files or with Apache 
+Velocity code placed in the repository. Additionally the base bean classes can be 
+dynamically extended by Groovy codes in the repository.
+
+Tangram not only allows for the convenient presentation of content buts also the 
+implementation of actions to be called via URLs by use of custom annotations in 
+Java or again Groovy extensions.
+
+Examples are presented for JDO with RDBMS (SQLite is used for the example contens), 
+JDO on Google App Engine, and CoreMedia CMS's most simple example application.
 
 HOW-TO
 
 To make all this work you need
 
-- Java 6 (Update 26 maximum - 32 or 64 bit)
-- Gradle 1.2
+- Java 6 or 7
+- Gradle 1.3
 
 simply type
 
