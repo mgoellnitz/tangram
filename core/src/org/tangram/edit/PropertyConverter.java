@@ -18,7 +18,11 @@
  */
 package org.tangram.edit;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -31,6 +35,8 @@ import org.tangram.content.Content;
 public abstract class PropertyConverter {
 
     private static final Log log = LogFactory.getLog(PropertyConverter.class);
+
+    private static DateFormat editDateFormat = new SimpleDateFormat("hh:mm:ss dd.MM.yyyy zzz");
 
     @Autowired
     private BeanFactory beanFactory;
@@ -54,6 +60,8 @@ public abstract class PropertyConverter {
             return result;
         } else if (o instanceof Content) {
             return ((Content)o).getId();
+        } else if (o instanceof Date) {
+            return editDateFormat.format(o);
         } else {
             return o.toString();
         } // if
@@ -70,6 +78,12 @@ public abstract class PropertyConverter {
         } // if
         if (cls==String.class) {
             value = StringUtils.hasText(valueString) ? ""+valueString : null;
+        } else if (cls==Date.class) {
+            try {
+                value = editDateFormat.parseObject(valueString);
+            } catch (ParseException pe) {
+                log.error("getStorableObject() cannot parse as Date: "+valueString);
+            } // try/catch
         } else if (cls==Integer.class) {
             value = StringUtils.hasText(valueString) ? Integer.parseInt(valueString) : null;
         } else if (cls==Float.class) {
@@ -99,6 +113,8 @@ public abstract class PropertyConverter {
             } // for
             value = elements;
         } else if (Content.class.isAssignableFrom(cls)) {
+            // TODO: RegEx Matching for ID-Format and extraction of ID part of this string would be a nice copy paste
+            // helper
             if (StringUtils.hasText(valueString)) {
                 value = beanFactory.getBean(valueString);
             } // if
