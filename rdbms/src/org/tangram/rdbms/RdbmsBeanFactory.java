@@ -55,8 +55,7 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
                 throw new Exception("Passed over kind "+kind+" not valid");
             } // if
             if ( !(cls.isAssignableFrom(kindClass))) {
-                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "
-                        +kindClass.getSimpleName());
+                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             OID oid = new OIDImpl(kindClass.getName(), numericId);
             if (log.isWarnEnabled()) {
@@ -82,6 +81,9 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
 
     @Override
     public String postprocessPlainId(Object id) {
+        if (log.isInfoEnabled()) {
+            log.info("postprocessPlainId() id="+id+" ("+id.getClass().getName()+")");
+        } // if
         if (id instanceof OID) {
             OID oid = (OID)id;
             String pcClass = oid.getPcClass();
@@ -89,8 +91,11 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
             pcClass = pcClass.substring(idx+1);
             return pcClass+":"+oid.getKeyValue();
         } else {
+            if (log.isWarnEnabled()) {
+                log.warn("postprocessPlainId() returning default '"+id+"'");
+            } // if
             return ""+id;
         } // if
     } // postprocessPlainId()
 
-} // DatanucleusBeanFactory
+} // RdbmsBeanFactory
