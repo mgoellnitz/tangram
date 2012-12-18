@@ -58,8 +58,8 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             OID oid = new OIDImpl(kindClass.getName(), numericId);
-            if (log.isWarnEnabled()) {
-                log.warn("getBean() "+kindClass.getName()+" "+numericId+" "+oid);
+            if (log.isInfoEnabled()) {
+                log.info("getBean() "+kindClass.getName()+" "+numericId+" oid="+oid);
             } // if
             result = (T)manager.getObjectById(oid);
             ((JdoContent)result).setManager(manager);
