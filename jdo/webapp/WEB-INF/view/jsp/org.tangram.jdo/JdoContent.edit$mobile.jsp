@@ -70,10 +70,10 @@ if (value instanceof Collection) {
 	Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
 	boolean abstractClass = (elementClass.getModifiers() | Modifier.ABSTRACT) == Modifier.ABSTRACT;
     request.setAttribute("propertyValue", value); 
-%><br/><c:forEach items="${propertyValue}" var="item">
+%><c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
+<br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach><%request.setAttribute("elementClass", elementClass);%>
-<c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
 <form method="get" id="f<%=fid%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>

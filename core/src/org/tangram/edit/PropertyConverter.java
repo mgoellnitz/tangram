@@ -102,13 +102,18 @@ public abstract class PropertyConverter {
                     log.debug("getStorableObject() idString="+idString);
                 } // if
                 if (StringUtils.hasText(idString)) {
-                    Object o = beanFactory.getBean(idString);
-                    if (log.isDebugEnabled()) {
-                        log.debug("getStorableObject() o="+o);
-                    } // if
-                    if (o!=null) {
-                        elements.add(o);
-                    } // if
+                    Object o = null;
+                    try {
+                        o = beanFactory.getBean(idString);
+                        if (log.isDebugEnabled()) {
+                            log.debug("getStorableObject() o="+o);
+                        } // if
+                    } catch (Exception e) {
+                        if (log.isWarnEnabled()) {
+                            log.warn("getStorableObject() taking plain value as list element "+idString);
+                        } // if
+                    } // try/catch
+                    elements.add(o==null ? idString : o);
                 } // if
             } // for
             value = elements;
