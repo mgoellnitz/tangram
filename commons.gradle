@@ -60,7 +60,7 @@ repositories {
   
 }
 
-version = '0.7-SNAPSHOT'
+version = '0.7'
 ext.basename = 'tangram'
 
 // datanucleus enhancer doesn't support this, but it works!
@@ -253,7 +253,8 @@ war {
       println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
     } // if 
   } // if 
-  classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
+  // classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
+  classpath = jar.outputs.files
 }
 
 // just for debugging purposes
