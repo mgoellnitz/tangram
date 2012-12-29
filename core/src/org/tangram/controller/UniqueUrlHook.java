@@ -41,15 +41,14 @@ public class UniqueUrlHook implements ControllerHook {
 
 
     @Override
-	public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
+    public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         Link link = null;
         try {
             link = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
         } catch (Exception e) {
             if (log.isWarnEnabled()) {
-                log.warn("render() expensive things happen "
-                        +((descriptor.bean==null) ? "" : descriptor.bean.getClass().getName()));
+                log.warn("intercept() expensive things happen "+((descriptor.bean==null) ? "" : descriptor.bean.getClass().getName()));
             } // if
         } // try/catch
         if (link!=null) {
