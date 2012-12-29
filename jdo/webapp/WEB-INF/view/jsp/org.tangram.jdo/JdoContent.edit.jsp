@@ -157,12 +157,12 @@ if (value instanceof Collection) {
   if (elementClass != Object.class) {
 %>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
   } // if
-  request.setAttribute("propertyValue", value); 
+  request.setAttribute("propertyValue", value);   
+  request.setAttribute("elementClass", elementClass); 
 %><c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
-</c:forEach><%request.setAttribute("elementClass", elementClass);%>
-<form method="get" id="f<%=fid%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
+</c:forEach><form method="get" id="f<%=fid%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
 <select name="<%=EditingController.PARAMETER_CLASS_NAME%>">
