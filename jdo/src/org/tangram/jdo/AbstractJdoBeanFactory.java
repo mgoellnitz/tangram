@@ -65,6 +65,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
+    protected Map<Class<? extends Content>, List<Class<? extends Content>>> implementingClassesMap = null;
+
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
     protected boolean activateCaching = false;
@@ -181,16 +183,25 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty) {
+    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<T>();
         try {
             Extent extent = manager.getExtent(cls, false);
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
-                String order = orderProperty+" asc";
+                String asc = " asc";
+                if (ascending!=null) {
+                    asc = ascending ? " asc" : " desc";
+                } // if
+                String order = orderProperty+asc;
                 query.setOrdering(order);
             } // if
+              // TOOD: will be extended once we decide to introduce start/end
+              // if (end!=null) {
+              // long from = start!=null ? start : 0;
+              // query.setRange(from, end+1);
+              // } // if
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
                         +(queryString==null ? "" : " with condition "+queryString));
@@ -223,7 +234,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty) {
+    public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = null;
         if (log.isInfoEnabled()) {
             log.info("listBeans() looking up instances of "+cls.getSimpleName()
@@ -245,7 +256,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             result = new ArrayList<T>();
             for (Class c : getClasses()) {
                 if (cls.isAssignableFrom(c)) {
-                    result.addAll(listBeansOfExactClass(c, queryString, orderProperty));
+                    result.addAll(listBeansOfExactClass(c, queryString, orderProperty, ascending));
                 } // if
             } // for
             if (activateQueryCaching) {
@@ -442,7 +453,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         } // for
 
         return result;
-    } // getImplementingClassNames()
+    } // getImplementingClasses()
 
 
     /**
@@ -453,13 +464,17 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
      */
     @Override
     public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
-        Map<Class<? extends Content>, List<Class<? extends Content>>> result = new HashMap<Class<? extends Content>, List<Class<? extends Content>>>();
+        if (implementingClassesMap==null) {
+            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends Content>>>();
 
-        for (Class<? extends Content> c : getAllClasses()) {
-            result.put(c, getImplementingClasses(c));
-        } // for
-
-        return result;
+            // Add the very basic root classes directly here - they won't get auto detected otherwise
+            implementingClassesMap.put(JdoContent.class, getImplementingClasses(JdoContent.class));
+            implementingClassesMap.put(Content.class, getImplementingClasses(Content.class));
+            for (Class<? extends Content> c : getAllClasses()) {
+                implementingClassesMap.put(c, getImplementingClasses(c));
+            } // for
+        } // if
+        return implementingClassesMap;
     } // getImplementingClassMap()
 
 

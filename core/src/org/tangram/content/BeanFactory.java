@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2012 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ public interface BeanFactory {
      *            name of a attribute of the bean to be used for ascending ordering
      * @return
      */
-    <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty);
+    <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending);
 
 
     <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery);
@@ -69,7 +69,7 @@ public interface BeanFactory {
     <T extends Content> List<T> listBeans(Class<T> cls);
 
 
-    <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty);
+    <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending);
 
 
     <T extends Content> List<T> listBeansOfExactClass(Class<T> cls);

@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2012 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,10 +154,10 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
     @Override
     @SuppressWarnings("rawtypes")
-    public List<Content> listBeansOfExactClass(Class cls, String optionalQuery, String orderProperty) {
+    public List<Content> listBeansOfExactClass(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
         List<Content> result = new ArrayList<Content>();
         String typeName = cls.getSimpleName();
-        Set<String> ids = listIds(typeName, optionalQuery, orderProperty);
+        Set<String> ids = listIds(typeName, optionalQuery, orderProperty, ascending);
         for (String id : ids) {
             result.add(getBean(id));
         } // for
@@ -167,29 +167,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
     @Override
     @SuppressWarnings("rawtypes")
-    public List<Content> listBeansOfExactClass(Class cls) {
-        return listBeansOfExactClass(cls, null, null);
-    } // listBeans()
-
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public List<Content> listBeans(Class cls, String optionalQuery) {
-        return listBeans(cls, optionalQuery, null);
-    } // listBeans()
-
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public List<Content> listBeans(Class cls, String optionalQuery, String orderProperty) {
-        return listBeansOfExactClass(cls, optionalQuery, orderProperty);
-    } // listBeans()
-
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public List<Content> listBeans(Class cls) {
-        return listBeansOfExactClass(cls, null, null);
+    public List<Content> listBeans(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
+        return listBeansOfExactClass(cls, optionalQuery, orderProperty, ascending);
     } // listBeans()
 
 
@@ -265,8 +244,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
                 // select blobs
                 s = dbConnection.createStatement();
-                query = "SELECT * FROM blobs WHERE documentid = "+id+" AND documentversion = "+version
-                        +" ORDER BY propertyname ASC";
+                query = "SELECT * FROM blobs WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
                 resultSet = s.executeQuery(query);
                 while (resultSet.next()) {
                     String propertyName = resultSet.getString("propertyname");
@@ -288,8 +266,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
                 // select xml
                 s = dbConnection.createStatement();
-                query = "SELECT * FROM texts WHERE documentid = "+id+" AND documentversion = "+version
-                        +" ORDER BY propertyname ASC";
+                query = "SELECT * FROM texts WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
                 resultSet = s.executeQuery(query);
                 while (resultSet.next()) {
                     String propertyName = resultSet.getString("propertyname");
@@ -304,8 +281,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                         String xmlText = textSet.getString("text");
                         text.append(xmlText);
                         if (log.isDebugEnabled()) {
-                            log.debug("getBean() "+propertyName+" "+textSet.getInt("id")+" "
-                                    +textSet.getInt("segmentno")+" "+xmlText);
+                            log.debug("getBean() "+propertyName+" "+textSet.getInt("id")+" "+textSet.getInt("segmentno")+" "+xmlText);
                         } // if
                     } // if
                     if (log.isDebugEnabled()) {
@@ -320,8 +296,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                         String xmlData = dataSet.getString("data");
                         data.append(xmlData);
                         if (log.isDebugEnabled()) {
-                            log.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "
-                                    +dataSet.getInt("segmentno")+" "+xmlData);
+                            log.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "+dataSet.getInt("segmentno")+" "
+                                    +xmlData);
                         } // if
                     } // if
                     if (log.isDebugEnabled()) {
@@ -386,7 +362,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
     } // getChildId()
 
 
-    public Set<String> listIds(String typeName, String optionalQuery, String orderProperty) {
+    public Set<String> listIds(String typeName, String optionalQuery, String orderProperty, Boolean ascending) {
         Set<String> ids = new HashSet<String>();
         String query = null;
         try {
@@ -395,7 +371,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
                 query += optionalQuery;
             } // if
             if (orderProperty!=null) {
-                query += " ORDER BY "+orderProperty;
+                String asc = "ASC";
+                if (ascending!=null) {
+                    asc = ascending ? "ASC" : "DESC";
+                } // if
+                String order = orderProperty+" "+asc;
+                query += " ORDER BY "+order;
             } // if
             Statement s = dbConnection.createStatement();
             ResultSet resultSet = s.executeQuery(query);
