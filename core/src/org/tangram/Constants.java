@@ -69,7 +69,7 @@ public final class Constants {
 
     public static final String VERSION_MAJOR = "0";
 
-    public static final String VERSION_MINOR = "7";
+    public static final String VERSION_MINOR = "8";
 
     public static final Map<String, String> VERSIONS = new HashMap<String, String>();
 
