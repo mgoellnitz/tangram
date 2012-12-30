@@ -100,11 +100,6 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
             if (log.isInfoEnabled()) {
                 log.info("checkResourceExists("+url+") is="+is);
             } // if
-              // TODO: what was this good for? it seems to be duplicated code...
-              // URL u = getClass().getResource(url);
-              // if (log.isInfoEnabled()) {
-              // log.info("checkResourceExists(" + url + ") u=" + u);
-              // } // if
             if (is!=null) {
                 if (log.isInfoEnabled()) {
                     log.info("checkResourceExists("+url+") exists!");

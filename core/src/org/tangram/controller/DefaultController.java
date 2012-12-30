@@ -96,4 +96,4 @@ public class DefaultController extends RenderingController {
         return null;
     } // createLink()
 
-} // GenericController
+} // DefaultController
