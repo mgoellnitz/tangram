@@ -227,13 +227,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // listBeansOfExactClass()
 
 
-    private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty) {
-        return cls.getName()+":"+orderProperty+":"+queryString;
+    private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
+        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+queryString;
     } // getCacheKey()
 
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = null;
         if (log.isInfoEnabled()) {
@@ -242,21 +241,29 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         } // if
         String key = null;
         if (activateQueryCaching) {
-            key = getCacheKey(cls, queryString, orderProperty);
+            key = getCacheKey(cls, queryString, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
+                // old style
                 result = new ArrayList<T>(idList.size());
                 for (String id : idList) {
                     result.add(getBean(cls, id));
                 } // for
+
+                // New style with lazy content list - perhaps will work some day
+                // result = new LazyContentList<T>(this, idList);
+
                 statistics.increase("query beans cached");
             } // if
         } // if
         if (result==null) {
             result = new ArrayList<T>();
-            for (Class c : getClasses()) {
-                if (cls.isAssignableFrom(c)) {
-                    result.addAll(listBeansOfExactClass(c, queryString, orderProperty, ascending));
+            for (Class<? extends Content> cx : getClasses()) {
+                if (cls.isAssignableFrom(cx)) {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends T> c = (Class<? extends T>)cx;
+                    List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
+                    result.addAll(beans);
                 } // if
             } // for
             if (activateQueryCaching) {
@@ -291,18 +298,18 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         statistics.increase("bean cache clear");
         cache.clear();
         if (log.isWarnEnabled()) {
-            log.warn("clearCache() for "+cls.getSimpleName());
+            log.warn("clearCacheFor() "+cls.getSimpleName());
         } // if
         try {
             for (Class<? extends Content> c : attachedListeners.keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isInfoEnabled()) {
-                    log.info("clearCache() "+c.getSimpleName()+"? "+assignableFrom);
+                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     List<BeanListener> listeners = attachedListeners.get(c);
                     if (log.isInfoEnabled()) {
-                        log.info("clearCache() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
                     } // if
                     if (listeners!=null) {
                         for (BeanListener listener : listeners) {
@@ -318,7 +325,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isInfoEnabled()) {
-                    log.info("clearCache("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     removeKeys.add(key);
@@ -328,7 +335,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 queryCache.remove(key);
             } // for
         } catch (Exception e) {
-            log.error("clearCache() for "+cls.getSimpleName(), e);
+            log.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
 
