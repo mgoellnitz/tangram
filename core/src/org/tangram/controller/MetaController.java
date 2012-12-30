@@ -147,17 +147,19 @@ public class MetaController extends AbstractController implements InitializingBe
 
 
     private Method findMethod(Object target, String methodName) {
+        if (log.isInfoEnabled()) {
+            log.info("findMethod() trying to find "+methodName+" in "+target.getClass().getName());
+        } // if
         Method method = null;
         Method[] methods = target.getClass().getMethods();
         for (Method m : methods) {
             if (m.getName().equals(methodName)) {
-                // TODO: Did this ever work?
-                LinkAction linkAction = method.getAnnotation(LinkAction.class);
+                LinkAction linkAction = m.getAnnotation(LinkAction.class);
                 if (log.isInfoEnabled()) {
                     log.info("findMethod() linkAction="+linkAction);
-                    log.info("findMethod() method.getReturnType()="+method.getReturnType());
+                    log.info("findMethod() method.getReturnType()="+m.getReturnType());
                 } // if
-                if ( !TargetDescriptor.class.equals(method.getReturnType())) {
+                if ( !TargetDescriptor.class.equals(m.getReturnType())) {
                     linkAction = null;
                 } // if
                 if (log.isInfoEnabled()) {
@@ -174,14 +176,15 @@ public class MetaController extends AbstractController implements InitializingBe
 
     private Link callAction(HttpServletRequest request, HttpServletResponse response, Method method, TargetDescriptor descriptor,
             Object target) {
+        Link link = null;
         if (log.isInfoEnabled()) {
             log.info("callAction() method="+method);
         } // if
 
-        descriptor.action = null;
-        List<Object> parameters = new ArrayList<Object>();
         // We don't want to access parameters via GET
         if ((method!=null)&&request.getMethod().equals("POST")) {
+            descriptor.action = null;
+            List<Object> parameters = new ArrayList<Object>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
             Class<? extends Object>[] parameterTypes = method.getParameterTypes();
             int typeIndex = 0;
@@ -221,8 +224,8 @@ public class MetaController extends AbstractController implements InitializingBe
             } catch (InvocationTargetException e) {
                 log.error("callAction()", e);
             } // try/catch
+            link = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
         } // if
-        Link link = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
         if (log.isInfoEnabled()) {
             log.info("callAction() link="+link);
         } // if
@@ -254,19 +257,26 @@ public class MetaController extends AbstractController implements InitializingBe
                         return modelAndViewFactory.createModelAndView(model, descriptor.view);
                     } else {
                         if (log.isInfoEnabled()) {
-                            log.info("handleRequestInternal() trying call action "+descriptor.action);
+                            log.info("handleRequestInternal() trying to call action "+descriptor.action);
                         } // if
                           // TODO: find a less expensive way of digging out action calls
                         Method method = findMethod(linkScheme, descriptor.action);
                         Link link = callAction(request, response, method, descriptor, linkScheme);
                         for (Object value : model.values()) {
-                            method = findMethod(value, descriptor.action);
-                            link = callAction(request, response, method, descriptor, value);
+                            // This has to be checked because of special null values in context like $null
+                            if (value!=null) {
+                                method = findMethod(value, descriptor.action);
+                                link = callAction(request, response, method, descriptor, value);
+                            } // if
                         } // for
-                        if (log.isInfoEnabled()) {
-                            log.info("handleRequestInternal() received link "+link.getUrl());
+                        if (link==null) {
+                            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                        } else {
+                            if (log.isInfoEnabled()) {
+                                log.info("handleRequestInternal() received link "+link.getUrl());
+                            } // if
+                            response.sendRedirect(link.getUrl());
                         } // if
-                        response.sendRedirect(link.getUrl());
                         return result;
                     } // if
                 } // if
