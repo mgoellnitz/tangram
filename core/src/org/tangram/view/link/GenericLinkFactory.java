@@ -34,7 +34,7 @@ import org.tangram.monitor.Statistics;
  * right at the moment we cannot think of a second necessary implementation of this.
  * 
  * So this is the generic not just default implementation of a link factory.
- *
+ * 
  */
 public class GenericLinkFactory implements LinkFactory {
 
@@ -59,13 +59,13 @@ public class GenericLinkFactory implements LinkFactory {
 
 
     @Override
-	public void registerHandler(LinkHandler handler) {
+    public void registerHandler(LinkHandler handler) {
         handlers.add(handler);
     } // registerHandler()
 
 
     @Override
-	public void unregisterHandler(LinkHandler handler) {
+    public void unregisterHandler(LinkHandler handler) {
         handlers.remove(handler);
     } // unregisterHandler()
 
@@ -73,7 +73,7 @@ public class GenericLinkFactory implements LinkFactory {
 
 
     @Override
-	public String getPrefix(HttpServletRequest request) {
+    public String getPrefix(HttpServletRequest request) {
         if (prefix==null) {
             String contextPath = request.getContextPath();
             if (contextPath.length()==1) {
@@ -103,8 +103,7 @@ public class GenericLinkFactory implements LinkFactory {
 
 
     @Override
-	public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action,
-            String view) {
+    public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
         if (bean==null) {
             throw new RuntimeException("No bean issued for link generation in action "+action+" for view "+view);
         } // if
@@ -112,8 +111,7 @@ public class GenericLinkFactory implements LinkFactory {
             long startTime = System.currentTimeMillis();
             Link result = handler.createLink(request, response, bean, action, view);
             if (log.isDebugEnabled()) {
-                log.debug("createLink() "+handler.getClass().getName()+" -> "+result+" ["
-                        +bean.getClass().getSimpleName()+"]");
+                log.debug("createLink() "+handler.getClass().getName()+" -> "+result+" ["+bean.getClass().getSimpleName()+"]");
             } // if
             if (result!=null) {
                 postProcessResult(result, request);

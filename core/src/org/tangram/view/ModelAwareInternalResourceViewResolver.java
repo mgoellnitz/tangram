@@ -91,7 +91,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
         int idx = url.indexOf('/');
         if (idx!=0) {
             // TODO: this code is unused for now - we'd like to have VTL or
-            // stuff like that on the classpath
+            // stuff like that on the classpath which comes with Servlet 3
             idx++ ;
             if (log.isInfoEnabled()) {
                 log.info("checkResourceExists("+url+")");
