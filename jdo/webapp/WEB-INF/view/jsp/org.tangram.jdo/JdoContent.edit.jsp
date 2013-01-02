@@ -77,7 +77,7 @@ if (c != null) {
     %><%=className %> ist kein<br/>gültiger Klassenname!<%
 } // if
 for (PropertyDescriptor p : ps) {
-    if (!EditingController.SYSTEM_PROPERTIES.contains(p.getName())) {
+    if ((p.getReadMethod() != null) && (!EditingController.SYSTEM_PROPERTIES.contains(p.getName()))) {
         String delimiter = "</span> :";
         if ((p.getName()+p.getPropertyType().getSimpleName()).length() > 18) {
             delimiter = "</span><br/>&#160;&#160;:";
