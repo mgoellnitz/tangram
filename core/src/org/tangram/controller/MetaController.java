@@ -264,7 +264,8 @@ public class MetaController extends AbstractController implements InitializingBe
                         Link link = callAction(request, response, method, descriptor, linkScheme);
                         for (Object value : model.values()) {
                             // This has to be checked because of special null values in context like $null
-                            if (value!=null) {
+                            // if the link is already set don't try to call other methods
+                            if ((value!=null) && (link == null)) {
                                 method = findMethod(value, descriptor.action);
                                 link = callAction(request, response, method, descriptor, value);
                             } // if
