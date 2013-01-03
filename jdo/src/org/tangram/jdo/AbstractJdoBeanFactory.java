@@ -162,22 +162,19 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         if (log.isDebugEnabled()) {
             log.debug("createBean() obtaining persistence manager");
         } // if
-        try {
-            manager.currentTransaction().begin();
-            if (log.isDebugEnabled()) {
-                log.debug("createBean() creating new instance of "+cls.getName());
-            } // if
-            T bean = manager.newInstance(cls);
-            if (log.isDebugEnabled()) {
-                log.debug("createBean() populating new instance");
-            } // if
-            bean.setBeanFactory(this);
-            ((JdoContent)bean).setManager(manager);
+        manager.currentTransaction().begin();
+        if (log.isDebugEnabled()) {
+            log.debug("createBean() creating new instance of "+cls.getName());
+        } // if
+        T bean = manager.newInstance(cls);
+        if (log.isDebugEnabled()) {
+            log.debug("createBean() populating new instance");
+        } // if
+        bean.setBeanFactory(this);
+        ((JdoContent)bean).setManager(manager);
 
-            statistics.increase("create bean");
-            return bean;
-        } finally {
-        } // try/catch/finally
+        statistics.increase("create bean");
+        return bean;
     } // createBean()
 
 
