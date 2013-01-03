@@ -15,8 +15,12 @@
 nicht berechtigt, diese Seite zu sehen. <%
     } else {
         String loginURL = userService.createLoginURL(""+request.getAttribute("tangramURL"));
-        response.sendRedirect(loginURL); %>
-        <script type="text/javascript">location.href='<%=loginURL%>';</script>
+        try {
+          response.sendRedirect(loginURL);
+        } catch (Exception e)  {
+            System.out.println("GoogleProtection.login.jsp "+e.getMessage());
+        } // try/catch
+        %><script type="text/javascript">location.href='<%=loginURL%>';</script>
         Die <a href="<%=loginURL%>">Login-Seite</a> konnte leider nicht automatisch aufgerufen werden.
 <%  } // if
 %></div>
