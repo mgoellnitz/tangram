@@ -27,6 +27,7 @@ import javax.jdo.annotations.NotPersistent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
@@ -94,7 +95,7 @@ public abstract class JdoContent implements Content {
         if (log.isDebugEnabled()) {
             log.debug("getContent() id="+i+" beanFactory="+beanFactory);
         } // if
-        return (i==null) ? null : beanFactory.getBean(c, i);
+        return (StringUtils.hasText(id)) ? beanFactory.getBean(c, i) : null;
     } // getContent()
 
 
