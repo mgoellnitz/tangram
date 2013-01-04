@@ -33,8 +33,8 @@ ext.jdo_api="javax.jdo:jdo2-api:2.3-eb"
 ext.springframework_version = "3.1.2.RELEASE"
 ext.springsecurity_version = "3.1.2.RELEASE"
 // Datanucleus Version except for Google App Engine
-ext.datanucleus_version= "3.1.0-release"
-ext.datanucleus_enhancer_version= "3.1.0-release"
+ext.datanucleus_version= "3.1.3"
+ext.datanucleus_enhancer_version= "3.1.1"
 
 ext.appengine_version = "1.7.4"
 /* version section end */
@@ -46,7 +46,6 @@ apply plugin: 'maven'
 // apply plugin: 'code-quality'
 
 repositories {
-
   mavenLocal()
   
   // most of the usual stuff
@@ -57,7 +56,6 @@ repositories {
   maven { url "http://repository.springsource.com/maven/bundles/release" }
   // needed for latest datanucleus versions
   maven { url "http://www.datanucleus.org/downloads/maven2" }
-  
 }
 
 version = '0.8-SNAPSHOT'
@@ -133,6 +131,11 @@ compileJava.doLast {
   FileOutputStream fos = new FileOutputStream(filename)
   p.save(fos, " Tangram Build and System Information")
   fos.close()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
 }
 
 // TODO: this looks a little bit redundnant...
@@ -237,6 +240,8 @@ war.doFirst {
     exclude 'WEB-INF/lib/**'
   }
 }
+
+war.dependsOn sourcesJar
 
 war {
   // For some reason webapp files are not included in the inputs collection
