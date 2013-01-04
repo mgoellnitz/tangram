@@ -37,7 +37,7 @@ dependencies {
     compile "org.springframework.security:spring-security-config:$springsecurity_version"
     compile "org.springframework.security:spring-security-web:$springsecurity_version"
 
-    compile "log4j:log4j:1.2.16"
+    compile "log4j:log4j:1.2.17"
 
     testCompile "junit:junit:4.10"
 
