@@ -85,13 +85,13 @@ public class EditingController extends RenderingController {
 
     @Autowired
     private PropertyConverter propertyConverter;
-    
+
     @Autowired
     private ClassRepository classRepository;
-    
+
     @Autowired
     private LinkFactory linkFactory;
-    
+
 
     @Autowired
     public void setDefaultController(DefaultController defaultController) {
@@ -214,7 +214,7 @@ public class EditingController extends RenderingController {
             if (log.isDebugEnabled()) {
                 log.debug("store() id="+id);
             } // if
-            
+
             return redirect(request, response, bean);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
@@ -257,13 +257,16 @@ public class EditingController extends RenderingController {
             @SuppressWarnings("unchecked")
             Class<Content> cls = (Class<Content>)(this.getClass().getClassLoader().loadClass(typeName));
             Content content = beanFactory.createBean(cls);
-            if (log.isDebugEnabled()) {
-                log.debug("create() content="+content);
-                log.debug("create() id="+content.getId());
+            if (content.persist()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("create() content="+content);
+                    log.debug("create() id="+content.getId());
+                } // if
+                return redirect(request, response, content);
             } // if
-            content.persist();
-            return redirect(request, response, content);
+            return modelAndViewFactory.createModelAndView("Cannot persist new "+typeName, request, response);
         } catch (Exception e) {
+            log.error("create() error while creating object ", e);
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
     } // create()
@@ -327,7 +330,7 @@ public class EditingController extends RenderingController {
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource)content;
                 request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
-            } // if            
+            } // if
             return modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);

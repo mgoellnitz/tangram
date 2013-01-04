@@ -72,7 +72,7 @@ public abstract class JdoContent implements Content {
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id.hashCode();
+        return id==null ? 0 : id.hashCode();
     } // hashCode()
 
 
@@ -122,7 +122,10 @@ public abstract class JdoContent implements Content {
             ((JdoBeanFactory)beanFactory).clearCacheFor(this.getClass());
         } catch (Exception e) {
             log.error("persist()", e);
-            manager.currentTransaction().rollback();
+            // yes we saw situations where this was not the case thus hiding other errors!
+            if (manager.currentTransaction().isActive()) {
+                manager.currentTransaction().rollback();
+            } // if
             result = false;
         } // try/catch/finally
         return result;

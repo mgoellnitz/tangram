@@ -82,7 +82,7 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
     @Override
     public String postprocessPlainId(Object id) {
         if (log.isInfoEnabled()) {
-            log.info("postprocessPlainId() id="+id+" ("+id.getClass().getName()+")");
+            log.info("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
         } // if
         if (id instanceof OID) {
             OID oid = (OID)id;

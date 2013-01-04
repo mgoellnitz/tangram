@@ -118,7 +118,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     @Override
     public String postprocessPlainId(Object id) {
-        String result = ""+id;
+        String result = (id == null) ? "" : ""+id;
         try {
             Key key = KeyFactory.stringToKey(result);
             result = key.getKind()+":"+key.getId();
