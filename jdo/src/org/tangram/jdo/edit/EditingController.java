@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2012 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -353,22 +353,24 @@ public class EditingController extends RenderingController {
             @SuppressWarnings("unchecked")
             Class<Content> cls = (Class<Content>)(this.getClass().getClassLoader().loadClass(typeName));
             Content content = beanFactory.createBean(cls);
-            if (log.isDebugEnabled()) {
-                log.debug("link() content="+content);
-                log.debug("link() id="+content.getId());
+            if (content.persist()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("link() content="+content);
+                    log.debug("link() id="+content.getId());
+                } // if
+
+                Content bean = beanFactory.getBeanForUpdate(Content.class, id);
+                BeanWrapper wrapper = new BeanWrapperImpl(bean);
+                Object listObject = wrapper.getPropertyValue(propertyName);
+                @SuppressWarnings("unchecked")
+                List<Object> list = (List<Object>)listObject;
+                list.add(content);
+                wrapper.setPropertyValue(propertyName, list);
+                bean.persist();
+                return redirect(request, response, content);
+            } else {
+                throw new Exception("could not create new instance of type "+typeName);
             } // if
-            content.persist();
-
-            Content bean = beanFactory.getBeanForUpdate(Content.class, id);
-            BeanWrapper wrapper = new BeanWrapperImpl(bean);
-            Object listObject = wrapper.getPropertyValue(propertyName);
-            @SuppressWarnings("unchecked")
-            List<Object> list = (List<Object>)listObject;
-            list.add(content);
-            wrapper.setPropertyValue(propertyName, list);
-            bean.persist();
-
-            return redirect(request, response, content);
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
