@@ -264,7 +264,7 @@ public class EditingController extends RenderingController {
                 } // if
                 return redirect(request, response, content);
             } // if
-            return modelAndViewFactory.createModelAndView("Cannot persist new "+typeName, request, response);
+            return modelAndViewFactory.createModelAndView(new Exception("Cannot persist new "+typeName), request, response);
         } catch (Exception e) {
             log.error("create() error while creating object ", e);
             return modelAndViewFactory.createModelAndView(e, request, response);
