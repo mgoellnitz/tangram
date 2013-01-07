@@ -26,7 +26,7 @@ To make all this work you need
 
 simply type
 
-gradle clean upload
+  gradle clean upload
 
 and then you can build and use your projects using tangram or the examples
 

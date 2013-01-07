@@ -82,8 +82,8 @@ public abstract class RenderingController implements LinkHandler {
      * @return
      * @throws Exception
      */
-    protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
         Map<String, Object> model = modelAndViewFactory.createModel(descriptor.bean, request, response);
         try {
             for (ControllerHook controllerHook : controllerHooks) {
@@ -112,7 +112,6 @@ public abstract class RenderingController implements LinkHandler {
 
 
     @Override
-	public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean,
-            String action, String view);
+    public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
 } // RenderingController
