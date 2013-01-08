@@ -26,6 +26,9 @@
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
+<form id="dummyform">
+<!-- nested forms are not allowed but only the first nested one really failes in browsers. So we present a dummy first one -->
+</form>
 <div class="cms_editor_row"><span class="cms_editor_label">
 Bearbeiten </span>| 
 Typ: ${self.class.package.name}.<span class="cms_editor_title">${self.class.simpleName}</span>
