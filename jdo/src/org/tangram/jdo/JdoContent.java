@@ -99,7 +99,7 @@ public abstract class JdoContent implements Content {
         if (log.isDebugEnabled()) {
             log.debug("getContent() id="+i+" beanFactory="+beanFactory);
         } // if
-        return (StringUtils.hasText(id)) ? beanFactory.getBean(c, i) : null;
+        return (StringUtils.hasText(i)) ? beanFactory.getBean(c, i) : null;
     } // getContent()
 
 
