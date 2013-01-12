@@ -32,32 +32,27 @@ dependencies {
     compile "com.google.appengine:appengine-jsr107cache:$appengine_version"
 
     compile "$jdo_api"
-    compile "org.apache.geronimo.specs:geronimo-jpa_3.0_spec:1.1.1"
-    compile "org.datanucleus:datanucleus-core:1.1.5"
-    compile "org.datanucleus:datanucleus-jpa:1.1.5"
-    compile "com.google.appengine.orm:datanucleus-appengine:1.0.8"
+    compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
+    compile "org.datanucleus:datanucleus-core:$datanucleus_version"
+    compile "com.google.appengine.orm:datanucleus-appengine:$datanucleus_appengine_version"
+    
     compile "net.sf.jsr107cache:jsr107cache:1.1"
-
-    compile "commons-lang:commons-lang:2.6"
 
     testCompile "junit:junit:4.10"
 
     providedCompile "org.apache.ant:ant:1.8.4"
-    dn "org.datanucleus:datanucleus-enhancer:1.1.4"
+    providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
 }
 
 compileJava.doLast {
     try {
-        // println 'configurations: '+configurations.dn.asPath
-        ant.taskdef(name: 'enhance', classpath: configurations.dn.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
+        ant.taskdef(name: 'enhance', classpath: sourceSets['main'].compileClasspath.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
         ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: sourceSets['main'].output.classesDir.canonicalPath) {
             classpath {
                 // for the log configuration...
                 pathelement(path: '.')
                 // The classes to be enhanced need to be on the class path
                 pathelement(path: sourceSets['main'].output.classesDir.canonicalPath)
-                // this is the real class path for the tool (s.a.)
-                pathelement(path: configurations.dn.asPath)
                 // this is the real class path for the tool (s.a.)
                 pathelement(path: sourceSets['main'].compileClasspath.asPath)
             }
