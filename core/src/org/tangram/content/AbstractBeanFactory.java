@@ -18,6 +18,8 @@
  */
 package org.tangram.content;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractBeanFactory implements BeanFactory {
@@ -31,6 +33,14 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     @Override
     public <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery) {
         return listBeans(cls, optionalQuery, null, null);
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, Comparator<T> order) {
+        List<T> result = listBeans(cls, optionalQuery, null, null);
+        Collections.sort(result, order);
+        return result;
     } // listBeans()
 
 

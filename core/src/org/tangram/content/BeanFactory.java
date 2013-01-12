@@ -18,6 +18,7 @@
  */
 package org.tangram.content;
 
+import java.util.Comparator;
 import java.util.List;
 
 public interface BeanFactory {
@@ -64,6 +65,9 @@ public interface BeanFactory {
 
 
     <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery);
+
+
+    <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, Comparator<T> order);
 
 
     <T extends Content> List<T> listBeans(Class<T> cls);
