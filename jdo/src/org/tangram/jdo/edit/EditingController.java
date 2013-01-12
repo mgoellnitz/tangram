@@ -203,8 +203,13 @@ public class EditingController extends RenderingController {
 
             bean = beanFactory.getBeanForUpdate(JdoContent.class, id);
             wrapper = new BeanWrapperImpl(bean);
+            Exception e = null;
             for (String propertyName : newValues.keySet()) {
-                wrapper.setPropertyValue(propertyName, newValues.get(propertyName));
+                try {
+                    wrapper.setPropertyValue(propertyName, newValues.get(propertyName));
+                } catch (Exception ex) {
+                    e = new Exception("Cannot set value for "+propertyName, ex);
+                } // try/catch
             } // for
 
             if ( !bean.persist()) {
@@ -213,6 +218,10 @@ public class EditingController extends RenderingController {
 
             if (log.isDebugEnabled()) {
                 log.debug("store() id="+id);
+            } // if
+
+            if (e!=null) {
+                throw e;
             } // if
 
             return redirect(request, response, bean);
