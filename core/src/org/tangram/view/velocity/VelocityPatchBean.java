@@ -29,7 +29,7 @@ public class VelocityPatchBean implements InitializingBean {
 
 
     @Override
-	public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         VelocityResourceLoader.factory = factory;
     } // afterPropertiesSet()
 
