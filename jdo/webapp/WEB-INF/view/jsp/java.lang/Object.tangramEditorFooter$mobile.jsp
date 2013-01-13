@@ -3,4 +3,4 @@
 	prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 	%><hr />
 <div style="width: 100%; text-align: left;">Tangram Object Presenter 
-| &copy; 2010-2012 <c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}">Abmelden</a></c:if></div>
+| &copy; 2010-2013 <c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}">Abmelden</a></c:if></div>
