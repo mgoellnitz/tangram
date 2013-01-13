@@ -120,7 +120,7 @@ public final class Utils {
         result = result.replace("Ö", "Oe");
         result = result.replace("Ü", "Ue");
         result = result.replace("ß", "ss");
-        char[] specials = { ',', ' ', ':', ';', '"', '?', '*' };
+        char[] specials = { ',', ' ', ':', ';', '"', '?', '!', '*' };
         for (char c : specials) {
             result = result.replace(c, '-');
         } // for
