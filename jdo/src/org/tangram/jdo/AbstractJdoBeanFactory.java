@@ -55,9 +55,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     @Autowired
     protected Statistics statistics;
 
-    public static final PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory("transactions-optional");
+    public PersistenceManagerFactory pmfInstance = null;
 
-    protected PersistenceManager manager = pmfInstance.getPersistenceManager();
+    protected PersistenceManager manager = null;
 
     protected List<Class<? extends Content>> modelClasses = null;
 
@@ -86,6 +86,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     public PersistenceManager getManager() {
         return manager;
     }
+
+
+    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
+        return Collections.emptyMap();
+    } // getFactoryConfigOverrides()
 
 
     public AbstractJdoBeanFactory() {
@@ -484,6 +489,10 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        pmfInstance = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "transactions-optional");
+
+        manager = pmfInstance.getPersistenceManager();
+
         // Just to prefill
         if (prefill) {
             getClasses();

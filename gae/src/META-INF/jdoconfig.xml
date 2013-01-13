@@ -12,6 +12,5 @@
        <property name="datanucleus.appengine.autoCreateDatastoreTxns" value="true"/>
        <property name="datanucleus.appengine.query.inMemoryWhenUnsupported" value="true"/>
        <property name="datanucleus.appengine.relationDefault" value="unowned"/>
-       <property name="datanucleus.appengine.datastoreEnableXGTransactions" value="true"/>
    </persistence-manager-factory>
 </jdoconfig>

@@ -34,6 +34,7 @@
 		<property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
 		<property name="prefill" value="${tangram.caches.prefill}" />
 		<property name="encodeIds" value="${bean.factory.encode.ids}" />
+		<property name="useHdrDatastore" value="${use.hdr.datastore}" />
 	</bean>
 
 	<!--  edit scenarios only  -->

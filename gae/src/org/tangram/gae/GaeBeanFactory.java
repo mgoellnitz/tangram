@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheFactory;
@@ -44,6 +45,8 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     private boolean encodeIds = true;
 
+    private boolean useHdrDatastore = true;
+
 
     public boolean isEncodeIds() {
         return encodeIds;
@@ -53,6 +56,30 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     public void setEncodeIds(boolean encodeIds) {
         this.encodeIds = encodeIds;
     }
+
+
+    public boolean isUseHdrDatastore() {
+        return useHdrDatastore;
+    }
+
+
+    public void setUseHdrDatastore(boolean useHdrDatastore) {
+        this.useHdrDatastore = useHdrDatastore;
+    }
+
+
+    /**
+     * set cross group transactions only to true on HDR data stores. So projects which actually don't use it can still
+     * run in the same setup.
+     */
+    @Override
+    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
+        Map<Object, Object> result = new HashMap<Object, Object>();
+        if (isUseHdrDatastore()) {
+            result.put("datanucleus.appengine.datastoreEnableXGTransactions", Boolean.TRUE);
+        } // if
+        return result;
+    } // getFactoryConfigOverrides()
 
 
     @Override
@@ -118,7 +145,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     @Override
     public String postprocessPlainId(Object id) {
-        String result = (id == null) ? "" : ""+id;
+        String result = (id==null) ? "" : ""+id;
         try {
             Key key = KeyFactory.stringToKey(result);
             result = key.getKind()+":"+key.getId();
