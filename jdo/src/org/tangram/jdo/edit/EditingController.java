@@ -19,7 +19,6 @@
 package org.tangram.jdo.edit;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -300,13 +299,13 @@ public class EditingController extends RenderingController {
                     log.error("list()", e);
                 } // try/catch
             } // if
+            Collection<Class<? extends Content>> classes = ((JdoBeanFactory)beanFactory).getClasses();
             if (cls==null) {
-                Collection<Class<? extends Content>> clss = ((JdoBeanFactory)beanFactory).getClasses();
-                if ( !clss.isEmpty()) {
-                    cls = clss.iterator().next();
+                if ( !classes.isEmpty()) {
+                    cls = classes.iterator().next();
                 } // if
             } // if
-            List<? extends Content> contents = null;
+            List<? extends Content> contents = Collections.emptyList();
             if (cls!=null) {
                 contents = beanFactory.listBeansOfExactClass(cls);
                 try {
@@ -314,11 +313,14 @@ public class EditingController extends RenderingController {
                 } catch (Exception e) {
                     log.error("list() error while sorting", e);
                 } // try/catch
-            } else {
-                contents = new ArrayList<Content>();
             } // if
             response.setContentType("text/html; charset=UTF-8");
-            return modelAndViewFactory.createModelAndView(contents, "tangramEditorList"+getVariant(request), request, response);
+            Map<String, Object> model = new HashMap<String, Object>();
+            model.put(Constants.THIS, contents);
+            model.put("request", request);
+            model.put("response", response);
+            model.put("classes", classes);
+            return modelAndViewFactory.createModelAndView(model, "tangramEditorList"+getVariant(request));
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
@@ -340,7 +342,9 @@ public class EditingController extends RenderingController {
                 CodeResource code = (CodeResource)content;
                 request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
-            return modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
+            ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
+            mav.getModel().put("classes", ((JdoBeanFactory)beanFactory).getClasses());
+            return mav;
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch

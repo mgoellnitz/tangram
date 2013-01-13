@@ -33,7 +33,7 @@ Typ: </span>${oneItem.class.package.name}.<span class="cms_editor_title">${oneIt
 </div>
 </form>
 <hr/>
-<c:if test="${! empty oneItem}"><cms:include bean="${oneItem}" view="tangramEditorClasses$mobile"/></c:if>
+<cms:include bean="${self}" view="tangramEditorClasses$mobile"/>
 <cms:include bean="${self}" view="tangramEditorFooter$mobile" />
 </body>
 </html>

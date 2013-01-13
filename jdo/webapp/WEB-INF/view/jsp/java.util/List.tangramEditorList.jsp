@@ -33,8 +33,8 @@ Typ: </span> <c:choose><c:when test="${empty oneitem}">${className}</c:when>
 <input type="submit" value="  Neues Objekt dieser Klasse erzeugen  " />
 </div>
 </form>
-<c:if test="${! empty oneItem}"><hr/>
-<cms:include bean="${oneItem}" view="tangramEditorClasses"/></c:if>
+<c:if test="${! empty oneItem}"><hr/></c:if>
+<cms:include bean="${self}" view="tangramEditorClasses"/>
 <cms:include bean="${self}" view="tangramEditorFooter" />
 </body>
 </html>
