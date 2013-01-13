@@ -34,10 +34,7 @@ dependencies {
   compile "org.springframework:spring-webmvc:$springframework_version"
   
   compile "org.apache.velocity:velocity:$velocity_version"
-  // TODO: Groovy-Compiler needs this but doesn't tell - check on every groovy update
-  compile "org.ow2.asm:asm:4.0"
   compile "org.codehaus.groovy:groovy:$groovy_version"
-  // compile "org.mozilla:rhino:$rhino_version"
   compile "com.yahoo.platform.yui:yuicompressor:$yui_version"
   
   compile "commons-logging:commons-logging:1.1.1"
