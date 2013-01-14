@@ -72,7 +72,12 @@ request.setAttribute("errorStyle", (c == null) ? "color: #FF0000;" : "");%>
 PropertyDescriptor[] ps = new PropertyDescriptor[0];
 if (c != null) {
     ps = BeanUtils.getPropertyDescriptors(c);
+    String mimeType = ""+bw.getPropertyValue("mimeType");
+	if ("application/x-groovy".equals(mimeType)) {
+    %>delegate kennt<br/><%
+    } else {
     %>$self kennt<br/><%
+    } // if
 } else {
     %><%=className %> ist kein<br/>gültiger Klassenname!<%
 } // if
@@ -165,7 +170,7 @@ if (value instanceof Collection) {
 </c:forEach><form method="get" id="f<%=fid%>" action="<cms:link bean="${self}" action="link"/>" class="cms_editor_inline">
 <input type="hidden" name="<%=EditingController.PARAMETER_PROPERTY%>" value="<%=key%>"/>
 <input type="hidden" name="<%=EditingController.PARAMETER_ID%>" value="<c:out value="${self.id}"/>"/>
-<select name="<%=EditingController.PARAMETER_CLASS_NAME%>">
+<select name="<%=EditingController.PARAMETER_CLASS_NAME%>" id="submit<%=fid++%>">
 <c:forEach items="${self.beanFactory.implementingClassesMap[elementClass]}" var="c"
 ><option value="${c.name}">${c.simpleName}</option>
 </c:forEach
