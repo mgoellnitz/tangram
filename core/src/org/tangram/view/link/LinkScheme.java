@@ -18,10 +18,11 @@
  */
 package org.tangram.view.link;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.tangram.content.BeanFactory;
-import org.tangram.controller.DefaultController;
 import org.tangram.view.TargetDescriptor;
 
 /**
@@ -30,28 +31,32 @@ import org.tangram.view.TargetDescriptor;
  * 
  * Implementing classes might need the bean factory and the default controller (to register which views are handled by
  * this implementation)
- *
+ * 
  */
 public interface LinkScheme extends LinkHandler {
-    
+
     /**
      * underlying implementations might want to use this
+     * 
      * @param beanFactory
      */
     void setBeanFactory(BeanFactory beanFactory);
-    
+
+
     /**
-     * underlying implementations might want to use this
-     * to deactivate views and URLs handled here in the default controller
-     * @param beanFactory
+     * return all view's names the underlying implementation wants to handle itself
+     * 
+     * @return collection of view names
      */
-    void setDefaultController(DefaultController defaultController);
-    
+    Collection<String> getCustomViews();
+
+
     /**
      * return the id of the object to be show, null otherwise
      * 
      * @param url
-     * @param response for error handling
+     * @param response
+     *            for error handling
      * @return
      */
     TargetDescriptor parseLink(String url, HttpServletResponse response);

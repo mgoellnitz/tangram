@@ -73,6 +73,8 @@ public class MetaController extends AbstractController implements InitializingBe
 
     private Map<String, LinkScheme> schemes;
 
+    private Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
+
 
     // do autowiring here so the registration can be done automagically
     @Autowired
@@ -85,6 +87,15 @@ public class MetaController extends AbstractController implements InitializingBe
     @Override
     public void reset() {
         schemes = new HashMap<String, LinkScheme>();
+        // remove current custom views from default controller
+        for (Object key : customViews.keySet()) {
+            for (String view : customViews.get(key)) {
+                defaultController.getCustomLinkViews().remove(view);
+            } // for
+        } // for
+        if (log.isInfoEnabled()) {
+            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews()); 
+        } // if
         for (Map.Entry<String, Class<LinkScheme>> entry : classRepository.get(LinkScheme.class).entrySet()) {
             try {
                 String annotation = entry.getKey();
@@ -98,7 +109,13 @@ public class MetaController extends AbstractController implements InitializingBe
                         log.info("reset() "+clazz.getName()+" instanciated");
                     } // if
                     linkScheme.setBeanFactory(beanFactory);
-                    linkScheme.setDefaultController(defaultController);
+                    Collection<String> schemeCustomViews = linkScheme.getCustomViews();
+                    customViews.put(linkScheme, schemeCustomViews);
+                    defaultController.getCustomLinkViews().addAll(schemeCustomViews);
+                    if (log.isInfoEnabled()) {
+                        log.info("reset() adding custom views "+schemeCustomViews); 
+                        log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews()); 
+                    } // if
                     schemes.put(annotation, linkScheme);
                 } else {
                     if (log.isInfoEnabled()) {
@@ -112,6 +129,9 @@ public class MetaController extends AbstractController implements InitializingBe
                 } // if
             } // try/catch
         } // for
+        if (log.isInfoEnabled()) {
+            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews()); 
+        } // if
     } // fillSchemes()
 
 
@@ -265,7 +285,7 @@ public class MetaController extends AbstractController implements InitializingBe
                         for (Object value : model.values()) {
                             // This has to be checked because of special null values in context like $null
                             // if the link is already set don't try to call other methods
-                            if ((value!=null) && (link == null)) {
+                            if ((value!=null)&&(link==null)) {
                                 method = findMethod(value, descriptor.action);
                                 link = callAction(request, response, method, descriptor, value);
                             } // if

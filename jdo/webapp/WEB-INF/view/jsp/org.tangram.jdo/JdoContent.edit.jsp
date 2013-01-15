@@ -55,7 +55,8 @@ for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
 <% 
 if ((Utils.getPropertyConverter(request).isTextType(type)) &&("code".equals(key)) && bw.isReadableProperty("mimeType") && (!(""+bw.getPropertyValue("mimeType")).equals("text/javascript")) && (!(""+bw.getPropertyValue("mimeType")).equals("text/css"))) {
 Class<? extends Object> c = null;
-String className = ""+bw.getPropertyValue("annotation");
+Object annotation = bw.getPropertyValue("annotation");
+String className = annotation == null ? null : ""+annotation;
 try {
     c = Class.forName(className);
 } catch (Exception e) {
@@ -79,7 +80,7 @@ if (c != null) {
     %>$self kennt<br/><%
     } // if
 } else {
-    %><%=className %> ist kein<br/>gültiger Klassenname!<%
+    %><%=annotation == null ? "" : annotation+" ist kein<br/>gültiger Klassenname!"%><%
 } // if
 for (PropertyDescriptor p : ps) {
     if ((p.getReadMethod() != null) && (!EditingController.SYSTEM_PROPERTIES.contains(p.getName()))) {
