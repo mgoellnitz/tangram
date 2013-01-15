@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ package org.tangram.content;
 public interface Content extends Comparable<Content> {
 
     String getId();
-    
-    
+
+
     void setBeanFactory(BeanFactory factory);
 
 
@@ -30,6 +30,6 @@ public interface Content extends Comparable<Content> {
 
 
     @Override
-	int compareTo(Content o);
+    int compareTo(Content o);
 
 } // Content
