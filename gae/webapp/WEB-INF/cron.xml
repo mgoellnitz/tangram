@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
+<!-- example:
   <cron>
     <url>/s/stats</url>
     <description>Hit statistics page to keep tangram active</description>
     <schedule>every 1 minutes</schedule>
   </cron>
+ -->
 </cronentries>
