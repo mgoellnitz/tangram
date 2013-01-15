@@ -124,6 +124,9 @@ public abstract class JdoContent implements Content {
         PersistenceManager manager = null;
         try {
             manager = JDOHelper.getPersistenceManager(this);
+            if (manager == null) {
+                manager = ((JdoBeanFactory)getBeanFactory()).getManager();
+            } // if
             manager.makePersistent(this);
             manager.currentTransaction().commit();
             ((JdoBeanFactory)beanFactory).clearCacheFor(this.getClass());
