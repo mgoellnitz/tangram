@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2012 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -176,7 +176,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             log.debug("createBean() populating new instance");
         } // if
         bean.setBeanFactory(this);
-        ((JdoContent)bean).setManager(manager);
 
         statistics.increase("create bean");
         return bean;
@@ -216,7 +215,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 if (o instanceof Content) {
                     JdoContent c = (JdoContent)o;
                     c.setBeanFactory(this);
-                    c.setManager(manager);
 
                     result.add((T)c);
                 } // if

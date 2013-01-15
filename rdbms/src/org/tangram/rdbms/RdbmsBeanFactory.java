@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import org.datanucleus.identity.OID;
 import org.datanucleus.identity.OIDImpl;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
-import org.tangram.jdo.JdoContent;
 
 public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
 
@@ -62,7 +61,6 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
                 log.info("getBean() "+kindClass.getName()+" "+numericId+" oid="+oid);
             } // if
             result = (T)manager.getObjectById(oid);
-            ((JdoContent)result).setManager(manager);
             result.setBeanFactory(this);
 
             if (activateCaching) {
@@ -77,25 +75,5 @@ public class RdbmsBeanFactory extends AbstractJdoBeanFactory {
         statistics.increase("get bean uncached");
         return result;
     } // getBean()
-
-
-    @Override
-    public String postprocessPlainId(Object id) {
-        if (log.isInfoEnabled()) {
-            log.info("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
-        } // if
-        if (id instanceof OID) {
-            OID oid = (OID)id;
-            String pcClass = oid.getPcClass();
-            int idx = pcClass.lastIndexOf('.');
-            pcClass = pcClass.substring(idx+1);
-            return pcClass+":"+oid.getKeyValue();
-        } else {
-            if (log.isWarnEnabled()) {
-                log.warn("postprocessPlainId() returning default '"+id+"'");
-            } // if
-            return ""+id;
-        } // if
-    } // postprocessPlainId()
 
 } // RdbmsBeanFactory

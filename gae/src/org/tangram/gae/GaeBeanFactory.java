@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2012 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
-import org.tangram.jdo.JdoContent;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -43,19 +42,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     private static final Log log = LogFactory.getLog(GaeBeanFactory.class);
 
-    private boolean encodeIds = true;
-
     private boolean useHdrDatastore = true;
-
-
-    public boolean isEncodeIds() {
-        return encodeIds;
-    }
-
-
-    public void setEncodeIds(boolean encodeIds) {
-        this.encodeIds = encodeIds;
-    }
 
 
     public boolean isUseHdrDatastore() {
@@ -126,7 +113,6 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             result = (T)manager.getObjectById(kindClass, key);
-            ((JdoContent)result).setManager(manager);
             result.setBeanFactory(this);
 
             if (activateCaching) {
@@ -141,26 +127,6 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
         statistics.increase("get bean uncached");
         return result;
     } // getBean()
-
-
-    @Override
-    public String postprocessPlainId(Object id) {
-        String result = (id==null) ? "" : ""+id;
-        try {
-            Key key = KeyFactory.stringToKey(result);
-            result = key.getKind()+":"+key.getId();
-            if (encodeIds) {
-                try {
-                    result = Base64.encodeWebSafe(result.getBytes("UTF-8"), true);
-                } catch (Exception e) {
-                    log.warn("postprocessPlainId() "+e.getLocalizedMessage());
-                } // try/catch
-            } // if
-        } catch (Exception e) {
-            // never mind
-        } // try/catch
-        return result;
-    } // postprocessPlainId()
 
 
     @SuppressWarnings("unchecked")

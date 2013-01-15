@@ -25,11 +25,36 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.datanucleus.identity.OID;
 import org.tangram.jdo.JdoContent;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
-@DatastoreIdentity(strategy=IdGeneratorStrategy.INCREMENT)
-@Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy="complete-table")
+@DatastoreIdentity(strategy = IdGeneratorStrategy.INCREMENT)
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
 public abstract class RdbmsContent extends JdoContent {
+
+    private static final Log log = LogFactory.getLog(RdbmsContent.class);
+
+
+    @Override
+    public String postprocessPlainId(Object id) {
+        if (log.isInfoEnabled()) {
+            log.info("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
+        } // if
+        if (id instanceof OID) {
+            OID oid = (OID)id;
+            String pcClass = oid.getPcClass();
+            int idx = pcClass.lastIndexOf('.');
+            pcClass = pcClass.substring(idx+1);
+            return pcClass+":"+oid.getKeyValue();
+        } else {
+            if (log.isWarnEnabled()) {
+                log.warn("postprocessPlainId() returning default '"+id+"'");
+            } // if
+            return ""+id;
+        } // if
+    } // postprocessPlainId()
 
 } // RdbmsContent

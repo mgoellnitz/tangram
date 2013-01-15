@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,9 +36,6 @@ public abstract class JdoContent implements Content {
     private static final Log log = LogFactory.getLog(JdoContent.class);
 
     @NotPersistent
-    protected PersistenceManager manager;
-
-    @NotPersistent
     protected BeanFactory beanFactory;
 
     @NotPersistent
@@ -46,21 +43,25 @@ public abstract class JdoContent implements Content {
 
 
     /**
-     * returns the string representation of the objects persistent ID.
-     * Be aware not to call this before the object has been persisted!
+     * get readable and storable representation of ID
+     * 
+     * @param oid id as JDO internal object
+     * @return id as readable and storable string
+     */
+    protected abstract String postprocessPlainId(Object oid);
+
+
+    /**
+     * returns the string representation of the objects persistent ID. Be aware not to call this before the object has
+     * been persisted!
      */
     @Override
     public String getId() {
         if (id==null) {
-            id = ((JdoBeanFactory)beanFactory).postprocessPlainId(JDOHelper.getObjectId(this));
+            id = postprocessPlainId(JDOHelper.getObjectId(this));
         } // if
         return id;
     } // getId()
-
-
-    public void setManager(PersistenceManager manager) {
-        this.manager = manager;
-    }
 
 
     public BeanFactory getBeanFactory() {
@@ -120,15 +121,19 @@ public abstract class JdoContent implements Content {
     @Override
     public boolean persist() {
         boolean result = true;
+        PersistenceManager manager = null;
         try {
+            manager = JDOHelper.getPersistenceManager(this);
             manager.makePersistent(this);
             manager.currentTransaction().commit();
             ((JdoBeanFactory)beanFactory).clearCacheFor(this.getClass());
         } catch (Exception e) {
             log.error("persist()", e);
-            // yes we saw situations where this was not the case thus hiding other errors!
-            if (manager.currentTransaction().isActive()) {
-                manager.currentTransaction().rollback();
+            if (manager!=null) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                if (manager.currentTransaction().isActive()) {
+                    manager.currentTransaction().rollback();
+                } // if
             } // if
             result = false;
         } // try/catch/finally
