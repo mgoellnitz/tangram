@@ -128,6 +128,10 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     } // checkView()
 
 
+    /**
+     * 
+     * @throws IOException - in subclasses not this one
+     */
     protected View lookupView(String viewName, Locale locale, Object content, String key) throws IOException {
         Class<? extends Object> cls = content.getClass();
         View view = null;
