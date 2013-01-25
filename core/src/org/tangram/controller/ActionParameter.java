@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2012 Martin Goellnitz
+ * Copyright 2012-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface ActionParameter {
     
-    String name();
+    String name() default "--empty--";
     
 } // ActionParamter

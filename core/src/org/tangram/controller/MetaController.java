@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -213,6 +213,9 @@ public class MetaController extends AbstractController implements InitializingBe
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof ActionParameter) {
                         String parameterName = ((ActionParameter)annotation).name();
+                        if ("--empty--".equals(parameterName)) {
+                            parameterName = parameterType.getSimpleName().toLowerCase();
+                        } // if
                         String value = request.getParameter(parameterName);
                         if (log.isInfoEnabled()) {
                             log.info("callAction() parameter "+parameterName+" should be of type "+parameterType.getName());
