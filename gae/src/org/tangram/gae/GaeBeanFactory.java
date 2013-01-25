@@ -20,14 +20,9 @@ package org.tangram.gae;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.jsr107cache.Cache;
-import net.sf.jsr107cache.CacheFactory;
-import net.sf.jsr107cache.CacheManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -129,45 +124,9 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     } // getBean()
 
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Collection<Class<? extends Content>> getAllClasses() {
-        synchronized (this) {
-            if (allClasses==null) {
-                try {
-                    CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-                    Cache jsrCache = cacheFactory.createCache(Collections.emptyMap());
-
-                    String cacheKey = com.google.appengine.api.utils.SystemProperty.applicationVersion.get();
-                    Object co = jsrCache.get(cacheKey);
-                    if (co!=null) {
-                        if (co instanceof List) {
-                            allClasses = new ArrayList<Class<? extends Content>>();
-                            tableNameMapping = new HashMap<String, Class<? extends Content>>();
-                            List<String> classNames = (List<String>)co;
-                            for (String beanClassName : classNames) {
-                                Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
-                                if (log.isInfoEnabled()) {
-                                    log.info("getAllClasses() # "+cls.getName());
-                                } // if
-                                tableNameMapping.put(cls.getSimpleName(), cls);
-                                allClasses.add(cls);
-                            } // for
-                        } // if
-                    } else {
-                        super.getAllClasses();
-                        List<String> classNames = new ArrayList<String>();
-                        for (Class<?> cls : allClasses) {
-                            classNames.add(cls.getName());
-                        } // for
-                        jsrCache.put(cacheKey, classNames);
-                    } // if
-                } catch (Exception e) {
-                    log.error("getAllClasses() cached gae wrapper", e);
-                } // try/catch
-            } // if
-        } // synchronized
-        return allClasses;
-    } // getAllClasses()
+    protected String getClassNamesCacheKey() {
+        return com.google.appengine.api.utils.SystemProperty.applicationVersion.get();
+    } // getClassNamesCacheKey()
 
 } // GaeBeanFactory

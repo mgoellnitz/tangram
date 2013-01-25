@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tangram.Constants;
+import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;
@@ -43,7 +44,10 @@ public class ClassRepository implements InitializingBean, BeanListener {
     @Autowired
     private CodeResourceCache codeCache;
 
-    private Map<String, Class<? extends Object>> classes;
+    @Autowired
+    private PersistentRestartCache startupCache;
+
+    private Map<String, Class<? extends Object>> classes = null;
 
     private Map<String, String> compilationErrors;
 
@@ -53,56 +57,64 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
 
     @SuppressWarnings("unchecked")
-    private void fillClasses() {
-        compilationErrors = new HashMap<String,String>();
-        classes = new HashMap<String, Class<? extends Object>>();
+    protected void fillClasses() {
+        if (classes==null) {
+            classes = startupCache.get("classes", Map.class);
+        } else {
+            classes = null;
+        } // if
+        compilationErrors = new HashMap<String, String>();
 
-        Map<String, String> codes = new HashMap<String, String>();
+        // if empty or just cleaned
+        if (classes==null) {
+            Map<String, String> codes = new HashMap<String, String>();
 
-        GroovyClassLoader gcl = new GroovyClassLoader();
-        Map<String, CodeResource> typeCache = codeCache.getTypeCache("application/x-groovy");
-        for (CodeResource resource : typeCache.values()) {
-            String annotation = resource.getAnnotation();
-            // Check for class name - must be with capital letter for last element
-            int idx = annotation.lastIndexOf('.');
-            if (log.isInfoEnabled()) {
-                log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
-            } // if
-            if (idx>=0) {
-                idx++ ;
-                String suffix = annotation.substring(idx);
-                if ( !Character.isLowerCase(suffix.charAt(0))) {
-                    try {
-                        String codeText = resource.getCodeText();
-                        codes.put(annotation, codeText);
-                    } catch (Throwable e) {
-                        // who cares
-                        if (log.isErrorEnabled()) {
-                            log.error("fillClasses()", e);
-                        } // if
-                    } // try/catch
+            GroovyClassLoader gcl = new GroovyClassLoader();
+            Map<String, CodeResource> typeCache = codeCache.getTypeCache("application/x-groovy");
+            for (CodeResource resource : typeCache.values()) {
+                String annotation = resource.getAnnotation();
+                // Check for class name - must be with capital letter for last element
+                int idx = annotation.lastIndexOf('.');
+                if (log.isInfoEnabled()) {
+                    log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
                 } // if
-            } // if
-        } // for
-
-        int i = Constants.RIP_CORD_COUNT;
-        while (i-- >0&&codes.size()>classes.size()) {
-            for (Map.Entry<String, String> code : codes.entrySet()) {
-                try {
-                    if (log.isInfoEnabled()) {
-                        log.info("fillClasses() compiling "+code.getKey());
+                if (idx>=0) {
+                    idx++ ;
+                    String suffix = annotation.substring(idx);
+                    if ( !Character.isLowerCase(suffix.charAt(0))) {
+                        try {
+                            String codeText = resource.getCodeText();
+                            codes.put(annotation, codeText);
+                        } catch (Throwable e) {
+                            // who cares
+                            if (log.isErrorEnabled()) {
+                                log.error("fillClasses()", e);
+                            } // if
+                        } // try/catch
                     } // if
-                    Class<? extends Object> clazz = gcl.parseClass(code.getValue(), code.getKey()+".groovy");
-                    classes.put(code.getKey(), clazz);
-                } catch (CompilationFailedException cfe) {
-                    compilationErrors.put(code.getKey(), cfe.getMessage());
-                    log.error("fillClasses()", cfe);
-                } catch (Throwable t) {
-                    log.error("fillClasses() [not marked in source code]", t);
-                } // try/catch
+                } // if
             } // for
-        } // while
-    }// fillClasses()
+
+            classes = new HashMap<String, Class<? extends Object>>();
+            int i = Constants.RIP_CORD_COUNT;
+            while (i-- >0&&codes.size()>classes.size()) {
+                for (Map.Entry<String, String> code : codes.entrySet()) {
+                    try {
+                        if (log.isInfoEnabled()) {
+                            log.info("fillClasses() compiling "+code.getKey());
+                        } // if
+                        Class<? extends Object> clazz = gcl.parseClass(code.getValue(), code.getKey()+".groovy");
+                        classes.put(code.getKey(), clazz);
+                    } catch (CompilationFailedException cfe) {
+                        compilationErrors.put(code.getKey(), cfe.getMessage());
+                        log.error("fillClasses()", cfe);
+                    } catch (Throwable t) {
+                        log.error("fillClasses() [not marked in source code]", t);
+                    } // try/catch
+                } // for
+            } // while
+        } // if
+    } // fillClasses()
 
 
     public Set<String> get() {

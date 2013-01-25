@@ -35,6 +35,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
+import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -43,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
+import org.tangram.PersistentRestartCache;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
@@ -54,6 +56,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     @Autowired
     protected Statistics statistics;
+
+    @Autowired
+    protected PersistentRestartCache startupCache;
 
     public PersistenceManagerFactory pmfInstance = null;
 
@@ -244,7 +249,10 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             key = getCacheKey(cls, queryString, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
-                // old style
+                if (log.isInfoEnabled()) {
+                    log.info("listBeans() found in cache "+idList);
+                } // if
+                  // old style
                 result = new ArrayList<T>(idList.size());
                 for (String id : idList) {
                     result.add(getBean(cls, id));
@@ -356,6 +364,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // addListener()
 
 
+    protected String getClassNamesCacheKey() {
+        return "tangram-class-names";
+    } // getClassNamesCacheKey()
+
+
     @Override
     @SuppressWarnings("unchecked")
     public Collection<Class<? extends Content>> getAllClasses() {
@@ -365,62 +378,77 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 tableNameMapping = new HashMap<String, Class<? extends Content>>();
 
                 try {
-                    /*
-                     * new: we also want abstract classes and interfaces here, so override "isCandidateComponent()" to
-                     * leave out beanDefinition.getMetadata().isConcrete()
-                     */
-                    ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true) {
-                        @Override
-                        protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-                            return (beanDefinition.getMetadata().isIndependent());
-                        }
-                    };
-                    provider.addIncludeFilter(new AssignableTypeFilter(JdoContent.class));
+                    List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
+                    if (classNames==null) {
+                        /*
+                         * new: we also want abstract classes and interfaces here, so override "isCandidateComponent()"
+                         * to leave out beanDefinition.getMetadata().isConcrete()
+                         */
+                        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true) {
+                            @Override
+                            protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+                                return (beanDefinition.getMetadata().isIndependent());
+                            }
+                        };
+                        provider.addIncludeFilter(new AssignableTypeFilter(JdoContent.class));
 
-                    // scan
-                    Set<BeanDefinition> components = new HashSet<BeanDefinition>();
-                    for (String pack : basePackages) {
-                        try {
-                            if (log.isInfoEnabled()) {
-                                log.info("getAllClasses() "+pack+" "+components.size());
-                            } // if
-                            components.addAll(provider.findCandidateComponents(pack));
-                        } catch (Exception e) {
-                            log.error("getAllClasses() inner "+e.getMessage());
-                        } // try/catch
-                    } // for
-                    if (log.isInfoEnabled()) {
-                        log.info("getAllClasses() size()="+components.size());
-                    } // if
-                    for (BeanDefinition component : components) {
-                        try {
-                            String beanClassName = component.getBeanClassName();
-                            if (log.isDebugEnabled()) {
-                                log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
-                            } // if
-                            Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
-                            if (JdoContent.class.isAssignableFrom(cls)) {
+                        // scan
+                        Set<BeanDefinition> components = new HashSet<BeanDefinition>();
+                        for (String pack : basePackages) {
+                            try {
                                 if (log.isInfoEnabled()) {
-                                    log.info("getAllClasses() * "+cls.getName());
+                                    log.info("getAllClasses() "+pack+" "+components.size());
                                 } // if
-                                tableNameMapping.put(cls.getSimpleName(), cls);
-                                allClasses.add(cls);
-                            } else {
+                                components.addAll(provider.findCandidateComponents(pack));
+                            } catch (Exception e) {
+                                log.error("getAllClasses() inner "+e.getMessage());
+                            } // try/catch
+                        } // for
+                        if (log.isInfoEnabled()) {
+                            log.info("getAllClasses() size()="+components.size());
+                        } // if
+                        classNames = new ArrayList<String>();
+                        for (BeanDefinition component : components) {
+                            try {
+                                String beanClassName = component.getBeanClassName();
                                 if (log.isDebugEnabled()) {
-                                    log.debug("getAllClasses() "+cls.getName());
+                                    log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
+                                Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
+                                if (JdoContent.class.isAssignableFrom(cls)) {
+                                    if (log.isInfoEnabled()) {
+                                        log.info("getAllClasses() * "+cls.getName());
+                                    } // if
+                                    classNames.add(beanClassName);
+                                    tableNameMapping.put(cls.getSimpleName(), cls);
+                                    allClasses.add(cls);
+                                } else {
+                                    if (log.isDebugEnabled()) {
+                                        log.debug("getAllClasses() "+cls.getName());
+                                    } // if
+                                } // if
+                            } catch (Exception e) {
+                                log.error("getAllClasses() inner", e);
+                            } // try/catch
+                        } // for
+                        startupCache.put(getClassNamesCacheKey(), classNames);
+                    } else {
+                        for (String beanClassName : classNames) {
+                            Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
+                            if (log.isInfoEnabled()) {
+                                log.info("getAllClasses() # "+cls.getName());
                             } // if
-                        } catch (Exception e) {
-                            log.error("getAllClasses() inner", e);
-                        } // try/catch
-                    } // for
+                            tableNameMapping.put(cls.getSimpleName(), cls);
+                            allClasses.add(cls);
+                        } // for
+                    } // if
                 } catch (Exception e) {
                     log.error("getAllClasses() outer", e);
                 } // try/catch
             } // if
-        } // if
+        } // synchronized
         return allClasses;
-    } // getAllClasses()
+    }// getAllClasses()
 
 
     @Override
