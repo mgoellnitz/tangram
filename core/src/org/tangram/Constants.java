@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,31 +41,61 @@ public final class Constants {
 
     public static final String THIS = "self";
 
+    /**
+     * name of the default view if value null cannot be used
+     */
     public static final String DEFAULT_VIEW = "NULL";
 
+    /**
+     * name of the url parameter for the view to be selected in defaul controller.
+     */
     public static final String PARAMETER_VIEW = "v";
 
     public static final String PARAMETER_PROTECTION_LOGIN = "protection.login.button";
 
     public static final String PARAMETER_PROTECTION_KEY = "protection.key";
 
+    /**
+     * name of the request attribute to take a currently valid logout url from
+     */
     public static final String ATTRIBUTE_LOGOUT_URL = "logoutUrl";
 
+    /*
+     * name of the request attribute to take a currently valid login from
+     */
     public static final String ATTRIBUTE_LOGIN_URL = "loginUrl";
 
+    /**
+     * name of the request attribute to take the result of a login attempt from
+     */
     public static final String ATTRIBUTE_LOGIN_RESULT = "loginResult";
 
+    /**
+     * name of the request attribute to take the value of a protecton from, which
+     * needs to be met right now for the content to be displayed. If the value
+     * is not null, we should issue a login form to the user in this output
+     */
     public static final String ATTRIBUTE_PROTECTION = "protection";
 
+    /**
+     * 
+     */
     public static final String ATTRIBUTE_LIVE_SYSTEM = "tangramLiveSystem";
 
+    /**
+     * name of the request attribute holding the currently logged in tangram user
+     */
     public static final String ATTRIBUTE_USER = "tangramUser";
 
+    /**
+     * name of the request attribute to indicate if the currently logged in tangram user
+     * is considered a tangram admin by system configuration
+     */
     public static final String ATTRIBUTE_ADMIN_USER = "tangramAdminUser";
 
     public static final String PROPERTY_VERSION_BUILD = "version.build";
 
-    public static final int RIP_CORD_COUNT = 10;
+    public static final int RIP_CORD_COUNT = 8;
 
     public static final String VERSION_MAJOR = "0";
 
