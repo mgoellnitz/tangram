@@ -44,27 +44,32 @@ public abstract class PropertyConverter {
 
     @SuppressWarnings("unchecked")
     public String getEditString(Object o) {
-        if (o==null) {
-            return "";
-        } // if
-        if (o instanceof List) {
-            String result = "";
-            List<? extends Object> list = (List<? extends Object>)o;
-            for (Object i : list) {
-                if (i instanceof Content) {
-                    result = result+((Content)i).getId()+", ";
-                } else {
-                    result = result+i+",";
-                } // if
-            } // for
-            return result;
-        } else if (o instanceof Content) {
-            return ((Content)o).getId();
-        } else if (o instanceof Date) {
-            return editDateFormat.format(o);
-        } else {
-            return o.toString();
-        } // if
+        try {
+            if (o==null) {
+                return "";
+            } // if
+            if (o instanceof List) {
+                String result = "";
+                List<? extends Object> list = (List<? extends Object>)o;
+                for (Object i : list) {
+                    if (i instanceof Content) {
+                        result = result+((Content)i).getId()+", ";
+                    } else {
+                        result = result+i+",";
+                    } // if
+                } // for
+                return result;
+            } else if (o instanceof Content) {
+                return ((Content)o).getId();
+            } else if (o instanceof Date) {
+                return editDateFormat.format(o);
+            } else {
+                return o.toString();
+            } // if
+        } catch (Exception e) {
+            log.error("getEditString() ", e);
+            return "error while converting "+o;
+        } // try/catch
     } // getEditString()
 
 
