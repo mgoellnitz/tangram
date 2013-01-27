@@ -35,7 +35,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
-import org.apache.commons.lang.text.StrTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -51,6 +50,8 @@ import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
 
 public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory implements JdoBeanFactory, InitializingBean {
+
+    private static final String QUERY_CACHE_KEY = "tangram.query.cache";
 
     private static final Log log = LogFactory.getLog(AbstractJdoBeanFactory.class);
 
@@ -280,6 +281,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                     idList.add(content.getId());
                 } // for
                 queryCache.put(key, idList);
+                startupCache.put(QUERY_CACHE_KEY, queryCache);
             } // if
             statistics.increase("query beans uncached");
         } // if
@@ -309,6 +311,24 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             log.warn("clearCacheFor() "+cls.getSimpleName());
         } // if
         try {
+            // clear query cache first since listeners might want to use query to obtain fresh data
+            Collection<String> removeKeys = new HashSet<String>();
+            for (Object keyObject : queryCache.keySet()) {
+                String key = (String)keyObject;
+                Class<? extends Content> c = getKeyClass(key);
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    removeKeys.add(key);
+                } // if
+            } // for
+            for (String key : removeKeys) {
+                queryCache.remove(key);
+            } // for
+            startupCache.put(QUERY_CACHE_KEY, queryCache);
+
             for (Class<? extends Content> c : attachedListeners.keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isInfoEnabled()) {
@@ -325,22 +345,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                         } // for
                     } // if
                 } // if
-            } // for
-
-            Collection<String> removeKeys = new HashSet<String>();
-            for (Object keyObject : queryCache.keySet()) {
-                String key = (String)keyObject;
-                Class<? extends Content> c = getKeyClass(key);
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    removeKeys.add(key);
-                } // if
-            } // for
-            for (String key : removeKeys) {
-                queryCache.remove(key);
             } // for
         } catch (Exception e) {
             log.error("clearCacheFor() "+cls.getSimpleName(), e);
@@ -522,6 +526,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
         // Just to prefill
         if (prefill) {
             getClasses();
+        } // if
+
+        Map<String, List<String>> c = null;
+        c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        if (c!=null) {
+            queryCache = c;
         } // if
     } // afterPropertiesSet()
 
