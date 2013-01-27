@@ -35,13 +35,16 @@ public class GaeCacheAdapter implements PersistentRestartCache {
 
     private static final Log log = LogFactory.getLog(GaeBeanFactory.class);
 
-    private Cache jsrCache;
+    private Cache jsrCache = null;
 
 
     public GaeCacheAdapter() {
         try {
             CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
             jsrCache = cacheFactory.createCache(Collections.emptyMap());
+            if (log.isInfoEnabled()) {
+                log.info("() jsrCache="+jsrCache);
+            } // if
         } catch (CacheException ce) {
             log.error("()", ce);
         } // try
@@ -51,6 +54,9 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
+        if (log.isDebugEnabled()) {
+            log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
+        } // if
         return jsrCache==null ? null : (T)jsrCache.get(key);
     } // get()
 
@@ -59,6 +65,9 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     public <T> void put(String key, T value) {
         if (jsrCache!=null) {
             jsrCache.put(key, value);
+            if (log.isDebugEnabled()) {
+                log.debug("put() "+jsrCache.get(key));
+            } // if
         } // if
     } // Put()
 
