@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
                 } // if
             } // if
         } // for
-        
+
         for (BeanListener listener : attachedListeners) {
             listener.reset();
         } // for
@@ -77,31 +77,19 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
 
     public CodeResource get(String mimeType, String annotation) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
-        if (typeCache!=null) {
-            return typeCache.get(annotation);
-        } else {
-            return null;
-        } // if
+        return (typeCache==null) ? null : typeCache.get(annotation);
     } // get()
 
 
     public Collection<String> getAnnotations(String mimeType) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
-        if (typeCache!=null) {
-            return typeCache.keySet();
-        } else {
-            return new HashSet<String>();
-        } // if
+        return (typeCache!=null) ? typeCache.keySet() : new HashSet<String>();
     } // getAnnotations()
 
 
     public Map<String, CodeResource> getTypeCache(String mimeType) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
-        if (typeCache!=null) {
-            return typeCache;
-        } else {
-            return new HashMap<String, CodeResource>();
-        } // if
+        return (typeCache!=null) ? typeCache : new HashMap<String, CodeResource>();
     } // getTypeCache();
 
 
@@ -113,7 +101,7 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
 
 
     @Override
-	public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         factory.addListener(CodeResource.class, this);
         reset();
     } // afterPropertiesSet()
