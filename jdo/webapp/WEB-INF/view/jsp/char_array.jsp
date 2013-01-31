@@ -29,7 +29,7 @@
             try {
                 url = linkFactory.createLink(request, response, beanFactory.getBean(id), null, null).getUrl()+"\"";
             } catch (Exception e) {
-              ;  
+                // What could be do about it?
             } // try/catch
             valueString.replace(starts.get(i), ends.get(i), url);
         } // for

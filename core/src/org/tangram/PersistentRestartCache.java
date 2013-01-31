@@ -18,6 +18,8 @@
  */
 package org.tangram;
 
+import java.lang.reflect.Type;
+
 /**
  * Cache to be used to speed up start up sequences.
  * 
@@ -27,6 +29,9 @@ package org.tangram;
 public interface PersistentRestartCache {
 
     <T extends Object> T get(String key, Class<T> c);
+
+
+    <T extends Object> T get(String key, Type t);
 
 
     <T extends Object> void put(String key, T value);

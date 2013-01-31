@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
   
- Copyright 2011 Martin Goellnitz
+ Copyright 2011-2013 Martin Goellnitz
   
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,8 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<context:component-scan base-package="org.tangram" />
+    <!--  this should include as few packages as possible -->
+	<context:component-scan base-package="org.tangram.components" />
 
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
@@ -32,9 +33,6 @@
 				<value>/WEB-INF/tangram/*.properties</value>
 			</list>
 		</property>
-	</bean>
-
-	<bean id="classRepository" class="org.tangram.logic.ClassRepository">
 	</bean>
 
 	<bean id="modelAndViewFactory" class="org.tangram.view.GroovyModelAndViewFactory" />

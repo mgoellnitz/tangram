@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.rdbms;
+package org.tangram.components.rdbms;
+
+import java.lang.reflect.Type;
 
 import org.springframework.stereotype.Component;
 import org.tangram.PersistentRestartCache;
@@ -26,6 +28,12 @@ public class DummyCacheAdapter implements PersistentRestartCache {
 
     @Override
     public <T> T get(String key, Class<T> c) {
+        return null;
+    }
+
+
+    @Override
+    public <T> T get(String key, Type t) {
         return null;
     }
 

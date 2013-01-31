@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@ import java.io.InputStream;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.CodeResource;
-import org.tangram.content.CodeResourceCache;
 import org.tangram.content.Content;
 
 public class VelocityResourceLoader extends ResourceLoader {

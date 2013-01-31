@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.gae;
+package org.tangram.components.gae;
 
+import java.lang.reflect.Type;
 import java.util.Collections;
 
 import net.sf.jsr107cache.Cache;
@@ -29,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.tangram.PersistentRestartCache;
+import org.tangram.gae.GaeBeanFactory;
 
 @Component
 public class GaeCacheAdapter implements PersistentRestartCache {
@@ -54,6 +56,16 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
+        if (log.isDebugEnabled()) {
+            log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
+        } // if
+        return jsrCache==null ? null : (T)jsrCache.get(key);
+    } // get()
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key, Type t) {
         if (log.isDebugEnabled()) {
             log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
         } // if

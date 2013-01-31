@@ -525,6 +525,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
         // Just to prefill
         if (prefill) {
+            if (log.isInfoEnabled()) {
+                log.info("afterPropertiesSet() prefilling");
+            } // if
             getClasses();
         } // if
 
