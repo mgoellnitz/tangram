@@ -29,18 +29,29 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
+import org.codehaus.groovy.control.CompilationUnit;
+import org.codehaus.groovy.control.Phases;
+import org.codehaus.groovy.tools.GroovyClass;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tangram.Constants;
+import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 
 @Component
 public class ClassRepository implements InitializingBean, BeanListener {
 
+    private static final String BYTECODE_CACHE_KEY = "tangram.bytecode.cache";
+
+    private static Log log = LogFactory.getLog(ClassRepository.class);
+
     @Autowired
     private CodeResourceCache codeCache;
+
+    @Autowired
+    private PersistentRestartCache startupCache;
 
     private Map<String, Class<? extends Object>> classes = null;
 
@@ -48,59 +59,86 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
 
-    private static Log log = LogFactory.getLog(ClassRepository.class);
-
 
     @SuppressWarnings("unchecked")
     protected void fillClasses() {
-        compilationErrors = new HashMap<String, String>();
-
-        Map<String, String> codes = new HashMap<String, String>();
-
+        Map<String, byte[]> byteCodes = startupCache.get(BYTECODE_CACHE_KEY, Map.class);
         GroovyClassLoader gcl = new GroovyClassLoader();
-        Map<String, CodeResource> typeCache = codeCache.getTypeCache("application/x-groovy");
-        for (CodeResource resource : typeCache.values()) {
-            String annotation = resource.getAnnotation();
-            // Check for class name - must be with capital letter for last element
-            int idx = annotation.lastIndexOf('.');
-            if (log.isInfoEnabled()) {
-                log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
-            } // if
-            if (idx>=0) {
-                idx++ ;
-                String suffix = annotation.substring(idx);
-                if ( !Character.isLowerCase(suffix.charAt(0))) {
-                    try {
-                        String codeText = resource.getCodeText();
-                        codes.put(annotation, codeText);
-                    } catch (Throwable e) {
-                        // who cares
-                        if (log.isErrorEnabled()) {
-                            log.error("fillClasses()", e);
-                        } // if
-                    } // try/catch
-                } // if
-            } // if
-        } // for
-
         classes = new HashMap<String, Class<? extends Object>>();
-        int i = Constants.RIP_CORD_COUNT;
-        while (i-- >0&&codes.size()>classes.size()) {
-            for (Map.Entry<String, String> code : codes.entrySet()) {
-                try {
-                    if (log.isInfoEnabled()) {
-                        log.info("fillClasses() compiling "+code.getKey());
+        if (byteCodes==null) {
+            compilationErrors = new HashMap<String, String>();
+            byteCodes = new HashMap<String, byte[]>();
+
+            Map<String, String> codes = new HashMap<String, String>();
+            Map<String, CodeResource> typeCache = codeCache.getTypeCache("application/x-groovy");
+            for (CodeResource resource : typeCache.values()) {
+                String annotation = resource.getAnnotation();
+                // Check for class name - must be with capital letter for last element
+                int idx = annotation.lastIndexOf('.');
+                if (log.isInfoEnabled()) {
+                    log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
+                } // if
+                if (idx>=0) {
+                    idx++ ;
+                    String suffix = annotation.substring(idx);
+                    if ( !Character.isLowerCase(suffix.charAt(0))) {
+                        try {
+                            String codeText = resource.getCodeText();
+                            codes.put(annotation, codeText);
+                        } catch (Throwable e) {
+                            // who cares
+                            if (log.isErrorEnabled()) {
+                                log.error("fillClasses()", e);
+                            } // if
+                        } // try/catch
                     } // if
-                    Class<? extends Object> clazz = gcl.parseClass(code.getValue(), code.getKey()+".groovy");
-                    classes.put(code.getKey(), clazz);
-                } catch (CompilationFailedException cfe) {
-                    compilationErrors.put(code.getKey(), cfe.getMessage());
-                    log.error("fillClasses()", cfe);
-                } catch (Throwable t) {
-                    log.error("fillClasses() [not marked in source code]", t);
-                } // try/catch
+                } // if
             } // for
-        } // while
+
+            int i = Constants.RIP_CORD_COUNT;
+            while (i-- >0&&codes.size()>byteCodes.size()) {
+                for (Map.Entry<String, String> code : codes.entrySet()) {
+                    try {
+                        if (log.isInfoEnabled()) {
+                            log.info("fillClasses() compiling "+code.getKey());
+                        } // if
+                        CompilationUnit cu = new CompilationUnit(gcl);
+                        cu.addSource(code.getKey()+".groovy", code.getValue());
+                        cu.compile(Phases.CLASS_GENERATION);
+                        List<GroovyClass> classList = cu.getClasses();
+                        if (classList.size()==1) {
+                            GroovyClass groovyClass = classList.get(0);
+                            byteCodes.put(groovyClass.getName(), groovyClass.getBytes());
+                            Class<? extends Object> clazz = gcl.defineClass(groovyClass.getName(), groovyClass.getBytes());
+                            if (log.isInfoEnabled()) {
+                                log.info("fillClasses() defining "+clazz.getName());
+                            } // if
+                            classes.put(clazz.getName(), clazz);
+                        } // if
+                    } catch (CompilationFailedException cfe) {
+                        compilationErrors.put(code.getKey(), cfe.getMessage());
+                        log.error("fillClasses()", cfe);
+                    } catch (Throwable t) {
+                        log.error("fillClasses() [not marked in source code]", t);
+                    } // try/catch
+                } // for
+            } // while
+            startupCache.put(BYTECODE_CACHE_KEY, byteCodes);
+        } else {
+            for (Map.Entry<String, byte[]> byteCode : byteCodes.entrySet()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("fillClasses() defining "+byteCode.getKey());
+                } // if
+                Class<? extends Object> clazz = gcl.defineClass(byteCode.getKey(), byteCode.getValue());
+                if (log.isInfoEnabled()) {
+                    log.info("fillClasses() defining "+clazz.getName()+" as "+byteCode.getKey());
+                } // if
+                classes.put(clazz.getName(), clazz);
+            } // if
+        } // if
+        if (log.isInfoEnabled()) {
+            log.info("fillClasses() done");
+        } // if
     } // fillClasses()
 
 
