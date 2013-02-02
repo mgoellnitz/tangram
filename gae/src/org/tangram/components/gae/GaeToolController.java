@@ -67,7 +67,7 @@ public class GaeToolController extends RenderingController {
 
             DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
             Query query = new Query("_ah_SESSION");
-            query.addFilter("_expires", FilterOperator.LESS_THAN, new Long(System.currentTimeMillis()));
+            query.setFilter(new Query.FilterPredicate("_expires", FilterOperator.LESS_THAN, new Long(System.currentTimeMillis())));
             PreparedQuery results = datastore.prepare(query);
             FetchOptions limit = FetchOptions.Builder.withLimit(10000);
             if (log.isInfoEnabled()) {
