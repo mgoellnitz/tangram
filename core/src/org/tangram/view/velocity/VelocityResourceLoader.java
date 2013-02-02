@@ -19,41 +19,47 @@
 package org.tangram.view.velocity;
 
 import java.io.InputStream;
+import java.util.Date;
 
 import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 import org.tangram.components.CodeResourceCache;
-import org.tangram.content.BeanFactory;
 import org.tangram.content.CodeResource;
-import org.tangram.content.Content;
 
 public class VelocityResourceLoader extends ResourceLoader {
 
-    public static CodeResourceCache codeResourceCache;
+    @SuppressWarnings("hiding")
+    private static final Log log = LogFactory.getLog(VelocityResourceLoader.class);
 
-    public static BeanFactory factory;
+    public static CodeResourceCache codeResourceCache;
 
 
     @Override
     public long getLastModified(Resource resource) {
-        return System.currentTimeMillis();
-    }
+        if (log.isInfoEnabled()) {
+            log.info("getLastModified() "+resource.getName()+" "+new Date(codeResourceCache.getLastUpdate()));
+        } // if
+        return codeResourceCache.getLastUpdate();
+    } // getLastModified()
 
 
     @Override
     public InputStream getResourceStream(String source) {
-        // TODO: Streamline this to be sure to use efficient caching
         InputStream result = null; // new ByteArrayInputStream("Oops!".getBytes());
         if ( !"VM_global_library.vm".equals(source)) {
-            Content t = factory.getBean(source);
             try {
+                if (log.isInfoEnabled()) {
+                    log.info("getResourceStream() "+source);
+                } // if
+                CodeResource t = codeResourceCache.get(source);
                 if (t!=null) {
-                    CodeResource temp = (CodeResource)t;
-                    result = temp.getStream();
+                    result = t.getStream();
                 } // if
             } catch (Exception e) {
-                log.error("getResourceStream()"+e.getMessage());
+                log.error("getResourceStream() "+e.getMessage());
             } // try/catch
         } // if
         return result;
@@ -62,12 +68,28 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public void init(ExtendedProperties configuration) {
-    }
+        if (log.isInfoEnabled()) {
+            log.info("init() "+configuration);
+        } // if
+    } // init()
 
 
     @Override
     public boolean isSourceModified(Resource resource) {
-        return true;
-    }
+        if (log.isInfoEnabled()) {
+            log.info("isSourceModified() "+resource.getName()+" "+new Date(resource.getLastModified())+" "
+                    +new Date(codeResourceCache.getLastUpdate()));
+        } // if
+        return (codeResourceCache.getLastUpdate() > resource.getLastModified());
+    } // isSourceModified()
+
+
+    @Override
+    public boolean resourceExists(String resourceName) {
+        if (log.isInfoEnabled()) {
+            log.info("resourceExists() "+resourceName);
+        } // if
+        return (codeResourceCache.get(resourceName)!=null);
+    } // resourceExists()
 
 } // VelocityResourceLoader

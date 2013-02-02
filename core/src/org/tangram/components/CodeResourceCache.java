@@ -42,7 +42,7 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
-    private Map<String, Map<String, CodeResource>> resourceCache;
+    private static Log log = LogFactory.getLog(CodeResourceCache.class);
 
     @Autowired
     private PersistentRestartCache startupCache;
@@ -50,9 +50,13 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
     @Autowired
     private BeanFactory factory;
 
+    private long lastResetTime;
+
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
 
-    private static Log log = LogFactory.getLog(CodeResourceCache.class);
+    private Map<String, Map<String, CodeResource>> resourceCache;
+
+    private Map<String, CodeResource> cache;
 
 
     @Override
@@ -65,7 +69,6 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
                 log.info("reset() cache: "+resources);
             } // if
         } // if
-        resourceCache = new HashMap<String, Map<String, CodeResource>>();
         if (resources==null) {
             if (log.isInfoEnabled()) {
                 log.info("reset() obtaining all code resources");
@@ -80,7 +83,10 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
             } // for
             startupCache.put(CODE_RESOURCE_CACHE_KEY, resources);
         } // if
+        resourceCache = new HashMap<String, Map<String, CodeResource>>(resources.size());
+        cache = new HashMap<String, CodeResource>(resourceCache.size());
         for (CodeResource resource : resources) {
+            cache.put(resource.getId(), resource);
             String mimeType = resource.getMimeType();
             if (StringUtils.hasText(mimeType)) {
                 Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
@@ -102,12 +108,23 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
         if (log.isInfoEnabled()) {
             log.info("reset() listeners notified");
         } // if
+        lastResetTime = System.currentTimeMillis();
     } // reset()
+
+
+    public long getLastUpdate() {
+        return lastResetTime;
+    } // getLastUpdate()
 
 
     public CodeResource get(String mimeType, String annotation) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
         return (typeCache==null) ? null : typeCache.get(annotation);
+    } // get()
+
+
+    public CodeResource get(String id) {
+        return cache.get(id);
     } // get()
 
 

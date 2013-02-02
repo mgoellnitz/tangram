@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,17 +20,17 @@ package org.tangram.view.velocity;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tangram.content.BeanFactory;
+import org.tangram.components.CodeResourceCache;
 
 public class VelocityPatchBean implements InitializingBean {
 
     @Autowired
-    BeanFactory factory;
+    CodeResourceCache codeResourcdCache;
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        VelocityResourceLoader.factory = factory;
+        VelocityResourceLoader.codeResourceCache = codeResourcdCache;
     } // afterPropertiesSet()
 
 } // VelocityPatchBean()
