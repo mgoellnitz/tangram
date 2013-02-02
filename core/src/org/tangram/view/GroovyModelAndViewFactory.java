@@ -19,6 +19,8 @@
 package org.tangram.view;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,23 +89,24 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
         cachedViewShims = new HashMap<String, List<Constructor<Shim>>>();
         cachedBeanShims = new HashMap<String, List<Constructor<Shim>>>();
 
-        ClassLoader classLoader = this.getClass().getClassLoader();
         for (Map.Entry<String, Class<Shim>> entry : classRepository.get(Shim.class).entrySet()) {
             try {
                 String annotation = entry.getKey();
-                Class<Content> beanClass = (Class<Content>)classLoader.loadClass(annotation);
                 Class<Shim> c = entry.getValue();
+                ParameterizedType pt = ((ParameterizedType)c.getGenericSuperclass());
+                Type[] actualTypes = pt.getActualTypeArguments();
+                Class<Content> beanClass = (Class<Content>)(actualTypes[0]);
                 String className = c.getName();
                 if (ViewShim.class.isAssignableFrom(c)) {
                     if (log.isInfoEnabled()) {
-                        log.info("setShimClasses() defining view shim "+className+" for "+annotation);
+                        log.info("reset() defining view shim "+className+" for "+annotation);
                     } // if
                     Constructor<Shim> ct = c.getConstructor(HttpServletRequest.class, beanClass);
                     defineViewShim(beanClass, ct);
                 } else {
                     if (Shim.class.isAssignableFrom(c)) {
                         if (log.isInfoEnabled()) {
-                            log.info("setShimClasses() defining bean shim "+className+" for "+annotation);
+                            log.info("reset() defining bean shim "+className+" for "+annotation);
                         } // if
                         Constructor<Shim> ct = c.getConstructor(beanClass);
                         defineBeanShim(beanClass, ct);
@@ -112,7 +115,7 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
             } catch (Throwable e) {
                 // who cares
                 if (log.isErrorEnabled()) {
-                    log.error("fillShimClasses()", e);
+                    log.error("reset()", e);
                 } // if
             } // try/catch
         } // for
