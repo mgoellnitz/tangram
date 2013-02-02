@@ -59,11 +59,13 @@ public class TangramServlet extends DispatcherServlet {
 
         View result = viewHandler.resolveView(viewName, model, locale, request);
 
-        /* TODO: Maybe we don't like this too much
-        if (result==null) {
-            result = super.resolveViewName(viewName, model, locale, request);
+        if (result == null) {
+            Object self = model.get(Constants.THIS);
+            if (self == null) {
+                self = model;
+            } // if
+            throw new Exception("Cannot find view "+viewName+" for "+self);
         } // if
-        */
 
         return result;
     } // resolveViewName()
