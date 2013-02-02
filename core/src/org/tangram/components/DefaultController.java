@@ -37,11 +37,15 @@ import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.link.Link;
+import org.tangram.view.link.LinkFactory;
 
 @Controller
 public class DefaultController extends RenderingController {
 
     private static final Log log = LogFactory.getLog(DefaultController.class);
+
+    @Autowired
+    LinkFactory linkFactory;
 
     @Autowired(required = false)
     protected HashSet<String> customLinkViews = new HashSet<String>();
@@ -53,13 +57,9 @@ public class DefaultController extends RenderingController {
 
 
     @RequestMapping(value = "/id_{id}/view_{view}")
-    public ModelAndView render(@PathVariable("id") String id, @PathVariable("view") String view,
-            HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView render(@PathVariable("id") String id, @PathVariable("view") String view, HttpServletRequest request,
+            HttpServletResponse response) {
         try {
-            if (customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "custom view required.");
-                return null;
-            } // if
             if (log.isDebugEnabled()) {
                 log.debug("render() id="+id);
                 log.debug("render() view="+view);
@@ -72,7 +72,18 @@ public class DefaultController extends RenderingController {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
                 return null;
             } // if
-
+            if (customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
+                Link redirectLink = null;
+                try {
+                    redirectLink = linkFactory.createLink(request, response, content, null, view);
+                    response.setHeader("Location", redirectLink.getUrl());
+                    response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);                    
+                } catch (Exception e) {
+                    log.error("render() cannot redirect", e);
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "custom view required.");
+                } // try/catch
+                return null;
+            } // if
             Map<String, Object> model = createModel(new TargetDescriptor(content, view, null), request, response);
             return modelAndViewFactory.createModelAndView(model, view);
         } catch (Exception e) {
