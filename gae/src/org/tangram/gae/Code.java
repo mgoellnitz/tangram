@@ -92,7 +92,7 @@ public class Code extends GaeContent implements CodeResource {
 
     @Override
     public String getCodeText() {
-        return getCode().getValue();
+        return (getCode()==null) ? null : getCode().getValue();
     } // getCodeText()
 
 

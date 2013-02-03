@@ -372,12 +372,15 @@ public class EditingController extends RenderingController {
                     log.debug("link() id="+content.getId());
                 } // if
 
-                Content bean = beanFactory.getBeanForUpdate(Content.class, id);
+                Content bean = beanFactory.getBean(Content.class, id);
                 BeanWrapper wrapper = new BeanWrapperImpl(bean);
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")
                 List<Object> list = (List<Object>)listObject;
                 list.add(content);
+                // re-get for update to avoid xg transactions whereevery possible
+                bean = beanFactory.getBeanForUpdate(Content.class, id);
+                wrapper = new BeanWrapperImpl(bean);
                 wrapper.setPropertyValue(propertyName, list);
                 bean.persist();
                 return redirect(request, response, content);

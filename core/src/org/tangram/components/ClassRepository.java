@@ -55,7 +55,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
     private Map<String, Class<? extends Object>> classes = null;
 
-    private Map<String, String> compilationErrors;
+    private Map<String, String> compilationErrors = new HashMap<String, String>();;
 
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
 
@@ -63,6 +63,9 @@ public class ClassRepository implements InitializingBean, BeanListener {
     @SuppressWarnings("unchecked")
     protected void fillClasses() {
         Map<String, byte[]> byteCodes = startupCache.get(BYTECODE_CACHE_KEY, Map.class);
+        if (classes!=null) {
+            byteCodes = null;
+        } // if
         GroovyClassLoader gcl = new GroovyClassLoader();
         classes = new HashMap<String, Class<? extends Object>>();
         if (byteCodes==null) {
