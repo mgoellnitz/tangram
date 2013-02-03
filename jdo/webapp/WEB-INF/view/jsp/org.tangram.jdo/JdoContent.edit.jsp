@@ -11,7 +11,7 @@
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.view.Utils"
 %><%@page import="org.tangram.jdo.JdoContent"
-%><%@page import="org.tangram.components.jdo.EditingController;"
+%><%@page import="org.tangram.components.jdo.EditingController"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -163,7 +163,7 @@ if (value instanceof Collection) {
   if (elementClass != Object.class) {
 %>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
   } // if
-  request.setAttribute("propertyValue", value);   
+  request.setAttribute("propertyValue", value);
   request.setAttribute("elementClass", elementClass); 
 %><c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
