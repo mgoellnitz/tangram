@@ -36,7 +36,6 @@ Typ: </span>${self.class.package.name}.<span class="cms_editor_title">${self.cla
 <div class="cms_editor_table">
 <%
 BeanWrapper bw = new BeanWrapperImpl(request.getAttribute(Constants.THIS));
-int fid = 0; // form ids
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
