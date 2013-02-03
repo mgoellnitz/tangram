@@ -89,10 +89,8 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
         cachedViewShims = new HashMap<String, List<Constructor<Shim>>>();
         cachedBeanShims = new HashMap<String, List<Constructor<Shim>>>();
 
-        for (Map.Entry<String, Class<Shim>> entry : classRepository.get(Shim.class).entrySet()) {
+        for (Class<Shim> c : classRepository.get(Shim.class).values()) {
             try {
-                String annotation = entry.getKey();
-                Class<Shim> c = entry.getValue();
                 ParameterizedType pt = ((ParameterizedType)c.getGenericSuperclass());
                 Type[] actualTypes = pt.getActualTypeArguments();
                 Class<Content> beanClass = (Class<Content>)(actualTypes[0]);

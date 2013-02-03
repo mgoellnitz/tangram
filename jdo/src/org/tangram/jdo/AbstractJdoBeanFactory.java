@@ -518,6 +518,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
         pmfInstance = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "transactions-optional");
 

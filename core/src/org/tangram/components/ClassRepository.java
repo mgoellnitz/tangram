@@ -55,7 +55,7 @@ public class ClassRepository implements InitializingBean, BeanListener {
 
     private Map<String, Class<? extends Object>> classes = null;
 
-    private Map<String, String> compilationErrors = new HashMap<String, String>();;
+    private Map<String, String> compilationErrors = new HashMap<String, String>();
 
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
 

@@ -60,6 +60,7 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void reset() {
         List<CodeResource> resources = null;
         if (resourceCache==null) {
