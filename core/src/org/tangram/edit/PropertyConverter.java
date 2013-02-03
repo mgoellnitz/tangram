@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -123,8 +125,15 @@ public abstract class PropertyConverter {
             } // for
             value = elements;
         } else if (Content.class.isAssignableFrom(cls)) {
-            // TODO: RegEx Matching for ID-Format and extraction of ID part of this string would be a nice copy paste
-            // helper
+            // Filter out possible single ID from input
+            Pattern p = Pattern.compile(".*([A-Z][a-zA-Z]+:[0-9]+).*");
+            Matcher m = p.matcher(valueString);
+            if (m.find()) {
+                valueString = m.group(1);
+                if (log.isInfoEnabled()) {
+                    log.info("getStorableObject() pattern match result "+valueString);
+                } // if
+            } // if
             if (StringUtils.hasText(valueString)) {
                 value = beanFactory.getBean(valueString);
             } // if
