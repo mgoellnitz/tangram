@@ -74,22 +74,7 @@ if (value instanceof Collection) {
 %><c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
-</c:forEach>
-<select name="<%=EditingController.PARAMETER_CLASS_NAME%>" id="select<%=fid%>">
-<c:forEach items="${self.beanFactory.implementingClassesMap[elementClass]}" var="c"
-><option value="${c.name}">${c.simpleName}</option>
-</c:forEach
-></select>
-<script language="JavaScript">
-function new<%=fid%>() {
-	var e = document.getElementById('select<%=fid%>');
-	var url = '<cms:link bean="${self}" action="link"/>?<%=EditingController.PARAMETER_PROPERTY%>=<%=key%>&<%=EditingController.PARAMETER_ID%>=${self.id}&<%=EditingController.PARAMETER_CLASS_NAME%>='+e.value
-	location.href=url;
-} //
-</script>
-<a href="javascript:new<%=fid%>();">[Neues Element]</a><%
-fid++;
-%></c:if><%  
+</c:forEach></c:if><%  
 } // if 
 if (value instanceof JdoContent) {
     request.setAttribute("item", value); 
