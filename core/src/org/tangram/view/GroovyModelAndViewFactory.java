@@ -99,14 +99,14 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
                 String className = c.getName();
                 if (ViewShim.class.isAssignableFrom(c)) {
                     if (log.isInfoEnabled()) {
-                        log.info("reset() defining view shim "+className+" for "+annotation);
+                        log.info("reset() defining view shim "+className+" for "+beanClass.getName());
                     } // if
                     Constructor<Shim> ct = c.getConstructor(HttpServletRequest.class, beanClass);
                     defineViewShim(beanClass, ct);
                 } else {
                     if (Shim.class.isAssignableFrom(c)) {
                         if (log.isInfoEnabled()) {
-                            log.info("reset() defining bean shim "+className+" for "+annotation);
+                            log.info("reset() defining bean shim "+className+" for "+beanClass.getName());
                         } // if
                         Constructor<Shim> ct = c.getConstructor(beanClass);
                         defineBeanShim(beanClass, ct);

@@ -20,8 +20,8 @@ package org.tangram.components.gae;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.Map;
 
-import net.sf.jsr107cache.Cache;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
@@ -37,9 +37,10 @@ public class GaeCacheAdapter implements PersistentRestartCache {
 
     private static final Log log = LogFactory.getLog(GaeBeanFactory.class);
 
-    private Cache jsrCache = null;
+    private Map<String, Object> jsrCache = null;
 
 
+    @SuppressWarnings("unchecked")
     public GaeCacheAdapter() {
         try {
             CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
@@ -50,7 +51,7 @@ public class GaeCacheAdapter implements PersistentRestartCache {
         } catch (CacheException ce) {
             log.error("()", ce);
         } // try
-    } // GaeCacheAdapter()
+    }// GaeCacheAdapter()
 
 
     @Override

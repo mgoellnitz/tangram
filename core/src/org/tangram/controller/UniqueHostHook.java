@@ -46,7 +46,7 @@ public class UniqueHostHook implements ControllerHook {
 
 
     @Override
-	public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
+    public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
         if (log.isDebugEnabled()) {
@@ -54,8 +54,7 @@ public class UniqueHostHook implements ControllerHook {
         } // if
         boolean isOnLocalhost = request.getServerName().equals("localhost");
         if ( !(request.getServerName().equals(primaryDomain)||(isOnLocalhost))) {
-            Link redirectLink = linkFactory.createLink(request, response, descriptor.bean, descriptor.action,
-                    descriptor.view);
+            Link redirectLink = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
             response.setHeader("Location", "http://"+primaryDomain+redirectLink.getUrl());
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             return true;

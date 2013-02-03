@@ -130,9 +130,6 @@ public class ClassRepository implements InitializingBean, BeanListener {
                     log.debug("fillClasses() defining "+byteCode.getKey());
                 } // if
                 Class<? extends Object> clazz = gcl.defineClass(byteCode.getKey(), byteCode.getValue());
-                if (log.isInfoEnabled()) {
-                    log.info("fillClasses() defining "+clazz.getName()+" as "+byteCode.getKey());
-                } // if
                 classes.put(clazz.getName(), clazz);
             } // if
         } // if
