@@ -35,6 +35,9 @@ dependencies {
   
   compile "org.apache.velocity:velocity:$velocity_version"
   compile "org.codehaus.groovy:groovy:$groovy_version"
+  // needed for js compressor to work
+  compile "org.mozilla:rhino:$rhino_version"
+  providedCompile "rhino:js:$js_version"
   compile "com.yahoo.platform.yui:yuicompressor:$yui_version"
   
   compile "commons-logging:commons-logging:1.1.1"
