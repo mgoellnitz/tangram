@@ -25,7 +25,8 @@ dependencies {
   compile project (':core')
     
   compile "$jdo_api"
-  compile "com.google.code.gson:gson:1.7.1"
+  // perhaps later
+  // compile "com.google.code.gson:gson:1.7.1"
   
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"

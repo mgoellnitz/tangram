@@ -13,7 +13,7 @@
 %><%@page import="java.util.TimeZone"
 %><%@page import="java.util.Map"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
-//hard code mimetype
+// hard coded mimetype
 response.setContentType("text/javascript");
 
 ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
