@@ -70,7 +70,6 @@ public class IncludeDirective extends Directive {
 
         // copy model from original context
         Map<String, Object> model = Utils.getModelAndViewFactory(request).createModel(bean, request, response);
-        // Map<String, Object> model = new HashMap<String, Object>();
         Object[] keys = context.getKeys();
         for (Object key : keys) {
             String k = ""+key;
@@ -79,8 +78,6 @@ public class IncludeDirective extends Directive {
             } // if
         } // for
         model.remove("springMacroRequestContext");
-        // model.remove(Constants.THIS);
-        // model.put(Constants.THIS, bean);
 
         IncludeTag.render(writer, model, view);
         return false;
