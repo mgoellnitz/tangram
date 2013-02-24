@@ -35,7 +35,7 @@ ext.datanucleus_version= "3.1.3"
 ext.datanucleus_enhancer_version= "3.1.1"
 ext.datanucleus_appengine_version= "2.1.1"
 
-ext.appengine_version = "1.7.4"
+ext.appengine_version = "1.7.5"
 /* version section end */
 
 apply plugin: 'java'
@@ -101,7 +101,6 @@ jar.enabled = true
 configurations {
   libs 
   webapp
-  dn
 }
 
 // needed for building jars and wars

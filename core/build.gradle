@@ -18,6 +18,10 @@
  */
 apply from: '../commons.gradle'
 
+configurations {
+  all*.exclude(group: 'rhino', module: 'js') 
+}
+
 dependencies {
   providedCompile "javax.servlet:servlet-api:$servlet_spec"
   providedCompile "javax.servlet:jsp-api:$jsp_spec"
