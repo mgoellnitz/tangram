@@ -58,8 +58,13 @@ public class LogFormatter extends Formatter {
         sb.append(" ");
         sb.append(record.getLevel().getLocalizedName().toUpperCase());
         sb.append(": ");
-        if (record.getSourceClassName()!=null) {
-            sb.append(record.getSourceClassName());
+        String sourceClassName = record.getSourceClassName();
+        if (sourceClassName!=null) {
+            int idx = sourceClassName.lastIndexOf('.');
+            if (idx > 0) {
+                sourceClassName = sourceClassName.substring(idx);
+            } // if
+            sb.append(sourceClassName);
         } else {
             sb.append(record.getLoggerName());
         } // if
