@@ -18,6 +18,7 @@
  */
 package org.tangram.components;
 
+import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,12 +42,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
-import org.tangram.content.Content;
+import org.tangram.controller.ActionForm;
 import org.tangram.controller.ActionParameter;
 import org.tangram.controller.ControllerHook;
 import org.tangram.controller.LinkAction;
+import org.tangram.edit.PropertyConverter;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
+import org.tangram.view.Utils;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
 import org.tangram.view.link.LinkHandler;
@@ -96,7 +100,7 @@ public class MetaController extends AbstractController implements InitializingBe
             } // for
         } // for
         if (log.isInfoEnabled()) {
-            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews()); 
+            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
         } // if
         for (Map.Entry<String, Class<LinkScheme>> entry : classRepository.get(LinkScheme.class).entrySet()) {
             try {
@@ -115,8 +119,8 @@ public class MetaController extends AbstractController implements InitializingBe
                     customViews.put(linkScheme, schemeCustomViews);
                     defaultController.getCustomLinkViews().addAll(schemeCustomViews);
                     if (log.isInfoEnabled()) {
-                        log.info("reset() adding custom views "+schemeCustomViews); 
-                        log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews()); 
+                        log.info("reset() adding custom views "+schemeCustomViews);
+                        log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
                     } // if
                     schemes.put(annotation, linkScheme);
                 } else {
@@ -132,7 +136,7 @@ public class MetaController extends AbstractController implements InitializingBe
             } // try/catch
         } // for
         if (log.isInfoEnabled()) {
-            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews()); 
+            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
         } // if
     } // fillSchemes()
 
@@ -205,11 +209,14 @@ public class MetaController extends AbstractController implements InitializingBe
 
         // We don't want to access parameters via GET
         if ((method!=null)&&request.getMethod().equals("POST")) {
+            // TODO: Do type conversion or binding with spring or its coversion service
+            PropertyConverter propertyConverter = Utils.getPropertyConverter(request);
             descriptor.action = null;
             List<Object> parameters = new ArrayList<Object>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
             Class<? extends Object>[] parameterTypes = method.getParameterTypes();
             int typeIndex = 0;
+            // TODO: Do real binding like spring here - or allow spring stuff in groovy
             for (Annotation[] annotations : allAnnotations) {
                 Class<? extends Object> parameterType = parameterTypes[typeIndex++ ];
                 for (Annotation annotation : annotations) {
@@ -218,19 +225,34 @@ public class MetaController extends AbstractController implements InitializingBe
                         if ("--empty--".equals(parameterName)) {
                             parameterName = parameterType.getSimpleName().toLowerCase();
                         } // if
-                        String value = request.getParameter(parameterName);
+                        String valueString = request.getParameter(parameterName);
                         if (log.isInfoEnabled()) {
                             log.info("callAction() parameter "+parameterName+" should be of type "+parameterType.getName());
                         } // if
-                        Object derivedValue = value;
-                        if (Content.class.isAssignableFrom(parameterType)) {
-                            derivedValue = beanFactory.getBean(value);
-                            if (log.isInfoEnabled()) {
-                                log.info("callAction() converting parameter "+parameterName+" to "+derivedValue.getClass());
-                            } // if
-                        } // if
-                          // TODO: more type conversions
-                        parameters.add(derivedValue);
+                        // Object derivedValue = value;
+                        // if (Content.class.isAssignableFrom(parameterType)) {
+                        // derivedValue = beanFactory.getBean(value);
+                        // if (log.isInfoEnabled()) {
+                        // log.info("callAction() converting parameter "+parameterName+" to "+derivedValue.getClass());
+                        // } // if
+                        // } // if
+                        Object value = propertyConverter.getStorableObject(valueString, parameterType);
+                        parameters.add(value);
+                    } // if
+                    if (annotation instanceof ActionForm) {
+                        try {
+                            Object form = parameterType.newInstance();
+                            BeanWrapper wrapper = Utils.createWrapper(form, request);
+                            for (PropertyDescriptor property : wrapper.getPropertyDescriptors()) {
+                                String propertyName = property.getName();
+                                String valueString = request.getParameter(propertyName);
+                                Object value = propertyConverter.getStorableObject(valueString, property.getPropertyType());
+                                wrapper.setPropertyValue(propertyName, value);
+                            } // for
+                            parameters.add(form);
+                        } catch (Exception e) {
+                            log.error("callAction() cannot create and fill form "+parameterType.getName());
+                        } // try/catch
                     } // if
                 } // for
             } // for
