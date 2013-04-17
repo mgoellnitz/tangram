@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +52,7 @@ import org.tangram.controller.RenderingController;
 import org.tangram.edit.PropertyConverter;
 import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.jdo.JdoContent;
+import org.tangram.view.Utils;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
 
@@ -70,6 +70,8 @@ public class EditingController extends RenderingController {
     public static final String PARAMETER_ID = "cms.editor.id";
 
     public static final String PARAMETER_PROPERTY = "cms.editor.property.name";
+
+    public static final String ATTRIBUTE_WRAPPER = "wrapper";
 
     /**
      * writable properties which should not be altered by the upper layers or persisted
@@ -108,6 +110,15 @@ public class EditingController extends RenderingController {
     } // redirect()
 
 
+    private final BeanWrapper createWrapper(Object bean, HttpServletRequest request) {
+        BeanWrapper wrapper = Utils.createWrapper(bean, request);
+        if (log.isInfoEnabled()) {
+            log.info("createWrapper() conversion service "+wrapper.getConversionService());
+        } // if
+        return wrapper;
+    } // createWrapper()
+
+
     @RequestMapping(value = "/store/id_{id}")
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public ModelAndView store(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
@@ -116,7 +127,7 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             JdoContent bean = beanFactory.getBean(JdoContent.class, id);
-            BeanWrapper wrapper = new BeanWrapperImpl(bean);
+            BeanWrapper wrapper = createWrapper(bean, request);
             Map<String, Object> newValues = new HashMap<String, Object>();
 
             Map parameterMap = request.getParameterMap();
@@ -201,7 +212,8 @@ public class EditingController extends RenderingController {
             } // if
 
             bean = beanFactory.getBeanForUpdate(JdoContent.class, id);
-            wrapper = new BeanWrapperImpl(bean);
+            // wrapper = new BeanWrapperImpl(bean);
+            wrapper = createWrapper(bean, request);
             Exception e = null;
             for (String propertyName : newValues.keySet()) {
                 try {
@@ -227,7 +239,7 @@ public class EditingController extends RenderingController {
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
-    }// store()
+    } // store()
 
 
     private String getVariant(HttpServletRequest request) {
@@ -338,11 +350,15 @@ public class EditingController extends RenderingController {
             } // if
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
+            ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
+            mav.getModel().put(ATTRIBUTE_WRAPPER, createWrapper(content, request));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource)content;
-                request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
+                // TODO: Test
+                // request.setAttribute("compilationErrors",
+                // classRepository.getCompilationErrors().get(code.getAnnotation()));
+                mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
-            ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
             mav.getModel().put("classes", ((JdoBeanFactory)beanFactory).getClasses());
             return mav;
         } catch (Exception e) {
@@ -373,14 +389,14 @@ public class EditingController extends RenderingController {
                 } // if
 
                 Content bean = beanFactory.getBean(Content.class, id);
-                BeanWrapper wrapper = new BeanWrapperImpl(bean);
+                BeanWrapper wrapper = createWrapper(bean, request);
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")
                 List<Object> list = (List<Object>)listObject;
                 list.add(content);
                 // re-get for update to avoid xg transactions whereevery possible
                 bean = beanFactory.getBeanForUpdate(Content.class, id);
-                wrapper = new BeanWrapperImpl(bean);
+                wrapper = createWrapper(bean, request);
                 wrapper.setPropertyValue(propertyName, list);
                 bean.persist();
                 return redirect(request, response, content);

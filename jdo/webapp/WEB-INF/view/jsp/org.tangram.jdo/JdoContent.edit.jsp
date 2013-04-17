@@ -6,7 +6,6 @@
 %><%@page import="java.lang.reflect.Modifier"
 %><%@page import="java.beans.PropertyDescriptor"
 %><%@page import="org.springframework.beans.BeanWrapper"
-%><%@page import="org.springframework.beans.BeanWrapperImpl"
 %><%@page import="org.springframework.beans.BeanUtils"
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.view.Utils"
@@ -42,7 +41,7 @@ Typ: ${self.class.package.name}.<span class="cms_editor_title">${self.class.simp
 <table class="cms_editor_table">
 <%
 int fid = 0; // form ids
-BeanWrapper bw = new BeanWrapperImpl(request.getAttribute(Constants.THIS));
+BeanWrapper bw = Utils.createWrapper(request.getAttribute(Constants.THIS), request);
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 

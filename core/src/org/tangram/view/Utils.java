@@ -25,7 +25,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.tangram.content.BeanFactory;
 import org.tangram.edit.PropertyConverter;
@@ -138,6 +141,24 @@ public final class Utils {
         } // if
         return uriPrefix;
     } // getUriPrefix()
+
+
+    /**
+     * TODO: this is not really a view utility - place it somewhere else or replace it
+     * 
+     * @param bean
+     * @param conversionService
+     * @return
+     */
+    public static BeanWrapper createWrapper(Object bean, HttpServletRequest request) {
+        BeanWrapper wrapper;
+        wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
+        ConversionService conversionService = getBeanFromContext(ConversionService.class, request);
+        if (conversionService!=null) {
+            wrapper.setConversionService(conversionService);
+        } // if
+        return wrapper;
+    } // createWrapper()
 
 
     /**
