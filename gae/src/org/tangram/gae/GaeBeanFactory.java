@@ -28,7 +28,6 @@ import org.tangram.jdo.AbstractJdoBeanFactory;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.repackaged.com.google.common.util.Base64;
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
@@ -82,14 +81,6 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                     Key k = KeyFactory.stringToKey(id);
                     kind = k.getKind();
                     numericId = k.getId();
-                } else {
-                    byte[] idBytes = Base64.decodeWebSafe(id);
-                    String idString = new String(idBytes, "UTF-8");
-                    idx = idString.indexOf(':');
-                    if (idx>0) {
-                        kind = idString.substring(0, idx);
-                        numericId = Long.parseLong(idString.substring(idx+1));
-                    } // if
                 } // if
             } // if
             if (log.isDebugEnabled()) {

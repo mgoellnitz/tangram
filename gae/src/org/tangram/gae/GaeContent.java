@@ -22,27 +22,18 @@ import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.tangram.jdo.JdoContent;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.repackaged.com.google.common.util.Base64;
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
 public abstract class GaeContent extends JdoContent {
-
-    private static final Log log = LogFactory.getLog(GaeContent.class);
-
-    @NotPersistent
-    private static final boolean encodeIds = false;
 
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     @PrimaryKey
@@ -58,13 +49,6 @@ public abstract class GaeContent extends JdoContent {
         try {
             Key key = KeyFactory.stringToKey(result);
             result = key.getKind()+":"+key.getId();
-            if (encodeIds) {
-                try {
-                    result = Base64.encodeWebSafe(result.getBytes("UTF-8"), true);
-                } catch (Exception e) {
-                    log.warn("postprocessPlainId() "+e.getLocalizedMessage());
-                } // try/catch
-            } // if
         } catch (Exception e) {
             // never mind
         } // try/catch
