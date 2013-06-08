@@ -69,4 +69,4 @@ public class RdbmsPropertyConverter extends PropertyConverter {
         } // if
     } // getStorableObject()
 
-} // DatanucleusPropertyConverter
+} // RdbmsPropertyConverter

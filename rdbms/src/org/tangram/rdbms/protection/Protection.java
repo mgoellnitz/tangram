@@ -46,7 +46,7 @@ public abstract class Protection extends RdbmsContent implements org.tangram.sol
     }
 
 
-	@Override
+    @Override
     public String getProtectionKey() {
         return protectionKey;
     }

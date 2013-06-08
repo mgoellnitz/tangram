@@ -104,9 +104,9 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                 if (log.isInfoEnabled()) {
                     log.info("preHandle() checking for user: "+userName);
                 } // if
-                // if ( !thisURL.startsWith("/WEB-INF")&& !thisURL.startsWith("_ah")) {
-                // request.setAttribute(Constants.ATTRIBUTE_LOGOUT_URL, userService.createLogoutURL(thisURL));
-                // } // if
+                  // if ( !thisURL.startsWith("/WEB-INF")&& !thisURL.startsWith("_ah")) {
+                  // request.setAttribute(Constants.ATTRIBUTE_LOGOUT_URL, userService.createLogoutURL(thisURL));
+                  // } // if
                 if (adminUsers.contains(userName)) {
                     request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                 } // if
@@ -117,12 +117,13 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                 } // if
             } else {
-                // String loginURL = userService.createLoginURL(thisURL);
+                // TODO: new generic Login URL stuff
                 String loginURL = "";
+                // TODO: right now we log in an admin dummy user:
                 principal = new Principal() {
-                	@Override
+                    @Override
                     public String getName() {
-                        return "martin@goellnitz.de";
+                        return "dummy";
                     } // getName()
                 };
                 request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, "true");
