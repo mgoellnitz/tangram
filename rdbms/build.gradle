@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,22 +46,5 @@ dependencies {
 }
 
 compileJava.doLast {
-    try {
-        ant.taskdef(name: 'enhance', classpath: sourceSets['main'].compileClasspath.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
-        ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: sourceSets['main'].output.classesDir.canonicalPath) {
-            classpath {
-                // for the log configuration...
-                pathelement(path: '.')
-                // The classes to be enhanced need to be on the class path
-                pathelement(path: sourceSets['main'].output.classesDir.canonicalPath)
-                // this is the real class path for the tool (s.a.)
-                pathelement(path: sourceSets['main'].compileClasspath.asPath)
-            }
-            fileset(dir: sourceSets['main'].output.classesDir.canonicalPath)
-        }
-    } catch(Exception e) {
-        println ''
-        e.printStackTrace(System.out);
-        throw new GradleException('An error occurred enhancing persistence capable classes.', e)
-    }
+    jdoEnhance()
 }

@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,22 +20,22 @@
 /* version section */
 ext.servlet_spec = "2.5"
 ext.jsp_spec = "2.0"
-ext.groovy_version = "2.0.2"
+ext.groovy_version = "2.1.4"
 ext.velocity_version = "1.7"
 ext.yui_version="2.4.7"
 // TODO: find maven repository for 1.8.1.3
 ext.hsqldb_version="1.8.0.10"
 ext.jdo_api="javax.jdo:jdo-api:3.0.1"
 
-ext.springframework_version = "3.1.3.RELEASE"
-ext.springsecurity_version = "3.1.3.RELEASE"
+ext.springframework_version = "3.1.4.RELEASE"
+ext.springsecurity_version = "3.1.4.RELEASE"
 // Datanucleus Version except for Google App Engine
-ext.datanucleus_version= "3.1.3"
+ext.datanucleus_version= "3.2.1"
 // The byte code enhancer is not included in every version for some reason
 ext.datanucleus_enhancer_version= "3.1.1"
 ext.datanucleus_appengine_version= "2.1.1"
 
-ext.appengine_version = "1.7.7"
+ext.appengine_version = "1.8.0"
 /* version section end */
 
 apply plugin: 'java'
@@ -138,14 +138,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 buildscript {
     repositories {
         mavenLocal()
-  
-        // most of the usual stuff
         maven { url "http://repo1.maven.org/maven2" }
     }
-
     dependencies {
         // TODO: how to use the yui_version variable above?
-        classpath "com.yahoo.platform.yui:yuicompressor:2.4.6"
+        classpath "com.yahoo.platform.yui:yuicompressor:2.4.7"
     }
 }
 
@@ -154,14 +151,14 @@ class JavaScriptMinify extends FilterReader {
     Reader inputReader
 
     public JavaScriptMinify(Reader inputReader) {
-        super(inputReader);
+        super(inputReader)
         if (inputReader!=null) {
             try {
-                com.yahoo.platform.yui.compressor.JavaScriptCompressor jsc = new com.yahoo.platform.yui.compressor.JavaScriptCompressor(inputReader, null);
-                StringWriter out = new StringWriter();
-                jsc.compress(out, 80, false, false, false, false);
-                out.close();
-                super.in = new StringReader(out.getBuffer().toString());
+                com.yahoo.platform.yui.compressor.JavaScriptCompressor jsc = new com.yahoo.platform.yui.compressor.JavaScriptCompressor(inputReader, null)
+                StringWriter out = new StringWriter()
+                jsc.compress(out, 80, false, false, false, false)
+                out.close()
+                super.in = new StringReader(out.getBuffer().toString())
             } catch (Exception e) {
                 ; // who cares
             } // try/catch
@@ -178,11 +175,11 @@ class CSSMinify extends FilterReader {
         super(inputReader);
         if (inputReader!=null) {
             try {
-                com.yahoo.platform.yui.compressor.CssCompressor csc = new com.yahoo.platform.yui.compressor.CssCompressor(inputReader);
-                StringWriter out = new StringWriter();
-                csc.compress(out, 0);
-                out.close();
-                super.in = new StringReader(out.getBuffer().toString());
+                com.yahoo.platform.yui.compressor.CssCompressor csc = new com.yahoo.platform.yui.compressor.CssCompressor(inputReader)
+                StringWriter out = new StringWriter()
+                csc.compress(out, 0)
+                out.close()
+                super.in = new StringReader(out.getBuffer().toString())
             } catch (Exception e) {
                 ; // who cares
             } // try/catch
@@ -198,12 +195,6 @@ war.doFirst {
     Object firstWebappDependency = iter.next()
     if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
       String archiveFileName = firstWebappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
-      /*
-      idx = archiveFileName.indexOf(';')
-      if (idx >= 0) {
-        archiveFileName = archiveFileName.substring(0, idx)
-      } // if
-      */
       ant.unzip(src: archiveFileName, dest: "$buildDir/target")  
     } else {
       println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
@@ -268,9 +259,9 @@ uploadArchives {
   repositories.mavenDeployer {
       repository(url: repositories.mavenLocal().url)
       // TODO: change this when we know how to rename sub projects
-      // depends on http://issues.gradle.org/browse/GRADLE-1135
+      // depends on fixed http://issues.gradle.org/browse/GRADLE-1135
       // pom.artifactId = basename+'-'+project.name+'-webapp'
-      pom.artifactId = project.name+'-webapp'
+      // pom.artifactId = project.name+'-webapp'
   }
 }
 
@@ -279,8 +270,8 @@ uploadLibs {
   repositories.mavenDeployer {
       repository(url: repositories.mavenLocal().url)
       // TODO: remove this when we know how to rename sub projects
-      // depends on http://issues.gradle.org/browse/GRADLE-1135
-      pom.artifactId = project.name
+      // depends on fixed http://issues.gradle.org/browse/GRADLE-1135
+      // pom.artifactId = project.name
   }
 }
 
@@ -288,3 +279,47 @@ task upload(dependsOn: [uploadArchives, uploadLibs]) {
 }
 
 // println "project: "+project.name
+
+apply plugin: UtilitiesPlugin
+
+import org.gradle.api.Project;
+
+class UtilitiesPlugin implements Plugin<Project> {
+
+  public void apply(Project project) {
+    project.convention.plugins.utilities = new TangramUtilities(project)
+  }
+
+}
+
+class TangramUtilities {
+
+  private Project project;
+  
+  public TangramUtilities(Project p) {
+    project = p
+  } 
+
+  public jdoEnhance() {
+    try {
+        project.ant.taskdef(name: 'enhance', classpath: project.sourceSets['main'].compileClasspath.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
+        project.ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: project.sourceSets['main'].output.classesDir.canonicalPath) {
+            classpath {
+                // for the log configuration...
+                pathelement(path: '.')
+                // The classes to be enhanced need to be on the class path
+                pathelement(path: project.sourceSets['main'].output.classesDir.canonicalPath)
+                // this is the real class path for the tool (s.a.)
+                pathelement(path: project.sourceSets['main'].compileClasspath.asPath)
+            }
+            fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
+        }
+    } catch(Exception e) {
+        println ''
+        e.printStackTrace(System.out);
+        throw new GradleException('An error occurred enhancing persistence capable classes.', e)
+    }
+  }
+
+}
+    
