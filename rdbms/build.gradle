@@ -18,14 +18,14 @@
  */
 apply from: '../commons.gradle'
 
-war.dependsOn ':jdo:war'
+war.dependsOn ':tangram-jdo:war'
 
 dependencies {
-    webapp project (':jdo')
+    webapp project (':tangram-jdo')
 
     providedCompile "javax.servlet:servlet-api:$servlet_spec"
     providedCompile "javax.servlet:jsp-api:$jsp_spec"
-    compile project (':jdo')
+    compile project (':tangram-jdo')
 
     compile "hsqldb:hsqldb:$hsqldb_version"
     compile "$jdo_api"

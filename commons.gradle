@@ -42,6 +42,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 // apply plugin: 'code-quality'
 
 repositories {
@@ -56,7 +57,6 @@ repositories {
 }
 
 version = '0.8-SNAPSHOT'
-ext.basename = 'tangram'
 
 // datanucleus enhancer doesn't support this, but it works!
 sourceCompatibility = 1.6
@@ -88,9 +88,6 @@ sourceSets {
 // A place for a common checkstyle config file
 ext.checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
 
-// despite the short directory names we won't full blown archive names
-archivesBaseName = basename+'-'+project.name
-
 // avoid gradles default mimik to fiddle around with this directory
 webAppDirName = 'disabled'
 
@@ -109,11 +106,24 @@ artifacts {
   libs jar
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar 
+            artifact war {
+                classifier 'war'
+                extension 'war'
+            }
+        }
+    }
+}
+
 compileJava.doLast {
   // update build number after build 
   // do this here to avoid compiling without source changes since this here is a source change
-  println "Updating compile counter property files"
-  ext.filename = "${project.rootDir.absolutePath}/${project.name}/src/$basename/${project.name}-build.properties".toString()
+  println "Updating compile counter property files ${project.projectDir.name}-build.properties"
+  ext.filename = "${project.projectDir.canonicalPath}/src/${project.parent.name}/${project.projectDir.name}-build.properties".toString()
   Properties p = new Properties()
   try {
     FileInputStream fis = new FileInputStream(filename);
@@ -254,32 +264,6 @@ war.doLast {
   ant.unzip(src: war.archivePath, dest: "$buildDir/war")
 }
 
-uploadArchives {
-  inputs.dir file("$buildDir/libs")
-  repositories.mavenDeployer {
-      repository(url: repositories.mavenLocal().url)
-      // TODO: change this when we know how to rename sub projects
-      // depends on fixed http://issues.gradle.org/browse/GRADLE-1135
-      // pom.artifactId = basename+'-'+project.name+'-webapp'
-      // pom.artifactId = project.name+'-webapp'
-  }
-}
-
-uploadLibs {
-  inputs.dir file("$buildDir/libs")
-  repositories.mavenDeployer {
-      repository(url: repositories.mavenLocal().url)
-      // TODO: remove this when we know how to rename sub projects
-      // depends on fixed http://issues.gradle.org/browse/GRADLE-1135
-      // pom.artifactId = project.name
-  }
-}
-
-task upload(dependsOn: [uploadArchives, uploadLibs]) {
-}
-
-// println "project: "+project.name
-
 apply plugin: UtilitiesPlugin
 
 import org.gradle.api.Project;
@@ -322,4 +306,3 @@ class TangramUtilities {
   }
 
 }
-    
