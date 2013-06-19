@@ -63,7 +63,7 @@ sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
 // Project specific default output directory
-eclipse.classpath.conventionMapping.defaultOutputDir = { new File(project.projectDir, 'build/classes/main') }
+eclipse.classpath.conventionMapping.defaultOutputDir = { new File(project.projectDir, "$buildDir/classes/main") }
 
 // our custom directory layout
 sourceSets {
