@@ -35,7 +35,7 @@ dependencies {
     compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
     compile "org.datanucleus:datanucleus-core:$datanucleus_version"
     compile "com.google.appengine.orm:datanucleus-appengine:$datanucleus_appengine_version"
-    
+
     compile "net.sf.jsr107cache:jsr107cache:1.1"
 
     testCompile "junit:junit:4.10"
@@ -44,6 +44,4 @@ dependencies {
     providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
 }
 
-compileJava.doLast {
-    jdoEnhance()
-}
+compileJava.doLast { jdoEnhance() }

@@ -36,7 +36,7 @@ To make all this work you need
 simply type
 
 ```bash
-gradle clean publishToMavelLocal
+gradle clean publishToMavenLocal
 ```
 
 and then you can build and use your projects using tangram or the examples
