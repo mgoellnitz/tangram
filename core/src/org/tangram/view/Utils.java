@@ -146,6 +146,8 @@ public final class Utils {
     /**
      * TODO: this is not really a view utility - place it somewhere else or replace it
      * 
+     * create a bean wrapper instance from a bean object and prepares it with a conversion service if available
+     * 
      * @param bean
      * @param conversionService
      * @return
@@ -153,10 +155,15 @@ public final class Utils {
     public static BeanWrapper createWrapper(Object bean, HttpServletRequest request) {
         BeanWrapper wrapper;
         wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
-        ConversionService conversionService = getBeanFromContext(ConversionService.class, request);
-        if (conversionService!=null) {
-            wrapper.setConversionService(conversionService);
-        } // if
+        try {
+            // TODO: Do this exactly once!
+            ConversionService conversionService = getBeanFromContext(ConversionService.class, request);
+            if (conversionService!=null) {
+                wrapper.setConversionService(conversionService);
+            } // if
+        } catch (Exception e) {
+            // conversion services are still optional for some time
+        } // try/catch
         return wrapper;
     } // createWrapper()
 
