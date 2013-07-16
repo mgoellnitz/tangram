@@ -129,6 +129,7 @@ public class EditingController extends RenderingController {
             JdoContent bean = beanFactory.getBean(JdoContent.class, id);
             BeanWrapper wrapper = createWrapper(bean, request);
             Map<String, Object> newValues = new HashMap<String, Object>();
+            // List<String> deleteValues = new ArrayList<String>();
 
             Map parameterMap = request.getParameterMap();
             if (log.isDebugEnabled()) {
@@ -165,8 +166,8 @@ public class EditingController extends RenderingController {
                                 log.info("store() not setting value");
                             } // if
                         } // if
-                        if (log.isInfoEnabled()) {
-                            log.info("store() get "+wrapper.getPropertyValue(key));
+                        if (JdoContent.class.isAssignableFrom(cls)&&"".equals(valueString)) {
+                            newValues.put(key, null);
                         } // if
                     } catch (Exception e) {
                         throw new Exception("Cannot set value for "+key, e);
@@ -222,6 +223,15 @@ public class EditingController extends RenderingController {
                     e = new Exception("Cannot set value for "+propertyName, ex);
                 } // try/catch
             } // for
+            /*
+            for (String propertyName : deleteValues) {
+                try {
+                    wrapper.setPropertyValue(propertyName, null);
+                } catch (Exception ex) {
+                    e = new Exception("Cannot delete value for "+propertyName, ex);
+                } // try/catch
+            } // for
+            */
 
             if ( !bean.persist()) {
                 throw new Exception("Could not persist bean "+bean.getId());

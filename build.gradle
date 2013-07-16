@@ -17,5 +17,5 @@
  * 
  */
 allprojects {
-  defaultTasks 'publishToMavenLocal'
+  defaultTasks 'clean', 'publishToMavenLocal'
 }

@@ -126,7 +126,7 @@ public abstract class PropertyConverter {
             value = elements;
         } else if (Content.class.isAssignableFrom(cls)) {
             // Filter out possible single ID from input
-            Pattern p = Pattern.compile(".*([A-Z][a-zA-Z]+:[0-9]+).*");
+            Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
             Matcher m = p.matcher(valueString);
             if (m.find()) {
                 valueString = m.group(1);
