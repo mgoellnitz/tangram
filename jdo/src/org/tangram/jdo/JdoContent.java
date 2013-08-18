@@ -45,7 +45,8 @@ public abstract class JdoContent implements Content {
     /**
      * get readable and storable representation of ID
      * 
-     * @param oid id as JDO internal object
+     * @param oid
+     *            id as JDO internal object
      * @return id as readable and storable string
      */
     protected abstract String postprocessPlainId(Object oid);
@@ -87,6 +88,27 @@ public abstract class JdoContent implements Content {
     } // equals()
 
 
+    /**
+     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
+     * engine scenarios
+     * 
+     * @param c
+     *            Content instance - may be null
+     * @return id of content or null
+     */
+    protected String getId(Content c) {
+        return c==null ? null : c.getId();
+    } // getId()
+
+
+    /**
+     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
+     * engine scenarios
+     * 
+     * @param contents
+     *            list of contents - should not be null
+     * @return list of ids for the given list of contents
+     */
     protected List<String> getIds(List<? extends Content> contents) {
         List<String> result = new ArrayList<String>();
         for (Object o : contents) {
@@ -96,6 +118,14 @@ public abstract class JdoContent implements Content {
     } // getIds()
 
 
+    /**
+     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
+     * engine scenarios
+     * 
+     * @param i
+     *            id to fetch content for - may be null or empty
+     * @return resulting content or null
+     */
     protected <T extends Content> T getContent(Class<T> c, String i) {
         if (log.isDebugEnabled()) {
             log.debug("getContent() id="+i+" beanFactory="+beanFactory);
@@ -104,6 +134,14 @@ public abstract class JdoContent implements Content {
     } // getContent()
 
 
+    /**
+     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
+     * engine scenarios
+     * 
+     * @param ids
+     *            list of id which should match the given type - may be null
+     * @return Array of contents where none of the is null
+     */
     protected <T extends Content> List<T> getContents(Class<T> c, List<String> ids) {
         List<T> result = new ArrayList<T>();
         if (ids!=null) {
@@ -124,7 +162,7 @@ public abstract class JdoContent implements Content {
         PersistenceManager manager = null;
         try {
             manager = JDOHelper.getPersistenceManager(this);
-            if (manager == null) {
+            if (manager==null) {
                 manager = ((JdoBeanFactory)getBeanFactory()).getManager();
             } // if
             manager.makePersistent(this);
