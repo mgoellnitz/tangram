@@ -31,10 +31,10 @@ ext.jdo_api="javax.jdo:jdo-api:3.0.1"
 ext.springframework_version = "3.1.4.RELEASE"
 ext.springsecurity_version = "3.1.4.RELEASE"
 // Datanucleus Version limited to 3.1.1 by Google App Engine plugin for now
-ext.datanucleus_version= "3.2.2"
+ext.datanucleus_version= "3.1.1"
 // The byte code enhancer is not included in every version for some reason
 ext.datanucleus_enhancer_version= "3.1.1"
-ext.datanucleus_appengine_version= "2.1.1"
+ext.datanucleus_appengine_version= "2.1.2"
 
 ext.appengine_version = "1.8.0"
 /* version section end */

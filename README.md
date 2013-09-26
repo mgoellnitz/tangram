@@ -51,8 +51,3 @@ gradle eclipse
 ```
   
 (output folders are set to .../build/classes/main not to .../bin)
-
-Caveat:
-
-On buildhive current versions of tangram don't build since cloudbees only has gradle 1.4 available 
-there and the tangram maven publishing code got cleaned up ot meet gradle 1.6 tooling.

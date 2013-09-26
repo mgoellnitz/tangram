@@ -2,6 +2,10 @@ package org.tangram.gae.test;
 
 import java.lang.reflect.Method;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+
 import org.junit.Test;
 import org.springframework.util.Assert;
 import org.tangram.gae.GaeContent;
@@ -21,4 +25,13 @@ public class GaeContentTest {
         Assert.isTrue(flag, "Classes not enhanced - output unusable");
     } // testIsEnhanced()
 
-} // RdbmsContentTest
+    @Test
+    public void testIsCanPersist() {
+        PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory("transactions-optional");
+        PersistenceManager manager = pmfInstance.getPersistenceManager();
+        GaeContent bean = manager.newInstance(GaeContent.class);
+        manager.makePersistent(bean);
+        manager.currentTransaction().commit();
+    } // testIsEnhanced()
+
+} // GaeContentTest
