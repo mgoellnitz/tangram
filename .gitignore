@@ -21,3 +21,7 @@
 /rdbms/.classpath
 /rdbms/.project
 /rdbms/.settings/org.eclipse.jdt.core.prefs
+/mongo/build
+/mongo/.settings
+/mongo/.classpath
+/mongo/.project
