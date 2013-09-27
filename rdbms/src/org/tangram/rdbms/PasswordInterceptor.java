@@ -32,17 +32,12 @@ import org.tangram.Constants;
 
 /**
  * 
- * Interceptor to check if a user is logged in, if we are a live system, or if we should use generic password protection
- * with users preconfigured in an XML config file
+ * Interceptor to check if a user is logged in, or if we should use generic password protection with users preconfigured
+ * in an XML config file
  * 
- * liveSuffix should be the name suffix of your live installation as opposed to the development/testing appengine apps
- * 
- * statsUrl is a URL which should be available without log-in /s/statsa typically if you use statistics page for keep
- * alive cron job
+ * statsUrl is a URL which should be available without log-in /s/stats typically if you use statistics for alive checks
  * 
  * allowedUsers if not empty only these users are allowed to log-in.
- * 
- * Can be emails of google accounts or IDs of OpenID accounts
  * 
  * adminUsers same as allowedUsers (should be a subset of it) but these users get the access to the editing links
  * 
