@@ -36,7 +36,7 @@ ext.datanucleus_version= "3.1.1"
 ext.datanucleus_enhancer_version= "3.1.1"
 ext.datanucleus_appengine_version= "2.1.2"
 
-ext.appengine_version = "1.8.0"
+ext.appengine_version = "1.8.5"
 /* version section end */
 
 apply plugin: 'java'
