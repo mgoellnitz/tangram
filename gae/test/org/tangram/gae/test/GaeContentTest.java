@@ -25,13 +25,13 @@ public class GaeContentTest {
         Assert.isTrue(flag, "Classes not enhanced - output unusable");
     } // testIsEnhanced()
 
-    @Test
-    public void testIsCanPersist() {
-        PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory("transactions-optional");
-        PersistenceManager manager = pmfInstance.getPersistenceManager();
-        GaeContent bean = manager.newInstance(GaeContent.class);
-        manager.makePersistent(bean);
-        manager.currentTransaction().commit();
-    } // testIsEnhanced()
+//    @Test
+//    public void testIsCanPersist() {
+//        PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory("transactions-optional");
+//        PersistenceManager manager = pmfInstance.getPersistenceManager();
+//        GaeContent bean = manager.newInstance(GaeContent.class);
+//        manager.makePersistent(bean);
+//        manager.currentTransaction().commit();
+//    } // testIsEnhanced()
 
 } // GaeContentTest
