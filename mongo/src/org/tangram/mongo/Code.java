@@ -32,7 +32,7 @@ public class Code extends MongoContent implements CodeResource {
 
     private String mimeType;
 
-    private char[] code;
+    private String code;
 
 
     @Override
@@ -58,12 +58,12 @@ public class Code extends MongoContent implements CodeResource {
 
 
     public char[] getCode() {
-        return code;
+        return stringToCharArray(code);
     }
 
 
     public void setCode(char[] code) {
-        this.code = code;
+        this.code = charArraytoString(code);
     }
 
 
@@ -75,7 +75,7 @@ public class Code extends MongoContent implements CodeResource {
 
     @Override
     public long getSize() {
-        return code.length;
+        return code.length();
     }
 
 
