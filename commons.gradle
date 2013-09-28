@@ -57,7 +57,7 @@ repositories {
   maven { url "http://www.datanucleus.org/downloads/maven2" }
 }
 
-version = '0.8-SNAPSHOT'
+version = '0.8'
 
 // datanucleus enhancer doesn't support this, but it works!
 sourceCompatibility = 1.6
