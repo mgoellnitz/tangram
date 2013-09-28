@@ -28,10 +28,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datanucleus.identity.OID;
+import org.datanucleus.util.Base64;
 import org.tangram.jdo.JdoContent;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
-@DatastoreIdentity(strategy = IdGeneratorStrategy.INCREMENT)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE)
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
 public abstract class MongoContent extends JdoContent {
 
@@ -56,5 +57,27 @@ public abstract class MongoContent extends JdoContent {
             return ""+id;
         } // if
     } // postprocessPlainId()
+
+
+    /** utility helpers until we understand to do this natively in the datanucleus / mongoDB layer **/
+
+    protected byte[] stringToByteArray(String data) {
+        return data==null ? null : Base64.decode(data);
+    } // stringToByteArray()
+
+
+    protected String byteArraytoString(byte[] data) {
+        return data==null ? null : String.valueOf(Base64.encode(data));
+    } // byteArraytoString()
+
+
+    protected char[] stringToCharArray(String data) {
+        return data==null ? null : data.toCharArray();
+    } // stringToByteArray()
+
+
+    protected String charArraytoString(char[] data) {
+        return data==null ? null : String.valueOf(data);
+    } // byteArraytoString()
 
 } // MongoContent
