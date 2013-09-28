@@ -29,10 +29,12 @@ dependencies {
 
     compile "hsqldb:hsqldb:$hsqldb_version"
     compile "$jdo_api"
-    compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
     compile "org.datanucleus:datanucleus-core:$datanucleus_version"
+    // these two are more or lesss runtime dependencies:
+    compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
     compile "org.datanucleus:datanucleus-rdbms:$datanucleus_version"
 
+    // Also spring security is up to now used by configuration only:
     compile "org.springframework.security:spring-security-core:$springsecurity_version"
     compile "org.springframework.security:spring-security-config:$springsecurity_version"
     compile "org.springframework.security:spring-security-web:$springsecurity_version"
