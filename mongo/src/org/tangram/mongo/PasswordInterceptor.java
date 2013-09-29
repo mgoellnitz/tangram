@@ -107,15 +107,8 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                 } // if
             } else {
+                // TODO:
                 String loginURL = "spring_security_login";
-                principal = new Principal() {
-                    @Override
-                    public String getName() {
-                        return "admin";
-                    } // getName()
-                };
-                request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, "true");
-                request.setAttribute(Constants.ATTRIBUTE_USER, principal);
                 if (allowedUsers.size()>0) {
                     if (log.isInfoEnabled()) {
                         log.info("preHandle() no logged in user found");

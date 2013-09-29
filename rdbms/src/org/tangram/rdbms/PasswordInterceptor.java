@@ -114,15 +114,6 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             } else {
                 // TODO: new generic Login URL stuff
                 String loginURL = "";
-                // TODO: right now we log in an admin dummy user:
-                principal = new Principal() {
-                    @Override
-                    public String getName() {
-                        return "dummy";
-                    } // getName()
-                };
-                request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, "true");
-                request.setAttribute(Constants.ATTRIBUTE_USER, principal);
                 if (allowedUsers.size()>0) {
                     if (log.isInfoEnabled()) {
                         log.info("preHandle() no logged in user found");
