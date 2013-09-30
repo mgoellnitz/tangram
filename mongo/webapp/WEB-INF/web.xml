@@ -5,7 +5,7 @@
     id="tangram_coma" version="2.5">
     <display-name>Plain JDO Web Application</display-name>
 
-    <!-- location of the bootstrap logging configuration - if we once use log4j -->
+    <!-- location of the bootstrap logging configuration -->
     <context-param>
         <param-name>log4jConfigLocation</param-name>
         <param-value>/WEB-INF/log4j.properties</param-value>
