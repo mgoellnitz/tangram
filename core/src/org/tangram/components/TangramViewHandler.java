@@ -96,12 +96,6 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        initViewResolvers(applicationContext);
-    } // afterPropertiesSet()
-
-
-    @Override
     public View resolveView(String viewName, Map<String, Object> model, Locale locale, ServletRequest request) throws IOException {
         View result = null;
 
@@ -115,5 +109,11 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
 
         return result;
     } // resolveViewName()
+
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        initViewResolvers(applicationContext);
+    } // afterPropertiesSet()
 
 } // TangramViewHandler

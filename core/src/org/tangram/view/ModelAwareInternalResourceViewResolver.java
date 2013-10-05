@@ -113,6 +113,8 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
                 result = null;
             } // if
         } else {
+            // TODO: Strange if... idx == 0 means exactly startsWith("/") maybe this can be removed or the above code
+            // could be removed until we known how to deal with JARred resources.
             if (url.startsWith("/")) {
                 File f = new File(filePathPrefix+url);
                 if (log.isInfoEnabled()) {
