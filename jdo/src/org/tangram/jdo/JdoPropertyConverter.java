@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.mongo;
+package org.tangram.jdo;
 
 import org.tangram.edit.PropertyConverter;
 
-public class MongoPropertyConverter extends PropertyConverter {
+public class JdoPropertyConverter extends PropertyConverter {
 
     @Override
     public Object createBlob(byte[] octets) {
@@ -69,4 +69,4 @@ public class MongoPropertyConverter extends PropertyConverter {
         } // if
     } // getStorableObject()
 
-} // MongoPropertyConverter
+} // RdbmsPropertyConverter

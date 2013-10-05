@@ -20,6 +20,6 @@
 
 	<!--  edit scenarios only  -->
 
-	<bean id="propertyConverter" class="org.tangram.mongo.MongoPropertyConverter" />
+	<bean id="propertyConverter" class="org.tangram.jdo.JdoPropertyConverter" />
 	
 </beans>
