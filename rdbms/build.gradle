@@ -27,7 +27,6 @@ dependencies {
     providedCompile "javax.servlet:jsp-api:$jsp_spec"
     compile project (':tangram-jdo')
 
-    compile "hsqldb:hsqldb:$hsqldb_version"
     compile "$jdo_api"
     compile "org.datanucleus:datanucleus-core:$datanucleus_version"
     // these two are more or lesss runtime dependencies:
