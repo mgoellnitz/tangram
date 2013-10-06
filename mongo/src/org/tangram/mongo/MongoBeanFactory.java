@@ -18,6 +18,12 @@
  */
 package org.tangram.mongo;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.datanucleus.identity.OID;
 import org.datanucleus.identity.OIDImpl;
 import org.tangram.content.Content;
@@ -25,10 +31,66 @@ import org.tangram.jdo.AbstractJdoBeanFactory;
 
 public class MongoBeanFactory extends AbstractJdoBeanFactory {
 
+    private static final Log log = LogFactory.getLog(MongoBeanFactory.class);
+
+    String host;
+
+    String port;
+
+    String database;
+
+
+    public String getHost() {
+        return host;
+    }
+
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+
+    public String getPort() {
+        return port;
+    }
+
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+
+    public String getDatabase() {
+        return database;
+    }
+
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+
     @Override
     protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
         OID oid = new OIDImpl(kindClass.getName(), internalId);
         return oid;
     } // getObjectId()
+
+
+    @Override
+    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
+        Map<Object, Object> result = new HashMap<Object, Object>();
+        if (StringUtils.isNotEmpty(getHost())) {
+            log.info("getFactoryConfigOverrides() have host for mongoDB: "+getDatabase());
+            if (StringUtils.isNotEmpty(getDatabase())) {
+                log.info("getFactoryConfigOverrides() have databasefor mongoDB: "+getDatabase());
+                if (StringUtils.isNotEmpty(getPort())) {
+                    log.info("getFactoryConfigOverrides() have databasefor mongoDB: "+getPort());
+                    result.put("datanucleus.ConnectionURL", "mongodb:"+getHost()+":"+getPort()+"/"+getDatabase());
+                } // if
+            } // if
+        } // if
+        return result;
+    } // getFactoryConfigOverrides()
 
 } // MongoBeanFactory

@@ -16,6 +16,9 @@
 		<property name="activateCaching" value="${bean.factory.activate.caching}" />
 		<property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
 		<property name="prefill" value="${tangram.caches.prefill}" />
+		<property name="host" ref="${tangram.mongo.host}" />
+		<property name="port" ref="${tangram.mongo.port}" />
+		<property name="database" ref="${tangram.mongo.database}" />
 	</bean>
 
 	<!--  edit scenarios only  -->
