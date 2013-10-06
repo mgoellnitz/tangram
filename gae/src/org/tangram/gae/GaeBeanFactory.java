@@ -23,6 +23,9 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.datanucleus.identity.OID;
+import org.datanucleus.identity.OIDImpl;
+import org.springframework.jmx.access.InvocationFailureException;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
 
@@ -58,6 +61,15 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
         } // if
         return result;
     } // getFactoryConfigOverrides()
+
+
+    /**
+     * we had to override the whole getBeans, so this one should never be called.
+     */
+    @Override
+    protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
+        throw new InvocationFailureException("GAE implementation is somewhat different");
+    } // getObjectId()
 
 
     @Override
