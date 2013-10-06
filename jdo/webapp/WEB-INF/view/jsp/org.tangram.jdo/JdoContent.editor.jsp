@@ -8,7 +8,7 @@
 	><p class="tangram_edit_toolbar"><a <cms:link bean="${self}" action="edit" href="true" target="true" handlers="true"/> >Objekt Bearbeiten</a>
  | tangram <%=Constants.VERSION %> 
 <%--<c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}">Abmelden</a></c:if>--%>
-</p><c:set var="infoLineClass" value="tangram_edit_toobar"/>
+</p><c:set var="infoLineClass" value="tangram_edit_toolbar"/>
 </c:if><p class="${infoLineClass}">
 (<%=System.currentTimeMillis()-(Long)(request.getAttribute("start.time"))%>ms rendering time for this page)
 </p>
