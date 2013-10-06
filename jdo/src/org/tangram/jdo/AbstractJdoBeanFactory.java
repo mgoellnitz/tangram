@@ -61,6 +61,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     @Autowired
     protected PersistentRestartCache startupCache;
 
+    private Map<Object, Object> configOverrides = null;
+
     public PersistenceManagerFactory pmfInstance = null;
 
     protected PersistenceManager manager = null;
@@ -95,7 +97,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
-        return Collections.emptyMap();
+        return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
     } // getFactoryConfigOverrides()
 
 
@@ -142,6 +144,22 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     public void setPrefill(boolean prefill) {
         this.prefill = prefill;
+    }
+
+
+    public Map<Object, Object> getConfigOverrides() {
+        return configOverrides;
+    }
+
+
+    /**
+     * 
+     * Override Persistence Manager Factory properties given in jdoconfig.xml
+     * 
+     * @param configOverrides
+     */
+    public void setConfigOverrides(Map<Object, Object> configOverrides) {
+        this.configOverrides = configOverrides;
     }
 
 
