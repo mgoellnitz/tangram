@@ -30,7 +30,7 @@ import org.tangram.gae.GaeContent;
 import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable
-public abstract class Protection extends GaeContent implements org.tangram.solution.protection.Protection {
+public abstract class Protection extends GaeContent implements org.tangram.feature.protection.Protection {
 
     @Persistent
     private Text description;

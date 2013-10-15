@@ -35,8 +35,8 @@ import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
-import org.tangram.solution.protection.ProtectedContent;
-import org.tangram.solution.protection.Protection;
+import org.tangram.feature.protection.ProtectedContent;
+import org.tangram.feature.protection.Protection;
 import org.tangram.view.TargetDescriptor;
 
 @Component
