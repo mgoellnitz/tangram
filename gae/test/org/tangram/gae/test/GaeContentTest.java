@@ -2,10 +2,6 @@ package org.tangram.gae.test;
 
 import java.lang.reflect.Method;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-
 import org.junit.Test;
 import org.springframework.util.Assert;
 import org.tangram.gae.GaeContent;

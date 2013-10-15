@@ -35,9 +35,9 @@ import org.tangram.Constants;
  * Interceptor to check if a user is logged in, or if we should use generic password protection with users preconfigured
  * in an XML config file
  * 
- * allowedUsers if not empty only these users are allowed to log-in.
+ * allowedUsers - if not empty only these users are allowed to log-in.
  * 
- * adminUsers same as allowedUsers (should be a subset of it) but these users get the access to the editing links
+ * adminUsers - same as allowedUsers (should be a subset of it) but these users get access to the editing links
  * 
  */
 public class PasswordInterceptor extends HandlerInterceptorAdapter {

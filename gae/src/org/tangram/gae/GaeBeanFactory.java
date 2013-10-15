@@ -23,8 +23,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datanucleus.identity.OID;
-import org.datanucleus.identity.OIDImpl;
 import org.springframework.jmx.access.InvocationFailureException;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
