@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.jdo.util;
+package org.tangram.feature.blob;
 
 /**
  * 
@@ -25,6 +25,7 @@ package org.tangram.jdo.util;
  * which defaults to seven day (10080ms).
  * 
  */
+// TODO: this interface is not really JDO related
 public interface MimedBlob {
 
     /**
