@@ -1,14 +1,15 @@
 <%@page isELIgnored="false" language="java" session="false"
-	pageEncoding="UTF-8" %><%@page import="java.util.regex.Pattern"%><%@page
-	import="java.util.regex.Matcher"%><%@page import="java.util.List"%><%@page
-	import="java.util.ArrayList"%><%@page
-	import="org.tangram.view.Utils"%><%@page
-	import="org.tangram.content.BeanFactory"%><%@page
-	import="org.tangram.view.link.LinkFactory"%><%@page
-	import="org.tangram.Constants"%><%
+    pageEncoding="UTF-8" %><%@page import="java.util.regex.Pattern"%><%@page
+    import="java.util.regex.Matcher"%><%@page import="java.util.List"%><%@page
+    import="java.util.ArrayList"%><%@page
+    import="org.tangram.view.Utils"%><%@page
+    import="org.tangram.content.BeanFactory"%><%@page
+    import="org.tangram.view.link.LinkFactory"%><%@page
+    import="org.tangram.Constants"%><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
-  
+        String view = (String)request.getAttribute("embedded.link.view");
+        String action = (String)request.getAttribute("embedded.link.action");
         BeanFactory beanFactory = Utils.getBeanFactory(request);
         LinkFactory linkFactory = Utils.getLinkFactory(request);
         Pattern p = Pattern.compile("http://[a-zA-Z0-9:]*\"");
@@ -25,11 +26,11 @@
             i-- ;
             String raw = valueString.substring(starts.get(i), ends.get(i));
             String id = raw.substring(7, raw.length()-1);
-            String url = "FEHLER\"";
+            String url = "ERROR\"";
             try {
-                url = linkFactory.createLink(request, response, beanFactory.getBean(id), null, null).getUrl()+"\"";
+                url = linkFactory.createLink(request, response, beanFactory.getBean(id), action, view).getUrl()+"\"";
             } catch (Exception e) {
-                // ignore
+                // What could be do about it?
             } // try/catch
             valueString.replace(starts.get(i), ends.get(i), url);
         } // for
