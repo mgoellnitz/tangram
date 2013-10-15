@@ -27,7 +27,7 @@ import org.tangram.content.Content;
 import org.tangram.mongo.MongoContent;
 
 @PersistenceCapable
-public abstract class Protection extends MongoContent implements org.tangram.solution.protection.Protection {
+public abstract class Protection extends MongoContent implements org.tangram.feature.protection.Protection {
 
     private char[] description;
 

@@ -27,7 +27,7 @@ import org.tangram.content.Content;
 import org.tangram.rdbms.RdbmsContent;
 
 @PersistenceCapable
-public abstract class Protection extends RdbmsContent implements org.tangram.solution.protection.Protection {
+public abstract class Protection extends RdbmsContent implements org.tangram.feature.protection.Protection {
 
     private char[] description;
 
