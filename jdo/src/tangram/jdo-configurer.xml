@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
   
- Copyright 2011 Martin Goellnitz
+ Copyright 2011-2013 Martin Goellnitz
   
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-	<!-- velocity activation for app engine repository -->
+	<!-- velocity activation for view in jdo based repository -->
 
-	<bean id="velocityRepositoryViewResolver" class="org.tangram.jdo.view.ModelAwareRepositoryViewResolver">
+	<bean id="velocityRepositoryViewResolver" class="org.tangram.view.velocity.ModelAwareRepositoryViewResolver">
 		<property name="delegate" ref="plainRepositoryVelocityViewResolver" />
 		<property name="order" value="10000"/>
 		<property name="activateCaching" value="true" />

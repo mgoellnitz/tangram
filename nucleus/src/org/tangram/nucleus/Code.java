@@ -16,23 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.mongo;
+package org.tangram.nucleus;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.tangram.content.CodeResource;
 
 @PersistenceCapable
-public class Code extends MongoContent implements CodeResource {
+public class Code extends NucleusContent implements CodeResource {
 
     private String annotation;
 
     private String mimeType;
 
-    private String code;
+    private char[] code;
 
 
     @Override
@@ -58,30 +59,30 @@ public class Code extends MongoContent implements CodeResource {
 
 
     public char[] getCode() {
-        return stringToCharArray(code);
+        return code;
     }
 
 
     public void setCode(char[] code) {
-        this.code = charArraytoString(code);
+        this.code = code;
     }
 
 
     @Override
     public String getCodeText() {
-        return new String(code);
+        return code == null ? null : Arrays.toString(code);
     }
 
 
     @Override
     public long getSize() {
-        return code.length();
+        return code.length;
     }
 
 
     @Override
     public InputStream getStream() throws Exception {
-        return new ByteArrayInputStream(new String(code).getBytes("UTF-8"));
+        return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     }
 
 } // Code

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.mongo;
+package org.tangram.nucleus;
 
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -32,11 +32,11 @@ import org.datanucleus.util.Base64;
 import org.tangram.jdo.JdoContent;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
-@DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.INCREMENT)
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
-public abstract class MongoContent extends JdoContent {
+public abstract class NucleusContent extends JdoContent {
 
-    private static final Log log = LogFactory.getLog(MongoContent.class);
+    private static final Log log = LogFactory.getLog(NucleusContent.class);
 
 
     @Override
@@ -58,8 +58,7 @@ public abstract class MongoContent extends JdoContent {
         } // if
     } // postprocessPlainId()
 
-
-    /** utility helpers until we understand to do this natively in the datanucleus / mongoDB layer **/
+    /** utility helpers until we understand to do this natively in the datanucleus / mongoDB layer (or similar layers) **/
 
     protected byte[] stringToByteArray(String data) {
         return data==null ? null : Base64.decode(data);
@@ -80,4 +79,4 @@ public abstract class MongoContent extends JdoContent {
         return data==null ? null : String.valueOf(data);
     } // byteArraytoString()
 
-} // MongoContent
+} // NucleusContent

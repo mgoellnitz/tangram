@@ -126,7 +126,7 @@ public class EditingController extends RenderingController {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
             } // if
-            JdoContent bean = beanFactory.getBean(JdoContent.class, id);
+            Content bean = beanFactory.getBean(Content.class, id);
             BeanWrapper wrapper = createWrapper(bean, request);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
@@ -159,6 +159,7 @@ public class EditingController extends RenderingController {
                         if (log.isInfoEnabled()) {
                             log.info("store() value="+value);
                         } // if
+                        // TODO: Maybe Content.class ... is sufficient
                         if ( !(JdoContent.class.isAssignableFrom(cls)&&value==null)) {
                             newValues.put(key, value);
                         } else {
@@ -166,6 +167,7 @@ public class EditingController extends RenderingController {
                                 log.info("store() not setting value");
                             } // if
                         } // if
+                        // TODO: Maybe Content.class ... is sufficient
                         if (JdoContent.class.isAssignableFrom(cls)&&"".equals(valueString)) {
                             newValues.put(key, null);
                         } // if
@@ -398,15 +400,15 @@ public class EditingController extends RenderingController {
                     log.debug("link() id="+content.getId());
                 } // if
 
-                Content bean = beanFactory.getBean(Content.class, id);
+                // re-get for update to avoid xg transactions where ever possible
+                Content bean = beanFactory.getBeanForUpdate(Content.class, id);
                 BeanWrapper wrapper = createWrapper(bean, request);
+                                
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")
                 List<Object> list = (List<Object>)listObject;
                 list.add(content);
-                // re-get for update to avoid xg transactions whereevery possible
-                bean = beanFactory.getBeanForUpdate(Content.class, id);
-                wrapper = createWrapper(bean, request);
+                
                 wrapper.setPropertyValue(propertyName, list);
                 bean.persist();
                 return redirect(request, response, content);
@@ -421,7 +423,7 @@ public class EditingController extends RenderingController {
 
     private String getUrl(Object bean, String action, String view) {
         if ("store".equals(action)) {
-            return "/store/id_"+((JdoContent)bean).getId();
+            return "/store/id_"+((Content)bean).getId();
         } else {
             if ("create".equals(action)) {
                 return "/create";
@@ -444,7 +446,7 @@ public class EditingController extends RenderingController {
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         Link result = null;
         if ("edit".equals(action)) {
-            String url = "/edit/id_"+((JdoContent)bean).getId();
+            String url = "/edit/id_"+((Content)bean).getId();
             result = new Link();
             result.setUrl(url);
             result.setTarget(EDIT_TARGET);

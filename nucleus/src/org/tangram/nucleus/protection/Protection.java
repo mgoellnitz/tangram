@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.mongo.protection;
+package org.tangram.nucleus.protection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +24,19 @@ import java.util.List;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.tangram.content.Content;
-import org.tangram.mongo.MongoContent;
+import org.tangram.nucleus.NucleusContent;
 
+/**
+ * Abstract base class for the protected content core feature.
+ *
+ */
 @PersistenceCapable
-public abstract class Protection extends MongoContent implements org.tangram.feature.protection.Protection {
+public abstract class Protection extends NucleusContent implements org.tangram.feature.protection.Protection {
 
-    private char[] description;
+    /**
+     * for compatibility reasons internally use String and map it to char[]
+     */
+    private String description;
 
     private String protectionKey;
 
@@ -37,16 +44,16 @@ public abstract class Protection extends MongoContent implements org.tangram.fea
 
 
     public char[] getDescription() {
-        return description;
+        return stringToCharArray(description);
     }
 
 
     public void setDescription(char[] description) {
-        this.description = description;
+        this.description = charArraytoString(description);
     }
 
 
-	@Override
+    @Override
     public String getProtectionKey() {
         return protectionKey;
     }

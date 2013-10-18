@@ -1,0 +1,177 @@
+/**
+ * 
+ * Copyright 2011-2013 Martin Goellnitz
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+apply from: '../commons.gradle'
+
+// here go the differences to mere jar libs
+
+apply plugin: 'war'
+
+// needed for building jars and wars
+configurations {
+  libs 
+  webapp
+}
+
+// needed for building jars and wars
+artifacts {
+  archives war
+  libs jar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar 
+            artifact war {
+                classifier 'war'
+                extension 'war'
+            }
+        }
+    }
+}
+
+
+// the rest here only comes with webapp
+
+// avoid gradles default mimik to fiddle around with this directory
+webAppDirName = 'disabled'
+
+// we want jars and wars - in most cases
+jar.enabled = true 
+
+// TODO: this looks a little bit redundnant...
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "http://repo1.maven.org/maven2" }
+    }
+    dependencies {
+        // TODO: how to use the yui_version variable above?
+        classpath "com.yahoo.platform.yui:yuicompressor:2.4.7"
+    }
+}
+
+class JavaScriptMinify extends FilterReader {
+
+    Reader inputReader
+
+    public JavaScriptMinify(Reader inputReader) {
+        super(inputReader)
+        if (inputReader!=null) {
+            try {
+                com.yahoo.platform.yui.compressor.JavaScriptCompressor jsc = new com.yahoo.platform.yui.compressor.JavaScriptCompressor(inputReader, null)
+                StringWriter out = new StringWriter()
+                jsc.compress(out, 80, false, false, false, false)
+                out.close()
+                super.in = new StringReader(out.getBuffer().toString())
+            } catch (Exception e) {
+                ; // who cares
+            } // try/catch
+        } // if
+    } // JavaScriptMinify()
+
+} // JavaScriptMinify
+
+class CSSMinify extends FilterReader {
+
+    Reader inputReader
+
+    public CSSMinify(Reader inputReader) {
+        super(inputReader);
+        if (inputReader!=null) {
+            try {
+                com.yahoo.platform.yui.compressor.CssCompressor csc = new com.yahoo.platform.yui.compressor.CssCompressor(inputReader)
+                StringWriter out = new StringWriter()
+                csc.compress(out, 0)
+                out.close()
+                super.in = new StringReader(out.getBuffer().toString())
+            } catch (Exception e) {
+                ; // who cares
+            } // try/catch
+        } // if
+    } // CSSMinify()
+
+} // CSSMinify
+
+war.doFirst {
+  // Strange way of overwriting things - it must be the first webapp dependency
+  Object iter = configurations.webapp.dependencies.iterator()
+  if (iter.hasNext()) {
+    Object firstWebappDependency = iter.next()
+    if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+      String archiveFileName = firstWebappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
+      ant.unzip(src: archiveFileName, dest: "$buildDir/target")  
+    } else {
+      println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
+    } // if 
+  } // if 
+  
+  copy {
+    from 'webapp'
+    into "$buildDir/target"
+    include '**/**'
+    // exclude '**/*.js'
+    exclude '**/*.css'
+  }
+  copy {
+    from 'webapp'
+    into "$buildDir/target"
+    include '**/*.js'
+    exclude 'editor/ckeditor/**'
+    filter(JavaScriptMinify)
+  }
+  copy {
+    from 'webapp'
+    into "$buildDir/target"
+    include '**/*.css'
+    filter(CSSMinify)
+  }
+  
+  into ('') {
+    from "$buildDir/target"
+    exclude 'WEB-INF/lib/**'
+  }
+}
+
+war.dependsOn sourcesJar
+
+war {
+  // For some reason webapp files are not included in the inputs collection
+  FileTree tree = fileTree(dir: 'webapp')
+  inputs.files tree
+  // And also the web-archive of the upstream project has to be added
+  Object iter = configurations.webapp.dependencies.iterator()
+  if (iter.hasNext()) {
+    firstWebappDependency = iter.next()
+    if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+      println "Adding "+firstWebappDependency.dependencyProject.war.outputs.files.singleFile.name
+      inputs.file firstWebappDependency.dependencyProject.war.outputs.files.singleFile
+    } else {
+      println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
+    } // if 
+  } // if 
+  // classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
+  classpath = jar.outputs.files
+}
+
+// just for debugging purposes
+war.doLast {
+  ant.unzip(src: war.archivePath, dest: "$buildDir/war")
+}

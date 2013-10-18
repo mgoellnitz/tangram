@@ -257,11 +257,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<T>();
         try {
-            Extent extent = manager.getExtent(cls, false);
+            // TODO: test Extent<T> instead of Extent
+            Extent<T> extent = manager.getExtent(cls, false);
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
@@ -287,9 +288,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             } // if
             for (Object o : results) {
                 if (o instanceof Content) {
-                    JdoContent c = (JdoContent)o;
+                    Content c = (Content)o;
                     c.setBeanFactory(this);
-
                     result.add((T)c);
                 } // if
             } // for
@@ -588,7 +588,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     @Override
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
-        pmfInstance = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "transactions-optional");
+        pmfInstance = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "tangram");
 
         manager = pmfInstance.getPersistenceManager();
 

@@ -31,7 +31,7 @@ HOW-TO
 To make all this work you need
 
 - Java 6 or 7
-- Gradle 1.6
+- Gradle 1.6, 1.7, or 1.8
 
 simply type
 
@@ -51,3 +51,17 @@ gradle eclipse
 ```
   
 (output folders are set to .../build/classes/main not to .../bin)
+
+Changes 0.9
+
+0.9 is a code cleanup and refactoring version to get a starting point for other backend and platform solutions. 
+
+The named jdo persistence manager factory renamed from unintuitive "transaction-optional" to "tangram". You will need to change your jdoconfig.xml unless you are using Google App Engine.
+
+Users of relational database systems will have to get rid of their tangram-rdbms dependencies for library and web archives. Everything that's needed moved to the mere library dependecy nucleus for all datanucleus based scenarios, all other parts moved to core or jdo layer respectively. So an rdbms project will need the tanram-nucleus library compile dependency and the tangram-jdo war dependency instead of tangram-rdbms in both cases in the past.
+
+The security aspects have now been renamed from 'solution' to 'feature' which might result in a inheritance change and template renaming. 
+
+The MimedBlob stuff now also is called a 'feature' and moved to the core package.
+
+The code level now is lifted to Java 7 since the problems with the datanucleus enhancer seem to have vanished

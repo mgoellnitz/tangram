@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,30 +16,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-apply from: '../webapp.gradle'
-
-war.dependsOn ':tangram-jdo:war'
+apply from: '../lib.gradle'
 
 dependencies {
-    webapp project (':tangram-jdo')
-
-    providedCompile "javax.servlet:servlet-api:$servlet_spec"
-    providedCompile "javax.servlet:jsp-api:$jsp_spec"
-    compile project (':tangram-nucleus')
+    // maybe these two can be ommitted:
+    // providedCompile "javax.servlet:servlet-api:$servlet_spec"
+    // providedCompile "javax.servlet:jsp-api:$jsp_spec"
+    // because this one also uses them:
+    compile project (':tangram-jdo')
 
     compile "$jdo_api"
     compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
     compile "org.datanucleus:datanucleus-core:$datanucleus_version"
-    compile "org.datanucleus:datanucleus-mongodb:$datanucleus_version"
 
-    compile "org.springframework.security:spring-security-core:$springsecurity_version"
-    compile "org.springframework.security:spring-security-config:$springsecurity_version"
-    compile "org.springframework.security:spring-security-web:$springsecurity_version"
+    // Also spring security is up to now used by configuration only:
+    // compile "org.springframework.security:spring-security-core:$springsecurity_version"
+    // compile "org.springframework.security:spring-security-config:$springsecurity_version"
+    // compile "org.springframework.security:spring-security-web:$springsecurity_version"
 
-    compile "log4j:log4j:1.2.17"
+    // TODO: really needed?
+    // compile "log4j:log4j:1.2.17"
 
     testCompile "junit:junit:$junit_version"
 
+    // for the enhancer task:
     providedCompile "org.apache.ant:ant:1.8.4"
     providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
 }

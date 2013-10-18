@@ -111,9 +111,11 @@ public abstract class JdoContent implements Content {
      */
     protected List<String> getIds(List<? extends Content> contents) {
         List<String> result = new ArrayList<String>();
-        for (Object o : contents) {
-            result.add(((JdoContent)o).getId());
-        } // for
+        if (contents!=null) {
+            for (Object o : contents) {
+                result.add(((JdoContent)o).getId());
+            } // for
+        } // if
         return result;
     } // getIds()
 
@@ -186,5 +188,11 @@ public abstract class JdoContent implements Content {
     public int compareTo(Content c) {
         return getId().compareTo(c.getId());
     } // compareTo()
+
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+"/"+getId();
+    } // toString()
 
 } // JdoContent

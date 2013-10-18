@@ -24,12 +24,9 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.datanucleus.identity.OID;
-import org.datanucleus.identity.OIDImpl;
-import org.tangram.content.Content;
-import org.tangram.jdo.AbstractJdoBeanFactory;
+import org.tangram.nucleus.NucleusBeanFactory;
 
-public class MongoBeanFactory extends AbstractJdoBeanFactory {
+public class MongoBeanFactory extends NucleusBeanFactory {
 
     private static final Log log = LogFactory.getLog(MongoBeanFactory.class);
 
@@ -68,13 +65,6 @@ public class MongoBeanFactory extends AbstractJdoBeanFactory {
     public void setDatabase(String database) {
         this.database = database;
     }
-
-
-    @Override
-    protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
-        OID oid = new OIDImpl(kindClass.getName(), internalId);
-        return oid;
-    } // getObjectId()
 
 
     @Override
