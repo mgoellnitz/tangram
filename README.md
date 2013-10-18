@@ -1,5 +1,5 @@
 Tangram Dynamic Extendable Web Applications
-===============================
+==============================
 
 Tangram is a framework for the object oriented web rendering of java beans. 
 It comes with limited CMS functionality by using JDO as a source and presenting 
@@ -33,7 +33,20 @@ To make all this work you need
 - Java 6 or 7
 - Gradle 1.6, 1.7, or 1.8
 
-simply type
+To make things easier for applications using this framework we provide a gradle plugin now. This means that you now have to prepare that first:
+
+```bash
+cd gradle-plugin
+gradle
+```
+
+For all the rest simply type
+
+```bash
+gradle
+```
+
+which again automatically expands to
 
 ```bash
 gradle clean publishToMavenLocal
@@ -41,7 +54,7 @@ gradle clean publishToMavenLocal
 
 and then you can build and use your projects using tangram or the examples
 
-And optionally you might need Google App Engine but just if you want to use it for your target systems
+Optionally you might need Google App Engine but just if you want to use it for your target systems
 (Yes, you will want to install java AND python version)
 
 Eclipse preparation:

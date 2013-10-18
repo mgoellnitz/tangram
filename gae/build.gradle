@@ -23,25 +23,25 @@ war.dependsOn ':tangram-jdo:war'
 dependencies {
     webapp project (':tangram-jdo')
 
-    providedCompile "javax.servlet:servlet-api:$servlet_spec"
-    providedCompile "javax.servlet:jsp-api:$jsp_spec"
+    providedCompile "javax.servlet:servlet-api:$versions.servlet"
+    providedCompile "javax.servlet:jsp-api:$versions.jsp"
     compile project (':tangram-jdo')
 
-    compile "com.google.appengine:appengine-api-1.0-sdk:$appengine_version"
-    compile "com.google.appengine:appengine-api-labs:$appengine_version"
-    compile "com.google.appengine:appengine-jsr107cache:$appengine_version"
+    compile "com.google.appengine:appengine-api-1.0-sdk:$versions.appengine"
+    compile "com.google.appengine:appengine-api-labs:$versions.appengine"
+    compile "com.google.appengine:appengine-jsr107cache:$versions.appengine"
 
-    compile "$jdo_api"
-    compile "org.datanucleus:datanucleus-api-jdo:$datanucleus_version"
-    compile "org.datanucleus:datanucleus-core:$datanucleus_version"
-    compile "com.google.appengine.orm:datanucleus-appengine:$datanucleus_appengine_version"
+    compile "$versions.jdo_api"
+    compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
+    compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
+    compile "com.google.appengine.orm:datanucleus-appengine:$versions.datanucleus_appengine"
 
     compile "net.sf.jsr107cache:jsr107cache:1.1"
 
-    testCompile "junit:junit:$junit_version"
+    testCompile "junit:junit:$versions.junit"
 
     providedCompile "org.apache.ant:ant:1.8.4"
-    providedCompile "org.datanucleus:datanucleus-enhancer:$datanucleus_enhancer_version"
+    providedCompile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
 }
 
 compileJava.doLast { jdoEnhance() }

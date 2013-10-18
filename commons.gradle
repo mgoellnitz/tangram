@@ -16,32 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
-/* version section */
-ext.servlet_spec = "2.5"
-ext.jsp_spec = "2.0"
-ext.groovy_version = "2.1.4"
-ext.velocity_version = "1.7"
-ext.yui_version="2.4.7"
-ext.junit_version="4.11"
-ext.jdo_api="javax.jdo:jdo-api:3.0.1"
-
-ext.springframework_version = "3.1.4.RELEASE"
-ext.springsecurity_version = "3.1.4.RELEASE"
-// Datanucleus Version limited to 3.1.1 by Google App Engine plugin for now
-ext.datanucleus_version= "3.1.1"
-// The byte code enhancer is not included in every version for some reason
-ext.datanucleus_enhancer_version= "3.1.1"
-ext.datanucleus_appengine_version= "2.1.2"
-
-ext.appengine_version = "1.8.6"
-/* version section end */
+version = '0.9-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 // apply plugin: 'code-quality'
+// directly access plugin here to avoid depenceny on a project which we cannot auto-build
+apply from: '../gradle-plugin/tangram-plugin.gradle'
 
 repositories {
   // most of the usual stuff
@@ -54,58 +37,30 @@ repositories {
   maven { url "http://www.datanucleus.org/downloads/maven2" }
 }
 
-version = '0.9-SNAPSHOT'
-
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 // Project specific default output directory
 eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/classes/main") }
 
-// small .classpath patch to reflect project renamings in settings.gradle
-eclipse {
-    classpath {
-        file {
-            withXml {
-              /*
-                def projectPrefix = '/tangram-'
-                def node = it.asNode()
-                def projectReferenceNode =  null
-                node.children().each() {
-                    if ('src'.equals(it.attribute('kind'))) {
-                        if (it.attribute('path').startsWith(projectPrefix) && it.attribute('exported')) {
-                            projectReferenceNode = it
-                        } // if
-                    } // if
-                } // each()
-                if (projectReferenceNode) {
-                    def attributes = projectReferenceNode.attributes()
-                    attributes.put('path', '/'+attributes.get('path').substring(projectPrefix.length()))
-                } // if
-              */
-            }
-        }
-    }
-}
-
 // our custom directory layout
 sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-        resources {
-            srcDir 'src'
-        }
+  main {
+    java {
+      srcDir 'src'
     }
-    test {
-        java {
-            srcDir 'test'
-        }
-        resources {
-            srcDir 'test'
-        }
+    resources {
+      srcDir 'src'
     }
+  }
+  test {
+    java {
+      srcDir 'test'
+    }
+    resources {
+      srcDir 'test'
+    }
+  }
 }
 
 // A place for a common checkstyle config file
@@ -114,70 +69,10 @@ ext.checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
 compileJava.doLast {
   // update build number after build 
   // do this here to avoid compiling without source changes since this here is a source change
-  println "Updating compile counter property files ${project.projectDir.name}-build.properties"
-  ext.filename = "${project.projectDir.canonicalPath}/src/${project.parent.name}/${project.projectDir.name}-build.properties".toString()
-  Properties p = new Properties()
-  try {
-    FileInputStream fis = new FileInputStream(filename);
-    p.load(fis)
-    fis.close()
-  } catch (Exception e) {
-   // 
-  }
-  p.setProperty("version.date", ""+(new Date()))
-  p.setProperty("version.build", ""+(Integer.parseInt(p.getProperty("version.build", "0"))+1))
-  FileOutputStream fos = new FileOutputStream(filename)
-  p.save(fos, " Tangram Build and System Information")
-  fos.close()
+  systemIncrementBuildCounter()
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
   classifier = 'sources'
   from sourceSets.main.allSource
-}
-
-apply plugin: UtilitiesPlugin
-
-import org.gradle.api.Project;
-
-class UtilitiesPlugin implements Plugin<Project> {
-
-  public void apply(Project project) {
-    project.convention.plugins.utilities = new TangramUtilities(project)
-  }
-
-}
-
-class TangramUtilities {
-
-  private Project project;
-  
-  public TangramUtilities(Project p) {
-    project = p
-  } 
-
-  public jdoEnhance() {
-    // print "conf: $project.configurations.providedCompile.asPath"
-    try {
-        project.ant.taskdef(name: 'enhance', classpath: project.configurations.providedCompile.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
-        project.ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: project.sourceSets['main'].output.classesDir.canonicalPath) {
-            classpath {
-                // for the log configuration...
-                pathelement(path: '.')
-                // The classes to be enhanced need to be on the class path
-                pathelement(path: project.sourceSets['main'].output.classesDir.canonicalPath)
-                // this is the real class path for the tool (s.a.)
-                pathelement(path: project.configurations.providedCompile.asPath)
-                // With mere jar libs this is still not complete and enough:
-                pathelement(path: project.sourceSets['main'].compileClasspath.asPath)
-            }
-            fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
-        }
-    } catch(Exception e) {
-        println ''
-        e.printStackTrace(System.out);
-        throw new GradleException('An error occurred enhancing persistence capable classes.', e)
-    }
-  }
-
 }

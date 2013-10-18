@@ -33,10 +33,10 @@ artifacts {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar 
-        }
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      artifact sourcesJar 
     }
+  }
 }

@@ -24,8 +24,8 @@ dependencies {
   webapp project(':tangram-core')
   compile project(':tangram-core')
   
-  compile "$jdo_api"
+  compile "$versions.jdo_api"
   
-  providedCompile "javax.servlet:servlet-api:$servlet_spec"
-  providedCompile "javax.servlet:jsp-api:$jsp_spec"
+  providedCompile "javax.servlet:servlet-api:$versions.servlet"
+  providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }

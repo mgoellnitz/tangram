@@ -33,3 +33,5 @@
 /nucleus/.settings
 /nucleus/.classpath
 /nucleus/.project
+/gradle-plugin/build
+/gradle-plugin/.gradle

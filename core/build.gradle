@@ -23,23 +23,23 @@ configurations {
 }
 
 dependencies {
-  providedCompile "javax.servlet:servlet-api:$servlet_spec"
-  providedCompile "javax.servlet:jsp-api:$jsp_spec"
+  providedCompile "javax.servlet:servlet-api:$versions.servlet"
+  providedCompile "javax.servlet:jsp-api:$versions.jsp"
   compile "taglibs:standard:1.1.2"
   compile "javax.servlet:jstl:1.1.2"
   
-  compile "org.springframework:spring-core:$springframework_version"
-  compile "org.springframework:spring-asm:$springframework_version"
-  compile "org.springframework:spring-beans:$springframework_version"
-  compile "org.springframework:spring-context:$springframework_version"
-  compile "org.springframework:spring-context-support:$springframework_version"
-  compile "org.springframework:spring-expression:$springframework_version"
-  compile "org.springframework:spring-web:$springframework_version"
-  compile "org.springframework:spring-webmvc:$springframework_version"
+  compile "org.springframework:spring-core:$versions.springframework"
+  compile "org.springframework:spring-asm:$versions.springframework"
+  compile "org.springframework:spring-beans:$versions.springframework"
+  compile "org.springframework:spring-context:$versions.springframework"
+  compile "org.springframework:spring-context-support:$versions.springframework"
+  compile "org.springframework:spring-expression:$versions.springframework"
+  compile "org.springframework:spring-web:$versions.springframework"
+  compile "org.springframework:spring-webmvc:$versions.springframework"
   
-  compile "org.apache.velocity:velocity:$velocity_version"
-  compile "org.codehaus.groovy:groovy:$groovy_version"
-  compile("com.yahoo.platform.yui:yuicompressor:$yui_version") {
+  compile "org.apache.velocity:velocity:$versions.velocity"
+  compile "org.codehaus.groovy:groovy:$versions.groovy"
+  compile("com.yahoo.platform.yui:yuicompressor:$versions.yui") {
     exclude module: 'js'
   }
   

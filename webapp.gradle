@@ -19,7 +19,6 @@
 apply from: '../commons.gradle'
 
 // here go the differences to mere jar libs
-
 apply plugin: 'war'
 
 // needed for building jars and wars
@@ -35,20 +34,30 @@ artifacts {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact sourcesJar 
-            artifact war {
-                classifier 'war'
-                extension 'war'
-            }
-        }
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      artifact sourcesJar 
+      artifact war {
+        classifier 'war'
+        extension 'war'
+      }
     }
+  }
 }
 
 
 // the rest here only comes with webapp
+buildscript {
+  repositories {
+    // dependency of the plugins should be found here
+    maven { url "http://repo1.maven.org/maven2" }
+  }
+  dependencies {
+    // TODO: how to use the yui from versions list within this plugin?
+    classpath "com.yahoo.platform.yui:yuicompressor:2.4.7"
+  }
+}
 
 // avoid gradles default mimik to fiddle around with this directory
 webAppDirName = 'disabled'
@@ -56,18 +65,8 @@ webAppDirName = 'disabled'
 // we want jars and wars - in most cases
 jar.enabled = true 
 
-// TODO: this looks a little bit redundnant...
-buildscript {
-    repositories {
-        mavenLocal()
-        maven { url "http://repo1.maven.org/maven2" }
-    }
-    dependencies {
-        // TODO: how to use the yui_version variable above?
-        classpath "com.yahoo.platform.yui:yuicompressor:2.4.7"
-    }
-}
 
+// Minification filter classes for JavaScript and CSS
 class JavaScriptMinify extends FilterReader {
 
     Reader inputReader
@@ -89,6 +88,7 @@ class JavaScriptMinify extends FilterReader {
 
 } // JavaScriptMinify
 
+
 class CSSMinify extends FilterReader {
 
     Reader inputReader
@@ -109,6 +109,7 @@ class CSSMinify extends FilterReader {
     } // CSSMinify()
 
 } // CSSMinify
+
 
 war.doFirst {
   // Strange way of overwriting things - it must be the first webapp dependency

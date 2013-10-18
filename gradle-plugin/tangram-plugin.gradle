@@ -16,18 +16,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-apply from: '../webapp.gradle'
-
-war.dependsOn ':tangram-core:war'
-
-dependencies {
-  webapp project(':tangram-core')
-  compile project(':tangram-core')
-  
-  compile "org.eclipse.persistence:javax.persistence:2.1.0"
-  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"
-  // compile "org.datanucleus:datanucleus-api-jpa:$versions.datanucleus"
-  
-  providedCompile "javax.servlet:servlet-api:$versions.servlet"
-  providedCompile "javax.servlet:jsp-api:$versions.jsp"
-}
+String[] roots = ['gradle-plugin/src']
+apply plugin: new GroovyScriptEngine(roots).loadScriptByName('TangramPlugin.groovy')
