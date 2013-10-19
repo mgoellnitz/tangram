@@ -24,7 +24,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 // apply plugin: 'code-quality'
 // directly access plugin here to avoid depenceny on a project which we cannot auto-build
-apply from: '../gradle-plugin/tangram-plugin.gradle'
+apply from: "${project.rootProject.projectDir}/gradle-plugin/tangram-plugin.gradle"
 
 repositories {
   // most of the usual stuff

@@ -16,5 +16,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-String[] roots = ['gradle-plugin/src']
+String[] roots = ["${project.rootProject.projectDir}/gradle-plugin/src"]
 apply plugin: new GroovyScriptEngine(roots).loadScriptByName('TangramPlugin.groovy')
