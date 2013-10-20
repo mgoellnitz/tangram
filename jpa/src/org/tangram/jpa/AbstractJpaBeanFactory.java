@@ -271,7 +271,8 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
                 String order = " order by "+orderProperty+asc;
                 queryString += order;
             } // if
-            Query query = manager.createQuery(queryString==null ? "" : queryString, cls);
+            // Query query = manager.createQuery(queryString==null ? "" : queryString, cls);
+            Query query = manager.createQuery(queryString==null ? "select x from "+cls.getSimpleName() : queryString, cls);
             // Default is no ordering - not even via IDs
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
@@ -595,8 +596,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             getClasses();
         } // if
 
-        Map<String, List<String>> c = null;
-        c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;
         } // if
