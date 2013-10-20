@@ -15,122 +15,112 @@
  
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <!--  this should include as few packages as possible -->
-	<context:component-scan base-package="org.tangram.components" />
+  <!--  this should include as few packages as possible -->
+  <context:component-scan base-package="org.tangram.components" />
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath*:/tangram/*.properties</value>
-				<value>/WEB-INF/tangram/*.properties</value>
-			</list>
-		</property>
-	</bean>
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath*:/tangram/*.properties</value>
+        <value>/WEB-INF/tangram/*.properties</value>
+      </list>
+    </property>
+  </bean>
 
-	<bean id="modelAndViewFactory" class="org.tangram.view.GroovyModelAndViewFactory" />
+  <bean id="modelAndViewFactory" class="org.tangram.view.GroovyModelAndViewFactory" />
 
-	<bean id="linkFactory" class="org.tangram.view.link.GenericLinkFactory">
-		<property name="dispatcherPath" value="${spring.dispatcher.servlet.path}" />
-	</bean>
+  <bean id="linkFactory" class="org.tangram.view.link.GenericLinkFactory">
+    <property name="dispatcherPath" value="${spring.dispatcher.servlet.path}" />
+  </bean>
 
-	<bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-		<property name="order" value="10" />
-		<property name="interceptors" ref="interceptors" />
-	</bean>
+  <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+    <property name="order" value="10" />
+    <property name="interceptors" ref="interceptors" />
+  </bean>
 
-	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="mappings">
-			<value>
-				/**=metaController
-			</value>
-		</property>
-		<property name="order" value="100" />
-		<property name="interceptors" ref="interceptors"/>
-	</bean>
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="mappings">
+      <value>
+        /**=metaController
+      </value>
+    </property>
+    <property name="order" value="100" />
+    <property name="interceptors" ref="interceptors"/>
+  </bean>
 
-	<bean id="plainJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-	</bean>
+  <bean id="plainJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+  </bean>
 
-	<bean id="jspViewResolver" class="org.tangram.view.ModelAwareInternalResourceViewResolver">
-		<property name="delegate" ref="plainJspViewResolver" />
-		<property name="order" value="65435" />
-		<property name="prefix" value="/WEB-INF/view/jsp/" />
-		<property name="suffix" value=".jsp" />
-		<property name="activateCaching" value="true" />
-	</bean>
+  <bean id="jspViewResolver" class="org.tangram.view.ModelAwareInternalResourceViewResolver">
+    <property name="delegate" ref="plainJspViewResolver" />
+    <property name="order" value="65435" />
+    <property name="prefix" value="/WEB-INF/view/jsp/" />
+    <property name="suffix" value=".jsp" />
+    <property name="activateCaching" value="true" />
+  </bean>
 
-	<bean id="httpHeaderDateFormat" class="java.text.SimpleDateFormat">
-		<constructor-arg>
-			<value type="java.lang.String">EEE, dd MMM yyyy HH:mm:ss z</value>
-		</constructor-arg>
-	</bean>
+  <bean id="httpHeaderDateFormat" class="java.text.SimpleDateFormat">
+    <constructor-arg>
+      <value type="java.lang.String">EEE, dd MMM yyyy HH:mm:ss z</value>
+    </constructor-arg>
+  </bean>
 
-	<bean id="viewSettings" class="java.util.HashMap">
-		<constructor-arg>
-			<map>
-				<entry key="cssCacheTime" value="${css.cache.time}" />
-				<entry key="jsCacheTime" value="${js.cache.time}" />
-				<!--  not used by tangram itself! -->
-				<entry key="imageCacheTime" value="${image.cache.time}" />
-			</map>
-		</constructor-arg>
-	</bean>
+  <bean id="viewSettings" class="java.util.HashMap">
+    <constructor-arg>
+      <map>
+        <entry key="cssCacheTime" value="${css.cache.time}" />
+        <entry key="jsCacheTime" value="${js.cache.time}" />
+        <entry key="imageCacheTime" value="${image.cache.time}" />
+      </map>
+    </constructor-arg>
+  </bean>
 
-	<!--  generic base for dynamic velocity  -->
+  <!--  generic base for dynamic velocity  -->
 
-	<bean id="velocityPatch" class="org.tangram.view.velocity.VelocityPatchBean" />
+  <bean id="velocityPatch" class="org.tangram.view.velocity.VelocityPatchBean" />
 
-	<!--
-		path resolver s only used when velocity is used with classpath loading which results in too many exception when it falls
-		back to JSP views
-	-->
-	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-		<property name="velocityProperties">
-			<value>
-				input.encoding=UTF-8
-				output.encoding=UTF-8
-				resource.loader=tangram
-				tangram.resource.loader.class=org.tangram.view.velocity.VelocityResourceLoader
-				tangram.resource.loader.cachingOn=true
-				tangram.resource.loader.modificationCheckInterval=30
-				userdirective=org.tangram.view.velocity.IncludeDirective,org.tangram.view.velocity.LinkDirective
-			</value>
-		</property>
-	</bean>
+  <!--
+    path resolver s only used when velocity is used with classpath loading which results in too many exception when it falls
+    back to JSP views
+  -->
+  <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <property name="velocityProperties">
+      <value>
+        input.encoding=UTF-8
+        output.encoding=UTF-8
+        resource.loader=tangram
+        tangram.resource.loader.class=org.tangram.view.velocity.VelocityResourceLoader
+        tangram.resource.loader.cachingOn=true
+        tangram.resource.loader.modificationCheckInterval=30
+        userdirective=org.tangram.view.velocity.IncludeDirective,org.tangram.view.velocity.LinkDirective
+      </value>
+    </property>
+  </bean>
 
-	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-		<property name="velocityEngine" ref="velocityEngine" />
-	</bean>
+  <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+    <property name="velocityEngine" ref="velocityEngine" />
+  </bean>
 
-	<bean id="plainRepositoryVelocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
-		<property name="cache" value="true" />
-		<property name="prefix" value="" />
-		<property name="suffix" value="" />
-	</bean>
+  <bean id="plainRepositoryVelocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+    <property name="cache" value="true" />
+    <property name="prefix" value="" />
+    <property name="suffix" value="" />
+  </bean>
 
-	<!--  static velocity -->
+  <!--  edit scenarios only  -->
 
-	<!--
-		<bean id="plainVelocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver"> <property
-		name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityView" /> <property name="cache" value="true"
-		/> </bean> <bean id="velocityViewResolver" class="org.tangram.view.ModelAwareInternalResourceViewResolver"> <property
-		name="delegate" ref="plainVelocityViewResolver" /> <property name="order" value="65335" /> <property name="prefix"
-		value="templates/" /> <property name="suffix" value=".vtl" /> <property name="activateCaching" value="true" /> </bean>
-	-->
-
-	<!--  edit scenarios only  -->
-
-	<bean id="multipartResolver" class="org.tangram.edit.StreamingMultipartResolver">
-		<property name="maxUploadSize" value="${tangram.editor.max.upload.size}" />
-	</bean>
+  <bean id="multipartResolver" class="org.tangram.edit.StreamingMultipartResolver">
+    <property name="maxUploadSize" value="${tangram.editor.max.upload.size}" />
+  </bean>
 
 </beans>

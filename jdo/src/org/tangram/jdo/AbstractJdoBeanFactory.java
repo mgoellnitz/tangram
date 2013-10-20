@@ -63,7 +63,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     private Map<Object, Object> configOverrides = null;
 
-    public PersistenceManagerFactory pmfInstance = null;
+    public PersistenceManagerFactory managerFactory = null;
 
     protected PersistenceManager manager = null;
 
@@ -588,9 +588,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     @Override
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
-        pmfInstance = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "tangram");
+        managerFactory = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "transactions-optional");
 
-        manager = pmfInstance.getPersistenceManager();
+        manager = managerFactory.getPersistenceManager();
 
         // Just to prefill
         if (prefill) {
