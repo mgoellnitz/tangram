@@ -43,7 +43,7 @@
 
     <!-- this one moved out of components and is not auto-scanned anymore -->
 
-    <bean id="persistenceCache" class="org.tangram.util.FileCacheAdapter" />
+    <bean id="persistenceCache" class="org.tangram.util.DummyRestartCache" />
     
     <!--  edit scenarios only  -->
 

@@ -18,16 +18,8 @@
  */
 package org.tangram.util;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.tangram.PersistentRestartCache;
 
@@ -44,53 +36,26 @@ import org.tangram.PersistentRestartCache;
  * 
  */
 @Component
-public class FileCacheAdapter implements PersistentRestartCache {
+public class DummyRestartCache implements PersistentRestartCache {
 
-    private static final String PERSISTENT_CACHE_FILENAME = "tangram.persistent.cache.ser";
-
-    private static final Log log = LogFactory.getLog(FileCacheAdapter.class);
-
-    private Map<String, Object> cache = null;
-
-
-    @SuppressWarnings("unchecked")
-    public FileCacheAdapter() {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PERSISTENT_CACHE_FILENAME));
-            cache = (Map<String, Object>)(ois.readObject());
-            ois.close();
-        } catch (Exception e) {
-            cache = new HashMap<String, Object>();
-        } // try/catch
+    public DummyRestartCache() {
     } // DummyCacheAdapter()
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
-        return cache==null ? null : (T)cache.get(key);
+        return null;
     } // get()
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T> T get(String key, Type t) {
-        return cache==null ? null : (T)cache.get(key);
+        return null;
     } // get()
 
 
     @Override
     public <T> void put(String key, T value) {
-        if (cache!=null) {
-            cache.put(key, value);
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(PERSISTENT_CACHE_FILENAME));
-                oos.writeObject(cache);
-                oos.close();
-            } catch (Exception e) {
-                log.error("put()", e);
-            } // try/catch
-        } // if
     } // put()
 
 } // DummyCacheAdapter
