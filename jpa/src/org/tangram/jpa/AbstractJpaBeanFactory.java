@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.jpa;
 
@@ -62,7 +62,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
     private Map<Object, Object> configOverrides = null;
 
-    public EntityManagerFactory emfInstance = null;
+    public EntityManagerFactory managerFactory = null;
 
     protected EntityManager manager = null;
 
@@ -152,9 +152,9 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
 
     /**
-     * 
+     *
      * Override Persistence Manager Factory properties given in jdoconfig.xml
-     * 
+     *
      * @param configOverrides
      */
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
@@ -234,8 +234,8 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
-     * @throws IllegalAccessException 
-     * @throws InstantiationException 
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      */
     @Override
     public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
@@ -246,7 +246,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
         if (log.isDebugEnabled()) {
             log.debug("createBean() creating new instance of "+cls.getName());
         } // if
-        
+
         T bean = cls.newInstance();
         if (log.isDebugEnabled()) {
             log.debug("createBean() populating new instance");
@@ -272,7 +272,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
                 queryString += order;
             } // if
             // Query query = manager.createQuery(queryString==null ? "" : queryString, cls);
-            Query query = manager.createQuery(queryString==null ? "select x from "+cls.getSimpleName() : queryString, cls);
+            Query query = manager.createQuery(queryString==null ? "select x from "+cls.getSimpleName()+" x" : queryString, cls);
             // Default is no ordering - not even via IDs
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
@@ -561,7 +561,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
     /**
      * just to support JSP weak calling of methods with no parameters
-     * 
+     *
      * @param baseClass
      * @return
      */
@@ -584,9 +584,13 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
     @Override
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
-        emfInstance = Persistence.createEntityManagerFactory("tangram");
+        managerFactory = Persistence.createEntityManagerFactory("tangram");
 
-        manager = emfInstance.createEntityManager();
+        if (log.isWarnEnabled()) {
+            log.warn("afterPropertiesSet() emfInstance="+managerFactory);
+        } // if
+        
+        manager = managerFactory.createEntityManager();
 
         // Just to prefill
         if (prefill) {

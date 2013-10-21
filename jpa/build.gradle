@@ -26,8 +26,11 @@ dependencies {
   
   compile "org.eclipse.persistence:javax.persistence:2.1.0"
   compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"
-  // compile "org.datanucleus:datanucleus-api-jpa:$versions.datanucleus"
   
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
+}
+
+jar.doLast {
+  jpaWeave()
 }

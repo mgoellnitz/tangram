@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,6 +63,45 @@ class TangramUtilities {
             throw new GradleException('An error occurred enhancing persistence capable classes.', e)
         } // try/catch
     } // jdoEnhance()
+
+
+    public jpaWeave() {
+        try {
+            String jarPath = project.jar.outputs.files.asPath
+            String tempPath = jarPath.replace('.jar', '-unweaved.jar')
+            println "libs: ${jarPath}"
+            File o = new File(jarPath)
+            o.renameTo(new File(tempPath))
+            /*
+            String persistenceXml = project.configurations.providedCompile.asPath;
+            project.sourceSets['main'].resources.each() {
+                if (it.name.endsWith('persistence.xml')) persistenceXml = it.absolutePath
+            }
+            persistenceXml = persistenceXml.substring(0, persistenceXml.length()-'META-INT/persistence.xml'.length())
+            println "persistence.xml: $persistenceXml"
+            */
+            project.ant.taskdef(name: 'weave', 
+                                classpath: project.configurations.compile.asPath, 
+                                classname: 'org.eclipse.persistence.tools.weaving.jpa.StaticWeaveAntTask')
+            // project.ant.weave(source: project.sourceSets['main'].output.classesDir.canonicalPath, 
+            //                  target: project.sourceSets['main'].output.classesDir.canonicalPath,
+            //                  persistenceinfo: persistenceXml) {
+            project.ant.weave(source: tempPath, target: jarPath) {
+                classpath {
+                    // The classes to be enhanced need to be on the class path
+                    // pathelement(path: project.sourceSets['main'].output.classesDir.canonicalPath)
+                    // this is the real class path for the tool (s.a.)
+                    pathelement(path: project.configurations.compile.asPath)
+                    // With mere jar libs this is still not complete and enough:
+                    pathelement(path: project.sourceSets['main'].compileClasspath.asPath)
+                }
+            }            
+        } catch(Exception e) {
+            println ''
+            e.printStackTrace(System.out);
+            throw new GradleException('An error occurred weaving entity classes.', e)
+        } // try/catch
+    } // jpaWeave()
 
 
     public systemIncrementBuildCounter() {

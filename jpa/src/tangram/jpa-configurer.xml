@@ -15,38 +15,41 @@
  
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <!-- velocity activation for view in jpa based repository -->
+  <!-- velocity activation for view in jpa based repository -->
 
-    <bean id="velocityRepositoryViewResolver" class="org.tangram.view.velocity.ModelAwareRepositoryViewResolver">
-        <property name="delegate" ref="plainRepositoryVelocityViewResolver" />
-        <property name="order" value="10000"/>
-        <property name="activateCaching" value="true" />
-    </bean>
- 
-    <bean id="beanFactory" class="org.tangram.jpa.JpaBeanFactoryImpl">
-        <property name="basePackages">
-            <set>
-                <value>${bean.factory.application.base.package}</value>
-                <value>org.tangram.jpa</value>
-            </set>
-        </property>
-        <property name="activateCaching" value="${bean.factory.activate.caching}" />
-        <property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
-        <property name="prefill" value="${tangram.caches.prefill}" />
-    </bean>
-
-    <!-- this one moved out of components and is not auto-scanned anymore -->
-
-    <bean id="persistenceCache" class="org.tangram.util.DummyRestartCache" />
+  <bean id="velocityRepositoryViewResolver" class="org.tangram.view.velocity.ModelAwareRepositoryViewResolver">
+    <property name="delegate" ref="plainRepositoryVelocityViewResolver" />
+    <property name="order" value="10000"/>
+    <property name="activateCaching" value="true" />
+  </bean>
     
-    <!--  edit scenarios only  -->
+  <bean id="beanFactory" class="org.tangram.jpa.JpaBeanFactoryImpl">
+    <property name="basePackages">
+      <set>
+        <value>${bean.factory.application.base.package}</value>
+        <value>org.tangram.jpa</value>
+      </set>
+    </property>
+    <property name="activateCaching" value="${bean.factory.activate.caching}" />
+    <property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
+    <property name="prefill" value="${tangram.caches.prefill}" />
+  </bean>
 
-    <bean id="propertyConverter" class="org.tangram.jpa.JpaPropertyConverter" />
+  <!-- this one moved out of components and is not auto-scanned anymore -->
+
+  <bean id="persistentRestartCache" class="org.tangram.util.DummyRestartCache" />
+    
+  <!--  edit scenarios only  -->
+
+  <bean id="propertyConverter" class="org.tangram.jpa.JpaPropertyConverter" />
     
 </beans>

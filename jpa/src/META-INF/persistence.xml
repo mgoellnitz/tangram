@@ -5,15 +5,21 @@
     
     <persistence-unit name="tangram" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <!--
+        -->
+        <class>org.tangram.jpa.JpaContent</class>
+        <class>org.tangram.jpa.Code</class>
         <properties>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.driver=org.h2.Driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:file:tangram"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:file:C:/temp/tangram"/>
             <!--
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
             <property name="eclipselink.logging.level" value="INFO"/>
             -->
+            <property name="eclipselink.weaving" value="static"/>
         </properties>
     </persistence-unit>
     
