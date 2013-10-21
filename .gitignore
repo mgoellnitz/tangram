@@ -35,3 +35,6 @@
 /nucleus/.project
 /gradle-plugin/build
 /gradle-plugin/.gradle
+/.nb-gradle/profiles/private/
+/buildSrc/.gradle
+/buildSrc/build

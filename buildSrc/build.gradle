@@ -3,16 +3,16 @@
  * Copyright 2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
@@ -22,6 +22,7 @@ apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
 // our custom directory layout
+/*
 sourceSets {
   main {
     groovy {
@@ -40,6 +41,7 @@ sourceSets {
     }
   }
 }
+*/
 
 repositories {
   // most of the usual stuff
@@ -52,10 +54,14 @@ repositories {
   maven { url "http://www.datanucleus.org/downloads/maven2" }
 }
 
+dependencies {
+}
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
       groupId 'tangram'
+      artifactId 'gradle-plugin'
       version '0.9-SNAPSHOT'
       from components.java
       artifact sourcesJar 
@@ -71,6 +77,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 dependencies {
   compile gradleApi()
   compile localGroovy()
-  // TODO: how to use the yui from versions list within this plugin above?
+  // TODO: how to use the yui from versions list within this plugin?
   compile "com.yahoo.platform.yui:yuicompressor:2.4.7"
 }

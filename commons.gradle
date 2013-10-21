@@ -3,16 +3,16 @@
  * Copyright 2011-2013 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
@@ -23,8 +23,6 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 // apply plugin: 'code-quality'
-// directly access plugin here to avoid depenceny on a project which we cannot auto-build
-apply from: "${project.rootProject.projectDir}/gradle-plugin/tangram-plugin.gradle"
 
 repositories {
   // most of the usual stuff
@@ -46,20 +44,12 @@ eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/cla
 // our custom directory layout
 sourceSets {
   main {
-    java {
-      srcDir 'src'
-    }
-    resources {
-      srcDir 'src'
-    }
+    java { srcDir 'src' }
+    resources { srcDir 'src' }
   }
   test {
-    java {
-      srcDir 'test'
-    }
-    resources {
-      srcDir 'test'
-    }
+    java { srcDir 'test' }
+    resources { srcDir 'test' }
   }
 }
 
@@ -67,9 +57,8 @@ sourceSets {
 ext.checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
 
 compileJava.doLast {
-  // update build number after build 
   // do this here to avoid compiling without source changes since this here is a source change
-  systemIncrementBuildCounter()
+  incrementBuildCounter(project)
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
