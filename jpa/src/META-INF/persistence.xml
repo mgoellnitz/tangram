@@ -7,9 +7,9 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <!--
-        -->
         <class>org.tangram.jpa.JpaContent</class>
         <class>org.tangram.jpa.Code</class>
+        -->
         <properties>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
