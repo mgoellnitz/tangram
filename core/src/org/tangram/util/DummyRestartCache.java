@@ -58,4 +58,4 @@ public class DummyRestartCache implements PersistentRestartCache {
     public <T> void put(String key, T value) {
     } // put()
 
-} // DummyCacheAdapter
+} // DummyRestartCache

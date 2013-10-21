@@ -93,4 +93,4 @@ public class FileRestartCache implements PersistentRestartCache {
         } // if
     } // put()
 
-} // DummyCacheAdapter
+} // FileRestartCache
