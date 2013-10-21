@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-apply plugin: 'java'
-apply plugin: 'tangram'
 
 allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
@@ -46,4 +44,3 @@ public incrementBuildCounter(Project prj) {
     p.save(fos, " Tangram Build and System Information")
     fos.close()
 } // incrementBuildCounter()
-

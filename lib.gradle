@@ -16,20 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
- 
 apply from: '../commons.gradle'
 
-// here go the differenes between mere jar libs and wars
-
-// needed for building jars and wars
+// Since this is just a lib we need this "providedCompile" stuff explicitly here
 configurations {
   libs 
   providedCompile
-}
-
-// needed for building jars and wars
-artifacts {
-  libs jar
 }
 
 publishing {

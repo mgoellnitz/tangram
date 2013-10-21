@@ -19,6 +19,8 @@
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.GradleException
+import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.bundling.War
 
 class TangramPlugin implements Plugin<Project> {
 
@@ -40,9 +42,76 @@ class TangramUtilities {
     public TangramUtilities(Project p) {
         project = p
     } 
+    
+    /*
+     *  extract base webarchive which must be the first webapp dependency of this project.
+     *  Then copy JavaScript and CSS Codes and try to minify them.
+     *  
+     */
+    public overlayWebapp(War w) {
+        Project p = w.project
+        
+        // Strange way of overwriting things - it must be the first webapp dependency
+        Object iter = p.configurations.webapp.dependencies.iterator()
+        if (iter.hasNext()) {
+            Object firstWebappDependency = iter.next()
+            if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+                String archiveFileName = firstWebappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
+                p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
+            } else {
+                println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
+            } // if 
+        } // if 
+        
+        p.copy {
+            from 'webapp'
+            into "$p.buildDir/target"
+            include '**/**'
+            // exclude '**/*.js'
+            exclude '**/*.css'
+        }
+        p.copy {
+            from 'webapp'
+            into "$p.buildDir/target"
+            include '**/*.js'
+            exclude 'editor/ckeditor/**'
+            filter(JavaScriptMinify)
+        }
+        p.copy {
+            from 'webapp'
+            into "$p.buildDir/target"
+            include '**/*.css'
+            filter(CSSMinify)
+        }
+        w.into ('') {
+            from "$p.buildDir/target"
+            exclude 'WEB-INF/lib/**'
+        }
+    } // overlayWebapp()
+    
+    public customizeWar(War w) {
+        Project p = w.project
+        // For some reason webapp files are not included in the inputs collection
+        FileTree tree = p.fileTree(dir: 'webapp')
+        w.inputs.files tree
+        // And also the web-archive of the upstream project has to be added
+        Object iter = p.configurations.webapp.dependencies.iterator()
+        if (iter.hasNext()) {
+            firstWebappDependency = iter.next()
+            if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+                println "Adding "+firstWebappDependency.dependencyProject.war.outputs.files.singleFile.name
+                w.inputs.file firstWebappDependency.dependencyProject.war.outputs.files.singleFile
+            } else {
+                println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
+            } // if 
+        } // if 
+        // classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
+        w.classpath = p.jar.outputs.files
+    } // customizeWar()
 
     public jdoEnhance() {
         try {
+            // println "The project we are just now talking about is $project.name"
             project.ant.taskdef(name: 'enhance', classpath: project.configurations.providedCompile.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
             project.ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: project.sourceSets['main'].output.classesDir.canonicalPath) {
                 classpath {
