@@ -29,13 +29,13 @@ dependencies {
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
 
-  // Also spring security is up to now used by configuration only:
+  // Spring security is up to now used by configuration only:
   // compile "org.springframework.security:spring-security-core:$versions.springsecurity"
   // compile "org.springframework.security:spring-security-config:$versions.springsecurity"
   // compile "org.springframework.security:spring-security-web:$versions.springsecurity"
 
-  // TODO: really needed?
-  // compile "log4j:log4j:1.2.17"
+  // needed by dependent modules so log4j configs will result in some output
+  compile "log4j:log4j:1.2.17"
 
   testCompile "junit:junit:$versions.junit"
 
