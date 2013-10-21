@@ -21,7 +21,7 @@ defaultTasks 'clean', 'publishToMavenLocal'
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
-String[] roots = ["buildSrc/src/main/groovy"]
+String[] roots = ["${project.projectDir}/src/main/groovy"]
 def versions = new GroovyScriptEngine(roots).loadScriptByName('TangramVersions.groovy').newInstance()
 
 repositories {
