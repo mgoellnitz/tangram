@@ -375,8 +375,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
-        if (log.isWarnEnabled()) {
-            log.warn("clearCacheFor() "+cls.getSimpleName());
+        if (log.isInfoEnabled()) {
+            log.info("clearCacheFor() "+cls.getSimpleName());
         } // if
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
@@ -385,8 +385,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 String key = (String)keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                if (log.isDebugEnabled()) {
+                    log.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     removeKeys.add(key);
