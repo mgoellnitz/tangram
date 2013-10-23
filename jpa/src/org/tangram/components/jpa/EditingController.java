@@ -366,9 +366,6 @@ public class EditingController extends RenderingController {
             mav.getModel().put(ATTRIBUTE_WRAPPER, createWrapper(content, request));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource)content;
-                // TODO: Test
-                // request.setAttribute("compilationErrors",
-                // classRepository.getCompilationErrors().get(code.getAnnotation()));
                 mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
             mav.getModel().put("classes", ((JpaBeanFactory)beanFactory).getClasses());

@@ -191,11 +191,10 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             if ( !(cls.isAssignableFrom(kindClass))) {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
-            Object primaryKey = getPrimaryKey(internalId, kindClass);
             if (log.isInfoEnabled()) {
-                log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+primaryKey);
+                log.info("getBean() "+kindClass.getName()+":"+internalId);
             } // if
-            result = manager.find(cls, primaryKey);
+            result = (T)manager.find(kindClass, getPrimaryKey(internalId, kindClass));
             result.setBeanFactory(this);
 
             if (activateCaching) {
@@ -271,11 +270,13 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
                 String order = " order by "+orderProperty+asc;
                 queryString += order;
             } // if
-            // Query query = manager.createQuery(queryString==null ? "" : queryString, cls);
-            Query query = manager.createQuery(queryString==null ? "select x from "+cls.getSimpleName()+" x" : queryString, cls);
+            String shortTypeName = cls.getSimpleName();
+            // String findAllQuery = "select x from "+shortTypeName+" x where type(x) in ("+shortTypeName+")";
+            String findAllQuery = "select x from "+shortTypeName+" x";
+            Query query = manager.createQuery(queryString==null ? findAllQuery : queryString, cls);
             // Default is no ordering - not even via IDs
             if (log.isInfoEnabled()) {
-                log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
+                log.info("listBeansOfExactClass() looking up instances of "+shortTypeName
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
             List<Object> results = query.getResultList();
@@ -284,9 +285,11 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             } // if
             for (Object o : results) {
                 if (o instanceof Content) {
-                    Content c = (Content)o;
-                    c.setBeanFactory(this);
-                    result.add((T)c);
+                    Content c = (Content) o;
+                    if (c.getClass().isAssignableFrom(cls)) {
+                        c.setBeanFactory(this);
+                        result.add((T) c);
+                    } // if
                 } // if
             } // for
             statistics.increase("list beans");
@@ -371,8 +374,8 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
-        if (log.isWarnEnabled()) {
-            log.warn("clearCacheFor() "+cls.getSimpleName());
+        if (log.isInfoEnabled()) {
+            log.info("clearCacheFor() "+cls.getSimpleName());
         } // if
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
@@ -606,4 +609,4 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
         } // if
     } // afterPropertiesSet()
 
-} // AbstractJdoBeanFactory
+} // AbstractJpaBeanFactory

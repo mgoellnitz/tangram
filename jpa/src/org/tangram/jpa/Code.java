@@ -70,7 +70,7 @@ public class Code extends JpaContent implements CodeResource {
 
     @Override
     public String getCodeText() {
-        return code == null ? null : Arrays.toString(code);
+        return code == null ? null : new String(code);
     }
 
 

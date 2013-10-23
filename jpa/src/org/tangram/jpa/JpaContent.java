@@ -1,20 +1,18 @@
 /**
- * 
+ *
  * Copyright 2013 Martin Goellnitz
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.jpa;
 
@@ -35,8 +33,9 @@ import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
+
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class JpaContent implements Content {
 
     private static final Log log = LogFactory.getLog(JpaContent.class);
@@ -55,7 +54,8 @@ public abstract class JpaContent implements Content {
      */
     @Override
     public String getId() {
-        return id;
+        return getClass().getSimpleName()+":"+id;
+        // return id;
     } // getId()
 
 
@@ -78,16 +78,15 @@ public abstract class JpaContent implements Content {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof JpaContent) ? getId().equals(((JpaContent)obj).getId()) : super.equals(obj);
+        return (obj instanceof JpaContent) ? getId().equals(((JpaContent) obj).getId()) : super.equals(obj);
     } // equals()
 
 
     /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
-     * 
-     * @param c
-     *            Content instance - may be null
+     * One more convenience method to use IDs in persistence layer. 
+     * This is might still be a useful pattern in google app engine scenarios
+     *
+     * @param c Content instance - may be null
      * @return id of content or null
      */
     protected String getId(Content c) {
@@ -96,18 +95,17 @@ public abstract class JpaContent implements Content {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
-     * 
-     * @param contents
-     *            list of contents - should not be null
+     * One more convenience method to use IDs in persistence layer. 
+     * This is might still be a useful pattern in google app engine scenarios
+     *
+     * @param contents list of contents - should not be null
      * @return list of ids for the given list of contents
      */
     protected List<String> getIds(List<? extends Content> contents) {
         List<String> result = new ArrayList<String>();
         if (contents!=null) {
             for (Object o : contents) {
-                result.add(((JpaContent)o).getId());
+                result.add(((JpaContent) o).getId());
             } // for
         } // if
         return result;
@@ -115,11 +113,10 @@ public abstract class JpaContent implements Content {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
-     * 
-     * @param i
-     *            id to fetch content for - may be null or empty
+     * One more convenience method to use IDs in persistence layer. 
+     * This is might still be a useful pattern in google app engine scenarios
+     *
+     * @param i id to fetch content for - may be null or empty
      * @return resulting content or null
      */
     protected <T extends Content> T getContent(Class<T> c, String i) {
@@ -131,11 +128,10 @@ public abstract class JpaContent implements Content {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
-     * 
-     * @param ids
-     *            list of id which should match the given type - may be null
+     * One more convenience method to use IDs in persistence layer. 
+     * This is might still be a useful pattern in google app engine scenarios
+     *
+     * @param ids list of id which should match the given type - may be null
      * @return Array of contents where none of the is null
      */
     protected <T extends Content> List<T> getContents(Class<T> c, List<String> ids) {
@@ -158,10 +154,10 @@ public abstract class JpaContent implements Content {
         EntityManager manager = null;
         try {
             // TODO: It might be that there are situations where this is still null
-            manager = ((JpaBeanFactory)getBeanFactory()).getManager();
+            manager = ((JpaBeanFactory) getBeanFactory()).getManager();
             manager.persist(this);
             manager.getTransaction().commit();
-            ((JpaBeanFactory)beanFactory).clearCacheFor(this.getClass());
+            ((JpaBeanFactory) beanFactory).clearCacheFor(this.getClass());
         } catch (Exception e) {
             log.error("persist()", e);
             if (manager!=null) {

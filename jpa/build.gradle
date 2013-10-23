@@ -31,6 +31,6 @@ dependencies {
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }
 
-jar.doLast {
-  jpaWeave()
+compileJava.doLast {
+  internalJpaWeave()
 }
