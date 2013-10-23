@@ -78,22 +78,22 @@ public class Code extends GaeContent implements CodeResource {
 
 
     @Override
+    public String getCodeText() {
+        return (getCode()==null) ? null : getCode().getValue();
+    } // getCodeText()
+
+
+    @Override
     public InputStream getStream() throws Exception {
-        byte[] bytes = getCode().getValue().getBytes("UTF-8");
+        byte[] bytes = getCodeText().getBytes("UTF-8");
         return new ByteArrayInputStream(bytes);
     } // getStream()
 
 
     @Override
     public long getSize() {
-        return getCode().getValue().length();
+        return getCodeText().length();
     } // getSize()
-
-
-    @Override
-    public String getCodeText() {
-        return (getCode()==null) ? null : getCode().getValue();
-    } // getCodeText()
 
 
     @Override
