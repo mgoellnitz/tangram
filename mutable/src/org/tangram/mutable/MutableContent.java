@@ -14,18 +14,13 @@
  * <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.content;
+package org.tangram.mutable;
+
+import org.tangram.content.Content;
 
 
-public interface Content extends Comparable<Content> {
+public interface MutableContent extends Content {
 
-    String getId();
+    boolean persist();
 
-
-    void setBeanFactory(BeanFactory factory);
-
-
-    @Override
-    int compareTo(Content o);
-
-} // Content
+} // MutableContent

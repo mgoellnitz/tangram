@@ -30,8 +30,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.mutable.MutableContent;
 
-public abstract class JdoContent implements Content {
+public abstract class JdoContent implements MutableContent {
 
     private static final Log log = LogFactory.getLog(JdoContent.class);
 
@@ -84,7 +85,7 @@ public abstract class JdoContent implements Content {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof JdoContent) ? getId().equals(((JdoContent)obj).getId()) : super.equals(obj);
+        return (obj instanceof JdoContent) ? getId().equals(((Content)obj).getId()) : super.equals(obj);
     } // equals()
 
 
@@ -113,7 +114,7 @@ public abstract class JdoContent implements Content {
         List<String> result = new ArrayList<String>();
         if (contents!=null) {
             for (Object o : contents) {
-                result.add(((JdoContent)o).getId());
+                result.add(((Content)o).getId());
             } // for
         } // if
         return result;

@@ -69,13 +69,6 @@ public class ComaContent implements Content, Map<String, Object> {
     } // set()
 
 
-    @Override
-    public boolean persist() {
-        // this is a read only implementation
-        return false;
-    } // persist()
-
-
     /** Map **/
 
     @Override

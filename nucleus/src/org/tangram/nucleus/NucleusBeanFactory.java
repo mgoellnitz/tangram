@@ -22,6 +22,7 @@ import org.datanucleus.identity.OID;
 import org.datanucleus.identity.OIDImpl;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
+import org.tangram.mutable.MutableCode;
 
 public class NucleusBeanFactory extends AbstractJdoBeanFactory {
 
@@ -30,5 +31,11 @@ public class NucleusBeanFactory extends AbstractJdoBeanFactory {
         OID oid = new OIDImpl(kindClass.getName(), internalId);
         return oid;
     } // getObjectId()
+
+
+    @Override
+    public Class<? extends MutableCode> getCodeClass() {
+        return Code.class;
+    } // getCodeClass()
 
 } // RdbmsBeanFactory

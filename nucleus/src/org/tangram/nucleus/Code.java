@@ -20,14 +20,13 @@ package org.tangram.nucleus;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import javax.jdo.annotations.PersistenceCapable;
 
-import org.tangram.content.CodeResource;
+import org.tangram.mutable.MutableCode;
 
 @PersistenceCapable
-public class Code extends NucleusContent implements CodeResource {
+public class Code extends NucleusContent implements MutableCode {
 
     private String annotation;
 

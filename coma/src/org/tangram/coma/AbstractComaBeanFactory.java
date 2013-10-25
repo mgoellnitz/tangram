@@ -107,14 +107,6 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
     }
 
 
-    @Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Content createBean(Class cls) {
-        // this is a read only implementation
-        return null;
-    } // createBean()
-
-
     public abstract Content createContent(String id, String type, Map<String, Object> properties);
 
 
@@ -134,12 +126,6 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
 
     @Override
-    public Content getBeanForUpdate(String id) {
-        return getBean(id);
-    } // getBeanForUpdate()
-
-
-    @Override
     @SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String id) {
         return (T)getBean(id);
@@ -147,13 +133,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
 
     @Override
-    public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
-        return getBean(cls, id);
-    } // getBeanForUpdate()
-
-
-    @Override
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Content> listBeansOfExactClass(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
         List<Content> result = new ArrayList<Content>();
         String typeName = cls.getSimpleName();
@@ -166,7 +146,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
 
     @Override
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Content> listBeans(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
         return listBeansOfExactClass(cls, optionalQuery, orderProperty, ascending);
     } // listBeans()
@@ -174,6 +154,16 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
     /** supporting methods for implementing CM style access to content **/
 
+    /**
+     * Create a transient blob object from content instance.
+     * 
+     * @param id id of the content
+     * @param propertyName name of the property to find the blob in
+     * @param mimeType mimetype to choose
+     * @param len length in bytes
+     * @param data blob data
+     * @return return abstrace representation of the blob
+     */
     public abstract Object createBlob(String id, String propertyName, String mimeType, long len, byte[] data);
 
 

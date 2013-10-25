@@ -18,19 +18,12 @@
  */
 apply from: '../webapp.gradle'
 
-war.dependsOn ':tangram-core:war'
+war.dependsOn ':tangram-mutable:war'
 
 dependencies {
   webapp project(':tangram-mutable')
   compile project(':tangram-mutable')
   
-  compile "org.eclipse.persistence:javax.persistence:2.1.0"
-  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"
-  
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
-}
-
-compileJava.doLast {
-  internalJpaWeave()
 }

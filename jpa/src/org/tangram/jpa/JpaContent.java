@@ -32,11 +32,12 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.mutable.MutableContent;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class JpaContent implements Content {
+public abstract class JpaContent implements MutableContent {
 
     private static final Log log = LogFactory.getLog(JpaContent.class);
 
@@ -78,7 +79,7 @@ public abstract class JpaContent implements Content {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof JpaContent) ? getId().equals(((JpaContent) obj).getId()) : super.equals(obj);
+        return (obj instanceof JpaContent) ? getId().equals(((Content) obj).getId()) : super.equals(obj);
     } // equals()
 
 
@@ -105,7 +106,7 @@ public abstract class JpaContent implements Content {
         List<String> result = new ArrayList<String>();
         if (contents!=null) {
             for (Object o : contents) {
-                result.add(((JpaContent) o).getId());
+                result.add(((Content) o).getId());
             } // for
         } // if
         return result;

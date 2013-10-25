@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.components.jpa;
+package org.tangram.components.mutable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -50,7 +50,8 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
 import org.tangram.edit.PropertyConverter;
-import org.tangram.jpa.JpaBeanFactory;
+import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.mutable.MutableContent;
 import org.tangram.view.Utils;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
@@ -98,6 +99,11 @@ public class EditingController extends RenderingController {
         // Automagically set edit view
         defaultController.getCustomLinkViews().add("edit");
     } // setDefaultController()
+    
+    
+    private MutableBeanFactory getMutableBeanFactory() {
+        return (MutableBeanFactory)getBeanFactory();
+    } // getMutableBeanFactory()
 
 
     private ModelAndView redirect(HttpServletRequest request, HttpServletResponse response, Content content) throws IOException {
@@ -125,7 +131,7 @@ public class EditingController extends RenderingController {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
             } // if
-            Content bean = beanFactory.getBean(Content.class, id);
+            MutableContent bean = beanFactory.getBean(MutableContent.class, id);
             BeanWrapper wrapper = createWrapper(bean, request);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
@@ -211,7 +217,7 @@ public class EditingController extends RenderingController {
                 } // for
             } // if
 
-            bean = beanFactory.getBeanForUpdate(Content.class, id);
+            bean = getMutableBeanFactory().getBeanForUpdate(MutableContent.class, id);
             // wrapper = new BeanWrapperImpl(bean);
             wrapper = createWrapper(bean, request);
             Exception e = null;
@@ -284,8 +290,8 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            Class<Content> cls = (Class<Content>)(this.getClass().getClassLoader().loadClass(typeName));
-            Content content = beanFactory.createBean(cls);
+            Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+            MutableContent content = getMutableBeanFactory().createBean(cls);
             if (content.persist()) {
                 if (log.isDebugEnabled()) {
                     log.debug("create() content="+content);
@@ -320,7 +326,7 @@ public class EditingController extends RenderingController {
                     log.error("list()", e);
                 } // try/catch
             } // if
-            Collection<Class<? extends Content>> classes = ((JpaBeanFactory)beanFactory).getClasses();
+            Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
             if (cls==null) {
                 if ( !classes.isEmpty()) {
                     cls = classes.iterator().next();
@@ -365,7 +371,7 @@ public class EditingController extends RenderingController {
                 CodeResource code = (CodeResource)content;
                 mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
-            mav.getModel().put("classes", ((JpaBeanFactory)beanFactory).getClasses());
+            mav.getModel().put("classes", getMutableBeanFactory().getClasses());
             return mav;
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
@@ -386,8 +392,8 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            Class<Content> cls = (Class<Content>)(this.getClass().getClassLoader().loadClass(typeName));
-            Content content = beanFactory.createBean(cls);
+            Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+            MutableContent content = getMutableBeanFactory().createBean(cls);
             if (content.persist()) {
                 if (log.isDebugEnabled()) {
                     log.debug("link() content="+content);
@@ -395,7 +401,7 @@ public class EditingController extends RenderingController {
                 } // if
 
                 // re-get for update to avoid xg transactions where ever possible
-                Content bean = beanFactory.getBeanForUpdate(Content.class, id);
+                MutableContent bean = getMutableBeanFactory().getBeanForUpdate(id);
                 BeanWrapper wrapper = createWrapper(bean, request);
                                 
                 Object listObject = wrapper.getPropertyValue(propertyName);

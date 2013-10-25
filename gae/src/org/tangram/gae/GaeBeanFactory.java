@@ -1,20 +1,18 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.gae;
 
@@ -29,6 +27,8 @@ import org.tangram.jdo.AbstractJdoBeanFactory;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import org.tangram.mutable.MutableCode;
+
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
@@ -75,7 +75,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     public <T extends Content> T getBean(Class<T> cls, String id) {
         if (activateCaching&&(cache.containsKey(id))) {
             statistics.increase("get bean cached");
-            return (T)cache.get(id);
+            return (T) cache.get(id);
         } // if
         T result = null;
         try {
@@ -102,10 +102,10 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                 getClasses();
             } // if
             Class<? extends Content> kindClass = tableNameMapping.get(kind);
-            if ( !(cls.isAssignableFrom(kindClass))) {
+            if (!(cls.isAssignableFrom(kindClass))) {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
-            result = (T)manager.getObjectById(kindClass, key);
+            result = (T) manager.getObjectById(kindClass, key);
             result.setBeanFactory(this);
 
             if (activateCaching) {
@@ -126,5 +126,11 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     protected String getClassNamesCacheKey() {
         return com.google.appengine.api.utils.SystemProperty.applicationVersion.get();
     } // getClassNamesCacheKey()
+
+
+    @Override
+    public Class<? extends MutableCode> getCodeClass() {
+        return Code.class;
+    } // getCodeClass()
 
 } // GaeBeanFactory

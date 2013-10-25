@@ -47,6 +47,7 @@ import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
+import org.tangram.mutable.MutableContent;
 
 public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory implements JpaBeanFactory, InitializingBean {
 
@@ -218,7 +219,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-    public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
+    public <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id) {
         T bean = getBean(cls, id);
         manager.getTransaction().begin();
         return bean;
@@ -237,7 +238,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
      * @throws InstantiationException
      */
     @Override
-    public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
+    public <T extends MutableContent> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
         if (log.isDebugEnabled()) {
             log.debug("createBean() obtaining persistence manager");
         } // if

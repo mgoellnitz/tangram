@@ -20,14 +20,13 @@ package org.tangram.jpa;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import javax.persistence.Entity;
 
-import org.tangram.content.CodeResource;
+import org.tangram.mutable.MutableCode;
 
 @Entity
-public class Code extends JpaContent implements CodeResource {
+public class Code extends JpaContent implements MutableCode {
 
     private String annotation;
 

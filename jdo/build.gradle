@@ -21,8 +21,8 @@ apply from: '../webapp.gradle'
 war.dependsOn ':tangram-core:war'
 
 dependencies {
-  webapp project(':tangram-core')
-  compile project(':tangram-core')
+  webapp project(':tangram-mutable')
+  compile project(':tangram-mutable')
   
   compile "$versions.jdo_api"
   

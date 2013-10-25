@@ -81,12 +81,6 @@ public class TransientCode implements CodeResource, Serializable {
 
 
     @Override
-    public boolean persist() {
-        return false;
-    } // persist()
-
-
-    @Override
     public long getSize() {
         return getCodeText().length();
     } // getSize()

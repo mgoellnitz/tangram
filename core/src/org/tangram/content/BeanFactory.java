@@ -35,33 +35,11 @@ public interface BeanFactory {
 
     /**
      * Get bean with a given id.
+     *
      * @param id id of the bean to return
      * @return bean with the given ID or null otherwise
      */
     Content getBean(String id);
-
-
-    /**
-     *
-     * Get a bean of a given type with a given id. You MUST call persist() after using this method! The resulting bean
-     * must adhere to both conditions: id and type.
-     *
-     * @param <T>
-     * @param cls
-     * @param id
-     * @return
-     */
-    <T extends Content> T getBeanForUpdate(Class<T> cls, String id);
-
-
-    /**
-     *
-     * Get bean with a given id. You MUST call persist() after using this method! 
-     *
-     * @param id
-     * @return
-     */
-    Content getBeanForUpdate(String id);
 
 
     /**
@@ -103,13 +81,6 @@ public interface BeanFactory {
      * List beans from the repository of an exact type. Does not take sublcasses into account.
      */
     <T extends Content> List<T> listBeansOfExactClass(Class<T> cls);
-
-
-    /**
-     * Create a new bean of a given type. The beans hast to be persisted in a subsequent step! The call of persist() ist
-     * mandatory after using this call.
-     */
-    <T extends Content> T createBean(Class<T> cls) throws Exception;
 
 
     /**

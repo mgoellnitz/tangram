@@ -24,10 +24,10 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.mutable.MutableBeanFactory;
 
-public interface JpaBeanFactory extends BeanFactory {
+public interface JpaBeanFactory extends MutableBeanFactory {
 
     /**
      * Get all classes related with models - also the abstract ones

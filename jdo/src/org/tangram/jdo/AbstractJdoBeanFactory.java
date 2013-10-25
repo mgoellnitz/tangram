@@ -48,6 +48,7 @@ import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
+import org.tangram.mutable.MutableContent;
 
 public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory implements JdoBeanFactory, InitializingBean {
 
@@ -220,7 +221,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-    public <T extends Content> T getBeanForUpdate(Class<T> cls, String id) {
+    public <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id) {
         T bean = getBean(cls, id);
         manager.currentTransaction().begin();
         return bean;
@@ -228,16 +229,17 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     @Override
-    public JdoContent getBeanForUpdate(String id) {
+    public MutableContent getBeanForUpdate(String id) {
         return getBeanForUpdate(JdoContent.class, id);
     } // getBeanForUpdate()
 
 
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
+     * @see JdoBeanFactory
      */
     @Override
-    public <T extends Content> T createBean(Class<T> cls) {
+    public <T extends MutableContent> T createBean(Class<T> cls) {
         if (log.isDebugEnabled()) {
             log.debug("createBean() obtaining persistence manager");
         } // if

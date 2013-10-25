@@ -24,10 +24,10 @@ import java.util.Map;
 
 import javax.jdo.PersistenceManager;
 
-import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.mutable.MutableBeanFactory;
 
-public interface JdoBeanFactory extends BeanFactory {
+public interface JdoBeanFactory extends MutableBeanFactory {
 
     /**
      * Get all classes related with models - also the abstract ones
@@ -35,14 +35,6 @@ public interface JdoBeanFactory extends BeanFactory {
      * @return
      */
     Collection<Class<? extends Content>> getAllClasses();
-
-
-    /**
-     * Get non abstract model classes
-     * 
-     * @return
-     */
-    Collection<Class<? extends Content>> getClasses();
 
 
     Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap();

@@ -1,26 +1,24 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.components.jdo;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.List;
+import java.util.Collection;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -36,6 +34,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.components.StatisticsController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
@@ -44,6 +43,7 @@ import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
 
+
 @Controller
 public class ToolController extends RenderingController {
 
@@ -51,6 +51,9 @@ public class ToolController extends RenderingController {
 
     @Autowired
     private StatisticsController statisticsController;
+
+    @Autowired
+    private CodeResourceCache codeResourceCache;
 
 
     @Override
@@ -66,7 +69,7 @@ public class ToolController extends RenderingController {
                 throw new IOException("User may not clear cache");
             } // if
 
-            JdoBeanFactory jdoBeanFactory = (JdoBeanFactory)beanFactory;
+            JdoBeanFactory jdoBeanFactory = (JdoBeanFactory) beanFactory;
 
             if (log.isInfoEnabled()) {
                 log.info("clearCaches() clearing class specific caches");
@@ -96,7 +99,7 @@ public class ToolController extends RenderingController {
     @RequestMapping(value = "/codes")
     public ModelAndView codes(HttpServletRequest request, HttpServletResponse response) {
         try {
-            if ( !request.getRequestURI().endsWith(".zip")) {
+            if (!request.getRequestURI().endsWith(".zip")) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return null;
             } // if
@@ -113,7 +116,8 @@ public class ToolController extends RenderingController {
             ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
             zos.setComment("Tangram Google AppEngine Codes");
             zos.setLevel(9);
-            List<CodeResource> codes = beanFactory.listBeans(CodeResource.class);
+            // List<CodeResource> codes = beanFactory.listBeans(CodeResource.class);
+            Collection<CodeResource> codes = codeResourceCache.getCodes();
             for (CodeResource code : codes) {
                 if (StringUtils.hasText(code.getAnnotation())) {
                     String mimeType = code.getMimeType();

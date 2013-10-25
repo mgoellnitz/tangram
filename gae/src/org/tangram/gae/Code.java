@@ -25,17 +25,18 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 
 import com.google.appengine.api.datastore.Text;
+import org.tangram.content.CodeResource;
+import org.tangram.mutable.MutableCode;
 
 /*
  * TODO: Move to a more specific package to be able to have fewer packages scanned by Tangrams model autodetection
  */
 @PersistenceCapable
 @Inheritance(customStrategy = "complete-table")
-public class Code extends GaeContent implements CodeResource {
+public class Code extends GaeContent implements MutableCode {
 
     private String annotation;
 
@@ -77,6 +78,11 @@ public class Code extends GaeContent implements CodeResource {
     }
 
 
+    public void setCode(char[] code) {
+        this.code = new Text(String.valueOf(code));
+    }
+
+
     @Override
     public String getCodeText() {
         return (getCode()==null) ? null : getCode().getValue();
@@ -98,7 +104,7 @@ public class Code extends GaeContent implements CodeResource {
 
     @Override
     public int compareTo(Content o) {
-        return (o instanceof Code) ? (getMimeType()+getAnnotation()).compareTo(((Code)o).getMimeType()+((Code)o).getAnnotation())
+        return (o instanceof Code) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource)o).getMimeType()+((CodeResource)o).getAnnotation())
                 : super.compareTo(o);
     } // compareTo()
 

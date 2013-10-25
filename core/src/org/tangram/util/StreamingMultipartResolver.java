@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.edit;
+package org.tangram.util;
 
 import java.io.IOException;
 import java.io.InputStream;

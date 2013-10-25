@@ -14,26 +14,26 @@
  * <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.jpa;
+package org.tangram.mutable;
 
-import org.tangram.content.Content;
-import org.tangram.mutable.MutableCode;
+import org.tangram.content.CodeResource;
 
 
 /**
  *
+ * extension of code resource interface to let elements be written.
+ *
  */
-public class JpaBeanFactoryImpl extends AbstractJpaBeanFactory {
-
-    @Override
-    protected Object getPrimaryKey(String internalId, Class<? extends Content> kindClass) {
-        return internalId;
-    } // getPrimaryKey()
+public interface MutableCode extends CodeResource, MutableContent {
 
 
-    @Override
-    public Class<? extends MutableCode> getCodeClass() {
-        return Code.class;
-    } // getCodeClass()
+    void setAnnotation(String annotation);
 
-} // JpaBeanFactoryImpl
+
+    void setCode(char[] codeText);
+
+
+    void setMimeType(String type);
+
+
+} // MutableCode

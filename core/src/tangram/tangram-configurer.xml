@@ -117,10 +117,10 @@
     <property name="suffix" value="" />
   </bean>
 
-  <!--  edit scenarios only  -->
+  <!--  not only for editing but also custom web applications wanting to read larger portions from the web client  -->
 
-  <bean id="multipartResolver" class="org.tangram.edit.StreamingMultipartResolver">
-    <property name="maxUploadSize" value="${tangram.editor.max.upload.size}" />
+  <bean id="multipartResolver" class="org.tangram.util.StreamingMultipartResolver">
+    <property name="maxUploadSize" value="${tangram.max.upload.size}" />
   </bean>
 
 </beans>
