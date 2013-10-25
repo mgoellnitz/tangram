@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,36 +9,35 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.jpa;
 
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.Constants;
 
+
 /**
- * 
+ *
  * Interceptor to check if a user is logged in, or if we should use generic password protection with users preconfigured
  * in an XML config file
- * 
+ *
  * allowedUsers - if not empty only these users are allowed to log-in.
- * 
+ *
  * adminUsers - same as allowedUsers (should be a subset of it) but these users get access to the editing links
- * 
+ *
  */
 public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
@@ -89,7 +88,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             log.debug("preHandle() detected URI "+thisURL);
         } // if
 
-        if ( !getFreeUrls().contains(thisURL)) {
+        if (!getFreeUrls().contains(thisURL)) {
             Principal principal = request.getUserPrincipal();
 
             if (principal!=null) {
@@ -100,7 +99,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                 if (adminUsers.contains(userName)) {
                     request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                 } // if
-                if ((allowedUsers.size()>0)&&( !allowedUsers.contains(userName))) {
+                if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
                     if (log.isWarnEnabled()) {
                         log.warn("preHandle() user not allowed to access page: "+userName);
                     } // if

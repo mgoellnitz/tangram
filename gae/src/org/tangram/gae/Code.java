@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,31 +9,29 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.gae;
 
+import com.google.appengine.api.datastore.Text;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-
-import org.tangram.content.Content;
-
-import com.google.appengine.api.datastore.Text;
 import org.tangram.content.CodeResource;
+import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
 
 /*
  * TODO: Move to a more specific package to be able to have fewer packages scanned by Tangrams model autodetection
  */
+
 @PersistenceCapable
 @Inheritance(customStrategy = "complete-table")
 public class Code extends GaeContent implements MutableCode {
@@ -104,7 +102,7 @@ public class Code extends GaeContent implements MutableCode {
 
     @Override
     public int compareTo(Content o) {
-        return (o instanceof Code) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource)o).getMimeType()+((CodeResource)o).getAnnotation())
+        return (o instanceof Code) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource) o).getMimeType()+((CodeResource) o).getAnnotation())
                 : super.compareTo(o);
     } // compareTo()
 

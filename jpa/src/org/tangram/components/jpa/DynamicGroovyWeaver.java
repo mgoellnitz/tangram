@@ -16,26 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.jpa;
+package org.tangram.components.jpa;
 
-import org.tangram.content.Content;
-import org.tangram.mutable.MutableCode;
-
-
-/**
- *
- */
-public class JpaBeanFactoryImpl extends AbstractJpaBeanFactory {
-
-    @Override
-    protected Object getPrimaryKey(String internalId, Class<? extends Content> kindClass) {
-        return internalId;
-    } // getPrimaryKey()
+import org.springframework.stereotype.Component;
 
 
-    @Override
-    public Class<? extends MutableCode> getCodeClass() {
-        return Code.class;
-    } // getCodeClass()
+@Component
+public class DynamicGroovyWeaver {
 
-} // JpaBeanFactoryImpl
+
+
+} // DynamicGroovyWeaver

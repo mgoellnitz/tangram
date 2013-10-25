@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,16 +9,17 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.jdo;
 
 import org.tangram.edit.PropertyConverter;
+
 
 public class JdoPropertyConverter extends PropertyConverter {
 
@@ -32,7 +33,7 @@ public class JdoPropertyConverter extends PropertyConverter {
     public long getBlobLength(Object o) {
         long result = 0;
         if (o instanceof byte[]) {
-            result = ((byte[])o).length;
+            result = ((byte[]) o).length;
         } // if
         return result;
     } // getBlobLength()
@@ -53,7 +54,7 @@ public class JdoPropertyConverter extends PropertyConverter {
     @Override
     public String getEditString(Object o) {
         if (o instanceof char[]) {
-            return new String((char[])o);
+            return new String((char[]) o);
         } else {
             return super.getEditString(o);
         } // if

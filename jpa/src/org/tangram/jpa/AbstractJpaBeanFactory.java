@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.jpa;
@@ -28,12 +28,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -48,6 +46,7 @@ import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
 import org.tangram.mutable.MutableContent;
+
 
 public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory implements JpaBeanFactory, InitializingBean {
 
@@ -171,7 +170,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
     public <T extends Content> T getBean(Class<T> cls, String id) {
         if (activateCaching&&(cache.containsKey(id))) {
             statistics.increase("get bean cached");
-            return (T)cache.get(id);
+            return (T) cache.get(id);
         } // if
         T result = null;
         try {
@@ -189,13 +188,13 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             if (kindClass==null) {
                 throw new Exception("Passed over kind "+kind+" not valid");
             } // if
-            if ( !(cls.isAssignableFrom(kindClass))) {
+            if (!(cls.isAssignableFrom(kindClass))) {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             if (log.isInfoEnabled()) {
                 log.info("getBean() "+kindClass.getName()+":"+internalId);
             } // if
-            result = (T)manager.find(kindClass, getPrimaryKey(internalId, kindClass));
+            result = (T) manager.find(kindClass, getPrimaryKey(internalId, kindClass));
             result.setBeanFactory(this);
 
             if (activateCaching) {
@@ -234,6 +233,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
+     *
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
@@ -321,7 +321,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
                 if (log.isInfoEnabled()) {
                     log.info("listBeans() found in cache "+idList);
                 } // if
-                  // old style
+                // old style
                 result = new ArrayList<T>(idList.size());
                 for (String id : idList) {
                     result.add(getBean(cls, id));
@@ -329,7 +329,6 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
 
                 // New style with lazy content list - perhaps will work some day
                 // result = new LazyContentList<T>(this, idList);
-
                 statistics.increase("query beans cached");
             } // if
         } // if
@@ -338,7 +337,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             for (Class<? extends Content> cx : getClasses()) {
                 if (cls.isAssignableFrom(cx)) {
                     @SuppressWarnings("unchecked")
-                    Class<? extends T> c = (Class<? extends T>)cx;
+                    Class<? extends T> c = (Class<? extends T>) cx;
                     List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
                     result.addAll(beans);
                 } // if
@@ -364,7 +363,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
     private <T extends Content> Class<T> getKeyClass(String key) {
         String className = key.split(":")[0];
         try {
-            return (Class<T>)Class.forName(className);
+            return (Class<T>) Class.forName(className);
         } catch (ClassNotFoundException cnfe) {
             return null;
         } // try/catch
@@ -382,7 +381,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             // clear query cache first since listeners might want to use query to obtain fresh data
             Collection<String> removeKeys = new HashSet<String>();
             for (Object keyObject : queryCache.keySet()) {
-                String key = (String)keyObject;
+                String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isInfoEnabled()) {
@@ -486,7 +485,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
                                 if (log.isDebugEnabled()) {
                                     log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
-                                Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
+                                Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                                 if (JpaContent.class.isAssignableFrom(cls)) {
                                     if (log.isInfoEnabled()) {
                                         log.info("getAllClasses() * "+cls.getName());
@@ -506,7 +505,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
-                            Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
+                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -529,7 +528,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
             if (modelClasses==null) {
                 modelClasses = new ArrayList<Class<? extends Content>>();
                 for (Class<? extends Content> cls : getAllClasses()) {
-                    if ( !((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                         modelClasses.add(cls);
                     } // if
                 } // for
@@ -593,7 +592,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractBeanFactory impleme
         if (log.isWarnEnabled()) {
             log.warn("afterPropertiesSet() manager factory: "+managerFactory);
         } // if
-        
+
         manager = managerFactory.createEntityManager();
 
         // Just to prefill

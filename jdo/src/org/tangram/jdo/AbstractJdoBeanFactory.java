@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,12 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.jdo;
 
@@ -28,13 +28,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -49,6 +47,7 @@ import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
 import org.tangram.mutable.MutableContent;
+
 
 public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory implements JdoBeanFactory, InitializingBean {
 
@@ -154,9 +153,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
 
     /**
-     * 
+     *
      * Override Persistence Manager Factory properties given in jdoconfig.xml
-     * 
+     *
      * @param configOverrides
      */
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
@@ -172,7 +171,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     public <T extends Content> T getBean(Class<T> cls, String id) {
         if (activateCaching&&(cache.containsKey(id))) {
             statistics.increase("get bean cached");
-            return (T)cache.get(id);
+            return (T) cache.get(id);
         } // if
         T result = null;
         try {
@@ -190,14 +189,14 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             if (kindClass==null) {
                 throw new Exception("Passed over kind "+kind+" not valid");
             } // if
-            if ( !(cls.isAssignableFrom(kindClass))) {
+            if (!(cls.isAssignableFrom(kindClass))) {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             Object oid = getObjectId(internalId, kindClass);
             if (log.isInfoEnabled()) {
                 log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
             } // if
-            result = (T)manager.getObjectById(oid);
+            result = (T) manager.getObjectById(oid);
             result.setBeanFactory(this);
 
             if (activateCaching) {
@@ -236,6 +235,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
+     *
      * @see JdoBeanFactory
      */
     @Override
@@ -275,24 +275,24 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 String order = orderProperty+asc;
                 query.setOrdering(order);
             } // if
-              // TOOD: will be extended once we decide to introduce start/end
-              // if (end!=null) {
-              // long from = start!=null ? start : 0;
-              // query.setRange(from, end+1);
-              // } // if
+            // TOOD: will be extended once we decide to introduce start/end
+            // if (end!=null) {
+            // long from = start!=null ? start : 0;
+            // query.setRange(from, end+1);
+            // } // if
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
-            List<Object> results = (List<Object>)query.execute();
+            List<Object> results = (List<Object>) query.execute();
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
             for (Object o : results) {
                 if (o instanceof Content) {
-                    Content c = (Content)o;
+                    Content c = (Content) o;
                     c.setBeanFactory(this);
-                    result.add((T)c);
+                    result.add((T) c);
                 } // if
             } // for
             statistics.increase("list beans");
@@ -323,7 +323,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                 if (log.isInfoEnabled()) {
                     log.info("listBeans() found in cache "+idList);
                 } // if
-                  // old style
+                // old style
                 result = new ArrayList<T>(idList.size());
                 for (String id : idList) {
                     result.add(getBean(cls, id));
@@ -331,7 +331,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
                 // New style with lazy content list - perhaps will work some day
                 // result = new LazyContentList<T>(this, idList);
-
                 statistics.increase("query beans cached");
             } // if
         } // if
@@ -340,7 +339,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             for (Class<? extends Content> cx : getClasses()) {
                 if (cls.isAssignableFrom(cx)) {
                     @SuppressWarnings("unchecked")
-                    Class<? extends T> c = (Class<? extends T>)cx;
+                    Class<? extends T> c = (Class<? extends T>) cx;
                     List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
                     result.addAll(beans);
                 } // if
@@ -366,7 +365,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     private <T extends Content> Class<T> getKeyClass(String key) {
         String className = key.split(":")[0];
         try {
-            return (Class<T>)Class.forName(className);
+            return (Class<T>) Class.forName(className);
         } catch (ClassNotFoundException cnfe) {
             return null;
         } // try/catch
@@ -384,7 +383,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             // clear query cache first since listeners might want to use query to obtain fresh data
             Collection<String> removeKeys = new HashSet<String>();
             for (Object keyObject : queryCache.keySet()) {
-                String key = (String)keyObject;
+                String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isDebugEnabled()) {
@@ -488,7 +487,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                                 if (log.isDebugEnabled()) {
                                     log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
-                                Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
+                                Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                                 if (JdoContent.class.isAssignableFrom(cls)) {
                                     if (log.isInfoEnabled()) {
                                         log.info("getAllClasses() * "+cls.getName());
@@ -508,7 +507,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
-                            Class<? extends Content> cls = (Class<? extends Content>)Class.forName(beanClassName);
+                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -531,7 +530,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             if (modelClasses==null) {
                 modelClasses = new ArrayList<Class<? extends Content>>();
                 for (Class<? extends Content> cls : getAllClasses()) {
-                    if ( !((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                         modelClasses.add(cls);
                     } // if
                 } // for
@@ -567,7 +566,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     /**
      * just to support JSP weak calling of methods with no parameters
-     * 
+     *
      * @param baseClass
      * @return
      */

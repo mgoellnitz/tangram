@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,28 +9,27 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.components.gae;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
-
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.tangram.PersistentRestartCache;
 import org.tangram.gae.GaeBeanFactory;
+
 
 @Component
 public class GaeCacheAdapter implements PersistentRestartCache {
@@ -60,7 +59,7 @@ public class GaeCacheAdapter implements PersistentRestartCache {
         if (log.isDebugEnabled()) {
             log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
         } // if
-        return jsrCache==null ? null : (T)jsrCache.get(key);
+        return jsrCache==null ? null : (T) jsrCache.get(key);
     } // get()
 
 
@@ -70,7 +69,7 @@ public class GaeCacheAdapter implements PersistentRestartCache {
         if (log.isDebugEnabled()) {
             log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
         } // if
-        return jsrCache==null ? null : (T)jsrCache.get(key);
+        return jsrCache==null ? null : (T) jsrCache.get(key);
     } // get()
 
 

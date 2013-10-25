@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,28 +9,27 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.jdo;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.NotPersistent;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableContent;
+
 
 public abstract class JdoContent implements MutableContent {
 
@@ -45,9 +44,9 @@ public abstract class JdoContent implements MutableContent {
 
     /**
      * get readable and storable representation of ID
-     * 
+     *
      * @param oid
-     *            id as JDO internal object
+     * id as JDO internal object
      * @return id as readable and storable string
      */
     protected abstract String postprocessPlainId(Object oid);
@@ -85,16 +84,16 @@ public abstract class JdoContent implements MutableContent {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof JdoContent) ? getId().equals(((Content)obj).getId()) : super.equals(obj);
+        return (obj instanceof JdoContent) ? getId().equals(((Content) obj).getId()) : super.equals(obj);
     } // equals()
 
 
     /**
      * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
      * engine scenarios
-     * 
+     *
      * @param c
-     *            Content instance - may be null
+     * Content instance - may be null
      * @return id of content or null
      */
     protected String getId(Content c) {
@@ -105,16 +104,16 @@ public abstract class JdoContent implements MutableContent {
     /**
      * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
      * engine scenarios
-     * 
+     *
      * @param contents
-     *            list of contents - should not be null
+     * list of contents - should not be null
      * @return list of ids for the given list of contents
      */
     protected List<String> getIds(List<? extends Content> contents) {
         List<String> result = new ArrayList<String>();
         if (contents!=null) {
             for (Object o : contents) {
-                result.add(((Content)o).getId());
+                result.add(((Content) o).getId());
             } // for
         } // if
         return result;
@@ -124,9 +123,9 @@ public abstract class JdoContent implements MutableContent {
     /**
      * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
      * engine scenarios
-     * 
+     *
      * @param i
-     *            id to fetch content for - may be null or empty
+     * id to fetch content for - may be null or empty
      * @return resulting content or null
      */
     protected <T extends Content> T getContent(Class<T> c, String i) {
@@ -140,9 +139,9 @@ public abstract class JdoContent implements MutableContent {
     /**
      * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
      * engine scenarios
-     * 
+     *
      * @param ids
-     *            list of id which should match the given type - may be null
+     * list of id which should match the given type - may be null
      * @return Array of contents where none of the is null
      */
     protected <T extends Content> List<T> getContents(Class<T> c, List<String> ids) {
@@ -166,11 +165,11 @@ public abstract class JdoContent implements MutableContent {
         try {
             manager = JDOHelper.getPersistenceManager(this);
             if (manager==null) {
-                manager = ((JdoBeanFactory)getBeanFactory()).getManager();
+                manager = ((JdoBeanFactory) getBeanFactory()).getManager();
             } // if
             manager.makePersistent(this);
             manager.currentTransaction().commit();
-            ((JdoBeanFactory)beanFactory).clearCacheFor(this.getClass());
+            ((JdoBeanFactory) beanFactory).clearCacheFor(this.getClass());
         } catch (Exception e) {
             log.error("persist()", e);
             if (manager!=null) {
