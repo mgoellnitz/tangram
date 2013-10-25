@@ -118,10 +118,6 @@ public final class Utils {
         result = result.replace("ä", "ae");
         result = result.replace("ö", "oe");
         result = result.replace("ü", "ue");
-        // TODO: These three should be useless
-        result = result.replace("Ä", "Ae");
-        result = result.replace("Ö", "Oe");
-        result = result.replace("Ü", "Ue");
         result = result.replace("ß", "ss");
         char[] specials = { ',', ' ', ':', ';', '"', '?', '!', '*' };
         for (char c : specials) {

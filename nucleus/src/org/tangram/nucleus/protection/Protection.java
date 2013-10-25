@@ -21,8 +21,6 @@ package org.tangram.nucleus.protection;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import org.tangram.content.Content;
 import org.tangram.nucleus.NucleusContent;
 
@@ -30,7 +28,6 @@ import org.tangram.nucleus.NucleusContent;
  * Abstract base class for the protected content core feature.
  *
  */
-@PersistenceCapable
 public abstract class Protection extends NucleusContent implements org.tangram.feature.protection.Protection {
 
     /**

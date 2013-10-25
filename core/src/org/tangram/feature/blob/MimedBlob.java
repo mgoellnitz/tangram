@@ -25,7 +25,6 @@ package org.tangram.feature.blob;
  * which defaults to seven day (10080ms).
  * 
  */
-// TODO: this interface is not really JDO related
 public interface MimedBlob {
 
     /**
