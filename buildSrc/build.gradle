@@ -50,8 +50,8 @@ publishing {
     mavenJava(MavenPublication) {
       // TODO: must be included!
       // groupId 'tangram'
-      artifactId 'gradle-plugin'
-      version '0.9-SNAPSHOT'
+      // artifactId 'gradle-plugin'
+      // version '0.9-SNAPSHOT'
       from components.java
       artifact sourcesJar 
     }
