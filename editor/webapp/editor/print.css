@@ -1,0 +1,58 @@
+a {
+	text-decoration: none;
+	color: #905000;
+	font-weight: bold;
+}
+
+body {
+	font-family: Sans-Serif, Helvetica, Arial;
+	font-size: 11pt;
+	margin: 10px 25px 10px 15px;
+	visibility: hidden;
+}
+
+input {
+	font-weight: bold;
+	padding: 3px;
+	background-color: #DFD080;
+}
+
+.cms_editor_table {
+	margin-bottom: 15px;
+	width: 980px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #000000;
+}
+
+.cms_editor_table td {
+	padding: 5px;
+
+	border-width: 0px 1px 1px 0px;
+	border-style: dotted;
+	border-color: #000000;
+}
+
+.cms_editor_field_value {
+	width: 800px;
+}
+
+.cms_editor_textfield {
+	width: 700px;
+}
+
+.cms_editor_blobfield {
+	width: 94%;
+}
+
+.cms_editor_label {
+	font-weight: bold;
+}
+
+.cms_editor_row {
+	margin-bottom: 10px;
+}
+
+.cms_editor_title {
+	font-weight: bold;
+}
