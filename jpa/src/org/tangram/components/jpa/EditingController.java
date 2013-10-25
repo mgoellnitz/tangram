@@ -51,7 +51,6 @@ import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
 import org.tangram.edit.PropertyConverter;
 import org.tangram.jpa.JpaBeanFactory;
-import org.tangram.jpa.JpaContent;
 import org.tangram.view.Utils;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
@@ -159,16 +158,14 @@ public class EditingController extends RenderingController {
                         if (log.isInfoEnabled()) {
                             log.info("store() value="+value);
                         } // if
-                        // TODO: Maybe Content.class ... is sufficient
-                        if ( !(JpaContent.class.isAssignableFrom(cls)&&value==null)) {
+                        if ( !(Content.class.isAssignableFrom(cls)&&value==null)) {
                             newValues.put(key, value);
                         } else {
                             if (log.isInfoEnabled()) {
                                 log.info("store() not setting value");
                             } // if
                         } // if
-                        // TODO: Maybe Content.class ... is sufficient
-                        if (JpaContent.class.isAssignableFrom(cls)&&"".equals(valueString)) {
+                        if (Content.class.isAssignableFrom(cls)&&"".equals(valueString)) {
                             newValues.put(key, null);
                         } // if
                     } catch (Exception e) {
@@ -214,7 +211,7 @@ public class EditingController extends RenderingController {
                 } // for
             } // if
 
-            bean = beanFactory.getBeanForUpdate(JpaContent.class, id);
+            bean = beanFactory.getBeanForUpdate(Content.class, id);
             // wrapper = new BeanWrapperImpl(bean);
             wrapper = createWrapper(bean, request);
             Exception e = null;
