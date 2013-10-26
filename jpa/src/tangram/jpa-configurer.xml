@@ -27,6 +27,7 @@
   <!-- velocity activation for view in jpa based repository -->
 
   <bean id="velocityRepositoryViewResolver" class="org.tangram.view.velocity.ModelAwareRepositoryViewResolver">
+    <property name="name" value="Velocity Content" />
     <property name="delegate" ref="plainRepositoryVelocityViewResolver" />
     <property name="order" value="10000"/>
     <property name="activateCaching" value="true" />

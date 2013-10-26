@@ -62,6 +62,7 @@
   </bean>
 
   <bean id="jspViewResolver" class="org.tangram.view.ModelAwareInternalResourceViewResolver">
+    <property name="name" value="JSP-Files" />
     <property name="delegate" ref="plainJspViewResolver" />
     <property name="order" value="65435" />
     <property name="prefix" value="/WEB-INF/view/jsp/" />

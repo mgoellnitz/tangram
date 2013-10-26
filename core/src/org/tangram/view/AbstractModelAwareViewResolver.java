@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,12 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.view;
 
@@ -24,17 +24,17 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.exception.ParseErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
+
 
 public abstract class AbstractModelAwareViewResolver implements ModelAwareViewResolver {
 
@@ -52,6 +52,8 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
     };
 
+    String name = getClass().getSimpleName();
+
     private int order = Integer.MAX_VALUE;
 
     private boolean activateCaching = false;
@@ -62,6 +64,16 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     private Statistics statistics;
 
     private static Log log = LogFactory.getLog(AbstractModelAwareViewResolver.class);
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
     @Override
@@ -104,7 +116,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
         String path = getFullViewName(view, packageName, simpleName);
         if (log.isInfoEnabled()) {
-            log.info("checkView("+getClass().getSimpleName()+") view="+view+"  path="+path);
+            log.info("checkView("+getName()+") view="+view+"  path="+path);
         } // if
         try {
             result = resolveView(path, locale);
@@ -119,7 +131,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
             } // if
         } catch (Exception e) {
             if (e.getCause() instanceof ParseErrorException) {
-                throw (RuntimeException)(e.getCause());
+                throw (RuntimeException) (e.getCause());
             } else {
                 log.warn("checkView()", e);
             } // if
@@ -129,7 +141,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
 
     /**
-     * 
+     *
      * @throws IOException - in subclasses not this one
      */
     protected View lookupView(String viewName, Locale locale, Object content, String key) throws IOException {
@@ -140,11 +152,12 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
             String pack = (cls.getPackage()==null) ? "" : cls.getPackage().getName();
             view = checkView(viewName, pack, cls.getSimpleName(), key, locale);
             if (view==null) {
-                for (Class<? extends Object> c : cls.getInterfaces()) {
+                // TODO: This definetely doesn *not* find all interfaces!
+                for (Class<? extends Object> c : ClassUtils.getAllInterfacesForClass(cls)) {
                     if (log.isDebugEnabled()) {
-                        log.debug("lookupView() type to check templates against "+c.getName());
+                        log.debug("lookupView() type to check templates for "+c.getName());
                     } // if
-                    if ( !(alreadyChecked.contains(c.getName()))) {
+                    if (!(alreadyChecked.contains(c.getName()))) {
                         alreadyChecked.add(c.getName());
                         String interfacePackage = (c.getPackage()==null) ? "" : c.getPackage().getName();
                         view = checkView(viewName, interfacePackage, c.getSimpleName(), key, locale);
@@ -163,7 +176,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
     @Override
     public View resolveView(String viewName, Map<String, Object> model, Locale locale) throws IOException {
         if (log.isDebugEnabled()) {
-            log.debug("resolveViewName("+getClass().getSimpleName()+") "+viewName);
+            log.debug("resolveViewName("+getName()+") "+viewName);
         } // if
         Object content = model.get(Constants.THIS);
         if (content==null) {
@@ -172,19 +185,19 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
         Class<? extends Object> cls = content.getClass();
         String key = cls.getName()+"#"+viewName;
         if (activateCaching&&cache.containsKey(key)) {
-            statistics.increase("template lookup cached "+getClass().getSimpleName());
+            statistics.increase("template lookup cached "+getName());
             View result = cache.get(key);
             if (result==NOT_FOUND_DUMMY) {
                 result = null;
             } // if
             return result;
         } // if
-        statistics.increase("template lookup uncached "+getClass().getSimpleName());
+        statistics.increase("template lookup uncached "+getName());
         View view = lookupView(viewName, locale, content, key);
         View cacheView = view;
         if (view==null) {
             if (log.isInfoEnabled()) {
-                log.info("resolveViewName() no template found for "+content.getClass().getSimpleName());
+                log.info("resolveViewName("+getName()+") no template found for "+content.getClass().getSimpleName());
             } // if
             cacheView = NOT_FOUND_DUMMY;
         } // if
