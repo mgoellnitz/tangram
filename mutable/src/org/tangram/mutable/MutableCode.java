@@ -26,7 +26,7 @@ import org.tangram.content.CodeResource;
  * extension of code resource interface to let elements be written.
  *
  */
-public interface MutableCode extends MutableContent, CodeResource {
+public interface MutableCode extends CodeResource, MutableContent {
 
 
     void setAnnotation(String annotation);

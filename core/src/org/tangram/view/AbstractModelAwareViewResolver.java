@@ -26,11 +26,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.exception.ParseErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
@@ -152,8 +152,8 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
             String pack = (cls.getPackage()==null) ? "" : cls.getPackage().getName();
             view = checkView(viewName, pack, cls.getSimpleName(), key, locale);
             if (view==null) {
-                // TODO: This definetely doesn *not* find all interfaces!
-                for (Class<? extends Object> c : ClassUtils.getAllInterfacesForClass(cls)) {
+                for (Object i : ClassUtils.getAllInterfaces(cls)) {
+                    Class<? extends Object> c = (Class<? extends Object>)i;
                     if (log.isDebugEnabled()) {
                         log.debug("lookupView() type to check templates for "+c.getName());
                     } // if
