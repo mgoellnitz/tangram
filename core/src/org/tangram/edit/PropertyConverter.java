@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.edit;
 
@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +33,9 @@ import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
+/**
+ * Used to manually convert human readable values from forms to objects and vice versa.
+ */
 public abstract class PropertyConverter {
 
     private static final Log log = LogFactory.getLog(PropertyConverter.class);
@@ -147,7 +149,7 @@ public abstract class PropertyConverter {
 
     /**
      * if o is of class getBlobClass() it returns the blob size
-     * 
+     *
      * @param o
      * @return blob's size
      */
