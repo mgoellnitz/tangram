@@ -20,8 +20,7 @@ println "Gradle: ${gradle.gradleVersion}"
 
 rootProject.name = 'tangram'
 
-// include 'core', 'mutable', 'editor', 'ftp', 'jdo', 'nucleus', 'gae', 'jpa', 'mongo', 'coma'
-include 'core', 'mutable', 'editor', 'jdo', 'nucleus', 'gae', 'jpa', 'mongo', 'coma'
+include 'core', 'mutable', 'editor', 'ftp', 'jdo', 'nucleus', 'gae', 'jpa', 'mongo', 'coma'
 
 rootProject.children.each() {
   it.name = it.parent.name + '-' + it.name
