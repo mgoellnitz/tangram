@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,21 +14,19 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.view;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 
 /**
- * In the very heart this is just a collection of helper classes, but together with the groovy-implementation
+ * In the very heart this is just a collection of helper methods, but together with the groovy-implementation
  * it gets a powerful tool for populating contexts of velocity templates with useful stuff and methods.
  *
  */

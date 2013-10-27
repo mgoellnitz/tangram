@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.components;
 
@@ -28,10 +28,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
@@ -47,6 +45,7 @@ import org.tangram.controller.ActionParameter;
 import org.tangram.controller.ControllerHook;
 import org.tangram.controller.LinkAction;
 import org.tangram.edit.PropertyConverter;
+import org.tangram.logic.ClassRepository;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
@@ -143,9 +142,9 @@ public class MetaController extends AbstractController implements InitializingBe
 
     /**
      * also calls any registered hooks
-     * 
+     *
      * copied from rendering controller
-     * 
+     *
      * @param request
      * @param response
      * @param bean

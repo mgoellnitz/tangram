@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.view;
 
@@ -25,29 +25,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tangram.components.ClassRepository;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
+import org.tangram.logic.ClassRepository;
 import org.tangram.logic.Shim;
 import org.tangram.logic.ViewShim;
 
 /**
- * This ModelAndView factory implementation adds potential groovy based implementations of related codes as instances to
- * the context.
- * 
+ * This ModelAndView factory implementation adds specia objects called shims to the context.
+ *
+ * Shims are functional enhancements of the means from the model. They carry functions while beans carry data.
+ *
+ * Shims may depend on request and are then called ViewShims.
+ *
+ * The implementing classes are taken from a classRepository which may be dynamically filled.
+ *
  */
-public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implements InitializingBean, BeanListener {
+public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory implements InitializingBean, BeanListener {
 
-    private static final Log log = LogFactory.getLog(GroovyModelAndViewFactory.class);
+    private static final Log log = LogFactory.getLog(DynamicModelAndViewFactory.class);
 
     @Autowired
     private ClassRepository classRepository;
@@ -210,4 +213,4 @@ public class GroovyModelAndViewFactory extends DefaultModelAndViewFactory implem
         reset();
     } // afterPropertiesSet()
 
-} // GroovyModelAndViewFactory
+} // DynamicModelAndViewFactory

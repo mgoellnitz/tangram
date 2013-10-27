@@ -36,7 +36,7 @@
     </property>
   </bean>
 
-  <bean id="modelAndViewFactory" class="org.tangram.view.GroovyModelAndViewFactory" />
+  <bean id="modelAndViewFactory" class="org.tangram.view.DynamicModelAndViewFactory" />
 
   <bean id="linkFactory" class="org.tangram.view.link.GenericLinkFactory">
     <property name="dispatcherPath" value="${spring.dispatcher.servlet.path}" />
