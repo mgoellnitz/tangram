@@ -33,6 +33,7 @@ import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
+import javax.jdo.annotations.PersistenceCapable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -218,7 +219,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @Override
     public <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id) {
         T bean = getBean(cls, id);
-        manager.currentTransaction().begin();
+        if (!manager.currentTransaction().isActive()) {
+            manager.currentTransaction().begin();
+        } // if
         return bean;
     } // getBeanForUpdate()
 
@@ -239,7 +242,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         if (log.isDebugEnabled()) {
             log.debug("createBean() obtaining persistence manager");
         } // if
-        manager.currentTransaction().begin();
+        if (!manager.currentTransaction().isActive()) {
+            manager.currentTransaction().begin();
+        } // if
         if (log.isDebugEnabled()) {
             log.debug("createBean() creating new instance of "+cls.getName());
         } // if
@@ -427,8 +432,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         synchronized (this) {
             if (allClasses==null) {
                 allClasses = new ArrayList<Class<? extends MutableContent>>();
-                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
-
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
@@ -467,12 +470,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                                     log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
                                 Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
-                                if (JdoContent.class.isAssignableFrom(cls)) {
+                                if ((cls.getAnnotation(PersistenceCapable.class)!=null)&&JdoContent.class.isAssignableFrom(cls)) {
                                     if (log.isInfoEnabled()) {
                                         log.info("getAllClasses() * "+cls.getName());
                                     } // if
                                     classNames.add(beanClassName);
-                                    tableNameMapping.put(cls.getSimpleName(), cls);
                                     allClasses.add(cls);
                                 } else {
                                     if (log.isDebugEnabled()) {
@@ -490,7 +492,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
-                            tableNameMapping.put(cls.getSimpleName(), cls);
                             allClasses.add(cls);
                         } // for
                     } // if
@@ -523,6 +524,10 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 };
                 modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
+                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
+                for (Class<? extends MutableContent> mc : modelClasses) {
+                    tableNameMapping.put(mc.getSimpleName(), mc);
+                } // for
             } // if
         } // if
         return modelClasses;
@@ -534,6 +539,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     @Override
     public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
+        // TODO: Check for inheritance from JdoContent and PersistenceCapable flag
         additionalClasses = (classes==null) ? new HashSet<Class<? extends MutableContent>>() : classes;
         modelClasses = null;
     } // setAdditionalClasses()

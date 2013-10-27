@@ -25,10 +25,20 @@ import org.tangram.content.BeanListener;
 public interface ClassRepository {
 
     /**
+     * Get class loader instance used within this repository.
+     *
+     * Only this class loader instance is garantueed to be able to
+     * deal with the classes presented through this repository.
+     *
+     * @return class loader instance
+     */
+    ClassLoader getClassLoader();
+
+    /**
      * Get a set of names of classes available in this repository.
      * @return class names
      */
-    public Set<String> get();
+    Set<String> get();
 
 
     /**
@@ -37,7 +47,7 @@ public interface ClassRepository {
      * @param cls base class for the result
      * @return map code resource annotation to class instance
      */
-    public <T extends Object> Map<String, Class<T>> get(Class<? extends T> cls);
+    <T extends Object> Map<String, Class<T>> get(Class<? extends T> cls);
 
 
     /**
@@ -45,7 +55,7 @@ public interface ClassRepository {
      * @param className fully qualified class name
      * @return class instance
      */
-    public Class<? extends Object> get(String className);
+    Class<? extends Object> get(String className);
 
 
     /**
@@ -53,7 +63,14 @@ public interface ClassRepository {
      * @param className fully qualified class name
      * @return class instance
      */
-    public byte[] getBytes(String className);
+    byte[] getBytes(String className);
+
+
+    /**
+     * Override bytecode for class.
+     * @param className
+     */
+    void overrideClass(String className, byte[] bytes);
 
 
     /**
@@ -61,13 +78,13 @@ public interface ClassRepository {
      * Annotations are mapped to their respective textual compilation error.
      * @return map annotation to error text
      */
-    public Map<String, String> getCompilationErrors();
+    Map<String, String> getCompilationErrors();
 
 
     /**
      * Attach a consuming listener to this repository being notified of updates.
      * @param listener
      */
-    public void addListener(BeanListener listener);
+    void addListener(BeanListener listener);
 
 } // ClassRepository

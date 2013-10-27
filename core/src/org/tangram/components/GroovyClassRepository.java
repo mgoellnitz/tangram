@@ -61,6 +61,8 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
 
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
 
+    private GroovyClassLoader classLoader;
+
 
     @SuppressWarnings("unchecked")
     protected void fillClasses() {
@@ -68,7 +70,7 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
         if (classes!=null) {
             byteCodes = null;
         } // if
-        GroovyClassLoader gcl = new GroovyClassLoader();
+        classLoader = new GroovyClassLoader();
         classes = new HashMap<String, Class<? extends Object>>();
         if (byteCodes==null) {
             compilationErrors = new HashMap<String, String>();
@@ -107,14 +109,14 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
                         if (log.isInfoEnabled()) {
                             log.info("fillClasses() compiling "+code.getKey());
                         } // if
-                        CompilationUnit cu = new CompilationUnit(gcl);
+                        CompilationUnit cu = new CompilationUnit(classLoader);
                         cu.addSource(code.getKey()+".groovy", code.getValue());
                         cu.compile(Phases.CLASS_GENERATION);
                         List<GroovyClass> classList = cu.getClasses();
                         if (classList.size()==1) {
                             GroovyClass groovyClass = classList.get(0);
                             byteCodes.put(groovyClass.getName(), groovyClass.getBytes());
-                            Class<? extends Object> clazz = gcl.defineClass(groovyClass.getName(), groovyClass.getBytes());
+                            Class<? extends Object> clazz = classLoader.defineClass(groovyClass.getName(), groovyClass.getBytes());
                             if (log.isInfoEnabled()) {
                                 log.info("fillClasses() defining "+clazz.getName());
                             } // if
@@ -134,7 +136,7 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
                 if (log.isDebugEnabled()) {
                     log.debug("fillClasses() defining "+byteCode.getKey());
                 } // if
-                Class<? extends Object> clazz = gcl.defineClass(byteCode.getKey(), byteCode.getValue());
+                Class<? extends Object> clazz = classLoader.defineClass(byteCode.getKey(), byteCode.getValue());
                 classes.put(clazz.getName(), clazz);
             } // if
         } // if
@@ -142,6 +144,12 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
             log.info("fillClasses() done");
         } // if
     } // fillClasses()
+
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    } // getClassLoader()
+
 
 
     public Set<String> get() {
@@ -161,7 +169,7 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
     } // get()
 
 
-    public Class<? extends Object> get(String className ){
+    public Class<? extends Object> get(String className) {
         return classes.get(className);
     } // get()
 
@@ -169,6 +177,27 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
     public byte[] getBytes(String className) {
         return byteCodes.get(className);
     } // getBytes()
+
+
+    /**
+     * overriding one class means in this case defining all classes anew with one changed definition.
+     * @param className name of the class
+     * @param bytes redefined byte code for the class
+     */
+    @Override
+    public void overrideClass(String className, byte[] bytes) {
+        if (get(className)!=null) {
+            byteCodes.put(className, bytes);
+            classLoader = new GroovyClassLoader();
+            for (String name : byteCodes.keySet()) {
+                Class<? extends Object> clazz = classLoader.defineClass(className, bytes);
+                if (log.isInfoEnabled()) {
+                    log.info("overrideClass() overriding "+clazz.getName());
+                } // if
+                classes.put(clazz.getName(), clazz);
+            } // for
+        } // if
+    } // overrideClass()
 
 
     public Map<String, String> getCompilationErrors() {
