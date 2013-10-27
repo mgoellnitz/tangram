@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,23 +9,21 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.components;
 
 import groovy.lang.GroovyClassLoader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -39,9 +37,11 @@ import org.tangram.Constants;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
+import org.tangram.logic.ClassRepository;
+
 
 @Component
-public class GroovyClassRepository implements InitializingBean, BeanListener {
+public class GroovyClassRepository implements ClassRepository, InitializingBean, BeanListener {
 
     private static final String BYTECODE_CACHE_KEY = "tangram.bytecode.cache";
 
@@ -55,6 +55,8 @@ public class GroovyClassRepository implements InitializingBean, BeanListener {
 
     private Map<String, Class<? extends Object>> classes = null;
 
+    private Map<String, byte[]> byteCodes = null;
+
     private Map<String, String> compilationErrors = new HashMap<String, String>();
 
     private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
@@ -62,7 +64,7 @@ public class GroovyClassRepository implements InitializingBean, BeanListener {
 
     @SuppressWarnings("unchecked")
     protected void fillClasses() {
-        Map<String, byte[]> byteCodes = startupCache.get(BYTECODE_CACHE_KEY, Map.class);
+        byteCodes = startupCache.get(BYTECODE_CACHE_KEY, Map.class);
         if (classes!=null) {
             byteCodes = null;
         } // if
@@ -82,9 +84,9 @@ public class GroovyClassRepository implements InitializingBean, BeanListener {
                     log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
                 } // if
                 if (idx>=0) {
-                    idx++ ;
+                    idx++;
                     String suffix = annotation.substring(idx);
-                    if ( !Character.isLowerCase(suffix.charAt(0))) {
+                    if (!Character.isLowerCase(suffix.charAt(0))) {
                         try {
                             String codeText = resource.getCodeText();
                             codes.put(annotation, codeText);
@@ -99,7 +101,7 @@ public class GroovyClassRepository implements InitializingBean, BeanListener {
             } // for
 
             int i = Constants.RIP_CORD_COUNT;
-            while (i-- >0&&codes.size()>byteCodes.size()) {
+            while (i-->0&&codes.size()>byteCodes.size()) {
                 for (Map.Entry<String, String> code : codes.entrySet()) {
                     try {
                         if (log.isInfoEnabled()) {
@@ -152,16 +154,21 @@ public class GroovyClassRepository implements InitializingBean, BeanListener {
         Map<String, Class<T>> result = new HashMap<String, Class<T>>();
         for (Map.Entry<String, Class<? extends Object>> entry : classes.entrySet()) {
             if (cls.isAssignableFrom(entry.getValue())) {
-                result.put(entry.getKey(), (Class<T>)entry.getValue());
+                result.put(entry.getKey(), (Class<T>) entry.getValue());
             } // if
         } // for
         return result;
     } // get()
 
 
-    public Class<? extends Object> get(String annotation) {
-        return classes.get(annotation);
+    public Class<? extends Object> get(String className ){
+        return classes.get(className);
     } // get()
+
+
+    public byte[] getBytes(String className) {
+        return byteCodes.get(className);
+    } // getBytes()
 
 
     public Map<String, String> getCompilationErrors() {

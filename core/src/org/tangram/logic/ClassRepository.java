@@ -42,10 +42,18 @@ public interface ClassRepository {
 
     /**
      * Get a class from this repository.
-     * @param annotation of the underlying code resource instance
+     * @param className fully qualified class name
      * @return class instance
      */
-    public Class<? extends Object> get(String annotation);
+    public Class<? extends Object> get(String className);
+
+
+    /**
+     * Get a class from this repository.
+     * @param className fully qualified class name
+     * @return class instance
+     */
+    public byte[] getBytes(String className);
 
 
     /**
@@ -58,7 +66,7 @@ public interface ClassRepository {
 
     /**
      * Attach a consuming listener to this repository being notified of updates.
-     * @param listener 
+     * @param listener
      */
     public void addListener(BeanListener listener);
 
