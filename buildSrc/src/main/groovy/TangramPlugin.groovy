@@ -56,10 +56,11 @@ class TangramUtilities {
     int i = 0;
     while (iter.hasNext()) {
       Object webappDependency = iter.next()
-      println "  dependency: $webappDependency"
+      org.gradle.api.artifacts.ProjectDependency c;
+      println "$project.name: dependency: $webappDependency"
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFileName = webappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
-        println "  project archiveFileName: $archiveFileName"
+        println "$project.name: project archive: $archiveFileName"
         p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
       } else {
         // println "checking for path based extraction"
@@ -67,14 +68,14 @@ class TangramUtilities {
           // println "path is $p.configurations.webapp.asPath"
           String[] archiveFileNames = p.configurations.webapp.asPath.split(';')
           String archiveFileName = archiveFileNames[i];
-          println "  path archiveFileName: $archiveFileName"
+          println "$project.name: path archive: $archiveFileName"
           int idx = archiveFileName.indexOf(';')
           if (idx >= 0) {
             archiveFileName = archiveFileName.substring(0, idx)
           } // if
           p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
         } else {
-          println "** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
+          println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
         } // if
       } // if 
       i++;
