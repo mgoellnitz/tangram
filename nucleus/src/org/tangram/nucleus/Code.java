@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +14,20 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.nucleus;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
 import javax.jdo.annotations.PersistenceCapable;
-
 import org.tangram.mutable.MutableCode;
 
+/**
+ * Datanucleus generic code implementation.
+ *
+ * Internally it's very conservative about type and only using string.
+ */
 @PersistenceCapable
 public class Code extends NucleusContent implements MutableCode {
 
@@ -32,7 +35,7 @@ public class Code extends NucleusContent implements MutableCode {
 
     private String mimeType;
 
-    private char[] code;
+    private String code;
 
 
     @Override
@@ -58,24 +61,24 @@ public class Code extends NucleusContent implements MutableCode {
 
 
     public char[] getCode() {
-        return code;
+        return code.toCharArray();
     }
 
 
     public void setCode(char[] code) {
-        this.code = code;
+        this.code = charArraytoString(code);
     }
 
 
     @Override
     public String getCodeText() {
-        return code == null ? null : new String(code);
+        return code;
     }
 
 
     @Override
     public long getSize() {
-        return code.length;
+        return code.length();
     }
 
 
