@@ -20,7 +20,6 @@ package org.tangram.mutable;
 
 import java.util.Collection;
 import org.tangram.content.BeanFactory;
-import org.tangram.content.Content;
 
 
 public interface MutableBeanFactory extends BeanFactory {
@@ -60,10 +59,11 @@ public interface MutableBeanFactory extends BeanFactory {
 
     /**
      * return a collection of content classes available for mutable contents.
+     * No abstract classes will be in the list.
      *
      * @return list of classes
      */
-    public Collection<Class<? extends Content>> getClasses();
+    public Collection<Class<? extends MutableContent>> getClasses();
 
 
     /**

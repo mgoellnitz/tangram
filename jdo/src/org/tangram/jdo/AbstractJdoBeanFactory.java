@@ -42,16 +42,14 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.tangram.PersistentRestartCache;
-import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
+import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
 
-public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory implements JdoBeanFactory, InitializingBean {
-
-    private static final String QUERY_CACHE_KEY = "tangram.query.cache";
+public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory, InitializingBean {
 
     private static final Log log = LogFactory.getLog(AbstractJdoBeanFactory.class);
 
@@ -67,13 +65,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     protected PersistenceManager manager = null;
 
-    protected List<Class<? extends Content>> modelClasses = null;
+    protected List<Class<? extends MutableContent>> modelClasses = null;
 
-    protected List<Class<? extends Content>> allClasses = null;
+    protected List<Class<? extends MutableContent>> allClasses = null;
 
-    protected Map<String, Class<? extends Content>> tableNameMapping = null;
+    protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
 
-    protected Map<Class<? extends Content>, List<Class<? extends Content>>> implementingClassesMap = null;
+    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
@@ -84,8 +82,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     private boolean activateQueryCaching = false;
 
     private boolean prefill = true;
-
-    private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();
 
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
 
@@ -252,7 +248,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             log.debug("createBean() populating new instance");
         } // if
         bean.setBeanFactory(this);
-
         statistics.increase("create bean");
         return bean;
     } // createBean()
@@ -398,13 +393,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             } // for
             startupCache.put(QUERY_CACHE_KEY, queryCache);
 
-            for (Class<? extends Content> c : attachedListeners.keySet()) {
+            for (Class<? extends Content> c : getListeners().keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isInfoEnabled()) {
                     log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
-                    List<BeanListener> listeners = attachedListeners.get(c);
+                    List<BeanListener> listeners = getListeners().get(c);
                     if (log.isInfoEnabled()) {
                         log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
                     } // if
@@ -421,22 +416,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // clearCacheFor()
 
 
-    @Override
-    public void addListener(Class<? extends Content> cls, BeanListener listener) {
-        synchronized (attachedListeners) {
-            List<BeanListener> listeners = attachedListeners.get(cls);
-            if (listeners==null) {
-                listeners = new ArrayList<BeanListener>();
-                attachedListeners.put(cls, listeners);
-            } // if
-            listeners.add(listener);
-        } // sync
-        if (log.isInfoEnabled()) {
-            log.info("addListener() "+cls.getSimpleName()+": "+attachedListeners.get(cls).size());
-        } // if
-    } // addListener()
-
-
     protected String getClassNamesCacheKey() {
         return "tangram-class-names";
     } // getClassNamesCacheKey()
@@ -444,11 +423,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Class<? extends Content>> getAllClasses() {
+    public Collection<Class<? extends MutableContent>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends Content>>();
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
+                allClasses = new ArrayList<Class<? extends MutableContent>>();
+                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
 
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
@@ -487,7 +466,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                                 if (log.isDebugEnabled()) {
                                     log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
-                                Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
+                                Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
                                 if (JdoContent.class.isAssignableFrom(cls)) {
                                     if (log.isInfoEnabled()) {
                                         log.info("getAllClasses() * "+cls.getName());
@@ -507,7 +486,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
-                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
+                            Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -521,15 +500,15 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
             } // if
         } // synchronized
         return allClasses;
-    }// getAllClasses()
+    } // getAllClasses()
 
 
     @Override
-    public Collection<Class<? extends Content>> getClasses() {
+    public Collection<Class<? extends MutableContent>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
-                for (Class<? extends Content> cls : getAllClasses()) {
+                modelClasses = new ArrayList<Class<? extends MutableContent>>();
+                for (Class<? extends MutableContent> cls : getAllClasses()) {
                     if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                         modelClasses.add(cls);
                     } // if
@@ -542,6 +521,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
                     } // compareTo()
 
                 };
+                modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
             } // if
         } // if
@@ -549,10 +529,20 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
     } // getClasses()
 
 
-    private List<Class<? extends Content>> getImplementingClasses(Class<? extends Content> baseClass) {
-        List<Class<? extends Content>> result = new ArrayList<Class<? extends Content>>();
+    private Collection<Class<? extends MutableContent>> additionalClasses = Collections.emptySet();
 
-        for (Class<? extends Content> c : getClasses()) {
+
+    @Override
+    public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
+        additionalClasses = (classes==null) ? new HashSet<Class<? extends MutableContent>>() : classes;
+        modelClasses = null;
+    } // setAdditionalClasses()
+
+
+    private List<Class<? extends MutableContent>> getImplementingClasses(Class<? extends Content> baseClass) {
+        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
+
+        for (Class<? extends MutableContent> c : getClasses()) {
             if ((c.getModifiers()&Modifier.ABSTRACT)==0) {
                 if (baseClass.isAssignableFrom(c)) {
                     result.add(c);
@@ -571,9 +561,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractBeanFactory impleme
      * @return
      */
     @Override
-    public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
+    public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
         if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends Content>>>();
+            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
 
             // Add the very basic root classes directly here - they won't get auto detected otherwise
             implementingClassesMap.put(JdoContent.class, getImplementingClasses(JdoContent.class));

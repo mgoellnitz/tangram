@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.jdo.PersistenceManager;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.mutable.MutableContent;
 
 
 public interface JdoBeanFactory extends MutableBeanFactory {
@@ -33,10 +34,10 @@ public interface JdoBeanFactory extends MutableBeanFactory {
      *
      * @return
      */
-    Collection<Class<? extends Content>> getAllClasses();
+    Collection<Class<? extends MutableContent>> getAllClasses();
 
 
-    Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap();
+    Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
 
 
     /**
@@ -45,11 +46,23 @@ public interface JdoBeanFactory extends MutableBeanFactory {
      * only relevant for the attached listeners
      *
      * @param cls
-     * @throws Exception
      */
     void clearCacheFor(Class<? extends Content> cls);
 
 
+    /**
+     * returns the underlying persistence manager handling all objects at this layer.
+     *
+     * @return JDO persistence manager instance
+     */
     PersistenceManager getManager();
+
+    
+    /**
+     * set a list of classes to be used as model classes in addition to the statically scanned ones.
+     *
+     * @param classes list of available classes
+     */
+    void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes);
 
 } // JdoBeanFactory

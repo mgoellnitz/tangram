@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,51 +14,49 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.jpa;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.EntityManager;
-
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.mutable.MutableContent;
 
 public interface JpaBeanFactory extends MutableBeanFactory {
 
     /**
      * Get all classes related with models - also the abstract ones
-     * 
+     *
      * @return
      */
-    Collection<Class<? extends Content>> getAllClasses();
+    Collection<Class<? extends MutableContent>> getAllClasses();
 
 
-    /**
-     * Get non abstract model classes
-     * 
-     * @return
-     */
-    Collection<Class<? extends Content>> getClasses();
-
-
-    Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap();
+    Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
 
 
     /**
      * clears cache only for entries given type. Never dare to issue changes for abstract classes or interfaces!
-     * 
+     *
      * only relevant for the attached listeners
-     * 
+     *
      * @param cls
-     * @throws Exception
      */
     void clearCacheFor(Class<? extends Content> cls);
 
 
     EntityManager getManager();
+
+
+    /**
+     * set a list of classes to be used as model classes in addition to the statically scanned ones.
+     *
+     * @param classes list of available classes
+     */
+    void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes);
 
 } // JpaBeanFactory
