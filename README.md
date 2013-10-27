@@ -69,8 +69,6 @@ Changes 0.9
 
 0.9 is a code cleanup and refactoring version to get a starting point for other backend and platform solutions. 
 
-The named jdo persistence manager factory renamed from unintuitive "transaction-optional" to "tangram". You will need to change your jdoconfig.xml unless you are using Google App Engine.
-
 Users of relational database systems will have to get rid of their tangram-rdbms dependencies for library and web archives. Everything that's needed moved to the mere library dependecy nucleus for all datanucleus based scenarios, all other parts moved to core or jdo layer respectively. So an rdbms project will need the tanram-nucleus library compile dependency and the tangram-jdo war dependency instead of tangram-rdbms in both cases in the past.
 
 The security aspects have now been renamed from 'solution' to 'feature' which might result in a inheritance change and template renaming. 
@@ -78,3 +76,7 @@ The security aspects have now been renamed from 'solution' to 'feature' which mi
 The MimedBlob stuff now also is called a 'feature' and moved to the core package.
 
 The code level now is lifted to Java 7 since the problems with the datanucleus enhancer seem to have vanished
+
+The editor is an independent module and can - through the middle layer of mutable contents - be used for jpa and jdo base layers. Only the GAE flavour integrates this directory. For all other scenarios application will have to ad those extra two dependencies to switch on the generic editor.
+
+An ftp module has been added to support IDE synchronisation of codes in the repository. It's in an early stage but seems to be working at least for netbeans quite well. Create a Code resource with annotaion users.properties, mimetpe text/plain and user=passwords tuples inside.
