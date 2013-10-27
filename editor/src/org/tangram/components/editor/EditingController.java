@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,12 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.components.editor;
 
@@ -27,10 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
@@ -44,17 +42,18 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
-import org.tangram.components.ClassRepository;
 import org.tangram.components.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
 import org.tangram.edit.PropertyConverter;
+import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 import org.tangram.view.Utils;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
+
 
 @Controller
 public class EditingController extends RenderingController {
@@ -78,6 +77,7 @@ public class EditingController extends RenderingController {
      */
     public static Set<String> SYSTEM_PROPERTIES;
 
+
     static {
         SYSTEM_PROPERTIES = new HashSet<String>();
         SYSTEM_PROPERTIES.add("manager");
@@ -99,10 +99,10 @@ public class EditingController extends RenderingController {
         // Automagically set edit view
         defaultController.getCustomLinkViews().add("edit");
     } // setDefaultController()
-    
-    
+
+
     private MutableBeanFactory getMutableBeanFactory() {
-        return (MutableBeanFactory)getBeanFactory();
+        return (MutableBeanFactory) getBeanFactory();
     } // getMutableBeanFactory()
 
 
@@ -125,7 +125,7 @@ public class EditingController extends RenderingController {
 
 
     @RequestMapping(value = "/store/id_{id}")
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public ModelAndView store(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
@@ -142,9 +142,9 @@ public class EditingController extends RenderingController {
                 log.debug("store() "+request.getClass().getName());
             } // if
             for (Object entry : parameterMap.entrySet()) {
-                Entry<String, String[]> parameter = (Entry<String, String[]>)entry;
+                Entry<String, String[]> parameter = (Entry<String, String[]>) entry;
                 String key = parameter.getKey();
-                if ( !key.startsWith("cms.editor")) {
+                if (!key.startsWith("cms.editor")) {
                     try {
                         StringBuilder msg = new StringBuilder("store() ");
                         msg.append(key);
@@ -164,7 +164,7 @@ public class EditingController extends RenderingController {
                         if (log.isInfoEnabled()) {
                             log.info("store() value="+value);
                         } // if
-                        if ( !(Content.class.isAssignableFrom(cls)&&value==null)) {
+                        if (!(Content.class.isAssignableFrom(cls)&&value==null)) {
                             newValues.put(key, value);
                         } else {
                             if (log.isInfoEnabled()) {
@@ -180,7 +180,7 @@ public class EditingController extends RenderingController {
                 } // if
             } // for
             if (request instanceof DefaultMultipartHttpServletRequest) {
-                DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest)request;
+                DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;
                 Map<String, MultipartFile> fileMap = r.getFileMap();
 
                 for (Entry<String, MultipartFile> entry : fileMap.entrySet()) {
@@ -195,7 +195,7 @@ public class EditingController extends RenderingController {
                         log.debug("store() original filename "+entry.getValue().getOriginalFilename());
                     } // if
                     if (filename.length()>0) {
-                        if ( !key.startsWith("cms.editor")) {
+                        if (!key.startsWith("cms.editor")) {
                             try {
                                 if (log.isInfoEnabled()) {
                                     log.info("multipart file "+key);
@@ -229,16 +229,16 @@ public class EditingController extends RenderingController {
                 } // try/catch
             } // for
             /*
-            for (String propertyName : deleteValues) {
-                try {
-                    wrapper.setPropertyValue(propertyName, null);
-                } catch (Exception ex) {
-                    e = new Exception("Cannot delete value for "+propertyName, ex);
-                } // try/catch
-            } // for
-            */
+             for (String propertyName : deleteValues) {
+             try {
+             wrapper.setPropertyValue(propertyName, null);
+             } catch (Exception ex) {
+             e = new Exception("Cannot delete value for "+propertyName, ex);
+             } // try/catch
+             } // for
+             */
 
-            if ( !bean.persist()) {
+            if (!bean.persist()) {
                 throw new Exception("Could not persist bean "+bean.getId());
             } // if
 
@@ -281,7 +281,7 @@ public class EditingController extends RenderingController {
 
     @RequestMapping(value = "/create")
     public ModelAndView create(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
-            HttpServletResponse response) {
+                               HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("create() creating new instance of type "+typeName);
@@ -290,7 +290,14 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+            // Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+            // TODO: do this more efficiently and in one place
+            Class<? extends MutableContent> cls = null;
+            for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
+                if (c.getName().equals(typeName)) {
+                    cls = c;
+                } // if
+            } // for
             MutableContent content = getMutableBeanFactory().createBean(cls);
             if (content.persist()) {
                 if (log.isDebugEnabled()) {
@@ -310,7 +317,7 @@ public class EditingController extends RenderingController {
     @RequestMapping(value = "/list")
     @SuppressWarnings("unchecked")
     public ModelAndView list(@RequestParam(value = PARAMETER_CLASS_NAME, required = false) String typeName,
-            HttpServletRequest request, HttpServletResponse response) {
+                             HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("list() listing instances of type '"+typeName+"'");
@@ -321,14 +328,14 @@ public class EditingController extends RenderingController {
             Class<? extends Content> cls = null;
             if (typeName!=null) {
                 try {
-                    cls = (Class<Content>)(this.getClass().getClassLoader().loadClass(typeName));
+                    cls = (Class<Content>) (this.getClass().getClassLoader().loadClass(typeName));
                 } catch (Exception e) {
                     log.error("list()", e);
                 } // try/catch
             } // if
-            Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
+            Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
             if (cls==null) {
-                if ( !classes.isEmpty()) {
+                if (!classes.isEmpty()) {
                     cls = classes.iterator().next();
                 } // if
             } // if
@@ -368,7 +375,7 @@ public class EditingController extends RenderingController {
             ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
             mav.getModel().put(ATTRIBUTE_WRAPPER, createWrapper(content, request));
             if (content instanceof CodeResource) {
-                CodeResource code = (CodeResource)content;
+                CodeResource code = (CodeResource) content;
                 mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
             mav.getModel().put("classes", getMutableBeanFactory().getClasses());
@@ -380,10 +387,10 @@ public class EditingController extends RenderingController {
 
 
     // Changed to method get for new class selection mimik
-    @RequestMapping(method = { RequestMethod.GET }, value = "/link")
+    @RequestMapping(method = {RequestMethod.GET}, value = "/link")
     public ModelAndView link(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName,
-            @RequestParam(value = PARAMETER_ID) String id, @RequestParam(value = PARAMETER_PROPERTY) String propertyName,
-            HttpServletRequest request, HttpServletResponse response) {
+                             @RequestParam(value = PARAMETER_ID) String id, @RequestParam(value = PARAMETER_PROPERTY) String propertyName,
+                             HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("link() creating new instance of type "+typeName);
@@ -392,7 +399,14 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+            // Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+            // TODO: do this more efficiently and in one place
+            Class<? extends MutableContent> cls = null;
+            for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
+                if (c.getName().equals(typeName)) {
+                    cls = c;
+                } // if
+            } // for
             MutableContent content = getMutableBeanFactory().createBean(cls);
             if (content.persist()) {
                 if (log.isDebugEnabled()) {
@@ -403,12 +417,12 @@ public class EditingController extends RenderingController {
                 // re-get for update to avoid xg transactions where ever possible
                 MutableContent bean = getMutableBeanFactory().getBeanForUpdate(id);
                 BeanWrapper wrapper = createWrapper(bean, request);
-                                
+
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")
-                List<Object> list = (List<Object>)listObject;
+                List<Object> list = (List<Object>) listObject;
                 list.add(content);
-                
+
                 wrapper.setPropertyValue(propertyName, list);
                 bean.persist();
                 return redirect(request, response, content);
@@ -423,7 +437,7 @@ public class EditingController extends RenderingController {
 
     private String getUrl(Object bean, String action, String view) {
         if ("store".equals(action)) {
-            return "/store/id_"+((Content)bean).getId();
+            return "/store/id_"+((Content) bean).getId();
         } else {
             if ("create".equals(action)) {
                 return "/create";
@@ -446,7 +460,7 @@ public class EditingController extends RenderingController {
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         Link result = null;
         if ("edit".equals(action)) {
-            String url = "/edit/id_"+((Content)bean).getId();
+            String url = "/edit/id_"+((Content) bean).getId();
             result = new Link();
             result.setUrl(url);
             result.setTarget(EDIT_TARGET);
