@@ -46,7 +46,7 @@ import org.tangram.components.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
-import org.tangram.edit.PropertyConverter;
+import org.tangram.conversion.PropertyConverter;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;

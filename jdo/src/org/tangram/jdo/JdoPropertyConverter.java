@@ -18,7 +18,7 @@
  */
 package org.tangram.jdo;
 
-import org.tangram.edit.PropertyConverter;
+import org.tangram.conversion.PropertyConverter;
 
 
 public class JdoPropertyConverter extends PropertyConverter {

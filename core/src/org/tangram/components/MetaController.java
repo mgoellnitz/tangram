@@ -44,7 +44,7 @@ import org.tangram.controller.ActionForm;
 import org.tangram.controller.ActionParameter;
 import org.tangram.controller.ControllerHook;
 import org.tangram.controller.LinkAction;
-import org.tangram.edit.PropertyConverter;
+import org.tangram.conversion.PropertyConverter;
 import org.tangram.logic.ClassRepository;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;

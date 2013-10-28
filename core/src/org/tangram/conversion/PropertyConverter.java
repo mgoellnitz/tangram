@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,21 +9,25 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.edit;
+package org.tangram.conversion;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
@@ -32,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.view.jsp.IncludeTag;
+
 
 /**
  * Used to manually convert human readable values from forms to objects and vice versa.
@@ -54,17 +60,17 @@ public abstract class PropertyConverter {
             } // if
             if (o instanceof List) {
                 String result = "";
-                List<? extends Object> list = (List<? extends Object>)o;
+                List<? extends Object> list = (List<? extends Object>) o;
                 for (Object i : list) {
                     if (i instanceof Content) {
-                        result = result+((Content)i).getId()+", ";
+                        result = result+((Content) i).getId()+", ";
                     } else {
                         result = result+i+",";
                     } // if
                 } // for
                 return result;
             } else if (o instanceof Content) {
-                return ((Content)o).getId();
+                return ((Content) o).getId();
             } else if (o instanceof Date) {
                 return editDateFormat.format(o);
             } else {
@@ -110,8 +116,10 @@ public abstract class PropertyConverter {
                 if (log.isDebugEnabled()) {
                     log.debug("getStorableObject() idString="+idString);
                 } // if
+                // TODO: Check for selection via description template
                 if (StringUtils.hasText(idString)) {
                     Object o = null;
+                    boolean addSomething = true;
                     try {
                         o = beanFactory.getBean(idString);
                         if (log.isDebugEnabled()) {
@@ -121,6 +129,11 @@ public abstract class PropertyConverter {
                         if (log.isWarnEnabled()) {
                             log.warn("getStorableObject() taking plain value as list element "+idString);
                         } // if
+                        List<Content> results = getObjectsViaDescription(Content.class, idString);
+                        if (results.size() > 0) {
+                            addSomething = false;
+                            elements.addAll(results);
+                        } // if
                     } // try/catch
                     elements.add(o==null ? idString : o);
                 } // if
@@ -128,6 +141,7 @@ public abstract class PropertyConverter {
             value = elements;
         } else if (Content.class.isAssignableFrom(cls)) {
             // Filter out possible single ID from input
+            // TODO: Check for selection via description template
             Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
             Matcher m = p.matcher(valueString);
             if (m.find()) {
@@ -135,6 +149,13 @@ public abstract class PropertyConverter {
                 if (log.isInfoEnabled()) {
                     log.info("getStorableObject() pattern match result "+valueString);
                 } // if
+            } else {
+                if (log.isWarnEnabled()) {
+                    log.warn("getStorableObject() we should have checked for selection via description template");
+                } // if
+                @SuppressWarnings("unchecked")
+                Class<? extends Content> cc = (Class<? extends Content>) cls;
+                log.error("getStorageObject()"+getObjectViaDescription(cc, valueString.trim()));
             } // if
             if (StringUtils.hasText(valueString)) {
                 value = beanFactory.getBean(valueString);
@@ -142,6 +163,40 @@ public abstract class PropertyConverter {
         } // if
         return value;
     } // getStorableObject()
+
+
+    private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title) {
+        List<T> result = new ArrayList<T>();
+
+        List<T> beans = beanFactory.listBeans(c);
+        for (T bean : beans) {
+            try {
+                StringWriter writer = new StringWriter();
+                Map<String, Object> model = new HashMap<String, Object>();
+                IncludeTag.render(writer, model, "description");
+                String description = writer.toString();
+                if (description.indexOf(title)>=0) {
+                    result.add(bean);
+                } // if
+            } catch (IOException ioe) {
+                log.error("getObjectsViaDescription() ignoring element "+bean, ioe);
+            } // try/catch
+        } // for
+
+        return result;
+    } // getObjectsViaDescription()
+
+
+    private <T extends Content> T getObjectViaDescription(Class<T> c, String title) {
+        T result = null;
+
+        List<T> suggestions = getObjectsViaDescription(c, title);
+        if (suggestions.size()==1) {
+            result = suggestions.get(0);
+        } // if
+
+        return result;
+    } // getObjectViaDescription()
 
 
     public abstract boolean isBlobType(Class<?> cls);

@@ -31,7 +31,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.tangram.content.BeanFactory;
-import org.tangram.edit.PropertyConverter;
+import org.tangram.conversion.PropertyConverter;
 import org.tangram.view.link.LinkFactory;
 
 public final class Utils {

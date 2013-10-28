@@ -18,7 +18,7 @@
  */
 package org.tangram.jpa;
 
-import org.tangram.edit.PropertyConverter;
+import org.tangram.conversion.PropertyConverter;
 
 
 public class JpaPropertyConverter extends PropertyConverter {

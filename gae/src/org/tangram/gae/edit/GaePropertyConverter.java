@@ -21,7 +21,7 @@ package org.tangram.gae.edit;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tangram.edit.PropertyConverter;
+import org.tangram.conversion.PropertyConverter;
 
 import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Text;

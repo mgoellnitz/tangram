@@ -181,6 +181,7 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
 
     /**
      * overriding one class means in this case defining all classes anew with one changed definition.
+     *
      * @param className name of the class
      * @param bytes redefined byte code for the class
      */
@@ -190,6 +191,7 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
             byteCodes.put(className, bytes);
             classLoader = new GroovyClassLoader();
             for (String name : byteCodes.keySet()) {
+                @SuppressWarnings("unchecked")
                 Class<? extends Object> clazz = classLoader.defineClass(className, bytes);
                 if (log.isInfoEnabled()) {
                     log.info("overrideClass() overriding "+clazz.getName());
