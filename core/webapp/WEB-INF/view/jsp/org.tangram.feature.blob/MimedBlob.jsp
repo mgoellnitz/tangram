@@ -3,7 +3,7 @@
 %><%@page import="org.springframework.context.ApplicationContext"
 %><%@page import="org.springframework.web.servlet.DispatcherServlet"
 %><%@page import="org.tangram.Constants"
-%><%@page import="org.tangram.jdo.util.MimedBlob"
+%><%@page import="org.tangram.feature.blob.MimedBlob"
 %><% MimedBlob imageData = (MimedBlob)(request.getAttribute(Constants.THIS));
 String type = imageData.getMimeType();
 if ((type == null) || (type.length() == 0)) {
