@@ -66,7 +66,6 @@ public class RetrFtpCommandHandler extends RetrCommandHandler {
             if (log.isInfoEnabled()) {
                 log.info("processData() code for "+annotation+" is "+code);
             } // if
-            // TODO: move getBytes() to code implementations
             data = code.getCodeText().getBytes("UTF-8");
         } catch (Exception e) {
             log.error("processData()", e);
