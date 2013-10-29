@@ -19,10 +19,6 @@
 apply from: '../lib.gradle'
 
 dependencies {
-  // maybe these two can be ommitted:
-  // providedCompile "javax.servlet:servlet-api:$versions.servlet"
-  // providedCompile "javax.servlet:jsp-api:$versions.jsp"
-  // because this one also uses them:
   compile project (':tangram-jdo')
 
   compile "$versions.jdo_api"

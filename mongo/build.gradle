@@ -16,32 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-apply from: '../webapp.gradle'
-
-war.dependsOn ':tangram-jdo:war'
+apply from: '../lib.gradle'
 
 dependencies {
-    webapp project (':tangram-jdo')
+  compile project (':tangram-nucleus')
 
-    providedCompile "javax.servlet:servlet-api:$versions.servlet"
-    providedCompile "javax.servlet:jsp-api:$versions.jsp"
-    compile project (':tangram-nucleus')
+  compile "$versions.jdo_api"
+  compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
+  compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
+  compile "org.datanucleus:datanucleus-mongodb:$versions.datanucleus"
 
-    compile "$versions.jdo_api"
-    compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
-    compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
-    compile "org.datanucleus:datanucleus-mongodb:$versions.datanucleus"
+  // Spring security is up to now used by configuration only:
+  // compile "org.springframework.security:spring-security-core:$versions.springsecurity"
+  // compile "org.springframework.security:spring-security-config:$versions.springsecurity"
+  // compile "org.springframework.security:spring-security-web:$versions.springsecurity"
 
-    compile "org.springframework.security:spring-security-core:$versions.springsecurity"
-    compile "org.springframework.security:spring-security-config:$versions.springsecurity"
-    compile "org.springframework.security:spring-security-web:$versions.springsecurity"
-
-    testCompile "junit:junit:$versions.junit"
-
-    providedCompile "org.apache.ant:ant:1.8.4"
-    providedCompile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
-}
-
-compileJava.doLast {
-    jdoEnhance()
+  testCompile "junit:junit:$versions.junit"
 }
