@@ -19,23 +19,24 @@
 package org.tangram.conversion;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.ServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.view.BufferResponse;
+import org.tangram.view.Utils;
 import org.tangram.view.jsp.IncludeTag;
 
 
@@ -83,7 +84,7 @@ public abstract class PropertyConverter {
     } // getEditString()
 
 
-    public Object getStorableObject(String valueString, Class<? extends Object> cls) {
+    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
         Object value = null;
         if (valueString==null) {
             return null;
@@ -129,8 +130,8 @@ public abstract class PropertyConverter {
                         if (log.isWarnEnabled()) {
                             log.warn("getStorableObject() taking plain value as list element "+idString);
                         } // if
-                        List<Content> results = getObjectsViaDescription(Content.class, idString);
-                        if (results.size() > 0) {
+                        List<Content> results = getObjectsViaDescription(Content.class, idString, request);
+                        if (results.size()>0) {
                             addSomething = false;
                             elements.addAll(results);
                         } // if
@@ -141,7 +142,6 @@ public abstract class PropertyConverter {
             value = elements;
         } else if (Content.class.isAssignableFrom(cls)) {
             // Filter out possible single ID from input
-            // TODO: Check for selection via description template
             Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
             Matcher m = p.matcher(valueString);
             if (m.find()) {
@@ -155,7 +155,13 @@ public abstract class PropertyConverter {
                 } // if
                 @SuppressWarnings("unchecked")
                 Class<? extends Content> cc = (Class<? extends Content>) cls;
-                log.error("getStorageObject()"+getObjectViaDescription(cc, valueString.trim()));
+                value = getObjectViaDescription(cc, valueString.trim(), request);
+                if (value!=null) {
+                    if (log.isInfoEnabled()) {
+                        log.info("getStorableObject() found a value from description "+value);
+                    } // if
+                    valueString = null;
+                } // if
             } // if
             if (StringUtils.hasText(valueString)) {
                 value = beanFactory.getBean(valueString);
@@ -165,32 +171,46 @@ public abstract class PropertyConverter {
     } // getStorableObject()
 
 
-    private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title) {
+    private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title, ServletRequest request) {
         List<T> result = new ArrayList<T>();
 
-        List<T> beans = beanFactory.listBeans(c);
-        for (T bean : beans) {
-            try {
-                StringWriter writer = new StringWriter();
-                Map<String, Object> model = new HashMap<String, Object>();
-                IncludeTag.render(writer, model, "description");
-                String description = writer.toString();
-                if (description.indexOf(title)>=0) {
-                    result.add(bean);
-                } // if
-            } catch (IOException ioe) {
-                log.error("getObjectsViaDescription() ignoring element "+bean, ioe);
-            } // try/catch
-        } // for
+        if (StringUtils.hasText(title)) {
+            List<T> beans = beanFactory.listBeans(c);
+            if (log.isDebugEnabled()) {
+                log.debug("getObjectsViaDescription("+title+") checking "+beans);
+            } // if
+            for (T bean : beans) {
+                try {
+                    if (log.isDebugEnabled()) {
+                        log.debug("getObjectsViaDescription() checking "+bean);
+                    } // if
+                    BufferResponse r = new BufferResponse();
+                    Map<String, Object> model = Utils.getModelAndViewFactory(request).createModel(bean, request, r);
+                    IncludeTag.render(r.getWriter(), model, "description");
+                    String description = r.getContents();
+                    if (log.isDebugEnabled()) {
+                        log.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);
+                    } // if
+                    if (description.indexOf(title)>=0) {
+                        result.add(bean);
+                    } // if
+                } catch (IOException ioe) {
+                    log.error("getObjectsViaDescription() ignoring element "+bean, ioe);
+                } // try/catch
+            } // for
+        } // if
 
+        if (log.isDebugEnabled()) {
+            log.debug("getObjectsViaDescription("+title+") result="+result);
+        } // if
         return result;
     } // getObjectsViaDescription()
 
 
-    private <T extends Content> T getObjectViaDescription(Class<T> c, String title) {
+    private <T extends Content> T getObjectViaDescription(Class<T> c, String title, ServletRequest request) {
         T result = null;
 
-        List<T> suggestions = getObjectsViaDescription(c, title);
+        List<T> suggestions = getObjectsViaDescription(c, title, request);
         if (suggestions.size()==1) {
             result = suggestions.get(0);
         } // if

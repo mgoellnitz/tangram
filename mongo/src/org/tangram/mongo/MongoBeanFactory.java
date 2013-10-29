@@ -71,7 +71,7 @@ public class MongoBeanFactory extends NucleusBeanFactory {
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
         Map<Object, Object> result = new HashMap<Object, Object>();
         if (StringUtils.isNotEmpty(getHost())) {
-            log.info("getFactoryConfigOverrides() have host for mongoDB: "+getDatabase());
+            log.info("getFactoryConfigOverrides() have host for mongoDB: "+getHost());
             if (StringUtils.isNotEmpty(getDatabase())) {
                 log.info("getFactoryConfigOverrides() have databasefor mongoDB: "+getDatabase());
                 if (StringUtils.isNotEmpty(getPort())) {

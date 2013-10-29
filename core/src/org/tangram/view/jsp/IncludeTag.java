@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,12 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.view.jsp;
 
@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,6 +38,7 @@ import org.tangram.Constants;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewHandler;
+
 
 public class IncludeTag implements Tag, Serializable {
 
@@ -95,8 +94,8 @@ public class IncludeTag implements Tag, Serializable {
 
 
     public static void render(Writer out, Map<String, Object> model, String view) throws IOException {
-        ServletRequest request = (ServletRequest)model.get("request");
-        ServletResponse response = (ServletResponse)model.get("response");
+        ServletRequest request = (ServletRequest) model.get("request");
+        ServletResponse response = (ServletResponse) model.get("response");
 
         ViewHandler viewHandler = Utils.getViewHandler(request);
         if (viewHandler==null) {
@@ -124,11 +123,12 @@ public class IncludeTag implements Tag, Serializable {
             } // if
             if (log.isDebugEnabled()) {
                 log.debug("render() model="+mav.getModel());
+                log.debug("render("+mav.getViewName()+") effectiveView="+effectiveView);
             } // if
-            effectiveView.render(mav.getModel(), (HttpServletRequest)request, (HttpServletResponse)response);
+            effectiveView.render(mav.getModel(), (HttpServletRequest) request, (HttpServletResponse) response);
         } catch (Exception e) {
             log.error("render() #"+view, e);
-            if (out != null) {
+            if (out!=null) {
                 out.write(e.getLocalizedMessage());
             } // if
         } // try/catch
@@ -171,15 +171,15 @@ public class IncludeTag implements Tag, Serializable {
             log.debug("doEndTag("+Thread.currentThread().getId()+") view ******************* "+view);
         } // if
         /*
-        @SuppressWarnings("unchecked")
-        Enumeration<String> names = pc.getAttributeNamesInScope(PageContext.REQUEST_SCOPE);
-        while (names.hasMoreElements()) {
-            String name = names.nextElement();
-             if (log.isDebugEnabled()) {
-             log.debug("doEndTag("+Thread.currentThread().getId()+") request ******************* "+name);
-             } // if
-        } // while
-        */
+         @SuppressWarnings("unchecked")
+         Enumeration<String> names = pc.getAttributeNamesInScope(PageContext.REQUEST_SCOPE);
+         while (names.hasMoreElements()) {
+         String name = names.nextElement();
+         if (log.isDebugEnabled()) {
+         log.debug("doEndTag("+Thread.currentThread().getId()+") request ******************* "+name);
+         } // if
+         } // while
+         */
 
         render(pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
         return EVAL_PAGE;

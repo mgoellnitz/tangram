@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +14,17 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.gae.edit;
 
+import com.google.appengine.api.datastore.Blob;
+import com.google.appengine.api.datastore.Text;
+import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.conversion.PropertyConverter;
-
-import com.google.appengine.api.datastore.Blob;
-import com.google.appengine.api.datastore.Text;
 
 public class GaePropertyConverter extends PropertyConverter {
 
@@ -79,8 +79,8 @@ public class GaePropertyConverter extends PropertyConverter {
      * only handle special GAE specific cases like Text and Blob
      */
     @Override
-    public Object getStorableObject(String valueString, Class<? extends Object> cls) {
-        Object result = super.getStorableObject(valueString, cls);
+    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
+        Object result = super.getStorableObject(valueString, cls, request);
         if (result==null) {
             if (cls==Blob.class) {
                 if (log.isDebugEnabled()) {

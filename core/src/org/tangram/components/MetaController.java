@@ -235,7 +235,7 @@ public class MetaController extends AbstractController implements InitializingBe
                         // log.info("callAction() converting parameter "+parameterName+" to "+derivedValue.getClass());
                         // } // if
                         // } // if
-                        Object value = propertyConverter.getStorableObject(valueString, parameterType);
+                        Object value = propertyConverter.getStorableObject(valueString, parameterType, request);
                         parameters.add(value);
                     } // if
                     if (annotation instanceof ActionForm) {
@@ -245,7 +245,7 @@ public class MetaController extends AbstractController implements InitializingBe
                             for (PropertyDescriptor property : wrapper.getPropertyDescriptors()) {
                                 String propertyName = property.getName();
                                 String valueString = request.getParameter(propertyName);
-                                Object value = propertyConverter.getStorableObject(valueString, property.getPropertyType());
+                                Object value = propertyConverter.getStorableObject(valueString, property.getPropertyType(), request);
                                 wrapper.setPropertyValue(propertyName, value);
                             } // for
                             parameters.add(form);

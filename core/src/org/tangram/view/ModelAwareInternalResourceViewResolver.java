@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,16 +14,14 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.view;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.Locale;
-
 import javax.servlet.ServletContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -113,9 +111,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
                 result = null;
             } // if
         } else {
-            // TODO: Strange if... idx == 0 means exactly startsWith("/") - maybe this can be removed or the above code
-            // could be removed until we know how to deal with JARred resources.
-            if (url.startsWith("/")) {
+            if (idx == 0) {
                 File f = new File(filePathPrefix+url);
                 if (log.isInfoEnabled()) {
                     log.info("checkResourceExists() f="+f.getAbsolutePath());
@@ -124,6 +120,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
                     result = null;
                 } // if
             } else {
+                // meaning idx < 0 - no slash in url
                 log.warn("checkResourceExists() strange resource name "+url);
                 result = null;
             } // if

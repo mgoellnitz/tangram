@@ -26,7 +26,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 
 /**
- * In the very heart this is just a collection of helper methods, but together with the groovy-implementation
+ * Factory implementaiton to create model and view instances for spring.
+ * Despite it's name it's not really the default for tangram anymore.
+ *
+ * In its very heart this is just a collection of helper methods, but together with the groovy-implementation
  * it gets a powerful tool for populating contexts of velocity templates with useful stuff and methods.
  *
  */

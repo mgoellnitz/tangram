@@ -18,6 +18,7 @@
  */
 package org.tangram.jdo;
 
+import javax.servlet.ServletRequest;
 import org.tangram.conversion.PropertyConverter;
 
 
@@ -62,11 +63,11 @@ public class JdoPropertyConverter extends PropertyConverter {
 
 
     @Override
-    public Object getStorableObject(String valueString, Class<? extends Object> cls) {
+    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
         if (cls==char[].class) {
             return valueString.toCharArray();
         } else {
-            return super.getStorableObject(valueString, cls);
+            return super.getStorableObject(valueString, cls, request);
         } // if
     } // getStorableObject()
 

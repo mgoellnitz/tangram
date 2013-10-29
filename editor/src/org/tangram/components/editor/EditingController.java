@@ -160,7 +160,7 @@ public class EditingController extends RenderingController {
 
                         Class cls = wrapper.getPropertyType(key);
                         String valueString = values.length==1 ? values[0] : "";
-                        Object value = propertyConverter.getStorableObject(valueString, cls);
+                        Object value = propertyConverter.getStorableObject(valueString, cls, request);
                         if (log.isInfoEnabled()) {
                             log.info("store() value="+value);
                         } // if
