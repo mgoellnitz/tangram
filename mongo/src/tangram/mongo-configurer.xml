@@ -28,7 +28,7 @@
     <property name="basePackages">
       <set>
         <value>${bean.factory.application.base.package}</value>
-        <value>org.tangram.mongo</value>
+        <value>org.tangram.nucleus</value>
       </set>
     </property>
     <property name="activateCaching" value="${bean.factory.activate.caching}" />
