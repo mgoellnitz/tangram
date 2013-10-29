@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,32 +9,34 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.view;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.tangram.content.BeanFactory;
-import org.tangram.conversion.PropertyConverter;
 import org.tangram.view.link.LinkFactory;
 
+
 public final class Utils {
+
+    private static Log log = LogFactory.getLog(Utils.class);
 
     private static BeanFactory beanFactory = null;
 
@@ -48,10 +50,12 @@ public final class Utils {
 
     private static String uriPrefix = null;
 
+    private static ConversionService conversionService;
+
 
     public static <T extends Object> T getBeanFromContext(Class<? extends T> cls, ServletRequest request) {
         T result = null;
-        ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        ApplicationContext appContext = (ApplicationContext) request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         if (appContext!=null) {
             result = appContext.getBean(cls);
         } // if
@@ -104,7 +108,7 @@ public final class Utils {
 
     /**
      * transform a title into a URL conform UTF-8 encoded string
-     * 
+     *
      * @param title
      * @return the URL form of the title
      * @throws UnsupportedEncodingException
@@ -119,7 +123,7 @@ public final class Utils {
         result = result.replace("ö", "oe");
         result = result.replace("ü", "ue");
         result = result.replace("ß", "ss");
-        char[] specials = { ',', ' ', ':', ';', '"', '?', '!', '*' };
+        char[] specials = {',', ' ', ':', ';', '"', '?', '!', '*'};
         for (char c : specials) {
             result = result.replace(c, '-');
         } // for
@@ -139,23 +143,32 @@ public final class Utils {
     } // getUriPrefix()
 
 
+    public static ConversionService getConversionsService(ServletRequest request) {
+        if (conversionService==null) {
+            conversionService = Utils.getBeanFromContext(ConversionService.class, request);
+        } // if
+        return conversionService;
+    } // getConversionsService()
+
+
+
     /**
-     * TODO: this is not really a view utility - place it somewhere else or replace it
-     * 
-     * create a bean wrapper instance from a bean object and prepares it with a conversion service if available
-     * 
+     * create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
+     *
      * @param bean
      * @param conversionService
      * @return
      */
-    public static BeanWrapper createWrapper(Object bean, HttpServletRequest request) {
+    public static BeanWrapper createWrapper(Object bean, ServletRequest request) {
         BeanWrapper wrapper;
         wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
         try {
-            // TODO: Do this exactly once!
-            ConversionService conversionService = getBeanFromContext(ConversionService.class, request);
+            ConversionService conversionService = getConversionsService(request);
             if (conversionService!=null) {
                 wrapper.setConversionService(conversionService);
+            } // if
+            if (log.isInfoEnabled()) {
+                log.info("createWrapper() conversion service "+wrapper.getConversionService());
             } // if
         } catch (Exception e) {
             // conversion services are still optional for some time

@@ -46,10 +46,10 @@ import org.tangram.components.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
-import org.tangram.conversion.PropertyConverter;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
+import org.tangram.view.PropertyConverter;
 import org.tangram.view.Utils;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
@@ -115,15 +115,6 @@ public class EditingController extends RenderingController {
     } // redirect()
 
 
-    private final BeanWrapper createWrapper(Object bean, HttpServletRequest request) {
-        BeanWrapper wrapper = Utils.createWrapper(bean, request);
-        if (log.isInfoEnabled()) {
-            log.info("createWrapper() conversion service "+wrapper.getConversionService());
-        } // if
-        return wrapper;
-    } // createWrapper()
-
-
     @RequestMapping(value = "/store/id_{id}")
     @SuppressWarnings({"rawtypes", "unchecked"})
     public ModelAndView store(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
@@ -132,7 +123,7 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             MutableContent bean = beanFactory.getBean(MutableContent.class, id);
-            BeanWrapper wrapper = createWrapper(bean, request);
+            BeanWrapper wrapper = Utils.createWrapper(bean, request);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
 
@@ -218,8 +209,7 @@ public class EditingController extends RenderingController {
             } // if
 
             bean = getMutableBeanFactory().getBeanForUpdate(MutableContent.class, id);
-            // wrapper = new BeanWrapperImpl(bean);
-            wrapper = createWrapper(bean, request);
+            wrapper = Utils.createWrapper(bean, request);
             Exception e = null;
             for (String propertyName : newValues.keySet()) {
                 try {
@@ -373,7 +363,7 @@ public class EditingController extends RenderingController {
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
             ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
-            mav.getModel().put(ATTRIBUTE_WRAPPER, createWrapper(content, request));
+            mav.getModel().put(ATTRIBUTE_WRAPPER, Utils.createWrapper(content, request));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
                 mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
@@ -416,7 +406,7 @@ public class EditingController extends RenderingController {
 
                 // re-get for update to avoid xg transactions where ever possible
                 MutableContent bean = getMutableBeanFactory().getBeanForUpdate(id);
-                BeanWrapper wrapper = createWrapper(bean, request);
+                BeanWrapper wrapper = Utils.createWrapper(bean, request);
 
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.conversion;
+package org.tangram.view;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -35,8 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
-import org.tangram.view.BufferResponse;
-import org.tangram.view.Utils;
 import org.tangram.view.jsp.IncludeTag;
 
 
@@ -47,10 +45,17 @@ public abstract class PropertyConverter {
 
     private static final Log log = LogFactory.getLog(PropertyConverter.class);
 
-    private static DateFormat editDateFormat = new SimpleDateFormat("hh:mm:ss dd.MM.yyyy zzz");
+    public static final String DEFAULT_DATE_FORMAT = "hh:mm:ss dd.MM.yyyy zzz";
+
+    private DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 
     @Autowired
     private BeanFactory beanFactory;
+
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = new SimpleDateFormat(dateFormat);
+    } // setDateFormat()
 
 
     @SuppressWarnings("unchecked")
@@ -73,7 +78,7 @@ public abstract class PropertyConverter {
             } else if (o instanceof Content) {
                 return ((Content) o).getId();
             } else if (o instanceof Date) {
-                return editDateFormat.format(o);
+                return dateFormat.format(o);
             } else {
                 return o.toString();
             } // if
@@ -96,7 +101,7 @@ public abstract class PropertyConverter {
             value = StringUtils.hasText(valueString) ? ""+valueString : null;
         } else if (cls==Date.class) {
             try {
-                value = editDateFormat.parseObject(valueString);
+                value = dateFormat.parseObject(valueString);
             } catch (ParseException pe) {
                 log.error("getStorableObject() cannot parse as Date: "+valueString);
             } // try/catch

@@ -19,7 +19,7 @@
 package org.tangram.jdo;
 
 import javax.servlet.ServletRequest;
-import org.tangram.conversion.PropertyConverter;
+import org.tangram.view.PropertyConverter;
 
 
 public class JdoPropertyConverter extends PropertyConverter {

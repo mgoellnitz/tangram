@@ -37,6 +37,8 @@
 
   <!--  edit scenarios only  -->
 
-  <bean id="propertyConverter" class="org.tangram.gae.edit.GaePropertyConverter" />
+  <bean id="propertyConverter" class="org.tangram.gae.edit.GaePropertyConverter">
+    <property name="dateFormat" value="${tangram.date.format}"/>
+  </bean>
   
 </beans>

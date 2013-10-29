@@ -39,8 +39,4 @@
     <property name="database" ref="${tangram.mongo.database}" />
   </bean>
 
-  <!--  edit scenarios only  -->
-
-  <bean id="propertyConverter" class="org.tangram.jdo.JdoPropertyConverter" />
-  
 </beans>

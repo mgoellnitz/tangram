@@ -19,7 +19,7 @@
 package org.tangram.jpa;
 
 import javax.servlet.ServletRequest;
-import org.tangram.conversion.PropertyConverter;
+import org.tangram.view.PropertyConverter;
 
 
 public class JpaPropertyConverter extends PropertyConverter {

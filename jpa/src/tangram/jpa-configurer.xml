@@ -51,6 +51,8 @@
     
   <!--  edit scenarios only  -->
 
-  <bean id="propertyConverter" class="org.tangram.jpa.JpaPropertyConverter" />
+  <bean id="propertyConverter" class="org.tangram.jpa.JpaPropertyConverter">
+    <property name="dateFormat" value="${tangram.date.format}"/>
+  </bean>
     
 </beans>

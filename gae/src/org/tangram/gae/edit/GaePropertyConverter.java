@@ -24,7 +24,7 @@ import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tangram.conversion.PropertyConverter;
+import org.tangram.view.PropertyConverter;
 
 public class GaePropertyConverter extends PropertyConverter {
 
