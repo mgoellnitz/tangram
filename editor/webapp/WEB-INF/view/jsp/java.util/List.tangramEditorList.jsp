@@ -4,7 +4,10 @@
 	prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="org.tangram.view.Utils"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html><c:forEach items="${self}" var="item"
+><c:set var="oneItem" value="${item}" /><c:set var="className" value="${item.class.name}" /></c:forEach
+><c:if test="${empty oneItem}"><c:set var="className"
+><%=request.getParameter("cms.editor.class.name")%></c:set></c:if>
 <head>
 <title>Tangram - Liste <%=request.getParameter("cms.editor.class.name")%></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -13,10 +16,7 @@
 <link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/e/favicon.ico" />
 <script type="text/javascript" src="<%=Utils.getUriPrefix(request)%>/editor/script.js">
 </script>
-</head><c:forEach items="${self}" var="item"
-><c:set var="oneItem" value="${item}" /><c:set var="className" value="${item.class.name}" /></c:forEach
-><c:if test="${empty oneItem}"><c:set var="className"
-><%=request.getParameter("cms.editor.class.name")%></c:set></c:if>
+</head>
 <body>
 <div class="cms_editor_row"><span class="cms_editor_label">Objekte Auflisten | 
 Typ: </span> <c:choose><c:when test="${empty oneitem}">${className}</c:when>
