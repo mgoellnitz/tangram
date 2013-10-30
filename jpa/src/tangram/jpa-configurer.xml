@@ -31,6 +31,7 @@
     <property name="delegate" ref="plainRepositoryVelocityViewResolver" />
     <property name="order" value="10000"/>
     <property name="activateCaching" value="true" />
+    <property name="persistenceUnitName" value="${tangram.jpa.persistence.unit.name}" />
   </bean>
     
   <bean id="beanFactory" class="org.tangram.jpa.JpaBeanFactoryImpl">

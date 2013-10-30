@@ -50,6 +50,8 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
 
     private static final Log log = LogFactory.getLog(AbstractJpaBeanFactory.class);
 
+    private String persistenceUnitName = "tangram";
+
     public EntityManagerFactory managerFactory = null;
 
     protected EntityManager manager = null;
@@ -73,6 +75,16 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     private boolean prefill = true;
 
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
+
+
+    public String getPersistenceUnitName() {
+        return persistenceUnitName;
+    }
+
+
+    public void setPersistenceUnitName(String persistenceUnitName) {
+        this.persistenceUnitName = persistenceUnitName;
+    }
 
 
     @Override
@@ -563,7 +575,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     @Override
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
-        managerFactory = Persistence.createEntityManagerFactory("tangram");
+        managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
 
         if (log.isWarnEnabled()) {
             log.warn("afterPropertiesSet() manager factory: "+managerFactory);
