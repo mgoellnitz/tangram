@@ -24,9 +24,12 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.tangram.PersistentRestartCache;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
+import org.tangram.monitor.Statistics;
 
 
 /**
@@ -37,6 +40,12 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory {
     protected static final String QUERY_CACHE_KEY = "tangram.query.cache";
 
     private static final Log log = LogFactory.getLog(AbstractMutableBeanFactory.class);
+
+    @Autowired
+    protected Statistics statistics;
+
+    @Autowired
+    protected PersistentRestartCache startupCache;
 
     private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();
 

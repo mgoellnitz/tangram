@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -36,14 +37,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
-import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
-import org.tangram.monitor.Statistics;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
@@ -51,12 +49,6 @@ import org.tangram.mutable.MutableContent;
 public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory implements JpaBeanFactory, InitializingBean {
 
     private static final Log log = LogFactory.getLog(AbstractJpaBeanFactory.class);
-
-    @Autowired
-    protected Statistics statistics;
-
-    @Autowired
-    protected PersistentRestartCache startupCache;
 
     public EntityManagerFactory managerFactory = null;
 
@@ -458,7 +450,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                                     log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
                                 Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
-                                if (JpaContent.class.isAssignableFrom(cls)) {
+                                if ((cls.getAnnotation(Entity.class) != null) && JpaContent.class.isAssignableFrom(cls)) {
                                     if (log.isInfoEnabled()) {
                                         log.info("getAllClasses() * "+cls.getName());
                                     } // if
@@ -476,6 +468,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                         } // for
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
+                        // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
                             Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {

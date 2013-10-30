@@ -38,14 +38,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
-import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
-import org.tangram.monitor.Statistics;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
@@ -53,12 +50,6 @@ import org.tangram.mutable.MutableContent;
 public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory, InitializingBean {
 
     private static final Log log = LogFactory.getLog(AbstractJdoBeanFactory.class);
-
-    @Autowired
-    protected Statistics statistics;
-
-    @Autowired
-    protected PersistentRestartCache startupCache;
 
     private Map<Object, Object> configOverrides = null;
 
