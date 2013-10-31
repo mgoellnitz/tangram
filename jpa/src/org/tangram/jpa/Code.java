@@ -21,9 +21,13 @@ package org.tangram.jpa;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import org.tangram.mutable.MutableCode;
 
 @Entity
+// Annotation needed for OpenJPA - at least
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Code extends JpaContent implements MutableCode {
 
     private String annotation;
