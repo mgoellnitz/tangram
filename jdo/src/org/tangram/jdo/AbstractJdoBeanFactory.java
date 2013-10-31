@@ -577,7 +577,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
         managerFactory = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "transactions-optional");
-
         manager = managerFactory.getPersistenceManager();
 
         // Just to prefill

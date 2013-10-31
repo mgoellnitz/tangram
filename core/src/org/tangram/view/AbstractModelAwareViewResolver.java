@@ -126,8 +126,8 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
             if (result!=null) {
                 result = checkResourceExists(result);
             } // if
-            if (log.isInfoEnabled()) {
-                log.info("checkView() result="+result);
+            if (log.isDebugEnabled()) {
+                log.debug("checkView() result="+result);
             } // if
         } catch (Exception e) {
             if (e.getCause() instanceof ParseErrorException) {
