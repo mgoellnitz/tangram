@@ -24,6 +24,7 @@ dependencies {
   compile "$versions.jdo_api"
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
+  compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
 
   // Spring security is up to now used by configuration only:
   // compile "org.springframework.security:spring-security-core:$versions.springsecurity"
