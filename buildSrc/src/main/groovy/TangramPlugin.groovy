@@ -83,6 +83,7 @@ class TangramUtilities {
       i++;
     } // while
         
+    // The next three are for the tangram system where codes reside in webapp
     p.copy {
       from 'webapp'
       into "$p.buildDir/target"
@@ -103,18 +104,17 @@ class TangramUtilities {
       include '**/*.css'
       filter(CSSMinify)
     }
+    // for standard layout applications use these subdirectories
     p.copy {
       from 'src/main/webapp'
       into "$p.buildDir/target"
       include '**/**'
-      // exclude '**/*.js'
       exclude '**/*.css'
     }
     p.copy {
       from 'src/main/webapp'
       into "$p.buildDir/target"
       include '**/*.js'
-      exclude 'editor/ckeditor/**'
       filter(JavaScriptMinify)
     }
     p.copy {
@@ -123,6 +123,7 @@ class TangramUtilities {
       include '**/*.css'
       filter(CSSMinify)
     }
+    // and now move it to the web archive
     w.into ('') {
       from "$p.buildDir/target"
       exclude 'WEB-INF/lib/**'
