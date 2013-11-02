@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -80,6 +81,8 @@ public class EditingController extends RenderingController {
 
     static {
         SYSTEM_PROPERTIES = new HashSet<String>();
+        // The groovy compiler seems to use this
+        SYSTEM_PROPERTIES.add("metaClass");
         SYSTEM_PROPERTIES.add("manager");
         SYSTEM_PROPERTIES.add("beanFactory");
     } // static
@@ -315,20 +318,21 @@ public class EditingController extends RenderingController {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
             } // if
-            Class<? extends Content> cls = null;
-            if (typeName!=null) {
-                try {
-                    cls = (Class<Content>) (this.getClass().getClassLoader().loadClass(typeName));
-                } catch (Exception e) {
-                    log.error("list()", e);
-                } // try/catch
-            } // if
             Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
-            if (cls==null) {
-                if (!classes.isEmpty()) {
-                    cls = classes.iterator().next();
-                } // if
+            Class<? extends Content> cls = null;
+            // take first one of classes available
+            if (!classes.isEmpty()) {
+                cls = classes.iterator().next();
             } // if
+            // try to take class from provided classes
+            if (StringUtils.hasText(typeName)) {
+                for (Class<? extends MutableContent> c : classes) {
+                    if (c.getName().equals(typeName)) {
+                        cls = c;
+                    } // if
+                } // for
+            } // if
+
             List<? extends Content> contents = Collections.emptyList();
             if (cls!=null) {
                 contents = beanFactory.listBeansOfExactClass(cls);

@@ -188,13 +188,19 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
     @Override
     public void overrideClass(String className, byte[] bytes) {
         if (get(className)!=null) {
+            if (log.isInfoEnabled()) {
+                log.info("overrideClass() overriding "+className);
+            } // if
             byteCodes.put(className, bytes);
             classLoader = new GroovyClassLoader();
             for (String name : byteCodes.keySet()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("overrideClass() re-defining "+name);
+                } // if
                 @SuppressWarnings("unchecked")
-                Class<? extends Object> clazz = classLoader.defineClass(className, bytes);
-                if (log.isInfoEnabled()) {
-                    log.info("overrideClass() overriding "+clazz.getName());
+                Class<? extends Object> clazz = classLoader.defineClass(name, byteCodes.get(name));
+                if (log.isDebugEnabled()) {
+                    log.debug("overrideClass() re-defining "+clazz.getName());
                 } // if
                 classes.put(clazz.getName(), clazz);
             } // for
