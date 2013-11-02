@@ -22,10 +22,11 @@ public class TangramVersions {
     String jsp = '2.0'
     String groovy = '2.1.8'
     String velocity = '1.7'
-    String ant = '1.8.4'
+    String log4j = '1.2.17'
     String yui = '2.4.7'
     String junit = '4.11'
     String jdo_api = 'javax.jdo:jdo-api:3.0.1'
+    String ant = '1.8.4'
 
     String springframework = '3.1.4.RELEASE'
     String springsecurity = '3.1.4.RELEASE'

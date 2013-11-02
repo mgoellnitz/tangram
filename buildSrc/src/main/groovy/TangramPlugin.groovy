@@ -1,3 +1,4 @@
+
 /**
  * 
  * Copyright 2013 Martin Goellnitz
@@ -18,6 +19,7 @@
  */
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.datanucleus.enhancer.DataNucleusEnhancer
 import org.gradle.api.GradleException
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.bundling.War
@@ -57,10 +59,10 @@ class TangramUtilities {
     while (iter.hasNext()) {
       Object webappDependency = iter.next()
       org.gradle.api.artifacts.ProjectDependency c;
-      println "$project.name: dependency: $webappDependency"
+      // println "$project.name: dependency: $webappDependency"
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFileName = webappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
-        println "$project.name: project archive: $archiveFileName"
+        println "$project.name: project: $webappDependency.dependencyProject.war.outputs.files.singleFile.name"
         p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
       } else {
         // println "checking for path based extraction"
@@ -68,7 +70,7 @@ class TangramUtilities {
           // println "path is $p.configurations.webapp.asPath"
           String[] archiveFileNames = p.configurations.webapp.asPath.split(';')
           String archiveFileName = archiveFileNames[i];
-          println "$project.name: path archive: $archiveFileName"
+          println "$project.name: path: $archiveFileName"
           int idx = archiveFileName.indexOf(';')
           if (idx >= 0) {
             archiveFileName = archiveFileName.substring(0, idx)
@@ -147,9 +149,11 @@ class TangramUtilities {
     w.classpath = p.jar.outputs.files
   } // customizeWar()
 
-  public jdoEnhance() {
+  /**
+   * old variant using the ant task which relies on the fact that the using project has the enhancer in its providedCompile dependenvies
+   */
+  public oldJdoEnhance() {
     try {
-      // println "The project we are just now talking about is $project.name"
       project.ant.taskdef(name: 'enhance', classpath: project.configurations.providedCompile.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
       project.ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: project.sourceSets['main'].output.classesDir.canonicalPath) {
         classpath {
@@ -164,6 +168,56 @@ class TangramUtilities {
         }
         fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
       }
+    } catch(Exception e) {
+      println ''
+      e.printStackTrace(System.out);
+      throw new GradleException('An error occurred enhancing persistence capable classes.', e)
+    } // try/catch
+  } // oldJdoEnhance()
+
+
+  /**
+   *  Do JDO enhancement with datanucleus enhancer of classes from this jar
+   */
+  public nucleusEnhance() {
+    try {
+      List<String> fileList = new ArrayList<String>()
+      List<URL> urlList = new ArrayList<URL>()
+      project.sourceSets['main'].output.files.each {
+        String urlstring = it.toURI().toURL()
+        // println "url: $urlstring"
+        urlList.add(new URL(urlstring))
+        project.fileTree(dir: it).each {
+          fileList.add(it.canonicalPath)
+        }
+      }
+      project.configurations.compile.files.each {
+        String urlstring = it.toURI().toURL()
+        // println "url: $urlstring"
+        urlList.add(new URL(urlstring))
+      }
+      String[] filenames = fileList.toArray()
+      URL[] urls = urlList.toArray();
+      // println "files $filenames"
+      // println "urls $urls"
+      
+      URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
+      /*
+      print "resource "
+      println cl.getResource("org/tangram/gae/Code.class")
+      print "class "
+      println cl.loadClass("org.tangram.gae.Code")
+       */
+      
+      DataNucleusEnhancer enhancer = new DataNucleusEnhancer()
+      enhancer.setVerbose(true)
+      enhancer.setSystemOut(true)
+      enhancer.addFiles(filenames)
+      enhancer.setClassLoader(cl)
+      // println "enhancing $filenames"
+      int numClasses = enhancer.enhance();
+      
+      println "enhanced $numClasses"
     } catch(Exception e) {
       println ''
       e.printStackTrace(System.out);

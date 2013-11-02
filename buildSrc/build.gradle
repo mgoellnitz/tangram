@@ -40,15 +40,18 @@ repositories {
 dependencies {
   compile gradleApi()
   compile localGroovy()
-  compile "org.apache.ant:ant:$versions.ant"
-  compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
   compile "com.yahoo.platform.yui:yuicompressor:$versions.yui"
+  compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
+  compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
+  compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
+  // compile "log4j:log4j:$versions.log4j"
+  compile "$versions.jdo_api"
 }
 
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      // TODO: must be included!
+      // TODO: Not available on Gradle 1.6
       // groupId 'tangram'
       // artifactId 'gradle-plugin'
       // version '0.9-SNAPSHOT'

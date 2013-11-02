@@ -34,12 +34,8 @@ dependencies {
   compile "log4j:log4j:1.2.17"
 
   testCompile "junit:junit:$versions.junit"
-
-  // for the enhancer task:
-  providedCompile "org.apache.ant:ant:1.8.4"
-  providedCompile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
 }
 
 compileJava.doLast {
-  jdoEnhance()
+  nucleusEnhance()
 }
