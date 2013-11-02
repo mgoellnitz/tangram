@@ -150,33 +150,6 @@ class TangramUtilities {
   } // customizeWar()
 
   /**
-   * old variant using the ant task which relies on the fact that the using project has the enhancer in its providedCompile dependenvies
-   */
-  public oldJdoEnhance() {
-    try {
-      project.ant.taskdef(name: 'enhance', classpath: project.configurations.providedCompile.asPath, classname: 'org.datanucleus.enhancer.tools.EnhancerTask')
-      project.ant.enhance(failonerror: true, verbose: true, checkonly: false, dir: project.sourceSets['main'].output.classesDir.canonicalPath) {
-        classpath {
-          // for the log configuration...
-          pathelement(path: '.')
-          // The classes to be enhanced need to be on the class path
-          pathelement(path: project.sourceSets['main'].output.classesDir.canonicalPath)
-          // this is the real class path for the tool (s.a.)
-          pathelement(path: project.configurations.providedCompile.asPath)
-          // With mere jar libs this is still not complete and enough:
-          pathelement(path: project.sourceSets['main'].compileClasspath.asPath)
-        }
-        fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
-      }
-    } catch(Exception e) {
-      println ''
-      e.printStackTrace(System.out);
-      throw new GradleException('An error occurred enhancing persistence capable classes.', e)
-    } // try/catch
-  } // oldJdoEnhance()
-
-
-  /**
    *  Do JDO enhancement with datanucleus enhancer of classes from this jar
    */
   public nucleusEnhance() {
@@ -198,20 +171,12 @@ class TangramUtilities {
       }
       String[] filenames = fileList.toArray()
       URL[] urls = urlList.toArray();
-      // println "files $filenames"
-      // println "urls $urls"
       
       URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
-      /*
-      print "resource "
-      println cl.getResource("org/tangram/gae/Code.class")
-      print "class "
-      println cl.loadClass("org.tangram.gae.Code")
-       */
       
       DataNucleusEnhancer enhancer = new DataNucleusEnhancer()
-      enhancer.setVerbose(true)
-      enhancer.setSystemOut(true)
+      // enhancer.setVerbose(true)
+      // enhancer.setSystemOut(true)
       enhancer.addFiles(filenames)
       enhancer.setClassLoader(cl)
       // println "enhancing $filenames"
