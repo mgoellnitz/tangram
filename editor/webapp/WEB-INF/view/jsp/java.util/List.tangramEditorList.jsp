@@ -9,7 +9,7 @@
 ><c:if test="${empty oneItem}"><c:set var="className"
 ><%=request.getParameter("cms.editor.class.name")%></c:set></c:if>
 <head>
-<title>Tangram - Liste <%=request.getParameter("cms.editor.class.name")%></title>
+<title>Tangram - Liste ${className}</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/screen.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print" />

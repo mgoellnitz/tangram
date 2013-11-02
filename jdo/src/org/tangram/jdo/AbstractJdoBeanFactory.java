@@ -586,7 +586,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             } // if
             getClasses();
         } // if
-
         Map<String, List<String>> c = null;
         c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
