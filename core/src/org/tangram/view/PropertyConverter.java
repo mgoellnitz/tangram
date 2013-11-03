@@ -89,93 +89,6 @@ public abstract class PropertyConverter {
     } // getEditString()
 
 
-    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
-        Object value = null;
-        if (valueString==null) {
-            return null;
-        } // if
-        if (log.isDebugEnabled()) {
-            log.debug("getStorableObject() required type is "+cls.getName());
-        } // if
-        if (cls==String.class) {
-            value = StringUtils.hasText(valueString) ? ""+valueString : null;
-        } else if (cls==Date.class) {
-            try {
-                value = dateFormat.parseObject(valueString);
-            } catch (ParseException pe) {
-                log.error("getStorableObject() cannot parse as Date: "+valueString);
-            } // try/catch
-        } else if (cls==Integer.class) {
-            value = StringUtils.hasText(valueString) ? Integer.parseInt(valueString) : null;
-        } else if (cls==Float.class) {
-            value = StringUtils.hasText(valueString) ? Float.parseFloat(valueString) : null;
-        } else if (cls==Boolean.class) {
-            value = Boolean.parseBoolean(valueString);
-        } else if (cls==List.class) {
-            if (log.isDebugEnabled()) {
-                log.debug("getStorableObject() splitting "+valueString);
-            } // if
-            String[] idStrings = valueString.split(",");
-            List<Object> elements = new ArrayList<Object>();
-            for (String idString : idStrings) {
-                idString = idString.trim();
-                if (log.isDebugEnabled()) {
-                    log.debug("getStorableObject() idString="+idString);
-                } // if
-                // TODO: Check for selection via description template
-                if (StringUtils.hasText(idString)) {
-                    Object o = null;
-                    boolean addSomething = true;
-                    try {
-                        o = beanFactory.getBean(idString);
-                        if (log.isDebugEnabled()) {
-                            log.debug("getStorableObject() o="+o);
-                        } // if
-                    } catch (Exception e) {
-                        if (log.isWarnEnabled()) {
-                            log.warn("getStorableObject() taking plain value as list element "+idString);
-                        } // if
-                        List<Content> results = getObjectsViaDescription(Content.class, idString, request);
-                        if (results.size()>0) {
-                            addSomething = false;
-                            elements.addAll(results);
-                        } // if
-                    } // try/catch
-                    elements.add(o==null ? idString : o);
-                } // if
-            } // for
-            value = elements;
-        } else if (Content.class.isAssignableFrom(cls)) {
-            // Filter out possible single ID from input
-            Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
-            Matcher m = p.matcher(valueString);
-            if (m.find()) {
-                valueString = m.group(1);
-                if (log.isInfoEnabled()) {
-                    log.info("getStorableObject() pattern match result "+valueString);
-                } // if
-            } else {
-                if (log.isWarnEnabled()) {
-                    log.warn("getStorableObject() we should have checked for selection via description template");
-                } // if
-                @SuppressWarnings("unchecked")
-                Class<? extends Content> cc = (Class<? extends Content>) cls;
-                value = getObjectViaDescription(cc, valueString.trim(), request);
-                if (value!=null) {
-                    if (log.isInfoEnabled()) {
-                        log.info("getStorableObject() found a value from description "+value);
-                    } // if
-                    valueString = null;
-                } // if
-            } // if
-            if (StringUtils.hasText(valueString)) {
-                value = beanFactory.getBean(valueString);
-            } // if
-        } // if
-        return value;
-    } // getStorableObject()
-
-
     private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title, ServletRequest request) {
         List<T> result = new ArrayList<T>();
 
@@ -222,6 +135,99 @@ public abstract class PropertyConverter {
 
         return result;
     } // getObjectViaDescription()
+
+
+    private Matcher createIdMatcher(String idString) {
+        // Filter out possible single ID from input
+        Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
+        Matcher m = p.matcher(idString);
+        return m;
+    } // createidMatcher()
+
+
+    private Object getReferenceValue(Class<? extends Content> cls, ServletRequest request, String valueString) {
+        Object value = null;
+        Matcher m = createIdMatcher(valueString);
+        if (m.find()) {
+            valueString = m.group(1);
+            if (log.isInfoEnabled()) {
+                log.info("getReferenceValue() pattern match result "+valueString);
+            } // if
+            value = beanFactory.getBean(valueString);
+        } else {
+            if (log.isWarnEnabled()) {
+                log.warn("getReferenceValue() we should have checked for selection via description template");
+            } // if
+            value = getObjectViaDescription(cls, valueString.trim(), request);
+            if (value!=null) {
+                if (log.isInfoEnabled()) {
+                    log.info("getReferenceValue() found a value from description "+value);
+                } // if
+            } // if
+        } // if
+        return value;
+    } // getReferenceValue()
+
+
+    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
+        Object value = null;
+        if (valueString==null) {
+            return null;
+        } // if
+        if (log.isDebugEnabled()) {
+            log.debug("getStorableObject() required type is "+cls.getName());
+        } // if
+        if (cls==String.class) {
+            value = StringUtils.hasText(valueString) ? ""+valueString : null;
+        } else if (cls==Date.class) {
+            try {
+                value = dateFormat.parseObject(valueString);
+            } catch (ParseException pe) {
+                log.error("getStorableObject() cannot parse as Date: "+valueString);
+            } // try/catch
+        } else if (cls==Integer.class) {
+            value = StringUtils.hasText(valueString) ? Integer.parseInt(valueString) : null;
+        } else if (cls==Float.class) {
+            value = StringUtils.hasText(valueString) ? Float.parseFloat(valueString) : null;
+        } else if (cls==Boolean.class) {
+            value = Boolean.parseBoolean(valueString);
+        } else if (cls==List.class) {
+            if (log.isDebugEnabled()) {
+                log.debug("getStorableObject() splitting "+valueString);
+            } // if
+            String[] idStrings = valueString.split(",");
+            List<Object> elements = new ArrayList<Object>();
+            for (String idString : idStrings) {
+                idString = idString.trim();
+                if (log.isDebugEnabled()) {
+                    log.debug("getStorableObject() idString="+idString);
+                } // if
+                if (StringUtils.hasText(idString)) {
+                    Object o = null;
+                    Matcher m = createIdMatcher(idString);
+                    if (m.find()) {
+                        idString = m.group(1);
+                        if (log.isInfoEnabled()) {
+                            log.info("getStorableObject() pattern match result "+idString);
+                        } // if
+                        elements.add(beanFactory.getBean(idString));
+                    } else {
+                        List<Content> results = getObjectsViaDescription(Content.class, idString, request);
+                        if (results.size()>0) {
+                            elements.addAll(results);
+                        } // if
+                    } // if
+                } // if
+            } // for
+            value = elements;
+        } else if (Content.class.isAssignableFrom(cls)) {
+            @SuppressWarnings("unchecked")
+            Class<? extends Content> cc = (Class<? extends Content>) cls;
+            value = getReferenceValue(cc, request, valueString);
+        } // if
+        return value;
+    } // getStorableObject()
+
 
 
     public abstract boolean isBlobType(Class<?> cls);
