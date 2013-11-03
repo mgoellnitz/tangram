@@ -32,7 +32,14 @@
     <property name="activateCaching" value="${bean.factory.activate.caching}" />
     <property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
     <property name="prefill" value="${tangram.caches.prefill}" />
+    <property name="configOverrides" ref="jdoConfigOverrides" />
   </bean>
+
+  <!-- 
+       just an empty map as a default. 
+       Re-define this in your WEB-INF/tangram directory with values as needed
+  -->  
+  <bean id="jdoConfigOverrides" class="java.util.HashMap" />
     
   <!-- this one moved out of components and is not auto-scanned anymore -->
 

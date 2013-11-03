@@ -576,7 +576,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @Override
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
-        managerFactory = JDOHelper.getPersistenceManagerFactory(getFactoryConfigOverrides(), "transactions-optional");
+        Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
+        if (log.isInfoEnabled()) {
+            log.info("afterPropertiesSet() using overrides for persistence manager factory: "+configOverrides);
+        } // if
+        managerFactory = JDOHelper.getPersistenceManagerFactory(configOverrides, "transactions-optional");
         manager = managerFactory.getPersistenceManager();
 
         // Just to prefill
