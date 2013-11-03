@@ -20,7 +20,7 @@ public class TangramVersions {
 
     String servlet = '2.5'
     String jsp = '2.0'
-    String groovy = '2.1.8'
+    String groovy = '2.1.9'
     String velocity = '1.7'
     String log4j = '1.2.17'
     String yui = '2.4.7'
