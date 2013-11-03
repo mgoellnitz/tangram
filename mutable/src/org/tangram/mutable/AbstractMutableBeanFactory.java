@@ -70,7 +70,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory {
                 attachedListeners.put(cls, listeners);
             } // if
             listeners.add(listener);
-        } // sync
+        } // synchronized
         if (log.isInfoEnabled()) {
             log.info("addListener() "+cls.getSimpleName()+": "+attachedListeners.get(cls).size());
         } // if

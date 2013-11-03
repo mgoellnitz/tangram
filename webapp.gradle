@@ -43,7 +43,6 @@ publishing {
   }
 }
 
-
 // avoid gradles default mimik to fiddle around with this directory
 webAppDirName = 'disabled'
 
