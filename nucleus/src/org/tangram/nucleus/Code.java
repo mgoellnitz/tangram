@@ -61,7 +61,7 @@ public class Code extends NucleusContent implements MutableCode {
 
 
     public char[] getCode() {
-        return code.toCharArray();
+        return stringToCharArray(code);
     }
 
 
