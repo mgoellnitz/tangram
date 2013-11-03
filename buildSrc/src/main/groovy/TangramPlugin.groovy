@@ -58,7 +58,6 @@ class TangramUtilities {
     int i = 0;
     while (iter.hasNext()) {
       Object webappDependency = iter.next()
-      org.gradle.api.artifacts.ProjectDependency c;
       // println "$project.name: dependency: $webappDependency"
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFileName = webappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
@@ -129,25 +128,32 @@ class TangramUtilities {
       exclude 'WEB-INF/lib/**'
     }
   } // overlayWebapp()
-    
+
+  /**
+   * customize war dependencies for non-clean build intended for system build
+   */
   public customizeWar(War w) {
     Project p = w.project
     // For some reason webapp files are not included in the inputs collection
     FileTree tree = p.fileTree(dir: 'webapp')
     w.inputs.files tree
+    /* this code seems to be useless!
     // And also the web-archive of the upstream project has to be added
     Object iter = p.configurations.webapp.dependencies.iterator()
-    if (iter.hasNext()) {
-      firstWebappDependency = iter.next()
-      if (firstWebappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
-        println "Adding "+firstWebappDependency.dependencyProject.war.outputs.files.singleFile.name
-        w.inputs.file firstWebappDependency.dependencyProject.war.outputs.files.singleFile
+    println "$p.name: ****** $p.configurations.webapp.dependencies.size()"
+    while (iter.hasNext()) {
+      Object webappDependency = iter.next()
+      println "$project.name: dependency: $webappDependency"
+      if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
+        String archiveFile = webappDependency.dependencyProject.war.outputs.files.singleFile
+        println "$project.name: adding project dependency: $archiveFile.name"
+        w.inputs.file archiveFile
       } else {
-        println "WARNING: MISSING WAR TO ADD LOCAL FILES TO!"
+        println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
       } // if 
-    } // if 
-    // classpath = jar.outputs.files + configurations.runtime - configurations.providedRuntime
+    } // while
     w.classpath = p.jar.outputs.files
+    */
   } // customizeWar()
 
   /**
@@ -162,7 +168,9 @@ class TangramUtilities {
         // println "url: $urlstring"
         urlList.add(new URL(urlstring))
         project.fileTree(dir: it).each {
-          fileList.add(it.canonicalPath)
+          if (it.name.endsWith(".class")) {
+            fileList.add(it.canonicalPath)
+          } 
         }
       }
       project.configurations.compile.files.each {
@@ -176,11 +184,11 @@ class TangramUtilities {
       URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
       
       DataNucleusEnhancer enhancer = new DataNucleusEnhancer()
-      // enhancer.setVerbose(true)
-      // enhancer.setSystemOut(true)
+      enhancer.setVerbose(true)
+      enhancer.setSystemOut(true)
       enhancer.addFiles(filenames)
       enhancer.setClassLoader(cl)
-      // println "enhancing $filenames"
+      println "enhancing $filenames"
       int numClasses = enhancer.enhance();
       
       println "enhanced $numClasses"
