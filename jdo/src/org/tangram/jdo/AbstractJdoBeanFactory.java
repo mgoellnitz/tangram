@@ -51,9 +51,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     private static final Log log = LogFactory.getLog(AbstractJdoBeanFactory.class);
 
-    private Map<Object, Object> configOverrides = null;
-
-    public PersistenceManagerFactory managerFactory = null;
+    protected PersistenceManagerFactory managerFactory = null;
 
     protected PersistenceManager manager = null;
 
@@ -67,7 +65,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
-    protected boolean activateCaching = false;
+    private Map<Object, Object> configOverrides = null;
+
+    private boolean activateCaching = false;
 
     private Set<String> basePackages;
 
@@ -84,11 +84,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     }
 
 
-    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
-        return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
-    } // getFactoryConfigOverrides()
-
-
     public AbstractJdoBeanFactory() {
         basePackages = new HashSet<String>();
         basePackages.add("org.tangram");
@@ -102,6 +97,22 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     public void setBasePackages(Set<String> basePackages) {
         this.basePackages = basePackages;
+    }
+
+
+    public Map<Object, Object> getConfigOverrides() {
+        return configOverrides;
+    }
+
+
+    /**
+     *
+     * Override Persistence Manager Factory properties given in jdoconfig.xml
+     *
+     * @param configOverrides
+     */
+    public void setConfigOverrides(Map<Object, Object> configOverrides) {
+        this.configOverrides = configOverrides;
     }
 
 
@@ -132,22 +143,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     public void setPrefill(boolean prefill) {
         this.prefill = prefill;
-    }
-
-
-    public Map<Object, Object> getConfigOverrides() {
-        return configOverrides;
-    }
-
-
-    /**
-     *
-     * Override Persistence Manager Factory properties given in jdoconfig.xml
-     *
-     * @param configOverrides
-     */
-    public void setConfigOverrides(Map<Object, Object> configOverrides) {
-        this.configOverrides = configOverrides;
     }
 
 
@@ -571,6 +566,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         } // if
         return implementingClassesMap;
     } // getImplementingClassMap()
+
+
+    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
+        return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
+    } // getFactoryConfigOverrides()
 
 
     @Override

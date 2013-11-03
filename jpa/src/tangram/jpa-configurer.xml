@@ -43,8 +43,15 @@
     <property name="persistenceUnitName" value="${tangram.jpa.persistence.unit.name}" />
     <property name="activateCaching" value="${bean.factory.activate.caching}" />
     <property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
+    <property name="configOverrides" ref="jpaConfigOverrides" />
   </bean>
 
+  <!-- 
+       just an empty map as a default. 
+       Re-define this in your WEB-INF/tangram directory with values as needed
+  -->  
+  <bean id="jpaConfigOverrides" class="java.util.HashMap" />
+    
   <!-- this one moved out of components and is not auto-scanned anymore -->
 
   <bean id="persistentRestartCache" class="org.tangram.util.DummyRestartCache" />
