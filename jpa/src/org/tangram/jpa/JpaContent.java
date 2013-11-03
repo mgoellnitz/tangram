@@ -18,19 +18,13 @@ package org.tangram.jpa;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.EntityManager;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
-import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableContent;
 
@@ -40,9 +34,6 @@ import org.tangram.mutable.MutableContent;
 public abstract class JpaContent implements MutableContent {
 
     private static final Log log = LogFactory.getLog(JpaContent.class);
-
-    @Transient
-    protected BeanFactory beanFactory;
 
     @Id
     @GeneratedValue
@@ -55,20 +46,13 @@ public abstract class JpaContent implements MutableContent {
      */
     @Override
     public String getId() {
-        return getClass().getSimpleName()+":"+id;
+        String kind = getClass().getSimpleName();
+        if (kind.indexOf('$') >= 0) {
+            kind = getClass().getSuperclass().getSimpleName();
+        } // if
+        return kind+":"+id;
         // return id;
     } // getId()
-
-
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
-    }
-
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }
 
 
     @Override
@@ -84,7 +68,7 @@ public abstract class JpaContent implements MutableContent {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer. 
+     * One more convenience method to use IDs in persistence layer.
      * This is might still be a useful pattern in google app engine scenarios
      *
      * @param c Content instance - may be null
@@ -96,7 +80,7 @@ public abstract class JpaContent implements MutableContent {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer. 
+     * One more convenience method to use IDs in persistence layer.
      * This is might still be a useful pattern in google app engine scenarios
      *
      * @param contents list of contents - should not be null
@@ -111,66 +95,6 @@ public abstract class JpaContent implements MutableContent {
         } // if
         return result;
     } // getIds()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer. 
-     * This is might still be a useful pattern in google app engine scenarios
-     *
-     * @param i id to fetch content for - may be null or empty
-     * @return resulting content or null
-     */
-    protected <T extends Content> T getContent(Class<T> c, String i) {
-        if (log.isDebugEnabled()) {
-            log.debug("getContent() id="+i+" beanFactory="+beanFactory);
-        } // if
-        return (StringUtils.hasText(i)) ? beanFactory.getBean(c, i) : null;
-    } // getContent()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer. 
-     * This is might still be a useful pattern in google app engine scenarios
-     *
-     * @param ids list of id which should match the given type - may be null
-     * @return Array of contents where none of the is null
-     */
-    protected <T extends Content> List<T> getContents(Class<T> c, List<String> ids) {
-        List<T> result = new ArrayList<T>();
-        if (ids!=null) {
-            for (String i : ids) {
-                T content = getContent(c, i);
-                if (content!=null) {
-                    result.add(content);
-                } // if
-            } // for
-        } // if
-        return result;
-    } // getContents()
-
-
-    @Override
-    public boolean persist() {
-        boolean result = true;
-        EntityManager manager = null;
-        try {
-            // TODO: It might be that there are situations where this is still null
-            manager = ((JpaBeanFactory) getBeanFactory()).getManager();
-            manager.persist(this);
-            manager.getTransaction().commit();
-            ((JpaBeanFactory) beanFactory).clearCacheFor(this.getClass());
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (manager!=null) {
-                // yes we saw situations where this was not the case thus hiding other errors!
-                if (manager.getTransaction().isActive()) {
-                    manager.getTransaction().rollback();
-                } // if
-            } // if
-            result = false;
-        } // try/catch/finally
-        return result;
-    } // persist()
 
 
     @Override

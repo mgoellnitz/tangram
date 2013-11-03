@@ -58,6 +58,15 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
+     * Persist a given bean.
+     * @param <T>
+     * @param bean
+     * @return true if persisting could be completed successfully
+     */
+    <T extends MutableContent> boolean persist(T bean);
+
+    
+    /**
      * return a collection of content classes available for mutable contents.
      * No abstract classes will be in the list.
      *

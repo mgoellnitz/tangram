@@ -96,6 +96,15 @@ public class EditingController extends RenderingController {
     @Autowired
     private LinkFactory linkFactory;
 
+    private MutableBeanFactory beanFactory;
+
+
+    @Autowired
+    public void setBeanFactory(MutableBeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+        super.beanFactory = beanFactory;
+    }
+
 
     @Autowired
     public void setDefaultController(DefaultController defaultController) {
@@ -126,7 +135,7 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             MutableContent bean = beanFactory.getBean(MutableContent.class, id);
-            BeanWrapper wrapper = Utils.createWrapper(bean, request);
+            BeanWrapper wrapper = Utils.createWrapper(bean);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
 
@@ -212,7 +221,7 @@ public class EditingController extends RenderingController {
             } // if
 
             bean = getMutableBeanFactory().getBeanForUpdate(MutableContent.class, id);
-            wrapper = Utils.createWrapper(bean, request);
+            wrapper = Utils.createWrapper(bean);
             Exception e = null;
             for (String propertyName : newValues.keySet()) {
                 try {
@@ -231,7 +240,7 @@ public class EditingController extends RenderingController {
              } // for
              */
 
-            if (!bean.persist()) {
+            if (!beanFactory.persist(bean)) {
                 throw new Exception("Could not persist bean "+bean.getId());
             } // if
 
@@ -292,7 +301,7 @@ public class EditingController extends RenderingController {
                 } // if
             } // for
             MutableContent content = getMutableBeanFactory().createBean(cls);
-            if (content.persist()) {
+            if (beanFactory.persist(content)) {
                 if (log.isDebugEnabled()) {
                     log.debug("create() content="+content);
                     log.debug("create() id="+content.getId());
@@ -367,7 +376,7 @@ public class EditingController extends RenderingController {
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
             ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
-            mav.getModel().put(ATTRIBUTE_WRAPPER, Utils.createWrapper(content, request));
+            mav.getModel().put(ATTRIBUTE_WRAPPER, Utils.createWrapper(content));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
                 mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
@@ -402,7 +411,7 @@ public class EditingController extends RenderingController {
                 } // if
             } // for
             MutableContent content = getMutableBeanFactory().createBean(cls);
-            if (content.persist()) {
+            if (beanFactory.persist(content)) {
                 if (log.isDebugEnabled()) {
                     log.debug("link() content="+content);
                     log.debug("link() id="+content.getId());
@@ -410,7 +419,7 @@ public class EditingController extends RenderingController {
 
                 // re-get for update to avoid xg transactions where ever possible
                 MutableContent bean = getMutableBeanFactory().getBeanForUpdate(id);
-                BeanWrapper wrapper = Utils.createWrapper(bean, request);
+                BeanWrapper wrapper = Utils.createWrapper(bean);
 
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")
@@ -418,7 +427,7 @@ public class EditingController extends RenderingController {
                 list.add(content);
 
                 wrapper.setPropertyValue(propertyName, list);
-                bean.persist();
+                beanFactory.persist(bean);
                 return redirect(request, response, content);
             } else {
                 throw new Exception("could not create new instance of type "+typeName);

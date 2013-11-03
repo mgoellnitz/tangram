@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +14,15 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.view.velocity;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
@@ -69,7 +67,7 @@ public class IncludeDirective extends Directive {
         } // if
 
         // copy model from original context
-        Map<String, Object> model = Utils.getModelAndViewFactory(request).createModel(bean, request, response);
+        Map<String, Object> model = Utils.getModelAndViewFactory().createModel(bean, request, response);
         Object[] keys = context.getKeys();
         for (Object key : keys) {
             String k = ""+key;

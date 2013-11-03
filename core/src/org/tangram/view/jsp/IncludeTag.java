@@ -97,12 +97,12 @@ public class IncludeTag implements Tag, Serializable {
         ServletRequest request = (ServletRequest) model.get("request");
         ServletResponse response = (ServletResponse) model.get("response");
 
-        ViewHandler viewHandler = Utils.getViewHandler(request);
+        ViewHandler viewHandler = Utils.getViewHandler();
         if (viewHandler==null) {
             throw new RuntimeException("No view handler found");
         } // if
 
-        ModelAndViewFactory mavf = Utils.getModelAndViewFactory(request);
+        ModelAndViewFactory mavf = Utils.getModelAndViewFactory();
         ModelAndView mav = mavf.createModelAndView(model, view);
         View effectiveView = mav.getView();
         if (log.isDebugEnabled()) {
@@ -148,7 +148,7 @@ public class IncludeTag implements Tag, Serializable {
                 log.debug("render() bean="+bean.getClass().getName()+" #"+view);
             } // if
 
-            ModelAndViewFactory mavf = Utils.getModelAndViewFactory(request);
+            ModelAndViewFactory mavf = Utils.getModelAndViewFactory();
             Map<String, Object> model = mavf.createModel(bean, request, resp);
 
             render(out, model, view);

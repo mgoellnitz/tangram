@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.view.jsp;
 
@@ -22,13 +22,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.view.Utils;
@@ -144,7 +142,7 @@ public class LinkTag implements Tag, Serializable {
 
     public static void render(HttpServletRequest request, HttpServletResponse response, Writer out, Object bean, String action, String view, boolean isHref,
             boolean isTarget, boolean isHandlers) {
-        LinkFactory linkBuilder = Utils.getLinkFactory(request);
+        LinkFactory linkBuilder = Utils.getLinkFactory();
 
         try {
             Link link = linkBuilder.createLink(request, response, bean, action, view);

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,6 @@ package org.tangram.view;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -29,7 +28,6 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.tangram.content.BeanFactory;
 import org.tangram.view.link.LinkFactory;
 
@@ -37,6 +35,8 @@ import org.tangram.view.link.LinkFactory;
 public final class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
+
+    private static ApplicationContext applicationContext;
 
     private static BeanFactory beanFactory = null;
 
@@ -53,9 +53,20 @@ public final class Utils {
     private static ConversionService conversionService;
 
 
-    public static <T extends Object> T getBeanFromContext(Class<? extends T> cls, ServletRequest request) {
+    public static void setApplicationContext(ApplicationContext context) {
+        applicationContext = context;
+    }
+
+
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+
+
+    public static <T extends Object> T getBeanFromContext(Class<? extends T> cls) {
         T result = null;
-        ApplicationContext appContext = (ApplicationContext) request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        ApplicationContext appContext = getApplicationContext();
         if (appContext!=null) {
             result = appContext.getBean(cls);
         } // if
@@ -66,44 +77,53 @@ public final class Utils {
     } // getBeanFromContext()
 
 
-    public static BeanFactory getBeanFactory(ServletRequest request) {
+    public static BeanFactory getBeanFactory() {
         if (beanFactory==null) {
-            beanFactory = getBeanFromContext(BeanFactory.class, request);
+            beanFactory = getBeanFromContext(BeanFactory.class);
         } // if
         return beanFactory;
     } // getBeanFactory()
 
 
-    public static LinkFactory getLinkFactory(ServletRequest request) {
+    public static LinkFactory getLinkFactory() {
         if (linkFactory==null) {
-            linkFactory = getBeanFromContext(LinkFactory.class, request);
+            linkFactory = getBeanFromContext(LinkFactory.class);
         } // if
         return linkFactory;
     } // getLinkFactory()
 
 
-    public static ModelAndViewFactory getModelAndViewFactory(ServletRequest request) {
+    public static ModelAndViewFactory getModelAndViewFactory() {
         if (modelAndViewFactory==null) {
-            modelAndViewFactory = getBeanFromContext(ModelAndViewFactory.class, request);
+            modelAndViewFactory = getBeanFromContext(ModelAndViewFactory.class);
         } // if
         return modelAndViewFactory;
     } // getModelAndViewFactory()
 
 
-    public static ViewHandler getViewHandler(ServletRequest request) {
+    public static ViewHandler getViewHandler() {
         if (viewHandler==null) {
-            viewHandler = getBeanFromContext(ViewHandler.class, request);
+            viewHandler = getBeanFromContext(ViewHandler.class);
         } // if
         return viewHandler;
     } // getViewHandler()
 
 
-    public static PropertyConverter getPropertyConverter(ServletRequest request) {
+    public static PropertyConverter getPropertyConverter() {
         if (propertyConverter==null) {
-            propertyConverter = getBeanFromContext(PropertyConverter.class, request);
+            propertyConverter = getBeanFromContext(PropertyConverter.class);
         } // if
         return propertyConverter;
     } // getPropertyConverter()
+
+
+    public static ConversionService getConversionsService() {
+        if (conversionService==null) {
+            conversionService = Utils.getBeanFromContext(ConversionService.class);
+        } // if
+        return conversionService;
+    } // getConversionsService()
+
 
 
     /**
@@ -143,15 +163,6 @@ public final class Utils {
     } // getUriPrefix()
 
 
-    public static ConversionService getConversionsService(ServletRequest request) {
-        if (conversionService==null) {
-            conversionService = Utils.getBeanFromContext(ConversionService.class, request);
-        } // if
-        return conversionService;
-    } // getConversionsService()
-
-
-
     /**
      * create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
      *
@@ -159,11 +170,11 @@ public final class Utils {
      * @param conversionService
      * @return
      */
-    public static BeanWrapper createWrapper(Object bean, ServletRequest request) {
+    public static BeanWrapper createWrapper(Object bean) {
         BeanWrapper wrapper;
         wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
         try {
-            ConversionService conversionService = getConversionsService(request);
+            ConversionService conversionService = getConversionsService();
             if (conversionService!=null) {
                 wrapper.setConversionService(conversionService);
             } // if

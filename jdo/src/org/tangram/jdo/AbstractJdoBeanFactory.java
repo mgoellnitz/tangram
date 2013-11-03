@@ -180,7 +180,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
             } // if
             result = (T) manager.getObjectById(oid);
-            result.setBeanFactory(this);
 
             if (activateCaching) {
                 cache.put(id, result);
@@ -238,7 +237,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         if (log.isDebugEnabled()) {
             log.debug("createBean() populating new instance");
         } // if
-        bean.setBeanFactory(this);
         statistics.increase("create bean");
         return bean;
     } // createBean()
@@ -277,7 +275,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             for (Object o : results) {
                 if (o instanceof Content) {
                     Content c = (Content) o;
-                    c.setBeanFactory(this);
                     result.add((T) c);
                 } // if
             } // for
@@ -407,6 +404,33 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // clearCacheFor()
 
 
+    @Override
+    public <T extends MutableContent> boolean persist(T bean) {
+        boolean result = false;
+        try {
+            manager.makePersistent(bean);
+            manager.currentTransaction().commit();
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("persist()", e);
+            if (manager!=null) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                if (manager.currentTransaction().isActive()) {
+                    manager.currentTransaction().rollback();
+                } // if
+            } // if
+        } // try/catch/finally
+        return result;
+    } // persist()
+
+
+    /**
+     * Cache key for the persistent cache to store all class names.
+     * The stored values are taken from the class path package scan and
+     * asumed to be persistent over re-starts of the applicaion.
+     * @return String to be used as a cache key
+     */
     protected String getClassNamesCacheKey() {
         return "tangram-class-names";
     } // getClassNamesCacheKey()

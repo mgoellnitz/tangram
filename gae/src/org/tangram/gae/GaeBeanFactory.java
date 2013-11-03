@@ -107,7 +107,6 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                 throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
             } // if
             result = (T) manager.getObjectById(kindClass, key);
-            result.setBeanFactory(this);
 
             if (isActivateCaching()) {
                 cache.put(id, result);

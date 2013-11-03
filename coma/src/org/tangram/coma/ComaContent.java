@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.coma;
 
@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
 public class ComaContent implements Content, Map<String, Object> {
@@ -50,12 +48,6 @@ public class ComaContent implements Content, Map<String, Object> {
 
     public String getDocumentType() {
         return documentType;
-    }
-
-
-    @Override
-    public void setBeanFactory(BeanFactory factory) {
-
     }
 
 

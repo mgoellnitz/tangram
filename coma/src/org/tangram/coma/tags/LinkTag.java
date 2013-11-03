@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,19 +14,17 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.coma.tags;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.view.Utils;
@@ -97,7 +95,7 @@ public class LinkTag implements Tag, Serializable {
         try {
             HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
             HttpServletResponse response = (HttpServletResponse)pageContext.getResponse();
-            LinkFactory builder = Utils.getLinkFactory(request);
+            LinkFactory builder = Utils.getLinkFactory();
             if (log.isDebugEnabled()) {
                 log.debug("doEndTag() "+target+" "+view);
             } // if
@@ -109,7 +107,7 @@ public class LinkTag implements Tag, Serializable {
         return EVAL_PAGE;
     } // doEndTag()
 
-    
+
     @Override
     public void release() {
         pageContext = null;

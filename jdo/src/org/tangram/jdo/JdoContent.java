@@ -21,12 +21,9 @@ package org.tangram.jdo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.NotPersistent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.StringUtils;
-import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableContent;
 
@@ -34,9 +31,6 @@ import org.tangram.mutable.MutableContent;
 public abstract class JdoContent implements MutableContent {
 
     private static final Log log = LogFactory.getLog(JdoContent.class);
-
-    @NotPersistent
-    protected BeanFactory beanFactory;
 
     @NotPersistent
     private String id;
@@ -63,17 +57,6 @@ public abstract class JdoContent implements MutableContent {
         } // if
         return id;
     } // getId()
-
-
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
-    }
-
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }
 
 
     @Override
@@ -118,70 +101,6 @@ public abstract class JdoContent implements MutableContent {
         } // if
         return result;
     } // getIds()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
-     *
-     * @param i
-     * id to fetch content for - may be null or empty
-     * @return resulting content or null
-     */
-    protected <T extends Content> T getContent(Class<T> c, String i) {
-        if (log.isDebugEnabled()) {
-            log.debug("getContent() id="+i+" beanFactory="+beanFactory);
-        } // if
-        return (StringUtils.hasText(i)) ? beanFactory.getBean(c, i) : null;
-    } // getContent()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
-     *
-     * @param ids
-     * list of id which should match the given type - may be null
-     * @return Array of contents where none of the is null
-     */
-    protected <T extends Content> List<T> getContents(Class<T> c, List<String> ids) {
-        List<T> result = new ArrayList<T>();
-        if (ids!=null) {
-            for (String i : ids) {
-                T content = getContent(c, i);
-                if (content!=null) {
-                    result.add(content);
-                } // if
-            } // for
-        } // if
-        return result;
-    } // getContents()
-
-
-    @Override
-    public boolean persist() {
-        boolean result = true;
-        PersistenceManager manager = null;
-        try {
-            manager = JDOHelper.getPersistenceManager(this);
-            if (manager==null) {
-                manager = ((JdoBeanFactory) getBeanFactory()).getManager();
-            } // if
-            manager.makePersistent(this);
-            manager.currentTransaction().commit();
-            ((JdoBeanFactory) beanFactory).clearCacheFor(this.getClass());
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (manager!=null) {
-                // yes we saw situations where this was not the case thus hiding other errors!
-                if (manager.currentTransaction().isActive()) {
-                    manager.currentTransaction().rollback();
-                } // if
-            } // if
-            result = false;
-        } // try/catch/finally
-        return result;
-    } // persist()
 
 
     @Override

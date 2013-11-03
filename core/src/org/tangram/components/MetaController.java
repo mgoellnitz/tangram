@@ -209,7 +209,7 @@ public class MetaController extends AbstractController implements InitializingBe
         // We don't want to access parameters via GET
         if ((method!=null)&&request.getMethod().equals("POST")) {
             // TODO: Do type conversion or binding with spring or its coversion service
-            PropertyConverter propertyConverter = Utils.getPropertyConverter(request);
+            PropertyConverter propertyConverter = Utils.getPropertyConverter();
             descriptor.action = null;
             List<Object> parameters = new ArrayList<Object>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
@@ -241,7 +241,7 @@ public class MetaController extends AbstractController implements InitializingBe
                     if (annotation instanceof ActionForm) {
                         try {
                             Object form = parameterType.newInstance();
-                            BeanWrapper wrapper = Utils.createWrapper(form, request);
+                            BeanWrapper wrapper = Utils.createWrapper(form);
                             for (PropertyDescriptor property : wrapper.getPropertyDescriptors()) {
                                 String propertyName = property.getName();
                                 String valueString = request.getParameter(propertyName);

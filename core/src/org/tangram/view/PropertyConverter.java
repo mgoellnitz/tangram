@@ -103,7 +103,7 @@ public abstract class PropertyConverter {
                         log.debug("getObjectsViaDescription() checking "+bean);
                     } // if
                     BufferResponse r = new BufferResponse();
-                    Map<String, Object> model = Utils.getModelAndViewFactory(request).createModel(bean, request, r);
+                    Map<String, Object> model = Utils.getModelAndViewFactory().createModel(bean, request, r);
                     IncludeTag.render(r.getWriter(), model, "description");
                     String description = r.getContents();
                     if (log.isDebugEnabled()) {

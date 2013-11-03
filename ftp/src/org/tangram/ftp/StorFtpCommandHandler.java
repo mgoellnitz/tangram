@@ -69,7 +69,7 @@ public class StorFtpCommandHandler extends StorCommandHandler {
                 code.setAnnotation(annotation);
                 code.setCode(new String(data, "UTF-8").toCharArray());
                 code.setMimeType(mimetype);
-                code.persist();
+                beanFactory.persist(code);
             } // if
         } // if
 

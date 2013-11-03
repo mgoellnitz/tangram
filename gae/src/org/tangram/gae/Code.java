@@ -31,7 +31,6 @@ import org.tangram.mutable.MutableCode;
 /*
  * TODO: Move to a more specific package to be able to have fewer packages scanned by Tangrams model autodetection
  */
-
 @PersistenceCapable
 @Inheritance(customStrategy = "complete-table")
 public class Code extends GaeContent implements MutableCode {

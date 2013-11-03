@@ -21,6 +21,4 @@ import org.tangram.content.Content;
 
 public interface MutableContent extends Content {
 
-    boolean persist();
-
 } // MutableContent

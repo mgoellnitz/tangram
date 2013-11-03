@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -52,7 +53,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
 
     private String persistenceUnitName = "tangram";
 
-    public EntityManagerFactory managerFactory = null;
+    protected EntityManagerFactory managerFactory = null;
 
     protected EntityManager manager = null;
 
@@ -66,13 +67,13 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
-    protected boolean activateCaching = false;
+    private boolean activateCaching = false;
+
+    private Map<Object, Object> configOverrides = null;
 
     private boolean activateQueryCaching = false;
 
     private Set<String> basePackages;
-
-    private boolean prefill = true;
 
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
 
@@ -109,6 +110,22 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     }
 
 
+    public Map<Object, Object> getConfigOverrides() {
+        return configOverrides;
+    }
+
+
+    /**
+     *
+     * Override Entity Manager Factory properties given in persistence.xml
+     *
+     * @param configOverrides
+     */
+    public void setConfigOverrides(Map<Object, Object> configOverrides) {
+        this.configOverrides = configOverrides;
+    }
+
+
     public boolean isActivateCaching() {
         return activateCaching;
     }
@@ -126,16 +143,6 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
 
     public void setActivateQueryCaching(boolean activateQueryCaching) {
         this.activateQueryCaching = activateQueryCaching;
-    }
-
-
-    public boolean isPrefill() {
-        return prefill;
-    }
-
-
-    public void setPrefill(boolean prefill) {
-        this.prefill = prefill;
     }
 
 
@@ -172,7 +179,6 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                 log.info("getBean() "+kindClass.getName()+":"+internalId);
             } // if
             result = (T) manager.find(kindClass, getPrimaryKey(internalId, kindClass));
-            result.setBeanFactory(this);
 
             if (activateCaching) {
                 cache.put(id, result);
@@ -247,7 +253,6 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
         if (log.isDebugEnabled()) {
             log.debug("createBean() populating new instance");
         } // if
-        bean.setBeanFactory(this);
 
         statistics.increase("create bean");
         return bean;
@@ -281,11 +286,19 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                 log.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
             for (Object o : results) {
+                Class<? extends Object> instanceClass = o.getClass();
+                // eliminate problems with JPA sublcassing at runtime
+                if (instanceClass.getName().startsWith("org.apache.openjpa.enhance")) {
+                    instanceClass = instanceClass.getSuperclass();
+                } // if
                 if (o instanceof Content) {
                     Content c = (Content) o;
-                    if (c.getClass().isAssignableFrom(cls)) {
-                        c.setBeanFactory(this);
+                    if (instanceClass.isAssignableFrom(cls)) {
                         result.add((T) c);
+                    } else {
+                        if (log.isWarnEnabled()) {
+                            log.warn("listBeansOfExactClass() class name of instance "+c.getClass().getName());
+                        } // if
                     } // if
                 } // if
             } // for
@@ -358,7 +371,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     @SuppressWarnings("unchecked")
     private <T extends MutableContent> Class<T> getKeyClass(String key) {
         String className = key.split(":")[0];
-        return (Class<T>)getClassForName(className);
+        return (Class<T>) getClassForName(className);
     } // getKeyClass()
 
 
@@ -409,6 +422,27 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
             log.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
+
+
+    @Override
+    public <T extends MutableContent> boolean persist(T bean) {
+        boolean result = false;
+        try {
+            manager.persist(bean);
+            manager.getTransaction().commit();
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("persist()", e);
+            if (manager!=null) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                if (manager.getTransaction().isActive()) {
+                    manager.getTransaction().rollback();
+                } // if
+            } // if
+        } // try/catch/finally
+        return result;
+    } // persist()
 
 
     protected String getClassNamesCacheKey() {
@@ -462,7 +496,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                                     log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
                                 } // if
                                 Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
-                                if ((cls.getAnnotation(Entity.class) != null) && JpaContent.class.isAssignableFrom(cls)) {
+                                if ((cls.getAnnotation(Entity.class)!=null)&&JpaContent.class.isAssignableFrom(cls)) {
                                     if (log.isInfoEnabled()) {
                                         log.info("getAllClasses() * "+cls.getName());
                                     } // if
@@ -493,6 +527,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                 } catch (Exception e) {
                     log.error("getAllClasses() outer", e);
                 } // try/catch
+                allClasses.addAll(additionalClasses);
             } // if
         } // synchronized
         return allClasses;
@@ -517,7 +552,6 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
                     } // compareTo()
 
                 };
-                modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
             } // if
         } // if
@@ -531,7 +565,9 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     @Override
     public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
         additionalClasses = (classes==null) ? new HashSet<Class<? extends MutableContent>>() : classes;
+        allClasses = null;
         modelClasses = null;
+        afterPropertiesSet();
     } // setAdditionalClasses()
 
 
@@ -572,25 +608,48 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     } // getImplementingClassMap()
 
 
+    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
+        return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
+    } // getFactoryConfigOverrides()
+
+
     @Override
     @SuppressWarnings("unchecked")
-    public void afterPropertiesSet() throws Exception {
-        managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
+    public void afterPropertiesSet() {
+        Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
+        if (log.isInfoEnabled()) {
+            log.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
+        } // if
 
-        if (log.isWarnEnabled()) {
-            log.warn("afterPropertiesSet() manager factory: "+managerFactory);
+        // this was the prefill - right at the moment allways necessary
+        final Collection<Class<? extends MutableContent>> classes = getAllClasses();
+        // OpenJPA specific class handling to be able to handle classes from the class repository
+        StringBuilder classList = new StringBuilder("org.tangram.jpa.JpaContent");
+        for (Class<? extends MutableContent> c : classes) {
+            classList.append(";");
+            classList.append(c.getName());
+        } // for
+        Properties properties = new Properties();
+        properties.putAll(configOverrides);
+        properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
+        if (log.isInfoEnabled()) {
+            log.info("afterPropertiesSet() properties="+properties);
+        } // if
+        // be restart aware
+        if (manager!=null) {
+            manager.close();
+        } // if
+        if (managerFactory!=null) {
+            managerFactory.close();
+        } // if
+
+        // here we go with the basic stuff
+        managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
+        if (log.isInfoEnabled()) {
+            log.info("afterPropertiesSet() manager factory: "+managerFactory.getClass().getName());
         } // if
 
         manager = managerFactory.createEntityManager();
-
-        // Just to prefill
-        if (prefill) {
-            if (log.isInfoEnabled()) {
-                log.info("afterPropertiesSet() prefilling");
-            } // if
-            getClasses();
-        } // if
-
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;

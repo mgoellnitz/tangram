@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.content;
 
@@ -76,11 +76,6 @@ public class TransientCode implements CodeResource, Serializable {
 
 
     @Override
-    public void setBeanFactory(BeanFactory factory) {
-    } // setBeanFactory()
-
-
-    @Override
     public long getSize() {
         return getCodeText().length();
     } // getSize()
@@ -95,8 +90,8 @@ public class TransientCode implements CodeResource, Serializable {
 
     @Override
     public int compareTo(Content o) {
-        return (o instanceof TransientCode) ? (getMimeType()+getAnnotation()).compareTo(((TransientCode)o).getMimeType()
-                +((TransientCode)o).getAnnotation()) : -1;
+        return (o instanceof TransientCode) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource)o).getMimeType()
+                +((CodeResource)o).getAnnotation()) : -1;
     } // compareTo()
 
 

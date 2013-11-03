@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,15 +14,13 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.coma;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,13 +59,13 @@ public class ComaController extends RenderingController {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
                 return null;
             } catch (IOException ioe) {
-                return Utils.getModelAndViewFactory(request).createModelAndView(ioe, null, request, response);
+                return Utils.getModelAndViewFactory().createModelAndView(ioe, null, request, response);
             } // try/catch
         } // if
         if (populator!=null) {
             populator.populate(content);
         } // if
-        return Utils.getModelAndViewFactory(request).createModelAndView(content, view, request, response);
+        return Utils.getModelAndViewFactory().createModelAndView(content, view, request, response);
     } // render()
 
 
@@ -89,7 +87,7 @@ public class ComaController extends RenderingController {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
                 return null;
             } catch (IOException ioe) {
-                return Utils.getModelAndViewFactory(request).createModelAndView(ioe, null, request, response);
+                return Utils.getModelAndViewFactory().createModelAndView(ioe, null, request, response);
             } // try/catch
         } // if
         if (populator!=null) {
@@ -98,7 +96,7 @@ public class ComaController extends RenderingController {
 
         Object propertyValue = content.get(property);
 
-        return Utils.getModelAndViewFactory(request).createModelAndView(propertyValue, view, request, response);
+        return Utils.getModelAndViewFactory().createModelAndView(propertyValue, view, request, response);
     } // renderBlob()
 
 

@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,20 +14,18 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.gae.protection;
 
+import com.google.appengine.api.datastore.Text;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-
 import org.tangram.content.Content;
 import org.tangram.gae.GaeContent;
-
-import com.google.appengine.api.datastore.Text;
 
 @PersistenceCapable
 public abstract class Protection extends GaeContent implements org.tangram.feature.protection.Protection {
@@ -37,7 +35,8 @@ public abstract class Protection extends GaeContent implements org.tangram.featu
 
     private String protectionKey;
 
-    private List<String> protectedContentIds;
+    @Join
+    private List<Content> protectedContents;
 
 
     public Text getDescription() {
@@ -63,12 +62,12 @@ public abstract class Protection extends GaeContent implements org.tangram.featu
 
     @Override
     public List<Content> getProtectedContents() {
-        return getContents(Content.class, protectedContentIds);
+        return protectedContents;
     }
 
 
-    public void setProtectedContents(List<Content> protectedTopics) {
-        protectedContentIds = getIds(protectedTopics);
+    public void setProtectedContents(List<Content> protectedContents) {
+        this.protectedContents = protectedContents;
     }
 
 
