@@ -87,7 +87,6 @@ class TangramUtilities {
       from 'webapp'
       into "$p.buildDir/target"
       include '**/**'
-      // exclude '**/*.js'
       exclude '**/*.css'
     }
     p.copy {
@@ -137,13 +136,14 @@ class TangramUtilities {
     // For some reason webapp files are not included in the inputs collection
     FileTree tree = p.fileTree(dir: 'webapp')
     w.inputs.files tree
-    /* this code seems to be useless!
-    // And also the web-archive of the upstream project has to be added
+    /* And also the web-archive of the upstream project has to be added
+     * so that no classes subdirectory is present and the lib directory 
+     * is nearly empty.
+     */
     Object iter = p.configurations.webapp.dependencies.iterator()
-    println "$p.name: ****** $p.configurations.webapp.dependencies.size()"
     while (iter.hasNext()) {
       Object webappDependency = iter.next()
-      println "$project.name: dependency: $webappDependency"
+      // println "$project.name: dependency: $webappDependency"
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFile = webappDependency.dependencyProject.war.outputs.files.singleFile
         println "$project.name: adding project dependency: $archiveFile.name"
@@ -153,7 +153,6 @@ class TangramUtilities {
       } // if 
     } // while
     w.classpath = p.jar.outputs.files
-    */
   } // customizeWar()
 
   /**

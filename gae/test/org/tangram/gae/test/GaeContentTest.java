@@ -1,16 +1,15 @@
 package org.tangram.gae.test;
 
 import java.lang.reflect.Method;
-
 import org.junit.Test;
 import org.springframework.util.Assert;
-import org.tangram.gae.GaeContent;
+import org.tangram.gae.protection.PasswordProtection;
 
 public class GaeContentTest {
 
     @Test
     public void testIsEnhanced() {
-        Method[] methods = GaeContent.class.getMethods();
+        Method[] methods = PasswordProtection.class.getMethods();
         boolean flag = false;
         for (Method method : methods) {
             System.out.println(""+method.getName());
@@ -20,14 +19,5 @@ public class GaeContentTest {
         } // for
         Assert.isTrue(flag, "Classes not enhanced - output unusable");
     } // testIsEnhanced()
-
-//    @Test
-//    public void testIsCanPersist() {
-//        PersistenceManagerFactory pmfInstance = JDOHelper.getPersistenceManagerFactory("transactions-optional");
-//        PersistenceManager manager = pmfInstance.getPersistenceManager();
-//        GaeContent bean = manager.newInstance(GaeContent.class);
-//        manager.makePersistent(bean);
-//        manager.currentTransaction().commit();
-//    } // testIsEnhanced()
 
 } // GaeContentTest

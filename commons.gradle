@@ -29,11 +29,11 @@ repositories {
   // most of the usual stuff
   maven { url "http://repo1.maven.org/maven2" }
   // For the latest groovy stuff
-  maven { url "http://repository.codehaus.org/org/codehaus/groovy" }
+  // maven { url "http://repository.codehaus.org/org/codehaus/groovy" }
   // needed for latest spring framework and security versions
-  maven { url "http://repository.springsource.com/maven/bundles/release" }
+  // maven { url "http://repository.springsource.com/maven/bundles/release" }
   // needed for latest datanucleus versions
-  maven { url "http://www.datanucleus.org/downloads/maven2" }
+  // maven { url "http://www.datanucleus.org/downloads/maven2" }
 }
 
 sourceCompatibility = 1.7

@@ -31,7 +31,7 @@ public class TangramVersions {
     String springframework = '3.1.4.RELEASE'
     String springsecurity = '3.1.4.RELEASE'
     // Datanucleus Version limited to 3.1.1 by Google App Engine plugin for now
-    String datanucleus = '3.1.1'
+    String datanucleus = '3.1.3'
     // The byte code enhancer is not included in every version for some reason
     String datanucleus_enhancer = '3.1.1'
     String datanucleus_appengine = '2.1.2'

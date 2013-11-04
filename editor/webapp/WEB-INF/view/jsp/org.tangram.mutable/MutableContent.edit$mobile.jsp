@@ -34,7 +34,7 @@ Typ: </span>${self.class.package.name}.<span class="cms_editor_title">${self.cla
 </div>
 <div class="cms_editor_table">
 <%
-BeanWrapper bw = Utils.createWrapper(request.getAttribute(Constants.THIS), request);
+BeanWrapper bw = Utils.createWrapper(request.getAttribute(Constants.THIS));
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
@@ -50,26 +50,27 @@ if (value instanceof Collection) {
 	%>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
 } // if
 %>)<br/><%
-    if (Utils.getPropertyConverter(request).isBlobType(type)) {
-      long blobLength = Utils.getPropertyConverter(request).getBlobLength(bw.getPropertyValue(key));
+    if (Utils.getPropertyConverter().isBlobType(type)) {
+      long blobLength = Utils.getPropertyConverter().getBlobLength(bw.getPropertyValue(key));
 %><div class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</div><%
     } else {
 %><div class="cms_editor_field_value">
 <%
-    if (Utils.getPropertyConverter(request).isTextType(type)) {
+    if (Utils.getPropertyConverter().isTextType(type)) {
 %>
-<textarea class="cms_editor_textfield" cols="60" rows="7" name="<%=key%>"><%=Utils.getPropertyConverter(request).getEditString(value)%></textarea>
+<textarea class="cms_editor_textfield" cols="60" rows="7" name="<%=key%>"><%=Utils.getPropertyConverter().getEditString(value)%></textarea>
 <%
     } else {
 %>
-<input class="cms_editor_textfield" name="<%=key%>" value="<%=Utils.getPropertyConverter(request).getEditString(value)%>" />
+<input class="cms_editor_textfield" name="<%=key%>" value="<%=Utils.getPropertyConverter().getEditString(value)%>" />
 <%
 if (value instanceof Collection) {
   Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
   boolean abstractClass = (elementClass.getModifiers() | Modifier.ABSTRACT) == Modifier.ABSTRACT;
   request.setAttribute("propertyValue", value);
   request.setAttribute("elementClass", elementClass); 
-%><c:if test="${! empty self.beanFactory.implementingClassesMap[elementClass]}">
+  request.setAttribute("beanFactory", Utils.getBeanFactory()); 
+%><c:if test="${! empty beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach></c:if><%  
