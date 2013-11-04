@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,21 +14,22 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
-package org.tangram.nucleus.protection;
+package org.tangram.nucleus;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.tangram.content.Content;
-import org.tangram.nucleus.NucleusContent;
 
 /**
  * Abstract base class for the protected content core feature.
  *
+ * As of now implementations should be presented within your application and no generic implementations
+ * can be delivered by the framework.
+ *
  */
-public abstract class Protection extends NucleusContent implements org.tangram.feature.protection.Protection {
+public abstract class AbstractProtection extends NucleusContent implements org.tangram.feature.protection.Protection {
 
     /**
      * for compatibility reasons internally use String and map it to char[]
@@ -78,4 +79,4 @@ public abstract class Protection extends NucleusContent implements org.tangram.f
         return result;
     } // getProtectionPath()
 
-} // Protection
+} // AbstractProtection

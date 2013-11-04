@@ -35,7 +35,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 @PersistenceCapable
-public class OpenIDProtection extends Protection {
+public class OpenIDProtection extends AbstractProtection {
 
     @NotPersistent
     private UserService userService = UserServiceFactory.getUserService();

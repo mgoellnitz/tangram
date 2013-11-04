@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @PersistenceCapable
-public class PasswordProtection extends Protection {
+public class PasswordProtection extends AbstractProtection {
 
     @NotPersistent
     public static final String PARAM_LOGIN = "login";

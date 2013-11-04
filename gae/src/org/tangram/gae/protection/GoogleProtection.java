@@ -30,7 +30,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 @PersistenceCapable
-public class GoogleProtection extends Protection {
+public class GoogleProtection extends AbstractProtection {
 
     @NotPersistent
     private UserService userService = UserServiceFactory.getUserService();

@@ -22,11 +22,13 @@ import com.google.appengine.api.datastore.Text;
 import java.util.ArrayList;
 import java.util.List;
 import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import org.tangram.content.Content;
 import org.tangram.gae.GaeContent;
 
-public abstract class Protection extends GaeContent implements org.tangram.feature.protection.Protection {
+@PersistenceCapable
+public abstract class AbstractProtection extends GaeContent implements org.tangram.feature.protection.Protection {
 
     @Persistent
     private Text description;
@@ -76,4 +78,4 @@ public abstract class Protection extends GaeContent implements org.tangram.featu
         return result;
     } // getProtectionPath()
 
-} // Protection
+} // AbstractProtection
