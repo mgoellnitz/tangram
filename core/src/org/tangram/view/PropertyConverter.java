@@ -29,10 +29,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.ServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.view.jsp.IncludeTag;
@@ -92,7 +92,7 @@ public abstract class PropertyConverter {
     private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title, ServletRequest request) {
         List<T> result = new ArrayList<T>();
 
-        if (StringUtils.hasText(title)) {
+        if (StringUtils.isNotBlank(title)) {
             List<T> beans = beanFactory.listBeans(c);
             if (log.isDebugEnabled()) {
                 log.debug("getObjectsViaDescription("+title+") checking "+beans);
@@ -178,7 +178,7 @@ public abstract class PropertyConverter {
             log.debug("getStorableObject() required type is "+cls.getName());
         } // if
         if (cls==String.class) {
-            value = StringUtils.hasText(valueString) ? ""+valueString : null;
+            value = StringUtils.isNotBlank(valueString) ? ""+valueString : null;
         } else if (cls==Date.class) {
             try {
                 value = dateFormat.parseObject(valueString);
@@ -186,9 +186,9 @@ public abstract class PropertyConverter {
                 log.error("getStorableObject() cannot parse as Date: "+valueString);
             } // try/catch
         } else if (cls==Integer.class) {
-            value = StringUtils.hasText(valueString) ? Integer.parseInt(valueString) : null;
+            value = StringUtils.isNotBlank(valueString) ? Integer.parseInt(valueString) : null;
         } else if (cls==Float.class) {
-            value = StringUtils.hasText(valueString) ? Float.parseFloat(valueString) : null;
+            value = StringUtils.isNotBlank(valueString) ? Float.parseFloat(valueString) : null;
         } else if (cls==Boolean.class) {
             value = Boolean.parseBoolean(valueString);
         } else if (cls==List.class) {
@@ -202,7 +202,7 @@ public abstract class PropertyConverter {
                 if (log.isDebugEnabled()) {
                     log.debug("getStorableObject() idString="+idString);
                 } // if
-                if (StringUtils.hasText(idString)) {
+                if (StringUtils.isNotBlank(idString)) {
                     Object o = null;
                     Matcher m = createIdMatcher(idString);
                     if (m.find()) {

@@ -25,12 +25,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
@@ -90,13 +90,14 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
         for (CodeResource resource : resources) {
             cache.put(resource.getId(), resource);
             String mimeType = resource.getMimeType();
-            if (StringUtils.hasText(mimeType)) {
+
+            if (StringUtils.isNotEmpty(mimeType)) {
                 Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
                 if (typeCache==null) {
                     typeCache = new HashMap<String, CodeResource>();
                     resourceCache.put(mimeType, typeCache);
                 } // if
-                if (StringUtils.hasText(resource.getAnnotation())) {
+                if (StringUtils.isNotEmpty(resource.getAnnotation())) {
                     typeCache.put(resource.getAnnotation(), resource);
                 } // if
             } // if
