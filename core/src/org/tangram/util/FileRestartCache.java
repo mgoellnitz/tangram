@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.util;
@@ -25,10 +25,10 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.PersistentRestartCache;
+
 
 /**
  *
@@ -55,9 +55,12 @@ public class FileRestartCache implements PersistentRestartCache {
     public FileRestartCache() {
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PERSISTENT_CACHE_FILENAME));
-            cache = (Map<String, Object>)(ois.readObject());
+            cache = (Map<String, Object>) (ois.readObject());
             ois.close();
         } catch (Exception e) {
+            if (log.isWarnEnabled()) {
+                log.warn("() could not load cache starting with an empty set of values");
+            } // 
             cache = new HashMap<String, Object>();
         } // try/catch
     } // DummyCacheAdapter()
@@ -66,14 +69,14 @@ public class FileRestartCache implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
-        return cache==null ? null : (T)cache.get(key);
+        return cache==null ? null : (T) cache.get(key);
     } // get()
 
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Type t) {
-        return cache==null ? null : (T)cache.get(key);
+        return cache==null ? null : (T) cache.get(key);
     } // get()
 
 
