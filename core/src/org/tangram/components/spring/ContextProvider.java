@@ -16,22 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components;
+package org.tangram.components.spring;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
 import org.tangram.view.Utils;
 
 
-@Component
+@Named
 public class ContextProvider implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
 
-    @Autowired
+    @Inject
     public void setApplicationContext(ApplicationContext context) {
         this.applicationContext = context;
         Utils.setApplicationContext(this.applicationContext);

@@ -29,7 +29,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.tangram.content.BeanFactory;
-import org.tangram.view.link.LinkFactory;
+import org.tangram.link.LinkFactory;
 
 
 public final class Utils {

@@ -50,7 +50,7 @@ import org.mockftpserver.stub.command.StouCommandHandler;
 import org.mockftpserver.stub.command.StruCommandHandler;
 import org.mockftpserver.stub.command.SystCommandHandler;
 import org.mockftpserver.stub.command.TypeCommandHandler;
-import org.tangram.components.CodeResourceCache;
+import org.tangram.components.spring.CodeResourceCache;
 import org.tangram.mutable.MutableBeanFactory;
 
 

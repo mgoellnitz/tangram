@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram;
+package org.tangram.spring;
 
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.View;
+import org.tangram.Constants;
 import org.tangram.view.ViewHandler;
 
 public class TangramServlet extends DispatcherServlet {

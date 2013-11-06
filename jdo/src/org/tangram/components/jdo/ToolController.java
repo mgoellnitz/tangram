@@ -34,14 +34,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
-import org.tangram.components.CodeResourceCache;
-import org.tangram.components.StatisticsController;
+import org.tangram.components.spring.CodeResourceCache;
+import org.tangram.components.spring.StatisticsController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
 import org.tangram.jdo.JdoBeanFactory;
-import org.tangram.view.link.Link;
-import org.tangram.view.link.LinkFactory;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
 
 
 @Controller

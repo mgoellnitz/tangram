@@ -600,6 +600,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @Override
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
+        if (log.isInfoEnabled()) {
+            log.info("afterPropertiesSet() bean factory is using "+getClass().getClassLoader().getClass().getName());
+        } // if
         Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
         if (log.isInfoEnabled()) {
             log.info("afterPropertiesSet() using overrides for persistence manager factory: "+configOverrides);

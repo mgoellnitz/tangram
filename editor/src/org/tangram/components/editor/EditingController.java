@@ -27,12 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,17 +43,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
-import org.tangram.components.DefaultController;
+import org.tangram.components.spring.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.Utils;
-import org.tangram.view.link.Link;
-import org.tangram.view.link.LinkFactory;
 
 
 @Controller
@@ -87,26 +87,26 @@ public class EditingController extends RenderingController {
         SYSTEM_PROPERTIES.add("beanFactory");
     } // static
 
-    @Autowired
+    @Inject
     private PropertyConverter propertyConverter;
 
-    @Autowired
+    @Inject
     private ClassRepository classRepository;
 
-    @Autowired
+    @Inject
     private LinkFactory linkFactory;
 
     private MutableBeanFactory beanFactory;
 
 
-    @Autowired
+    @Inject
     public void setBeanFactory(MutableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
         super.beanFactory = beanFactory;
     }
 
 
-    @Autowired
+    @Inject
     public void setDefaultController(DefaultController defaultController) {
         // Automagically set edit view
         defaultController.getCustomLinkViews().add("edit");

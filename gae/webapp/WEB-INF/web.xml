@@ -26,7 +26,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
 		<servlet-name>spring</servlet-name>
-		<servlet-class>org.tangram.TangramServlet</servlet-class>
+		<servlet-class>org.tangram.spring.TangramServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>

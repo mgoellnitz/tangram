@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components;
+package org.tangram.components.spring;
 
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -44,33 +45,33 @@ import org.tangram.controller.ActionForm;
 import org.tangram.controller.ActionParameter;
 import org.tangram.controller.ControllerHook;
 import org.tangram.controller.LinkAction;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkHandler;
+import org.tangram.link.LinkScheme;
 import org.tangram.logic.ClassRepository;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
-import org.tangram.view.link.Link;
-import org.tangram.view.link.LinkFactory;
-import org.tangram.view.link.LinkHandler;
-import org.tangram.view.link.LinkScheme;
 
 @Controller
 public class MetaController extends AbstractController implements InitializingBean, LinkHandler, BeanListener {
 
     private static Log log = LogFactory.getLog(MetaController.class);
 
-    @Autowired
+    @Inject
     private BeanFactory beanFactory;
 
-    @Autowired
+    @Inject
     private DefaultController defaultController;
 
     private LinkFactory linkFactory;
 
-    @Autowired
+    @Inject
     protected ModelAndViewFactory modelAndViewFactory;
 
-    @Autowired
+    @Inject
     private ClassRepository classRepository;
 
     @Autowired(required = false)
@@ -82,7 +83,7 @@ public class MetaController extends AbstractController implements InitializingBe
 
 
     // do autowiring here so the registration can be done automagically
-    @Autowired
+    @Inject
     public void setLinkFactory(LinkFactory linkFactory) {
         this.linkFactory = linkFactory;
         this.linkFactory.registerHandler(this);

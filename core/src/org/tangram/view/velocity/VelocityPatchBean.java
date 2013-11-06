@@ -20,7 +20,7 @@ package org.tangram.view.velocity;
 
 import javax.inject.Inject;
 import org.springframework.beans.factory.InitializingBean;
-import org.tangram.components.CodeResourceCache;
+import org.tangram.components.spring.CodeResourceCache;
 
 // TODO: Since velocity now is a core feature, why is the so add-on style
 // TODO: Do this in a spring independent way

@@ -18,10 +18,10 @@
  */
 package org.tangram.components.jpa;
 
-import org.springframework.stereotype.Component;
+import javax.inject.Named;
 
 
-@Component
+@Named
 public class DynamicGroovyWeaver {
 
 

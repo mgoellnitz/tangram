@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram;
+package org.tangram.spring;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

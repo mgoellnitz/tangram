@@ -16,29 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.view.link;
+package org.tangram.link;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * The link factory implementation deals with all the link handler available in our implementations.
  * 
- * It should be aware of the fact that there are "web application context names" to be prepended to the
- * URLs returned in the Link instances from the underlying handler implementations.
- *
+ * Only the part of links which creates a Link from a set of source objects
+ * 
  */
-public interface LinkFactory {
-
-    String getPrefix(HttpServletRequest request);
-
-
-    void registerHandler(LinkHandler handler);
-
-
-    void unregisterHandler(LinkHandler handler);
-
-
+public interface LinkHandler {
+    
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
-} // LinkBuilder
+} // LinkHandler

@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.controller.RenderingController;
 import org.tangram.view.Utils;
-import org.tangram.view.link.Link;
+import org.tangram.link.Link;
 
 @Controller
 public class ComaController extends RenderingController {

@@ -27,7 +27,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityView;
 import org.tangram.Constants;
-import org.tangram.components.CodeResourceCache;
+import org.tangram.components.spring.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.view.AbstractModelAwareViewResolver;

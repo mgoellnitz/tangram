@@ -24,13 +24,13 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.exception.ParseErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
@@ -60,7 +60,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
     private Map<String, View> cache = new HashMap<String, View>();
 
-    @Autowired
+    @Inject
     private Statistics statistics;
 
     private static Log log = LogFactory.getLog(AbstractModelAwareViewResolver.class);

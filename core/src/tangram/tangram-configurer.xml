@@ -38,15 +38,17 @@
 
   <bean id="modelAndViewFactory" class="org.tangram.view.DynamicModelAndViewFactory" />
 
-  <bean id="linkFactory" class="org.tangram.view.link.GenericLinkFactory">
+  <bean id="linkFactory" class="org.tangram.link.GenericLinkFactory">
     <property name="dispatcherPath" value="${spring.dispatcher.servlet.path}" />
   </bean>
 
+  <!-- mapping for all of our and your @ccontrollers -->
   <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
     <property name="order" value="10" />
     <property name="interceptors" ref="interceptors" />
   </bean>
 
+  <!-- give the meta controller for repository based URL format definitions a special handling and priority -->
   <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     <property name="mappings">
       <value>
@@ -120,7 +122,7 @@
 
   <!--  not only for editing but also custom web applications wanting to read larger portions from the web client  -->
 
-  <bean id="multipartResolver" class="org.tangram.util.StreamingMultipartResolver">
+  <bean id="multipartResolver" class="org.tangram.spring.StreamingMultipartResolver">
     <property name="maxUploadSize" value="${tangram.max.upload.size}" />
   </bean>
 

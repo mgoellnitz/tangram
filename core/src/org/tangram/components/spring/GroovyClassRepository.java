@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components;
+package org.tangram.components.spring;
 
 import groovy.lang.GroovyClassLoader;
 import java.util.ArrayList;

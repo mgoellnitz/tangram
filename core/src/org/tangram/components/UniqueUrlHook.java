@@ -27,8 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.controller.ControllerHook;
 import org.tangram.view.TargetDescriptor;
-import org.tangram.view.link.Link;
-import org.tangram.view.link.LinkFactory;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
 
 @Named
 public class UniqueUrlHook implements ControllerHook {

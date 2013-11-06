@@ -75,6 +75,8 @@ The security aspects have now been renamed from 'solution' to 'feature' which mi
 
 The MimedBlob stuff now also is called a 'feature' and moved to the core package.
 
+TangramServlet resides in a spring package - you will have to change your web.xml
+
 The code level now is lifted to Java 7 since the problems with the datanucleus enhancer seem to have vanished
 
 The editor is an independent module and can - through the middle layer of mutable contents - be used for jpa and jdo base layers. Only the GAE flavour integrates this directory. For all other scenarios application will have to ad those extra two dependencies to switch on the generic editor.

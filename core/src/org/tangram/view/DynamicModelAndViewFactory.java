@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
@@ -52,7 +52,7 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
 
     private static final Log log = LogFactory.getLog(DynamicModelAndViewFactory.class);
 
-    @Autowired
+    @Inject
     private ClassRepository classRepository;
 
     private Map<String, List<Constructor<Shim>>> definedViewShims;

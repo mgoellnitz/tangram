@@ -23,7 +23,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.tangram.components.CodeResourceCache;
+import org.tangram.components.spring.CodeResourceCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.ftp.TangramFtpServer;
 import org.tangram.mutable.MutableBeanFactory;

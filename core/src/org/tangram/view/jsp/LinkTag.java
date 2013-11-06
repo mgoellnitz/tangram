@@ -30,8 +30,8 @@ import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.view.Utils;
-import org.tangram.view.link.Link;
-import org.tangram.view.link.LinkFactory;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
 
 public class LinkTag implements Tag, Serializable {
 

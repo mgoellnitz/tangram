@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.view.link;
+package org.tangram.link;
 
 import java.util.Collection;
 
