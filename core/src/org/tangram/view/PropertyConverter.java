@@ -28,11 +28,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.view.jsp.IncludeTag;
@@ -49,7 +49,7 @@ public abstract class PropertyConverter {
 
     private DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 
-    @Autowired
+    @Inject
     private BeanFactory beanFactory;
 
 

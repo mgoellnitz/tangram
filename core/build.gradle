@@ -28,6 +28,8 @@ dependencies {
   compile "taglibs:standard:1.1.2"
   compile "javax.servlet:jstl:1.1.2"
   
+  compile "javax.inject:javax.inject:1"
+  
   compile "org.springframework:spring-core:$versions.springframework"
   compile "org.springframework:spring-asm:$versions.springframework"
   compile "org.springframework:spring-beans:$versions.springframework"

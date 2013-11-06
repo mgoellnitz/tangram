@@ -21,17 +21,17 @@ package org.tangram.components.gae;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
+import javax.inject.Named;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Component;
 import org.tangram.PersistentRestartCache;
 import org.tangram.gae.GaeBeanFactory;
 
 
-@Component
+@Named
 public class GaeCacheAdapter implements PersistentRestartCache {
 
     private static final Log log = LogFactory.getLog(GaeBeanFactory.class);

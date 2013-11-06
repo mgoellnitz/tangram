@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,30 +14,28 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.components;
 
 import java.util.Map;
-
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.tangram.controller.ControllerHook;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.link.Link;
 import org.tangram.view.link.LinkFactory;
 
-@Component
+@Named
 public class UniqueUrlHook implements ControllerHook {
 
     private static Log log = LogFactory.getLog(UniqueUrlHook.class);
 
-    @Autowired
+    @Inject
     private LinkFactory linkFactory;
 
 

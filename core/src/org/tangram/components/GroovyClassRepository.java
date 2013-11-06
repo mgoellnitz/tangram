@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -31,8 +33,6 @@ import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.Phases;
 import org.codehaus.groovy.tools.GroovyClass;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.tangram.Constants;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
@@ -40,17 +40,17 @@ import org.tangram.content.CodeResource;
 import org.tangram.logic.ClassRepository;
 
 
-@Component
+@Named
 public class GroovyClassRepository implements ClassRepository, InitializingBean, BeanListener {
 
     private static final String BYTECODE_CACHE_KEY = "tangram.bytecode.cache";
 
     private static Log log = LogFactory.getLog(GroovyClassRepository.class);
 
-    @Autowired
+    @Inject
     private CodeResourceCache codeCache;
 
-    @Autowired
+    @Inject
     private PersistentRestartCache startupCache;
 
     private Map<String, Class<? extends Object>> classes = null;

@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
@@ -41,10 +41,10 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory {
 
     private static final Log log = LogFactory.getLog(AbstractMutableBeanFactory.class);
 
-    @Autowired
+    @Inject
     protected Statistics statistics;
 
-    @Autowired
+    @Inject
     protected PersistentRestartCache startupCache;
 
     private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();

@@ -24,13 +24,13 @@ import java.util.Collection;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
@@ -49,10 +49,10 @@ public class ToolController extends RenderingController {
 
     private static final Log log = LogFactory.getLog(ToolController.class);
 
-    @Autowired
+    @Inject
     private StatisticsController statisticsController;
 
-    @Autowired
+    @Inject
     private CodeResourceCache codeResourceCache;
 
 
@@ -119,7 +119,7 @@ public class ToolController extends RenderingController {
             // List<CodeResource> codes = beanFactory.listBeans(CodeResource.class);
             Collection<CodeResource> codes = codeResourceCache.getCodes();
             for (CodeResource code : codes) {
-                if (StringUtils.hasText(code.getAnnotation())) {
+                if (StringUtils.isNotBlank(code.getAnnotation())) {
                     String mimeType = code.getMimeType();
                     if ("application/x-groovy".equals(mimeType)) {
                         mimeType = "text/groovy";

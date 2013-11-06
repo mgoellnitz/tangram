@@ -25,12 +25,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
@@ -38,17 +38,17 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.TransientCode;
 
 
-@Component
+@Named
 public class CodeResourceCache implements InitializingBean, BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
     private static Log log = LogFactory.getLog(CodeResourceCache.class);
 
-    @Autowired
+    @Inject
     private PersistentRestartCache startupCache;
 
-    @Autowired
+    @Inject
     private BeanFactory factory;
 
     private long lastResetTime;

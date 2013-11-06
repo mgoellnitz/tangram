@@ -18,11 +18,11 @@
  */
 package org.tangram.components.ftp;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.ftp.TangramFtpServer;
@@ -34,17 +34,17 @@ import org.tangram.mutable.MutableBeanFactory;
  * Connector component to let the code aspects of a tangram repository be accessible as an ftp remote server.
  *
  */
-@Component
+@Named
 public class FtpDirectory implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(FtpDirectory.class);
 
     private TangramFtpServer ftpServerStub;
 
-    @Autowired
+    @Inject
     private BeanFactory beanFactory;
 
-    @Autowired
+    @Inject
     private CodeResourceCache codeResourceCache;
 
 
