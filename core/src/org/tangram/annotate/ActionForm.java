@@ -16,17 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-package org.tangram.controller;
+package org.tangram.annotate;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * 
+ * Annotation indicating that the annotated method parameter points to a form where all the HTML form parameters should
+ * be stored in a decent converted way
+ * 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface ActionParameter {
-    
-    String name() default "--empty--";
-    
-} // ActionParamter
+public @interface ActionForm {
+
+} // ActionForm

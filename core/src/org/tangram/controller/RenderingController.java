@@ -65,7 +65,7 @@ public abstract class RenderingController implements LinkHandler {
 
 
     // do autowiring here so the registration can be done automagically
-    @Autowired
+    @Inject
     public void setLinkFactory(LinkFactory linkFactory) {
         this.linkFactory = linkFactory;
         this.linkFactory.registerHandler(this);
