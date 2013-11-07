@@ -61,7 +61,7 @@ public class FileRestartCache implements PersistentRestartCache {
     @SuppressWarnings("unchecked")
     public FileRestartCache() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PERSISTENT_CACHE_FILENAME_DEFAULT));
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
             cache = (Map<String, Object>) (ois.readObject());
             ois.close();
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class FileRestartCache implements PersistentRestartCache {
         if (cache!=null) {
             cache.put(key, value);
             try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(PERSISTENT_CACHE_FILENAME_DEFAULT));
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
                 oos.writeObject(cache);
                 oos.close();
             } catch (Exception e) {
