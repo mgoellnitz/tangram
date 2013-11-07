@@ -24,10 +24,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.servlet.ServletRequest;
 import org.springframework.beans.factory.BeanFactoryUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -38,7 +38,7 @@ import org.tangram.view.ModelAwareViewResolver;
 import org.tangram.view.ViewHandler;
 
 @Named
-public class TangramViewHandler implements ViewHandler, InitializingBean, ApplicationContextAware {
+public class TangramViewHandler implements ViewHandler, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -109,7 +109,7 @@ public class TangramViewHandler implements ViewHandler, InitializingBean, Applic
     } // resolveViewName()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         initViewResolvers(applicationContext);
     } // afterPropertiesSet()

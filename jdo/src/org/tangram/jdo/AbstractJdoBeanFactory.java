@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
@@ -36,7 +37,6 @@ import javax.jdo.Query;
 import javax.jdo.annotations.PersistenceCapable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -47,7 +47,7 @@ import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
 
-public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory, InitializingBean {
+public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory {
 
     private static final Log log = LogFactory.getLog(AbstractJdoBeanFactory.class);
 
@@ -597,7 +597,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // getFactoryConfigOverrides()
 
 
-    @Override
+    @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
         if (log.isInfoEnabled()) {

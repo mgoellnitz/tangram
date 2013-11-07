@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2012 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.coma;
 
@@ -32,15 +32,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
-public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implements InitializingBean {
+public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
     protected static Log log = LogFactory.getLog(AbstractComaBeanFactory.class);
 
@@ -156,7 +156,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
     /**
      * Create a transient blob object from content instance.
-     * 
+     *
      * @param id id of the content
      * @param propertyName name of the property to find the blob in
      * @param mimeType mimetype to choose
@@ -169,7 +169,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
 
     /**
      * instance "id" must be of type "type"!!!
-     * 
+     *
      * @param type
      * @param id
      * @return
@@ -497,7 +497,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory implem
     } // getReferrerIds()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         Class.forName(dbDriver).newInstance();
         dbConnection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);

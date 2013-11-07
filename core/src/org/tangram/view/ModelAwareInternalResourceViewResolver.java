@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view;
@@ -21,10 +21,10 @@ package org.tangram.view;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Locale;
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
@@ -33,7 +33,8 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.tangram.Constants;
 
-public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements InitializingBean,
+
+public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements
         ServletContextAware {
 
     private UrlBasedViewResolver delegate;
@@ -85,12 +86,12 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
 
     @Override
     protected View checkResourceExists(View result) {
-        String url = ((AbstractUrlBasedView)result).getUrl();
+        String url = ((AbstractUrlBasedView) result).getUrl();
         int idx = url.indexOf('/');
         if (idx!=0) {
             // TODO: this code is unused for now - we'd like to have VTL or
             // stuff like that on the classpath which comes with Servlet 3
-            idx++ ;
+            idx++;
             if (log.isInfoEnabled()) {
                 log.info("checkResourceExists("+url+")");
             } // if
@@ -111,12 +112,12 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
                 result = null;
             } // if
         } else {
-            if (idx == 0) {
+            if (idx==0) {
                 File f = new File(filePathPrefix+url);
                 if (log.isInfoEnabled()) {
                     log.info("checkResourceExists() f="+f.getAbsolutePath());
                 } // if
-                if ( !(f.exists())) {
+                if (!(f.exists())) {
                     result = null;
                 } // if
             } else {
@@ -145,7 +146,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
     } // resolverViewName()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(delegate, "delegate is null");
         Assert.notNull(filePathPrefix, "path to lookup templates may not be null");

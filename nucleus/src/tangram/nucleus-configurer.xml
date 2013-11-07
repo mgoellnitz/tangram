@@ -43,7 +43,9 @@
     
   <!-- this one moved out of components and is not auto-scanned anymore -->
 
-  <bean id="persistentRestartCache" class="org.tangram.util.FileRestartCache" />
+  <bean id="persistentRestartCache" class="org.tangram.util.FileRestartCache">
+    <property name="filename" value="${tangram.restart.cache.file}"/>
+  </bean>
     
   <!--  edit scenarios only  -->
 

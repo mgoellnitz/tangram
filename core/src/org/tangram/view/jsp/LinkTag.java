@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view.jsp;
@@ -29,9 +29,10 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tangram.view.Utils;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
+import org.tangram.view.Utils;
+
 
 public class LinkTag implements Tag, Serializable {
 
@@ -57,19 +58,19 @@ public class LinkTag implements Tag, Serializable {
 
 
     @Override
-	public void setPageContext(PageContext p) {
+    public void setPageContext(PageContext p) {
         context = p;
     }
 
 
     @Override
-	public Tag getParent() {
+    public Tag getParent() {
         return parent;
     }
 
 
     @Override
-	public void setParent(Tag t) {
+    public void setParent(Tag t) {
         parent = t;
     }
 
@@ -135,13 +136,13 @@ public class LinkTag implements Tag, Serializable {
 
 
     @Override
-	public int doStartTag() throws JspException {
+    public int doStartTag() throws JspException {
         return SKIP_BODY;
     } // doStartTag()
 
 
     public static void render(HttpServletRequest request, HttpServletResponse response, Writer out, Object bean, String action, String view, boolean isHref,
-            boolean isTarget, boolean isHandlers) {
+                              boolean isTarget, boolean isHandlers) {
         LinkFactory linkBuilder = Utils.getLinkFactory();
 
         try {
@@ -154,7 +155,7 @@ public class LinkTag implements Tag, Serializable {
                 out.write("\" ");
             } // if
             if (isTarget) {
-                if (link.getTarget() != null) {
+                if (link.getTarget()!=null) {
                     out.write("target=\""+link.getTarget()+"\" ");
                 } // if
             } // if
@@ -175,17 +176,17 @@ public class LinkTag implements Tag, Serializable {
 
 
     @Override
-	public int doEndTag() throws JspException {
+    public int doEndTag() throws JspException {
         Writer out = context.getOut();
-        HttpServletRequest request = (HttpServletRequest)(context.getRequest());
-        HttpServletResponse response = (HttpServletResponse)(context.getResponse());
+        HttpServletRequest request = (HttpServletRequest) (context.getRequest());
+        HttpServletResponse response = (HttpServletResponse) (context.getResponse());
         render(request, response, out, getBean(), getAction(), getView(), isHref(), isTarget(), isHandlers());
         return EVAL_PAGE;
     } // doEndTag()
 
 
     @Override
-	public void release() {
+    public void release() {
         context = null;
         parent = null;
         bean = null;

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.spring;
+package org.tangram.components;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,12 +25,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
@@ -39,7 +39,7 @@ import org.tangram.content.TransientCode;
 
 
 @Named
-public class CodeResourceCache implements InitializingBean, BeanListener {
+public class CodeResourceCache implements BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
@@ -206,7 +206,7 @@ public class CodeResourceCache implements InitializingBean, BeanListener {
     } // attachListener()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         factory.addListener(CodeResource.class, this);
         reset();

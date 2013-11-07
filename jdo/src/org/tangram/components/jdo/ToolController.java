@@ -34,7 +34,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
-import org.tangram.components.spring.CodeResourceCache;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.components.spring.StatisticsController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;

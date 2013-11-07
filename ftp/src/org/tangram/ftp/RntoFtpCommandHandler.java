@@ -24,7 +24,7 @@ import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RntoCommandHandler;
-import org.tangram.components.spring.CodeResourceCache;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
 

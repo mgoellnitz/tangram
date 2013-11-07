@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view.velocity;
@@ -21,19 +21,19 @@ package org.tangram.view.velocity;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityView;
 import org.tangram.Constants;
-import org.tangram.components.spring.CodeResourceCache;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.view.AbstractModelAwareViewResolver;
 
-public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewResolver implements BeanListener,
-        InitializingBean {
+
+public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewResolver implements BeanListener {
 
     @Inject
     private CodeResourceCache codeResourceCache;
@@ -81,7 +81,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
                 // FIXME: Move this to separate VelocityViewResolver implementation
                 if (result!=null) {
                     if (result instanceof VelocityView) {
-                        VelocityView v = (VelocityView)result;
+                        VelocityView v = (VelocityView) result;
                         v.setContentType(mimeType+";charset=UTF-8");
                         v.setEncoding("UTF-8");
                     } // if
@@ -98,13 +98,13 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
     } // getFullViewName()
 
 
-	@Override
+    @Override
     public void reset() {
         getCache().clear();
     } // reset()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         codeResourceCache.addListener(this);
     } // afterPropertiesSet()

@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
@@ -56,7 +56,7 @@ import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 
 @Controller
-public class MetaController extends AbstractController implements InitializingBean, LinkHandler, BeanListener {
+public class MetaController extends AbstractController implements LinkHandler, BeanListener {
 
     private static Log log = LogFactory.getLog(MetaController.class);
 
@@ -353,7 +353,7 @@ public class MetaController extends AbstractController implements InitializingBe
     } // createLink()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();

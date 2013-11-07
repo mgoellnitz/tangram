@@ -26,7 +26,7 @@ import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.ListCommandHandler;
-import org.tangram.components.spring.CodeResourceCache;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
 
 

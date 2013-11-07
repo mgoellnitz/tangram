@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,7 +37,6 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -47,7 +47,7 @@ import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
 
-public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory implements JpaBeanFactory, InitializingBean {
+public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory implements JpaBeanFactory {
 
     private static final Log log = LogFactory.getLog(AbstractJpaBeanFactory.class);
 
@@ -613,7 +613,7 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     } // getFactoryConfigOverrides()
 
 
-    @Override
+    @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();

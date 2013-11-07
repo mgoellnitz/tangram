@@ -18,12 +18,12 @@
  */
 package org.tangram.components.ftp;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.tangram.components.spring.CodeResourceCache;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.ftp.TangramFtpServer;
 import org.tangram.mutable.MutableBeanFactory;
@@ -35,7 +35,7 @@ import org.tangram.mutable.MutableBeanFactory;
  *
  */
 @Named
-public class FtpDirectory implements InitializingBean {
+public class FtpDirectory {
 
     private static final Logger log = LoggerFactory.getLogger(FtpDirectory.class);
 
@@ -48,7 +48,7 @@ public class FtpDirectory implements InitializingBean {
     private CodeResourceCache codeResourceCache;
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         if (log.isInfoEnabled()) {
             log.info("() initializing with code cache "+codeResourceCache);

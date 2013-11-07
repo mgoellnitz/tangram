@@ -9,30 +9,26 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view.velocity;
 
 import javax.inject.Inject;
-import org.springframework.beans.factory.InitializingBean;
-import org.tangram.components.spring.CodeResourceCache;
+import javax.inject.Named;
+import org.tangram.components.CodeResourceCache;
 
-// TODO: Since velocity now is a core feature, why is the so add-on style
-// TODO: Do this in a spring independent way
-public class VelocityPatchBean implements InitializingBean {
+@Named
+public class VelocityPatchBean {
+
 
     @Inject
-    CodeResourceCache codeResourcdCache;
-
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        VelocityResourceLoader.codeResourceCache = codeResourcdCache;
-    } // afterPropertiesSet()
+    public void setCodeResourceCache(CodeResourceCache codeResourceCache) {
+        VelocityResourceLoader.codeResourceCache = codeResourceCache;
+    }
 
 } // VelocityPatchBean()

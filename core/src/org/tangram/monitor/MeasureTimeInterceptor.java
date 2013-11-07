@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.tangram.monitor.Statistics;
 
 public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
 
@@ -61,4 +62,3 @@ public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
     } // afterCompletion()
 
 } // MeasureTimeInterceptor
-

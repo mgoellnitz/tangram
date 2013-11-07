@@ -44,23 +44,30 @@ import org.tangram.PersistentRestartCache;
  */
 public class FileRestartCache implements PersistentRestartCache {
 
-    private static final String PERSISTENT_CACHE_FILENAME = "tangram.persistent.cache.ser";
+    private static final String PERSISTENT_CACHE_FILENAME_DEFAULT = "tangram.persistent.cache.ser";
 
     private static final Log log = LogFactory.getLog(FileRestartCache.class);
 
+    private String filename = PERSISTENT_CACHE_FILENAME_DEFAULT;
+
     private Map<String, Object> cache = null;
+
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
 
     @SuppressWarnings("unchecked")
     public FileRestartCache() {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PERSISTENT_CACHE_FILENAME));
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(PERSISTENT_CACHE_FILENAME_DEFAULT));
             cache = (Map<String, Object>) (ois.readObject());
             ois.close();
         } catch (Exception e) {
             if (log.isWarnEnabled()) {
                 log.warn("() could not load cache starting with an empty set of values");
-            } // 
+            } //
             cache = new HashMap<String, Object>();
         } // try/catch
     } // DummyCacheAdapter()
@@ -85,7 +92,7 @@ public class FileRestartCache implements PersistentRestartCache {
         if (cache!=null) {
             cache.put(key, value);
             try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(PERSISTENT_CACHE_FILENAME));
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(PERSISTENT_CACHE_FILENAME_DEFAULT));
                 oos.writeObject(cache);
                 oos.close();
             } catch (Exception e) {

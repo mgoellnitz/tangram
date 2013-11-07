@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
@@ -48,7 +48,7 @@ import org.tangram.logic.ViewShim;
  * The implementing classes are taken from a classRepository which may be dynamically filled.
  *
  */
-public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory implements InitializingBean, BeanListener {
+public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory implements BeanListener {
 
     private static final Log log = LogFactory.getLog(DynamicModelAndViewFactory.class);
 
@@ -207,7 +207,7 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
     } // createModel()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();

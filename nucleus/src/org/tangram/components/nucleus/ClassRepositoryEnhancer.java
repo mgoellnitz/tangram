@@ -21,13 +21,13 @@ package org.tangram.components.nucleus;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jdo.annotations.PersistenceCapable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datanucleus.enhancer.DataNucleusEnhancer;
-import org.springframework.beans.factory.InitializingBean;
 import org.tangram.content.BeanListener;
 import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.logic.ClassRepository;
@@ -35,7 +35,7 @@ import org.tangram.mutable.MutableContent;
 
 
 @Named
-public class ClassRepositoryEnhancer implements BeanListener, InitializingBean {
+public class ClassRepositoryEnhancer implements BeanListener {
 
     private static final Log log = LogFactory.getLog(ClassRepositoryEnhancer.class);
 
@@ -85,7 +85,7 @@ public class ClassRepositoryEnhancer implements BeanListener, InitializingBean {
     } // reset()
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         classRepository.addListener(this);
         reset();

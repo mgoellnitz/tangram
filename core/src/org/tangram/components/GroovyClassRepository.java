@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.spring;
+package org.tangram.components;
 
 import groovy.lang.GroovyClassLoader;
 import java.util.ArrayList;
@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.logging.Log;
@@ -32,16 +33,16 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.Phases;
 import org.codehaus.groovy.tools.GroovyClass;
-import org.springframework.beans.factory.InitializingBean;
 import org.tangram.Constants;
 import org.tangram.PersistentRestartCache;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.logic.ClassRepository;
 
 
 @Named
-public class GroovyClassRepository implements ClassRepository, InitializingBean, BeanListener {
+public class GroovyClassRepository implements ClassRepository, BeanListener {
 
     private static final String BYTECODE_CACHE_KEY = "tangram.bytecode.cache";
 
@@ -229,7 +230,7 @@ public class GroovyClassRepository implements ClassRepository, InitializingBean,
     } // reset();
 
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         codeCache.addListener(this);
         reset();
