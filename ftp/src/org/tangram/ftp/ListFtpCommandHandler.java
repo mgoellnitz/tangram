@@ -124,7 +124,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
                 log.info("handleCommand() root listing of all type directories");
             } // if
             for (String type : types) {
-                String name = SessionHelper.getExtension(type);
+                String name = SessionHelper.getFolder(type);
                 String item = DIR_PREFIX+"1 "+now+" "+name+"\n";
                 listing.append(item);
             } // for
@@ -138,7 +138,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
                 String extension = SessionHelper.getExtension(type);
                 Map<String, CodeResource> resources = codeResourceCache.getTypeCache(type);
                 for (CodeResource code : resources.values()) {
-                    String item = FILE_PREFIX+code.getSize()+" "+now+" "+code.getAnnotation()+"."+extension+"\n";
+                    String item = FILE_PREFIX+code.getSize()+" "+now+" "+code.getAnnotation()+extension+"\n";
                     listing.append(item);
                 } // for
             } // if

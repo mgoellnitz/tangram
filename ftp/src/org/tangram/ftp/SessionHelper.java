@@ -66,19 +66,45 @@ public class SessionHelper {
         if ("text/javascript".equals(mimeType)) {
             mimeType = "text/js";
         } // if
+        if ("text/plain".equals(mimeType)) {
+            mimeType = "";
+        } // if
+        if (mimeType.startsWith("text/")) {
+            mimeType = "."+mimeType.substring(5);
+        } // if
+        return mimeType;
+    } // getExtension()
+
+
+    public static String getFolder(String mimeType) {
+        if ("application/x-groovy".equals(mimeType)) {
+            mimeType = "text/groovy";
+        } // if
+        if ("text/html".equals(mimeType)) {
+            mimeType = "text/velocity";
+        } // if
+        if ("text/xml".equals(mimeType)) {
+            mimeType = "text/velocity-xml";
+        } // if
+        if ("text/javascript".equals(mimeType)) {
+            mimeType = "text/js";
+        } // if
         if (mimeType.startsWith("text/")) {
             mimeType = mimeType.substring(5);
         } // if
         return mimeType;
-    } // getExtension()
+    } // getFolder()
 
 
     public static String getMimetype(String directoryName) {
         String result = "text/plain";
 
         // TODO: how to distinguish XML templates
-        if ("vtl".equals(directoryName)) {
+        if ("velocity".equals(directoryName)) {
             result = "text/html";
+        } // if
+        if ("velocity-xml".equals(directoryName)) {
+            result = "text/xml";
         } // if
         if ("css".equals(directoryName)) {
             result = "text/css";
