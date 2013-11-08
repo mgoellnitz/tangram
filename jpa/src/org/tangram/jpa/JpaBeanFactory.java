@@ -19,8 +19,6 @@
 package org.tangram.jpa;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
@@ -36,12 +34,10 @@ public interface JpaBeanFactory extends MutableBeanFactory {
     Collection<Class<? extends MutableContent>> getAllClasses();
 
 
-    Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
-
-
     /**
-     * clears cache only for entries given type. Never dare to issue changes for abstract classes or interfaces!
+     * clears caches only for entries of the given type.
      *
+     * Never dare to issue changes for abstract classes or interfaces!
      * only relevant for the attached listeners
      *
      * @param cls

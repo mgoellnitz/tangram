@@ -38,7 +38,7 @@
   <!-- 
        just an empty map as a default. 
        Re-define this in your WEB-INF/tangram directory with values as needed
-  -->  
+  -->
   <bean id="jdoConfigOverrides" class="java.util.HashMap" />
     
   <!-- this one moved out of components and is not auto-scanned anymore -->

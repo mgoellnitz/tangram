@@ -19,7 +19,6 @@
 package org.tangram.jpa;
 
 import org.tangram.content.Content;
-import org.tangram.mutable.MutableCode;
 
 
 /**
@@ -31,11 +30,5 @@ public class JpaBeanFactoryImpl extends AbstractJpaBeanFactory {
     protected Object getPrimaryKey(String internalId, Class<? extends Content> kindClass) {
         return internalId;
     } // getPrimaryKey()
-
-
-    @Override
-    public Class<? extends MutableCode> getCodeClass() {
-        return Code.class;
-    } // getCodeClass()
 
 } // JpaBeanFactoryImpl

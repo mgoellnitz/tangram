@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -18,6 +18,7 @@
  */
 package org.tangram.ftp;
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +30,7 @@ import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
+import org.tangram.mutable.MutableContent;
 
 
 /**
@@ -63,7 +65,8 @@ public class StorFtpCommandHandler extends StorCommandHandler {
                 Map<String, CodeResource> cache = codeResourceCache.getTypeCache(mimetype);
                 String annotation = SessionHelper.getAnnotation(filename);
                 CodeResource lookup = cache.get(annotation);
-                Class<? extends MutableCode> c = beanFactory.getCodeClass();
+                final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(Code.class).get(0);
+                Class<? extends MutableCode> c = (Class<? extends MutableCode >)codeClass;
                 MutableCode code = (lookup==null) ? beanFactory.createBean(c) : beanFactory.getBeanForUpdate(c, lookup.getId());
 
                 code.setAnnotation(annotation);

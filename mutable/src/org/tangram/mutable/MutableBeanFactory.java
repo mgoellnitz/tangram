@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -19,7 +19,10 @@
 package org.tangram.mutable;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import org.tangram.content.BeanFactory;
+import org.tangram.content.Content;
 
 
 public interface MutableBeanFactory extends BeanFactory {
@@ -59,13 +62,14 @@ public interface MutableBeanFactory extends BeanFactory {
 
     /**
      * Persist a given bean.
+     *
      * @param <T>
      * @param bean
      * @return true if persisting could be completed successfully
      */
     <T extends MutableContent> boolean persist(T bean);
 
-    
+
     /**
      * return a collection of content classes available for mutable contents.
      * No abstract classes will be in the list.
@@ -76,10 +80,8 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
-     * return the class descriptor for the mutable class representing code in this implementation.
-     *
-     * @return class representing mutable code resources
+     * Return a map mapping abstract classes or interfaces to non-abstract classes implementing this interface.
      */
-    public Class<? extends MutableCode> getCodeClass();
+    Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
 
 } // MutableBeanFactory

@@ -571,7 +571,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     /**
-     * just to support JSP weak calling of methods with no parameters
+     * just to support JSP's weak calling of methods with no parameters
      *
      * @param baseClass
      * @return

@@ -19,8 +19,6 @@
 package org.tangram.jdo;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import javax.jdo.PersistenceManager;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
@@ -37,12 +35,10 @@ public interface JdoBeanFactory extends MutableBeanFactory {
     Collection<Class<? extends MutableContent>> getAllClasses();
 
 
-    Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
-
-
     /**
-     * clears cache only for entries given type. Never dare to issue changes for abstract classes or interfaces!
+     * clears caches only for entries of the given type.
      *
+     * Never dare to issue changes for abstract classes or interfaces!
      * only relevant for the attached listeners
      *
      * @param cls
@@ -57,7 +53,7 @@ public interface JdoBeanFactory extends MutableBeanFactory {
      */
     PersistenceManager getManager();
 
-    
+
     /**
      * set a list of classes to be used as model classes in addition to the statically scanned ones.
      *

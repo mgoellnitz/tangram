@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jmx.access.InvocationFailureException;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
-import org.tangram.mutable.MutableCode;
 
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
@@ -126,11 +125,5 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     protected String getClassNamesCacheKey() {
         return com.google.appengine.api.utils.SystemProperty.applicationVersion.get();
     } // getClassNamesCacheKey()
-
-
-    @Override
-    public Class<? extends MutableCode> getCodeClass() {
-        return Code.class;
-    } // getCodeClass()
 
 } // GaeBeanFactory

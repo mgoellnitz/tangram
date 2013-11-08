@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -18,6 +18,7 @@
  */
 package org.tangram.ftp;
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
@@ -27,6 +28,7 @@ import org.mockftpserver.stub.command.RntoCommandHandler;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
+import org.tangram.mutable.MutableContent;
 
 
 /**
@@ -59,7 +61,9 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
             log.info("handleCommand() renaming "+id+" to "+newName);
         } // if
         if (id!=null) {
-            MutableCode code = beanFactory.getBeanForUpdate(beanFactory.getCodeClass(), id);
+            final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(Code.class).get(0);
+            Class<? extends MutableCode> c = (Class<? extends MutableCode>) codeClass;
+            MutableCode code = beanFactory.getBeanForUpdate(c, id);
             if (code!=null) {
                 code.setAnnotation(SessionHelper.getAnnotation(newName));
                 beanFactory.persist(code);
