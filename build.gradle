@@ -24,7 +24,7 @@ allprojects {
 /*
  *
  *  Helper method to increment a build counter in each subproject to have build numbers
- *  built into the packages to be able to tracke any change
+ *  built into the packages to be able to track any change
  *
  */
 public incrementBuildCounter(Project prj) {
