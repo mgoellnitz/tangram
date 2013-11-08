@@ -27,7 +27,10 @@
   <!--  this should include as few packages as possible -->
   <context:component-scan base-package="org.tangram.components" />
 
+  <!--
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  -->
+  <bean id="propertyConfigurer" class="org.tangram.spring.PropertySplittingPlaceholderConfigurer">
     <property name="locations">
       <list>
         <value>classpath*:/tangram/*.properties</value>
