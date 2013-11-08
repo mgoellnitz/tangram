@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -62,9 +62,10 @@ public class RetrFtpCommandHandler extends RetrCommandHandler {
             if (log.isInfoEnabled()) {
                 log.info("processData() 'directory' for "+type+" is "+cache);
             } // if
-            CodeResource code = cache.get(annotation);
+            final String key = "text/plain".equals(type) ? filename : annotation;
+            CodeResource code = cache.get(key);
             if (log.isInfoEnabled()) {
-                log.info("processData() code for "+annotation+" is "+code);
+                log.info("processData() code for "+key+" is "+code);
             } // if
             data = code.getCodeText().getBytes("UTF-8");
         } catch (Exception e) {

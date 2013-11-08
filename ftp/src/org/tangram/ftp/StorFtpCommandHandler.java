@@ -18,7 +18,6 @@
  */
 package org.tangram.ftp;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,7 +64,7 @@ public class StorFtpCommandHandler extends StorCommandHandler {
                 Map<String, CodeResource> cache = codeResourceCache.getTypeCache(mimetype);
                 String annotation = SessionHelper.getAnnotation(filename);
                 CodeResource lookup = cache.get(annotation);
-                final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(Code.class).get(0);
+                final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(MutableCode.class).get(0);
                 Class<? extends MutableCode> c = (Class<? extends MutableCode >)codeClass;
                 MutableCode code = (lookup==null) ? beanFactory.createBean(c) : beanFactory.getBeanForUpdate(c, lookup.getId());
 

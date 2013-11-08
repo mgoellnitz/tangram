@@ -18,7 +18,6 @@
  */
 package org.tangram.ftp;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
@@ -61,7 +60,7 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
             log.info("handleCommand() renaming "+id+" to "+newName);
         } // if
         if (id!=null) {
-            final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(Code.class).get(0);
+            final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(MutableCode.class).get(0);
             Class<? extends MutableCode> c = (Class<? extends MutableCode>) codeClass;
             MutableCode code = beanFactory.getBeanForUpdate(c, id);
             if (code!=null) {
