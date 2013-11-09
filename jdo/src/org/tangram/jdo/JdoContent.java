@@ -37,18 +37,18 @@ public abstract class JdoContent implements MutableContent {
 
 
     /**
-     * get readable and storable representation of ID
+     * get readable and storable representation of ID.
      *
-     * @param oid
-     * id as JDO internal object
+     * @param oid id as JDO internal object
      * @return id as readable and storable string
      */
     protected abstract String postprocessPlainId(Object oid);
 
 
     /**
-     * returns the string representation of the objects persistent ID. Be aware not to call this before the object has
-     * been persisted!
+     * returns the string representation of the objects persistent ID.
+     *
+     * Be aware not to call this before the object has been persisted!
      */
     @Override
     public String getId() {
@@ -72,11 +72,11 @@ public abstract class JdoContent implements MutableContent {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
+     * One more convenience method to use IDs in persistence layer.
      *
-     * @param c
-     * Content instance - may be null
+     * This is still a useful pattern in google app engine scenarios
+     *
+     * @param c Content instance - may be null
      * @return id of content or null
      */
     protected String getId(Content c) {
@@ -85,11 +85,11 @@ public abstract class JdoContent implements MutableContent {
 
 
     /**
-     * One more convenience method to use IDs in persistence layer - which is still a useful pattern in google app
-     * engine scenarios
+     * One more convenience method to use IDs in persistence layer.
      *
-     * @param contents
-     * list of contents - should not be null
+     * This is still a useful pattern in google app engine scenarios
+     *
+     * @param contents list of contents - should not be null
      * @return list of ids for the given list of contents
      */
     protected List<String> getIds(List<? extends Content> contents) {
