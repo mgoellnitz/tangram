@@ -71,7 +71,7 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
-     * return a collection of content classes available for mutable contents.
+     * return a collection of all content classes available for mutable contents.
      * No abstract classes will be in the list.
      *
      * @return list of classes
@@ -80,8 +80,21 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
-     * Return a map mapping abstract classes or interfaces to non-abstract classes implementing this interface.
+     * Return a map mapping abstract classes to inheriting non-abstract classes.
+     *
+     * This map is used in the editor to map abstract classes to inheriting non-abstract classes when it
+     * comes to ask the user which non-abstract class to instanciate.
      */
     Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
+
+
+    /**
+     * Return a list of assignable non-bastract classes.
+     *
+     * @param <T> abstract class or interfaces
+     * @param c class instance for this type
+     * @return list of non abstract classes assignable to the given type
+     */
+    <T extends Content> List<Class<T>> getImplementingClasses(Class<T> c);
 
 } // MutableBeanFactory

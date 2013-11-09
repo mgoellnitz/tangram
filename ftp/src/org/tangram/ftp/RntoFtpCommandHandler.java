@@ -27,7 +27,6 @@ import org.mockftpserver.stub.command.RntoCommandHandler;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
-import org.tangram.mutable.MutableContent;
 
 
 /**
@@ -60,9 +59,8 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
             log.info("handleCommand() renaming "+id+" to "+newName);
         } // if
         if (id!=null) {
-            final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(MutableCode.class).get(0);
-            Class<? extends MutableCode> c = (Class<? extends MutableCode>) codeClass;
-            MutableCode code = beanFactory.getBeanForUpdate(c, id);
+            final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
+            MutableCode code = beanFactory.getBeanForUpdate(codeClass, id);
             if (code!=null) {
                 code.setAnnotation(SessionHelper.getAnnotation(newName));
                 beanFactory.persist(code);

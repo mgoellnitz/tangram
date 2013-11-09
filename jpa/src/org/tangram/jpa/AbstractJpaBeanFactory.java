@@ -571,14 +571,26 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
     } // setAdditionalClasses()
 
 
-    private List<Class<? extends MutableContent>> getImplementingClasses(Class<? extends Content> baseClass) {
+    @Override
+    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
+        List<Class<T>> result = new ArrayList<Class<T>>();
+
+        for (Class<? extends MutableContent> c : getClasses()) {
+            if (baseClass.isAssignableFrom(c)) {
+                result.add((Class<T>) c);
+            } // if
+        } // for
+
+        return result;
+    } // getImplementingClasses()
+
+
+    private List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
         List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
 
         for (Class<? extends MutableContent> c : getClasses()) {
-            if ((c.getModifiers()&Modifier.ABSTRACT)==0) {
-                if (baseClass.isAssignableFrom(c)) {
-                    result.add(c);
-                } // if
+            if (baseClass.isAssignableFrom(c)) {
+                result.add(c);
             } // if
         } // for
 
@@ -598,10 +610,10 @@ public abstract class AbstractJpaBeanFactory extends AbstractMutableBeanFactory 
             implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
 
             // Add the very basic root classes directly here - they won't get auto detected otherwise
-            implementingClassesMap.put(JpaContent.class, getImplementingClasses(JpaContent.class));
-            implementingClassesMap.put(Content.class, getImplementingClasses(Content.class));
+            implementingClassesMap.put(JpaContent.class, getImplementingClassesForModelClass(JpaContent.class));
+            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
             for (Class<? extends Content> c : getAllClasses()) {
-                implementingClassesMap.put(c, getImplementingClasses(c));
+                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
             } // for
         } // if
         return implementingClassesMap;

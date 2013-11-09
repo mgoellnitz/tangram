@@ -429,6 +429,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      * Cache key for the persistent cache to store all class names.
      * The stored values are taken from the class path package scan and
      * asumed to be persistent over re-starts of the applicaion.
+     *
      * @return String to be used as a cache key
      */
     protected String getClassNamesCacheKey() {
@@ -555,19 +556,31 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // setAdditionalClasses()
 
 
-    private List<Class<? extends MutableContent>> getImplementingClasses(Class<? extends Content> baseClass) {
-        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
+    @Override
+    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
+        List<Class<T>> result = new ArrayList<Class<T>>();
 
         for (Class<? extends MutableContent> c : getClasses()) {
-            if ((c.getModifiers()&Modifier.ABSTRACT)==0) {
-                if (baseClass.isAssignableFrom(c)) {
-                    result.add(c);
-                } // if
+            if (baseClass.isAssignableFrom(c)) {
+                result.add((Class<T>) c);
             } // if
         } // for
 
         return result;
     } // getImplementingClasses()
+
+
+    private List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
+        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
+
+        for (Class<? extends MutableContent> c : getClasses()) {
+            if (baseClass.isAssignableFrom(c)) {
+                result.add(c);
+            } // if
+        } // for
+
+        return result;
+    } // getImplementingClassesForModelClass()
 
 
     /**
@@ -582,10 +595,10 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
 
             // Add the very basic root classes directly here - they won't get auto detected otherwise
-            implementingClassesMap.put(JdoContent.class, getImplementingClasses(JdoContent.class));
-            implementingClassesMap.put(Content.class, getImplementingClasses(Content.class));
+            implementingClassesMap.put(JdoContent.class, getImplementingClassesForModelClass(JdoContent.class));
+            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
             for (Class<? extends Content> c : getAllClasses()) {
-                implementingClassesMap.put(c, getImplementingClasses(c));
+                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
             } // for
         } // if
         return implementingClassesMap;

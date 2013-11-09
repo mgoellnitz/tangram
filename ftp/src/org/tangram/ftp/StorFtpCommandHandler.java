@@ -29,7 +29,6 @@ import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
-import org.tangram.mutable.MutableContent;
 
 
 /**
@@ -64,9 +63,8 @@ public class StorFtpCommandHandler extends StorCommandHandler {
                 Map<String, CodeResource> cache = codeResourceCache.getTypeCache(mimetype);
                 String annotation = SessionHelper.getAnnotation(filename);
                 CodeResource lookup = cache.get(annotation);
-                final Class<? extends MutableContent> codeClass = beanFactory.getImplementingClassesMap().get(MutableCode.class).get(0);
-                Class<? extends MutableCode> c = (Class<? extends MutableCode >)codeClass;
-                MutableCode code = (lookup==null) ? beanFactory.createBean(c) : beanFactory.getBeanForUpdate(c, lookup.getId());
+                final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
+                MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBeanForUpdate(codeClass, lookup.getId());
 
                 code.setAnnotation(annotation);
                 code.setCode(new String(data, "UTF-8").toCharArray());
@@ -75,7 +73,9 @@ public class StorFtpCommandHandler extends StorCommandHandler {
             } // if
         } // if
 
-        log.info("afterProcessData() "+dir+" / "+filename+" ("+data.length+"b)");
+        if (log.isInfoEnabled()) {
+            log.info("afterProcessData() "+dir+" / "+filename+" ("+data.length+"b)");
+        } // if
     } // afterProcessData()
 
 } // StorFtpCommandHandler
