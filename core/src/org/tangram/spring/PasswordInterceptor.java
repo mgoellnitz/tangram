@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,31 +14,33 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
-package org.tangram.nucleus;
+package org.tangram.spring;
 
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.Constants;
 
 /**
- * 
+ *
  * Interceptor to check if a user is logged in, or if we should use generic password protection with users preconfigured
- * in an XML config file
- * 
+ * in an XML config file.
+ *
+ * This Code here is somewhere between dummy and glue code for simple spring security setups.
+ * The login interception for such scenarios is done directly by spring securities filters and this implementation
+ * maps the results to the admin and allowed user lists.
+ *
  * allowedUsers - if not empty only these users are allowed to log-in.
- * 
+ *
  * adminUsers - same as allowedUsers (should be a subset of it) but these users get the access to the editing links
- * 
+ *
  */
 public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
