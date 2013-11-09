@@ -27,6 +27,7 @@ import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.ListCommandHandler;
 import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 
 
@@ -124,7 +125,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
                 log.info("handleCommand() root listing of all type directories");
             } // if
             for (String type : types) {
-                String name = SessionHelper.getFolder(type);
+                String name = CodeHelper.getFolder(type);
                 String item = DIR_PREFIX+"1 "+now+" "+name+"\n";
                 listing.append(item);
             } // for
@@ -133,9 +134,9 @@ public class ListFtpCommandHandler extends ListCommandHandler {
             if (log.isInfoEnabled()) {
                 log.info("handleCommand() listing for directory "+dir);
             } // if
-            String type = SessionHelper.getMimetype(dir);
+            String type = CodeHelper.getMimetype(dir);
             if (types.contains(type)) {
-                String extension = SessionHelper.getExtension(type);
+                String extension = CodeHelper.getExtension(type);
                 Map<String, CodeResource> resources = codeResourceCache.getTypeCache(type);
                 for (CodeResource code : resources.values()) {
                     String item = FILE_PREFIX+code.getSize()+" "+now+" "+code.getAnnotation()+extension+"\n";

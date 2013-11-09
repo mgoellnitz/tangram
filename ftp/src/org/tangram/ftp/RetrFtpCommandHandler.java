@@ -26,6 +26,7 @@ import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RetrCommandHandler;
 import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 
 
@@ -56,7 +57,7 @@ public class RetrFtpCommandHandler extends RetrCommandHandler {
             if (log.isInfoEnabled()) {
                 log.info("processData() retrieving "+filename);
             } // if
-            String type = SessionHelper.getMimetype(SessionHelper.getDirectoy(session));
+            String type = CodeHelper.getMimetype(SessionHelper.getDirectoy(session));
             String annotation = filename.substring(0, filename.lastIndexOf('.'));
             Map<String, CodeResource> cache = codeResourceCache.getTypeCache(type);
             if (log.isInfoEnabled()) {

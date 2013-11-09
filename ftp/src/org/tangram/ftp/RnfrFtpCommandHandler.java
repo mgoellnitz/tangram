@@ -26,6 +26,7 @@ import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RnfrCommandHandler;
 import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 
 
@@ -60,11 +61,11 @@ public class RnfrFtpCommandHandler extends RnfrCommandHandler {
         if (log.isInfoEnabled()) {
             log.info("handleCommand() renaming from "+oldName+" in directory "+dir);
         } // if
-        String mimetype = SessionHelper.getMimetype(dir);
+        String mimetype = CodeHelper.getMimetype(dir);
         Map<String, CodeResource> typeCache = codeResourceCache.getTypeCache(mimetype);
         // directory exists?
         if (typeCache!=null) {
-            CodeResource resource = typeCache.get(SessionHelper.getAnnotation(oldName));
+            CodeResource resource = typeCache.get(CodeHelper.getAnnotation(oldName));
             if (resource!=null) {
                 session.setAttribute(SessionHelper.RENAME_ID, resource.getId());
             } // if

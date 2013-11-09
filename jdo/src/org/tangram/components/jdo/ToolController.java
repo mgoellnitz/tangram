@@ -20,14 +20,9 @@ package org.tangram.components.jdo;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.zip.CRC32;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -94,67 +89,6 @@ public class ToolController extends RenderingController {
     private String getFilename(CodeResource code) {
         return code.getAnnotation().replace(';', '_');
     } // getFilename()
-
-
-    @RequestMapping(value = "/codes")
-    public ModelAndView codes(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            if (!request.getRequestURI().endsWith(".zip")) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                return null;
-            } // if
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new IOException("User may not execute action");
-            } // if
-
-            long now = System.currentTimeMillis();
-
-            response.setContentType("application/x-zip-compressed");
-
-            CRC32 crc = new CRC32();
-
-            ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
-            zos.setComment("Tangram Google AppEngine Codes");
-            zos.setLevel(9);
-            // List<CodeResource> codes = beanFactory.listBeans(CodeResource.class);
-            Collection<CodeResource> codes = codeResourceCache.getCodes();
-            for (CodeResource code : codes) {
-                if (StringUtils.isNotBlank(code.getAnnotation())) {
-                    String mimeType = code.getMimeType();
-                    if ("application/x-groovy".equals(mimeType)) {
-                        mimeType = "text/groovy";
-                    } // if
-                    if ("text/html".equals(mimeType)) {
-                        mimeType = "text/vtl";
-                    } // if
-                    if ("text/xml".equals(mimeType)) {
-                        mimeType = "text/vtl";
-                    } // if
-                    if ("text/javascript".equals(mimeType)) {
-                        mimeType = "text/js";
-                    } // if
-                    if (mimeType.startsWith("text/")) {
-                        String subType = mimeType.substring(5);
-                        byte[] bytes = code.getCodeText().getBytes("UTF-8");
-                        ZipEntry ze = new ZipEntry(subType+"/"+getFilename(code)+"."+subType);
-                        ze.setTime(now);
-                        crc.reset();
-                        crc.update(bytes);
-                        ze.setCrc(crc.getValue());
-                        zos.putNextEntry(ze);
-                        zos.write(bytes);
-                        zos.closeEntry();
-                    } // if
-                } // if
-            } // for
-            zos.finish();
-            zos.close();
-
-            return null;
-        } catch (Exception e) {
-            return modelAndViewFactory.createModelAndView(e, request, response);
-        } // try/catch
-    } // codes()
 
 
     @Override

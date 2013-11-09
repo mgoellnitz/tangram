@@ -26,6 +26,7 @@ import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.StorCommandHandler;
 import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
@@ -59,9 +60,9 @@ public class StorFtpCommandHandler extends StorCommandHandler {
         if (!filename.startsWith("//netbeans-timestampdiff")) {
             if (dir.length()>0) {
                 dir = SessionHelper.getDirectoy(session);
-                String mimetype = SessionHelper.getMimetype(dir);
+                String mimetype = CodeHelper.getMimetype(dir);
                 Map<String, CodeResource> cache = codeResourceCache.getTypeCache(mimetype);
-                String annotation = SessionHelper.getAnnotation(filename);
+                String annotation = CodeHelper.getAnnotation(filename);
                 CodeResource lookup = cache.get(annotation);
                 final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
                 MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBeanForUpdate(codeClass, lookup.getId());

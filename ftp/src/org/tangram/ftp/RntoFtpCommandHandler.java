@@ -25,6 +25,7 @@ import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RntoCommandHandler;
 import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
 
@@ -62,7 +63,7 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
             final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
             MutableCode code = beanFactory.getBeanForUpdate(codeClass, id);
             if (code!=null) {
-                code.setAnnotation(SessionHelper.getAnnotation(newName));
+                code.setAnnotation(CodeHelper.getAnnotation(newName));
                 beanFactory.persist(code);
             } // if
         } // if

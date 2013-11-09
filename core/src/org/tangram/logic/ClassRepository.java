@@ -22,6 +22,10 @@ import java.util.Map;
 import java.util.Set;
 import org.tangram.content.BeanListener;
 
+
+/**
+ * Provides a dynamic repository of classes.
+ */
 public interface ClassRepository {
 
     /**
