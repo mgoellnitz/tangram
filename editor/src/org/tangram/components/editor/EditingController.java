@@ -357,6 +357,7 @@ public class EditingController extends RenderingController {
             model.put("request", request);
             model.put("response", response);
             model.put("classes", classes);
+            model.put("prefix", Utils.getUriPrefix(request));
             if (cls!=null) {
                 model.put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
             } // if
@@ -379,14 +380,16 @@ public class EditingController extends RenderingController {
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
             ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
-            mav.getModel().put(ATTRIBUTE_WRAPPER, Utils.createWrapper(content));
+            Map<String, Object> model = mav.getModel();
+            model.put(ATTRIBUTE_WRAPPER, Utils.createWrapper(content));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
-                mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
+                model.put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
-            mav.getModel().put("classes", getMutableBeanFactory().getClasses());
-            final Class<? extends Content> cls = content.getClass();
-            mav.getModel().put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
+            model.put("classes", getMutableBeanFactory().getClasses());
+            model.put("prefix", Utils.getUriPrefix(request));
+            Class<? extends Content> cls = content.getClass();
+            model.put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
             return mav;
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);

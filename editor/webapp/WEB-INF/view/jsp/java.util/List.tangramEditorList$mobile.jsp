@@ -9,10 +9,10 @@
 <title>Tangram - Liste</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width = 320, initial-scale = 0.95" />  
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/mobile.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print" />
-<link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/e/favicon.ico" />
-<script type="text/javascript" src="<%=Utils.getUriPrefix(request)%>/editor/script.js">
+<link rel="stylesheet" href="${prefix}/editor/mobile.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print" />
+<link rel="shortcut icon" href="${prefix}/t/e/favicon.ico" />
+<script type="text/javascript" src="${prefix}/editor/script.js">
 </script>
 </head>
 <c:forEach items="${self}" var="item"><c:set var="oneItem" value="${item}" /></c:forEach>

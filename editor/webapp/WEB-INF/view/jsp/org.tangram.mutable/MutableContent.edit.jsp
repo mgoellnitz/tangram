@@ -16,12 +16,12 @@
 <head>
 <title>Tangram - <cms:include bean="${self}" view="description"/>: ${designClass.simpleName}</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/screen.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print"/>
-<link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/e/favicon.ico" />
-<script type="text/javascript" src="<%=Utils.getUriPrefix(request)%>/editor/ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="<%=Utils.getUriPrefix(request)%>/editor/codemirror/js/codemirror.js"></script>
-<script type="text/javascript" src="<%=Utils.getUriPrefix(request)%>/editor/script.js"></script>
+<link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
+<link rel="shortcut icon" href="${prefix}/t/e/favicon.ico" />
+<script type="text/javascript" src="${prefix}/editor/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="${prefix}/editor/codemirror/js/codemirror.js"></script>
+<script type="text/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
@@ -143,7 +143,7 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
 %><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=Utils.getPropertyConverter().getEditString(value)%></textarea>
 <script type="text/javascript">
   var editor = CodeMirror.fromTextArea('code', {
-    height: "dynamic", continuousScanning: 500, path: "<%=Utils.getUriPrefix(request)%>/editor/codemirror/js/",
+    height: "dynamic", continuousScanning: 500, path: "${prefix}/editor/codemirror/js/",
     parserfile: <%=parserfile%>,
     stylesheet: <%=stylesheet%>,
     lineNumbers: true
