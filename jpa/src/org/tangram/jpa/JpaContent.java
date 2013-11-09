@@ -41,8 +41,9 @@ public abstract class JpaContent implements MutableContent {
 
 
     /**
-     * returns the string representation of the objects persistent ID. Be aware not to call this before the object has
-     * been persisted!
+     * returns the string representation of the objects persistent ID.
+     *
+     * Be aware not to call this before the object has been persisted!
      */
     @Override
     public String getId() {

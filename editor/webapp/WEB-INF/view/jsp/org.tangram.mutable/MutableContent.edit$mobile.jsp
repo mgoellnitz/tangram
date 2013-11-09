@@ -13,7 +13,7 @@
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<title>Tangram - ${self.class.simpleName} (${self.id})</title>
+<title>Tangram - ${designClass.simpleName} (${self.id})</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width = 320, initial-scale = 0.95" />  
 <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/mobile.css" type="text/css" media="screen"/>
@@ -28,7 +28,7 @@ Objekt Bearbeiten
 | <a href="#" onclick="window.close();">[ X ]</a> 
 &#160; &#160; <input type="submit" value="    Sichern    " class="cms_editor_button"/>
 <br/>
-Typ: </span>${self.class.package.name}.<span class="cms_editor_title">${self.class.simpleName}</span><br/>
+Typ: </span>${designClass.package.name}.<span class="cms_editor_title">${designClass.simpleName}</span><br/>
 <span class="cms_editor_label">ID: </span>${self.id}
 <c:if test="${! empty normalView}"><br/><a <c:out value="${normalView}" escapeXml="false" />>Web Ansicht</a></c:if>
 </div>

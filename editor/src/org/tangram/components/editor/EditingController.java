@@ -357,6 +357,9 @@ public class EditingController extends RenderingController {
             model.put("request", request);
             model.put("response", response);
             model.put("classes", classes);
+            if (cls!=null) {
+                model.put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
+            } // if
             return modelAndViewFactory.createModelAndView(model, "tangramEditorList"+getVariant(request));
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
@@ -382,6 +385,8 @@ public class EditingController extends RenderingController {
                 mav.getModel().put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
             mav.getModel().put("classes", getMutableBeanFactory().getClasses());
+            final Class<? extends Content> cls = content.getClass();
+            mav.getModel().put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
             return mav;
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
