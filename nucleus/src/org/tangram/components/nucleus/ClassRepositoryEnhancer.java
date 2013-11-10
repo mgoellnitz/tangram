@@ -47,6 +47,7 @@ public class ClassRepositoryEnhancer implements BeanListener {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void reset() {
         Map<String, Class<MutableContent>> classes = classRepository.get(MutableContent.class);
         if (log.isInfoEnabled()) {

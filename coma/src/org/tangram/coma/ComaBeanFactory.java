@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +14,17 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.coma;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 
+@SuppressWarnings("unchecked")
 public class ComaBeanFactory extends AbstractComaBeanFactory {
 
     @Override

@@ -86,7 +86,6 @@ public class CodeHelper {
     public static String getMimetype(String directoryName) {
         String result = "text/plain";
 
-        // TODO: how to distinguish XML templates
         if ("velocity".equals(directoryName)) {
             result = "text/html";
         } // if
@@ -110,7 +109,6 @@ public class CodeHelper {
     /**
      * derives annotation from pseudo filename.
      */
-    // TODO: same usage for codes.zip
     public static String getAnnotation(String filename) {
         int idx = filename.lastIndexOf('.');
         // TODO: the use of these two should be switchable

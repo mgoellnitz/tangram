@@ -28,6 +28,7 @@ import org.tangram.content.Content;
 import org.tangram.mutable.MutableContent;
 
 
+
 public abstract class JdoContent implements MutableContent {
 
     private static final Log log = LogFactory.getLog(JdoContent.class);

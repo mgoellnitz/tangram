@@ -557,6 +557,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
         List<Class<T>> result = new ArrayList<Class<T>>();
 
