@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableContent;
+import org.tangram.view.Utils;
 
 
 
@@ -93,6 +94,7 @@ public abstract class JdoContent implements MutableContent {
      * @param contents list of contents - should not be null
      * @return list of ids for the given list of contents
      */
+    @Deprecated
     protected List<String> getIds(List<? extends Content> contents) {
         List<String> result = new ArrayList<String>();
         if (contents!=null) {
@@ -102,6 +104,34 @@ public abstract class JdoContent implements MutableContent {
         } // if
         return result;
     } // getIds()
+
+
+    /**
+     * Legacy helper to store IDs as references.
+     *
+     * @param id
+     * @return content for the given ID
+     */
+    @Deprecated
+    protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
+        return Utils.getBeanFactory().getBean(cls, id);
+    } // getContent()
+
+
+    /**
+     * Legacy helper to store IDs as references.
+     *
+     * @param ids list of ids to get contents for
+     * @return list of contents for the given ids in the same order
+     */
+    @Deprecated
+    protected <T extends JdoContent> List<T> getContent(Class<T> cls, List<String> ids) {
+        List<T> result = new ArrayList<T>(ids.size());
+        for (String id : ids) {
+            result.add(Utils.getBeanFactory().getBean(cls, id));
+        } // for
+        return result;
+    } // getContent()
 
 
     @Override
