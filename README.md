@@ -1,10 +1,12 @@
 Tangram Dynamic Extendable Web Applications
-==============================
+===========================================
 
 Tangram is a framework for the object oriented web rendering of java beans. 
-It comes with limited CMS functionality by using JDO as a source and presenting 
+It comes with limited CMS functionality by using Java Data Object (JDO) or 
+Java Persistence API (JPA) implementations as data sources and presenting 
 a more or less generic editor for that situation. JDO can be used in conjunction 
-with Google App Engine or stand alone with relational database systems. 
+with Google App Engine while JDO and JPA are tested with relational database 
+systems and MongoDB stand alone or on the Cloudbees and OpenShift plattforms.
 Additionally the use of CoreMedia CMS repositories as data source is possible.
 
 The emphasis of the latest work and releases is towards dynamic templating, 
@@ -23,17 +25,32 @@ http://qiqiaoban.blogspot.de/2012/12/on-fly-url-formate-dynamisch-anpassen.html
 
 http://qiqiaoban.blogspot.de/2012/12/nie-wieder-keinen-shim-mer.html
 
-Examples are presented for JDO with RDBMS (SQLite is used for the example contens), 
+Examples are presented for JDO with RDBMS (hsqldb is used for the example contents), 
 JDO on Google App Engine, and CoreMedia CMS's most simple example application.
 
+More examples for cloud plattforms will presented some time in the near future.
+
+Maven Repositories
+------------------
+
+Snapshots:
+
+http://repository-tangram.forge.cloudbees.com/snapshot
+
+Releases:
+
+http://my-amor.appspot.com/repository/
+
 HOW-TO
+======
 
 To make all this work you need
 
 - Java 6 or 7
-- Gradle 1.6, 1.7, or 1.8
+- Gradle 1.8
 
-To make things easier for applications using this framework we provide a gradle plugin now. This means that you now have to prepare that first:
+To make things easier for applications using this framework we provide a gradle plugin now. 
+This means that you now have to prepare that first:
 
 ```bash
 cd gradle-plugin
@@ -54,7 +71,8 @@ gradle clean publishToMavenLocal
 
 and then you can build and use your projects using tangram or the examples
 
-Optionally you might need Google App Engine but just if you want to use it for your target systems
+Optionally you might need Google App Engine but just if you want to use it 
+for your target systems
 (Yes, you will want to install java AND python version)
 
 Eclipse preparation:
@@ -62,10 +80,12 @@ Eclipse preparation:
 ```bash
 gradle eclipse
 ```
-  
 (output folders are set to .../build/classes/main not to .../bin)
 
+(We don't recommend using eclipse anymore)
+  
 Changes 0.9
+===========
 
 0.9 is a code cleanup and refactoring version to get a starting point for other backend and platform solutions. 
 
