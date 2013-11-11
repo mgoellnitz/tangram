@@ -36,6 +36,6 @@ public class TangramVersions {
     String datanucleus_enhancer = '3.1.1'
     String datanucleus_appengine = '2.1.2'
 
-    String appengine = '1.8.6'
+    String appengine = '1.8.7'
   
 } // TangramVersions
