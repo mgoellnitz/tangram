@@ -26,9 +26,6 @@ dependencies {
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
 
-  // needed by dependent modules so log4j configs will result in some output
-  compile "log4j:log4j:1.2.17"
-
   testCompile "junit:junit:$versions.junit"
 }
 

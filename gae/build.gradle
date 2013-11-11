@@ -18,11 +18,11 @@
  */
 apply from: '../webapp.gradle'
 
-war.dependsOn ':tangram-jdo:war'
+war.dependsOn ':tangram-mutable:war'
 
 // Google App Engine always includes the editor
 dependencies {
-  webapp project (':tangram-jdo')
+  webapp project (':tangram-mutable')
   webapp project (':tangram-editor')
 
   providedCompile "javax.servlet:servlet-api:$versions.servlet"

@@ -16,11 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-apply from: '../lib.gradle'
+apply from: '../webapp.gradle'
+
+war.dependsOn ':tangram-core:war'
 
 dependencies {
+  webapp project(':tangram-core')
   compile project(':tangram-core')
   
+  // needed by dependent modules so log4j configs will result in some output
+  compile "log4j:log4j:1.2.17"
+
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }
