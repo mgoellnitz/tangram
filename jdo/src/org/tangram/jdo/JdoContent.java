@@ -125,7 +125,7 @@ public abstract class JdoContent implements MutableContent {
      * @return list of contents for the given ids in the same order
      */
     @Deprecated
-    protected <T extends JdoContent> List<T> getContent(Class<T> cls, List<String> ids) {
+    protected <T extends JdoContent> List<T> getContents(Class<T> cls, List<String> ids) {
         List<T> result = new ArrayList<T>(ids.size());
         for (String id : ids) {
             result.add(Utils.getBeanFactory().getBean(cls, id));
