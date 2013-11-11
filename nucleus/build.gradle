@@ -26,11 +26,6 @@ dependencies {
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
 
-  // Spring security is up to now used by configuration only:
-  // compile "org.springframework.security:spring-security-core:$versions.springsecurity"
-  // compile "org.springframework.security:spring-security-config:$versions.springsecurity"
-  // compile "org.springframework.security:spring-security-web:$versions.springsecurity"
-
   // needed by dependent modules so log4j configs will result in some output
   compile "log4j:log4j:1.2.17"
 

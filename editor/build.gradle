@@ -18,10 +18,10 @@
  */
 apply from: '../webapp.gradle'
 
-war.dependsOn ':tangram-mutable:war'
+war.dependsOn ':tangram-core:war'
 
 dependencies {
-  webapp project(':tangram-mutable')
+  webapp project(':tangram-core')
   compile project(':tangram-mutable')
   
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
