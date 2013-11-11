@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.jdo;
+package org.tangram.components.mutable;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -31,14 +31,18 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.components.spring.StatisticsController;
-import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingController;
-import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
+import org.tangram.mutable.MutableBeanFactory;
 
 
+/**
+ * Generic tool controller for repositories with mutable contents.
+ *
+ * Right at the moment it only can clean the content caches and all depending caches.
+ */
 @Controller
 public class ToolController extends RenderingController {
 
@@ -64,18 +68,18 @@ public class ToolController extends RenderingController {
                 throw new IOException("User may not clear cache");
             } // if
 
-            JdoBeanFactory jdoBeanFactory = (JdoBeanFactory) beanFactory;
+            MutableBeanFactory mutableBeanFactory = (MutableBeanFactory) beanFactory;
 
             if (log.isInfoEnabled()) {
                 log.info("clearCaches() clearing class specific caches");
             } // if
-            for (Class<? extends Content> c : jdoBeanFactory.getClasses()) {
+            for (Class<? extends Content> c : mutableBeanFactory.getClasses()) {
                 if (c.isInterface()||(c.getModifiers()&Modifier.ABSTRACT)>0) {
                     if (log.isInfoEnabled()) {
                         log.info("clearCaches() "+c.getSimpleName()+" may not have instances");
                     } // if
                 } else {
-                    jdoBeanFactory.clearCacheFor(c);
+                    mutableBeanFactory.clearCacheFor(c);
                 } // if
             } // for
 
@@ -84,11 +88,6 @@ public class ToolController extends RenderingController {
             return modelAndViewFactory.createModelAndView(e, request, response);
         } // try/catch
     } // clearCaches()
-
-
-    private String getFilename(CodeResource code) {
-        return code.getAnnotation().replace(';', '_');
-    } // getFilename()
 
 
     @Override

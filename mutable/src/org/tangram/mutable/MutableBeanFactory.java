@@ -97,4 +97,15 @@ public interface MutableBeanFactory extends BeanFactory {
      */
     <T extends Content> List<Class<T>> getImplementingClasses(Class<T> c);
 
+
+    /**
+     * clears caches only for entries of the given type.
+     *
+     * Never dare to issue changes for abstract classes or interfaces!
+     * only relevant for the attached listeners
+     *
+     * @param cls
+     */
+    void clearCacheFor(Class<? extends Content> cls);
+
 } // MutableBeanFactory

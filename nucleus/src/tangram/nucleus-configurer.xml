@@ -49,7 +49,7 @@
     
   <!--  edit scenarios only  -->
 
-  <bean id="propertyConverter" class="org.tangram.jdo.JdoPropertyConverter">
+  <bean id="propertyConverter" class="org.tangram.mutable.GenericPropertyConverter">
     <property name="dateFormat" value="${tangram.date.format}"/>
   </bean>
           

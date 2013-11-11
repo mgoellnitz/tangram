@@ -16,13 +16,18 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.jdo;
+package org.tangram.mutable;
 
 import javax.servlet.ServletRequest;
 import org.tangram.view.PropertyConverter;
 
 
-public class JdoPropertyConverter extends PropertyConverter {
+/**
+ * Property converter using byte[] as blob and char[] as text.
+ *
+ * Generic in the sense that we can use it for JDO, JPA and EBean alike.
+ */
+public class GenericPropertyConverter extends PropertyConverter {
 
     @Override
     public Object createBlob(byte[] octets) {
@@ -71,4 +76,4 @@ public class JdoPropertyConverter extends PropertyConverter {
         } // if
     } // getStorableObject()
 
-} // JdoPropertyConverter
+} // GenericPropertyConverter

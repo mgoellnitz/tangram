@@ -267,12 +267,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         List<T> result = new ArrayList<T>();
         try {
             if (orderProperty!=null) {
-                String asc = " asc";
-                if (ascending!=null) {
-                    asc = ascending ? " asc" : " desc";
-                } // if
-                String order = " order by "+orderProperty+asc;
-                queryString += order;
+                queryString += " order by "+orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
             } // if
             String shortTypeName = cls.getSimpleName();
             // String findAllQuery = "select x from "+shortTypeName+" x where type(x) in ("+shortTypeName+")";

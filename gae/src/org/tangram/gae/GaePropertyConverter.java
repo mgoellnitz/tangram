@@ -26,6 +26,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.view.PropertyConverter;
 
+/**
+ * Property converter dealing with special blob and text types of Google App Engine.
+ */
 public class GaePropertyConverter extends PropertyConverter {
 
     private static final Log log = LogFactory.getLog(PropertyConverter.class);

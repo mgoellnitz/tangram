@@ -252,11 +252,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
-                String asc = " asc";
-                if (ascending!=null) {
-                    asc = ascending ? " asc" : " desc";
-                } // if
-                String order = orderProperty+asc;
+                String order = orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
                 query.setOrdering(order);
             } // if
             // TOOD: will be extended once we decide to introduce start/end

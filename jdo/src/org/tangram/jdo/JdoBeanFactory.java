@@ -20,7 +20,6 @@ package org.tangram.jdo;
 
 import java.util.Collection;
 import javax.jdo.PersistenceManager;
-import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
@@ -33,17 +32,6 @@ public interface JdoBeanFactory extends MutableBeanFactory {
      * @return
      */
     Collection<Class<? extends MutableContent>> getAllClasses();
-
-
-    /**
-     * clears caches only for entries of the given type.
-     *
-     * Never dare to issue changes for abstract classes or interfaces!
-     * only relevant for the attached listeners
-     *
-     * @param cls
-     */
-    void clearCacheFor(Class<? extends Content> cls);
 
 
     /**
