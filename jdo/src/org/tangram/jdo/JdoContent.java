@@ -131,7 +131,7 @@ public abstract class JdoContent implements MutableContent {
             result.add(Utils.getBeanFactory().getBean(cls, id));
         } // for
         return result;
-    } // getContent()
+    } // getContents()
 
 
     @Override
