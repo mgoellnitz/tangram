@@ -281,6 +281,27 @@ public class EditingController extends RenderingController {
     } // getVariant()
 
 
+    /**
+     * Load a class for a given type name.
+     *
+     * Don't use a simple ClassLoader.loadClass since this classloader might not know about classes available
+     * from the class repository, so use this simple iterator here.
+     * @param typeName
+     * @return Class for the given type name or null
+     */
+    private Class<? extends MutableContent> loadClass(String typeName) {
+        // Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
+        // TODO: do this more efficiently
+        Class<? extends MutableContent> cls = null;
+        for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
+            if (c.getName().equals(typeName)) {
+                cls = c;
+            } // if
+        } // for
+        return cls;
+    } // loadClass()
+
+
     @RequestMapping(value = "/create")
     public ModelAndView create(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
                                HttpServletResponse response) {
@@ -292,14 +313,7 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            // Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
-            // TODO: do this more efficiently and in one place
-            Class<? extends MutableContent> cls = null;
-            for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
-                if (c.getName().equals(typeName)) {
-                    cls = c;
-                } // if
-            } // for
+            Class<? extends MutableContent> cls = loadClass(typeName);
             MutableContent content = getMutableBeanFactory().createBean(cls);
             if (beanFactory.persist(content)) {
                 if (log.isDebugEnabled()) {
@@ -410,14 +424,7 @@ public class EditingController extends RenderingController {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            // Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
-            // TODO: do this more efficiently and in one place
-            Class<? extends MutableContent> cls = null;
-            for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
-                if (c.getName().equals(typeName)) {
-                    cls = c;
-                } // if
-            } // for
+            Class<? extends MutableContent> cls = loadClass(typeName);
             MutableContent content = getMutableBeanFactory().createBean(cls);
             if (beanFactory.persist(content)) {
                 if (log.isDebugEnabled()) {
