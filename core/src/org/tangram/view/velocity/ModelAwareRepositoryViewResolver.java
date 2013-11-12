@@ -78,7 +78,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
             if (supportedContenTypes.contains(mimeType)) {
                 String viewId = template.getId();
                 result = delegate.resolveViewName(viewId, locale);
-                // FIXME: Move this to separate VelocityViewResolver implementation
+                // Set default encoding to UTF-8 for any view
                 if (result!=null) {
                     if (result instanceof VelocityView) {
                         VelocityView v = (VelocityView) result;

@@ -24,6 +24,7 @@ import javax.inject.Named;
 @Named
 public class DynamicGroovyWeaver {
 
-
+    // TODO: We would love to have a similar solution as for datanucleus in JDO here
+    // But right at the moment it doesn't even work with unenhanced classes for OpenJPA
 
 } // DynamicGroovyWeaver
