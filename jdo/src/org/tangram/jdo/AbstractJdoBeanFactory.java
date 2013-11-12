@@ -247,7 +247,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<T>();
         try {
-            // TODO: test Extent<T> instead of Extent
             Extent<T> extent = manager.getExtent(cls, false);
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
             // Default is no ordering - not even via IDs
@@ -546,8 +545,19 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     @Override
     public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
-        // TODO: Check for inheritance from JdoContent and PersistenceCapable flag
-        additionalClasses = (classes==null) ? new HashSet<Class<? extends MutableContent>>() : classes;
+        Set<Class<? extends MutableContent>> classSet = new HashSet<Class<? extends MutableContent>>();
+        if (classes!=null) {
+            for (Class<? extends MutableContent> cls : classes) {
+                if (JdoContent.class.isAssignableFrom(cls)) {
+                    if (cls.getAnnotation(PersistenceCapable.class)!=null) {
+                        if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                            classSet.add(cls);
+                        } // if
+                    } // if
+                } // if
+            } // for
+        } // if
+        additionalClasses = classSet;
         modelClasses = null;
     } // setAdditionalClasses()
 
