@@ -67,7 +67,7 @@ class TangramUtilities {
         // println "checking for path based extraction"
         if (p.configurations.webapp.dependencies.size() > 0) {
           // println "path is $p.configurations.webapp.asPath"
-          String[] archiveFileNames = p.configurations.webapp.asPath.split(';')
+          String[] archiveFileNames = p.configurations.webapp.asPath.split(File.pathSeparator)
           String archiveFileName = archiveFileNames[i];
           println "$project.name: path: $archiveFileName"
           int idx = archiveFileName.indexOf(';')
