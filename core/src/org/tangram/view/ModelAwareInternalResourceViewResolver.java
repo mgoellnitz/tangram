@@ -113,6 +113,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
             } // if
         } else {
             if (idx==0) {
+                // TODO: This only wirks with exploded deployments
                 File f = new File(filePathPrefix+url);
                 if (log.isInfoEnabled()) {
                     log.info("checkResourceExists() f="+f.getAbsolutePath());
