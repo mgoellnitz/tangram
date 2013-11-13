@@ -27,7 +27,7 @@
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
 <div class="cms_editor_row"><span class="cms_editor_label">
 Bearbeiten </span>| 
-Typ: ${designClass.package.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
+Typ: ${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
 | <span class="cms_editor_label">ID: </span>${self.id}
 <c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>>Web Ansicht</a></c:if> 
 | <a href="#" onclick="window.close();">[ X ]</a> 
@@ -202,6 +202,7 @@ if (value instanceof MutableContent) {
 %>
 </table>
 </form>
+(${self.class.name})<br/>
 <cms:include bean="${self}" view="tangramEditorClasses" />
 <cms:include bean="${self}" view="tangramEditorFooter" />
 <script type="text/javascript">

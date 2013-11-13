@@ -15,11 +15,10 @@
 <script type="text/javascript" src="${prefix}/editor/script.js">
 </script>
 </head>
-<c:forEach items="${self}" var="item"><c:set var="oneItem" value="${item}" /></c:forEach>
 <body>
 <div class="cms_editor_row"><span class="cms_editor_label">Objekte Auflisten 
 | <a href="#" onclick="window.close();">[ X ]</a><br/>
-Typ: </span>${oneItem.class.package.name}.<span class="cms_editor_title">${oneItem.class.simpleName}</span>
+Typ: </span>${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
 </div>
 <div class="cms_editor_row">
 <c:forEach items="${self}" var="item">
@@ -28,7 +27,7 @@ Typ: </span>${oneItem.class.package.name}.<span class="cms_editor_title">${oneIt
 </div>
 <form method="post" action="<cms:link bean="${self}" action="create"/>">
 <div class="cms_editor_row">
-<input class="cms_editor_textfield" type="hidden" name="cms.editor.class.name" value="${oneItem.class.name}"/>
+<input class="cms_editor_textfield" type="hidden" name="cms.editor.class.name" value="${designClass.name}"/>
 <input type="submit" value="  Neues Objekt erzeugen  " />
 </div>
 </form>

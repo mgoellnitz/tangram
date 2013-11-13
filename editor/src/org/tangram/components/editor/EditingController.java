@@ -286,6 +286,7 @@ public class EditingController extends RenderingController {
      *
      * Don't use a simple ClassLoader.loadClass since this classloader might not know about classes available
      * from the class repository, so use this simple iterator here.
+     *
      * @param typeName
      * @return Class for the given type name or null
      */
@@ -373,7 +374,9 @@ public class EditingController extends RenderingController {
             model.put("classes", classes);
             model.put("prefix", Utils.getUriPrefix(request));
             if (cls!=null) {
-                model.put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
+                Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+                model.put("designClass", designClass);
+                model.put("designClassPackage", designClass.getPackage());
             } // if
             return modelAndViewFactory.createModelAndView(model, "tangramEditorList"+getVariant(request));
         } catch (Exception e) {
@@ -403,7 +406,9 @@ public class EditingController extends RenderingController {
             model.put("classes", getMutableBeanFactory().getClasses());
             model.put("prefix", Utils.getUriPrefix(request));
             Class<? extends Content> cls = content.getClass();
-            model.put("designClass", (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass());
+            final Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+            model.put("designClass", designClass);
+            model.put("designClassPackage", designClass.getPackage());
             return mav;
         } catch (Exception e) {
             return modelAndViewFactory.createModelAndView(e, request, response);
