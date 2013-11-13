@@ -6,6 +6,6 @@
 %><div class="cms_editor_row"><span class="cms_editor_title">Vorhandene Objekt-Klassen:</span>
 <c:forEach items="${classes}" var="c">
 <br/><a href="<cms:link bean="${self}" action="create"/>?<%=EditingController.PARAMETER_CLASS_NAME%>=${c.name}">Neu</a> |
-${c.package.name}.<a href="<cms:link bean="${self}" action="list"/>?<%=EditingController.PARAMETER_CLASS_NAME%>=${c.name}">${c.simpleName}</a>
+<%Class<? extends Object> c = (Class<? extends Object>)pageContext.getAttribute("c");%><%=c.getPackage().getName()%>.<a href="<cms:link bean="${self}" action="list"/>?<%=EditingController.PARAMETER_CLASS_NAME%>=${c.name}">${c.simpleName}</a>
 </c:forEach>
 </div>
