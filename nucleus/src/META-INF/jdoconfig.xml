@@ -15,10 +15,10 @@
        -->
        
        <!-- common stuff -->
-       <property name="datanucleus.autoCreateSchema" value="true" />
-       <property name="datanucleus.validateTables" value="true" />
-       <property name="datanucleus.manageRelationships" value="true" />
-       <property name="datanucleus.validateConstraints" value="true" />
+       <property name="datanucleus.autoCreateSchema" value="true"/>
+       <property name="datanucleus.validateTables" value="true"/>
+       <property name="datanucleus.manageRelationships" value="true"/>
+       <property name="datanucleus.validateConstraints" value="true"/>
    </persistence-manager-factory>
 
 </jdoconfig>
