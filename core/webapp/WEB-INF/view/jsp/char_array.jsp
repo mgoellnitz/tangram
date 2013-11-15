@@ -10,8 +10,8 @@
     if (t!=null) {
         String view = (String)request.getAttribute("embedded.link.view");
         String action = (String)request.getAttribute("embedded.link.action");
-        BeanFactory beanFactory = Utils.getBeanFactory(request);
-        LinkFactory linkFactory = Utils.getLinkFactory(request);
+        BeanFactory beanFactory = Utils.getBeanFactory();
+        LinkFactory linkFactory = Utils.getLinkFactory();
         Pattern p = Pattern.compile("http://[a-zA-Z0-9:]*\"");
 
         StringBuffer valueString = new StringBuffer(new String(t));
