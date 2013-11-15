@@ -4,7 +4,7 @@
     import="java.util.ArrayList"%><%@page
     import="org.tangram.view.Utils"%><%@page
     import="org.tangram.content.BeanFactory"%><%@page
-    import="org.tangram.view.link.LinkFactory"%><%@page
+    import="org.tangram.link.LinkFactory"%><%@page
     import="org.tangram.Constants"%><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
