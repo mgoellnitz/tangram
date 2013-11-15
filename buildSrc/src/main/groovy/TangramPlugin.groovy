@@ -187,19 +187,30 @@ class TangramUtilities {
       enhancer.setSystemOut(true)
       enhancer.addFiles(filenames)
       enhancer.setClassLoader(cl)
-      println "enhancing $filenames"
+      // println "enhancing $filenames"
       int numClasses = enhancer.enhance();
-      
-      println "enhanced $numClasses"
+      println "number of classes enhanced $numClasses"
     } catch(Exception e) {
       println ''
       e.printStackTrace(System.out);
       throw new GradleException('An error occurred enhancing persistence capable classes.', e)
     } // try/catch
   } // jdoEnhance()
+  
+  
+  public openjpaEnhance() {
+    project.ant.taskdef(
+      name : 'enhance',
+      classpath : project.runtimeClasspath.asPath,
+      classname : 'org.apache.openjpa.ant.PCEnhancerTask'
+    )
+    project.ant.enhance(classpath : project.runtimeClasspath.asPath) {
+      fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
+    }
+  } // openjpaEnhance()
 
 
-  public jpaWeave() {
+  public eclipselinkWeave() {
     try {
       String jarPath = project.jar.outputs.files.asPath
       String tempPath = jarPath.replace('.jar', '-unweaved.jar')
@@ -221,8 +232,9 @@ class TangramUtilities {
       e.printStackTrace(System.out);
       throw new GradleException('An error occurred weaving entity classes.', e)
     } // try/catch
-  } // jpaWeave()
+  } // eclipselinkWeave()
 
+  
   public internalJpaWeave() {
     try {
       /*
@@ -261,6 +273,6 @@ class TangramUtilities {
       e.printStackTrace(System.out);
       throw new GradleException('An error occurred weaving entity classes.', e)
     } // try/catch
-  } // jpaWeave()
+  } // internalJpaWeave()
     
 } // TangramUtilities
