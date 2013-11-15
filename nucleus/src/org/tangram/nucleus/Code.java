@@ -26,7 +26,9 @@ import org.tangram.mutable.MutableCode;
 /**
  * Datanucleus generic code implementation.
  *
- * Internally it's very conservative about type and only using string.
+ * Internally it's very conservative about types and only using strings even for the code, which is
+ * externally mappped as a long text (char[]). This might reduce maximum code size using certain store
+ * options.
  */
 @PersistenceCapable
 public class Code extends NucleusContent implements MutableCode {

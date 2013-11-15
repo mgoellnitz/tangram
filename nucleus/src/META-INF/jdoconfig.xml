@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jdoconfig xmlns="http://java.sun.com/xml/ns/jdo/jdoconfig"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:noNamespaceSchemaLocation="http://java.sun.com/xml/ns/jdo/jdoconfig">
+
+   <persistence-manager-factory name="transactions-optional">
+       <property name="javax.jdo.PersistenceManagerFactoryClass"
+           value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory"/>
+       
+       <!-- 
+            We decided to put anything else, which might have arised here, to the
+            spring configuration to be able to fill values with placeholders. 
+            See any config example there and try not to put anything but real
+            constant settings for your app for all times and all environments here.
+       -->
+       
+       <!-- common stuff -->
+       <property name="datanucleus.autoCreateSchema" value="true" />
+       <property name="datanucleus.validateTables" value="true" />
+       <property name="datanucleus.manageRelationships" value="true" />
+       <property name="datanucleus.validateConstraints" value="true" />
+   </persistence-manager-factory>
+
+</jdoconfig>
