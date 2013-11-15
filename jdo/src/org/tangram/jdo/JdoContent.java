@@ -126,10 +126,13 @@ public abstract class JdoContent implements MutableContent {
      */
     @Deprecated
     protected <T extends JdoContent> List<T> getContents(Class<T> cls, List<String> ids) {
-        List<T> result = new ArrayList<T>(ids.size());
-        for (String id : ids) {
-            result.add(Utils.getBeanFactory().getBean(cls, id));
-        } // for
+        List<T> result = null;
+        if (ids!=null) {
+            result = new ArrayList<T>(ids.size());
+            for (String id : ids) {
+                result.add(Utils.getBeanFactory().getBean(cls, id));
+            } // for
+        } // if
         return result;
     } // getContents()
 
