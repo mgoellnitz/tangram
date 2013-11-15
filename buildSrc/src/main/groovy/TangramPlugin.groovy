@@ -1,4 +1,3 @@
-
 /**
  * 
  * Copyright 2013 Martin Goellnitz
@@ -213,7 +212,7 @@ class TangramUtilities {
   public eclipselinkWeave() {
     try {
       String jarPath = project.jar.outputs.files.asPath
-      String tempPath = jarPath.replace('.jar', '-unweaved.jar')
+      String tempPath = jarPath.replace('.jar', '-unwoven.jar')
       File o = new File(jarPath)
       o.renameTo(new File(tempPath))
       project.ant.taskdef(name: 'weave', 
@@ -239,7 +238,7 @@ class TangramUtilities {
     try {
       /*
       String jarPath = project.jar.outputs.files.asPath
-      String tempPath = jarPath.replace('.jar', '-unweaved.jar')
+      String tempPath = jarPath.replace('.jar', '-unwoven.jar')
       println "libs: ${jarPath}"
       File o = new File(jarPath)
       o.renameTo(new File(tempPath))
