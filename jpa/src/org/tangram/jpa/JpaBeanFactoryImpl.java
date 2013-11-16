@@ -626,11 +626,18 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
+        // be restart aware
+        if (manager!=null) {
+            manager.close();
+        } // if
+        if (managerFactory!=null) {
+            managerFactory.close();
+        } // if
+
         Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
         if (log.isInfoEnabled()) {
             log.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
         } // if
-
         // this was the prefill - right at the moment allways necessary
         final Collection<Class<? extends MutableContent>> classes = getAllClasses();
         // OpenJPA specific class handling to be able to handle classes from the class repository
@@ -644,13 +651,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
         if (log.isInfoEnabled()) {
             log.info("afterPropertiesSet() properties="+properties);
-        } // if
-        // be restart aware
-        if (manager!=null) {
-            manager.close();
-        } // if
-        if (managerFactory!=null) {
-            managerFactory.close();
         } // if
 
         // here we go with the basic stuff

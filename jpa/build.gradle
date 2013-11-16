@@ -21,15 +21,26 @@ apply from: '../lib.gradle'
 dependencies {
   compile project(':tangram-mutable')
   
-  // providedCompile "org.eclipse.persistence:javax.persistence:2.1.0"
   compile "org.eclipse.persistence:javax.persistence:2.1.0"
-  // compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"  
+  // OpenJPA
   // compile "org.apache.openjpa:openjpa-persistence:2.2.2"
+  // Or perhaps this is sufficient
+  // compile ("org.apache.openjpa:openjpa:2.2.2") {
+  // Eclipselink
+  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"  
   
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }
 
+/* For EcliseLink
+ */
 compileJava.doLast {
-  // internalJpaWeave()
+  internalJpaWeave()
 }
+
+/* For OpenJPA
+jar.doFirst {
+  openjpaEnhance()
+}
+*/

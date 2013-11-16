@@ -87,6 +87,7 @@ public abstract class JpaContent implements MutableContent {
      * @param contents list of contents - should not be null
      * @return list of ids for the given list of contents
      */
+    @Deprecated
     protected List<String> getIds(List<? extends Content> contents) {
         List<String> result = new ArrayList<String>();
         if (contents!=null) {
