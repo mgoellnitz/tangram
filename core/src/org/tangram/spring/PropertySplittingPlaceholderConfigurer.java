@@ -50,7 +50,96 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
 
     private static final Log log = LogFactory.getLog(PropertySplittingPlaceholderConfigurer.class);
 
+    final private Properties learnings = new Properties();
 
+
+    /**
+     * store URL parts of a property's values with suffixed names in a given set of properties
+     *
+     * @param propertyValue original value of the property
+     * @param propertyName base name of the parts
+     * @param props properties set to store split values in
+     */
+    private void storeUrlParts(String propertyValue, String propertyName, Properties props) {
+        // split
+        int idx = propertyValue.indexOf("://");
+        if (log.isDebugEnabled()) {
+            log.debug("storeUrlParts("+idx+") "+propertyValue);
+        } // if
+        if ((idx>0)&&(propertyValue.length()>idx+5)) {
+            // Might be a URL
+            try {
+                if (log.isInfoEnabled()) {
+                    log.info("storeUrlParts() splitting "+propertyValue+"("+propertyName+")");
+                } // if
+                String protocol = propertyValue.substring(0, idx);
+                if (StringUtils.isNotBlank(protocol)) {
+                    props.setProperty(propertyName+".protocol", protocol);
+                } // if
+                idx += 3;
+                String host = propertyValue.substring(idx);
+                if (log.isDebugEnabled()) {
+                    log.debug("storeUrlParts() host I: "+host);
+                } // if
+                String uri = "";
+                idx = host.indexOf('/');
+                if (idx>0) {
+                    uri = host.substring(idx+1);
+                    host = host.substring(0, idx);
+                } // if
+                if (log.isDebugEnabled()) {
+                    log.debug("storeUrlParts() host II: "+host);
+                    log.debug("storeUrlParts() uri: "+uri);
+                } // if
+                if (StringUtils.isNotBlank(uri)) {
+                    props.setProperty(propertyName+".uri", uri);
+                } // if
+                String username = "";
+                idx = host.indexOf('@');
+                if (idx>0) {
+                    username = host.substring(0, idx);
+                    host = host.substring(idx+1);
+                } // if
+                if (log.isDebugEnabled()) {
+                    log.debug("storeUrlParts() host III: "+host);
+                    log.debug("storeUrlParts() username: "+username);
+                } // if
+                idx = username.indexOf(':');
+                if (idx>0) {
+                    String[] userinfos = username.split(":");
+                    if (userinfos.length>1) {
+                        username = userinfos[0];
+                        props.setProperty(propertyName+".password", userinfos[1]);
+                    } // if
+                } // if
+                if (StringUtils.isNotBlank(username)) {
+                    props.setProperty(propertyName+".username", username);
+                } // if
+
+                String port = "";
+                idx = host.indexOf(':');
+                if (idx>0) {
+                    port = host.substring(idx+1);
+                    host = host.substring(0, idx);
+                } // if
+                if (StringUtils.isNotBlank(host)) {
+                    props.setProperty(propertyName+".host", host);
+                } // if
+                if (StringUtils.isNotBlank(port)) {
+                    props.setProperty(propertyName+".port", port);
+                } // if
+            } catch (Exception e) {
+                log.error("convertProperties() error reading "+propertyValue+" as a url", e);
+            } // try/catch
+        } // if
+    } // storeUrlParts()
+
+
+    /**
+     * convert all possible URLs in property files
+     *
+     * @param props
+     */
     @Override
     protected void convertProperties(Properties props) {
         super.convertProperties(props);
@@ -58,75 +147,33 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
         while (propertyNames.hasMoreElements()) {
             String propertyName = (String) propertyNames.nextElement();
             String propertyValue = props.getProperty(propertyName);
-            // split
-            int idx = propertyValue.indexOf("://");
-            if ((idx>0)&&(propertyValue.length()>idx+5)) {
-                // Might be a URL
-                try {
-                    if (log.isDebugEnabled()) {
-                        log.info("convertProperties() splitting "+propertyValue+"("+propertyName+")");
-                    } // if
-                    String protocol = propertyValue.substring(0, idx);
-                    if (StringUtils.isNotBlank(protocol)) {
-                        props.setProperty(propertyName+".protocol", protocol);
-                    } // if
-                    idx += 3;
-                    String hostname = propertyValue.substring(idx);
-                    if (log.isDebugEnabled()) {
-                        log.debug("hostname I: "+hostname);
-                    } // if
-                    String uri = "";
-                    idx = hostname.indexOf('/');
-                    if (idx>0) {
-                        uri = hostname.substring(idx+1);
-                        hostname = hostname.substring(0, idx);
-                    } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("hostname II: "+hostname);
-                        log.debug("uri: "+uri);
-                    } // if
-                    if (StringUtils.isNotBlank(uri)) {
-                        props.setProperty(propertyName+".uri", uri);
-                    } // if
-                    String username = "";
-                    idx = hostname.indexOf('@');
-                    if (idx>0) {
-                        username = hostname.substring(0, idx);
-                        hostname = hostname.substring(idx+1);
-                    } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("hostname III: "+hostname);
-                        log.debug("username: "+username);
-                    } // if
-                    idx = username.indexOf(':');
-                    if (idx>0) {
-                        String[] userinfos = username.split(":");
-                        if (userinfos.length>1) {
-                            username = userinfos[0];
-                            props.setProperty(propertyName+".password", userinfos[1]);
-                        } // if
-                    } // if
-                    if (StringUtils.isNotBlank(username)) {
-                        props.setProperty(propertyName+".username", username);
-                    } // if
-
-                    String port = "";
-                    idx = hostname.indexOf(':');
-                    if (idx>0) {
-                        port = hostname.substring(idx+1);
-                        hostname = hostname.substring(0, idx);
-                    } // if
-                    if (StringUtils.isNotBlank(hostname)) {
-                        props.setProperty(propertyName+".host", hostname);
-                    } // if
-                    if (StringUtils.isNotBlank(port)) {
-                        props.setProperty(propertyName+".port", port);
-                    } // if
-                } catch (Exception e) {
-                    log.error("convertProperties() error reading "+propertyValue+" as a url", e);
-                } // try/catch
-            } // if
+            storeUrlParts(propertyValue, propertyName, props);
         } // while
     } // convertProperties()
+
+
+    @Override
+    protected String resolveSystemProperty(String key) {
+        String result = super.resolveSystemProperty(key);
+        if (result==null) {
+            if (log.isDebugEnabled()) {
+                log.debug("resolveSystemProperty() nothing found in system properties for "+key);
+            } // if
+            int idx = key.lastIndexOf('.');
+            if (idx>0) {
+                String baseKey = key.substring(0, idx);
+                if (log.isDebugEnabled()) {
+                    log.debug("resolveSystemProperty() lookup for baseKey "+baseKey);
+                } // if
+                String value = super.resolveSystemProperty(baseKey);
+                storeUrlParts(value, baseKey, learnings);
+                result = learnings.getProperty(key);
+                if (log.isDebugEnabled()) {
+                    log.debug("resolveSystemProperty() result "+baseKey+" is "+result);
+                } // if
+            } // if
+        } // if
+        return result;
+    } // resolveSystemProperty()
 
 } // PropertySplittingPlaceholderConfigurer
