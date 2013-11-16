@@ -59,8 +59,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public String getCharacterEncoding() {
-        if (log.isInfoEnabled()) {
-            log.info("getCharacterEncoding() "+encoding);
+        if (log.isDebugEnabled()) {
+            log.debug("getCharacterEncoding() "+encoding);
         }
         return encoding;
     }
@@ -68,8 +68,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public String getContentType() {
-        if (log.isInfoEnabled()) {
-            log.info("getContentType() "+contentType);
+        if (log.isDebugEnabled()) {
+            log.debug("getContentType() "+contentType);
         }
         return contentType;
     }
@@ -77,8 +77,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
-        if (log.isInfoEnabled()) {
-            log.info("getOutputStream() "+stream);
+        if (log.isDebugEnabled()) {
+            log.debug("getOutputStream() "+stream);
         }
         return stream;
     }
@@ -86,8 +86,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public PrintWriter getWriter() throws IOException {
-        if (log.isInfoEnabled()) {
-            log.info("getWriter() "+writer);
+        if (log.isDebugEnabled()) {
+            log.debug("getWriter() "+writer);
         }
         return writer;
     }
@@ -95,8 +95,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public void setCharacterEncoding(String charset) {
-        if (log.isInfoEnabled()) {
-            log.info("setCharacterEncoding("+charset+")");
+        if (log.isDebugEnabled()) {
+            log.debug("setCharacterEncoding("+charset+")");
         }
         encoding = charset;
     }
@@ -104,8 +104,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public void setContentLength(int len) {
-        if (log.isInfoEnabled()) {
-            log.info("setContentLength("+len+")");
+        if (log.isDebugEnabled()) {
+            log.debug("setContentLength("+len+")");
         }
         size = len;
     }
@@ -113,8 +113,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public void setContentType(String type) {
-        if (log.isInfoEnabled()) {
-            log.info("setContenType("+type+")");
+        if (log.isDebugEnabled()) {
+            log.debug("setContenType("+type+")");
         }
         contentType = type;
     }
@@ -122,8 +122,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public void setBufferSize(int size) {
-        if (log.isInfoEnabled()) {
-            log.info("setBufferSize("+size+")");
+        if (log.isDebugEnabled()) {
+            log.debug("setBufferSize("+size+")");
         }
         bufferSize = size;
         reset();
@@ -132,8 +132,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public int getBufferSize() {
-        if (log.isInfoEnabled()) {
-            log.info("getBufferSize() "+bufferSize);
+        if (log.isDebugEnabled()) {
+            log.debug("getBufferSize() "+bufferSize);
         }
         return bufferSize;
     }
@@ -141,8 +141,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public void flushBuffer() throws IOException {
-        if (log.isInfoEnabled()) {
-            log.info("flushBuffer()");
+        if (log.isDebugEnabled()) {
+            log.debug("flushBuffer()");
         }
         writer.flush();
         stream.flush();
@@ -152,8 +152,8 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public void resetBuffer() {
-        if (log.isInfoEnabled()) {
-            log.info("resetBuffer()");
+        if (log.isDebugEnabled()) {
+            log.debug("resetBuffer()");
         }
         reset();
     }
@@ -161,17 +161,17 @@ public class BufferResponse implements HttpServletResponse {
 
     @Override
     public boolean isCommitted() {
-        if (log.isInfoEnabled()) {
-            log.info("isCommitted()");
+        if (log.isDebugEnabled()) {
+            log.debug("isCommitted()");
         }
         return false;
     }
 
 
     @Override
-    public void reset() {
-        if (log.isInfoEnabled()) {
-            log.info("reset()");
+    public final void reset() {
+        if (log.isDebugEnabled()) {
+            log.debug("reset()");
         }
         out = new ByteArrayOutputStream(bufferSize);
 
@@ -179,8 +179,8 @@ public class BufferResponse implements HttpServletResponse {
 
             @Override
             public void write(int b) throws IOException {
-                if (log.isWarnEnabled()) {
-                    log.warn("write() "+b);
+                if (log.isDebugEnabled()) {
+                    log.debug("write() "+b);
                 }
                 out.write(b);
             }

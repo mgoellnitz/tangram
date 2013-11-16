@@ -188,7 +188,7 @@ class TangramUtilities {
       enhancer.setClassLoader(cl)
       // println "enhancing $filenames"
       int numClasses = enhancer.enhance();
-      println "number of classes enhanced $numClasses"
+      println "$numClasses classes enhanced."
     } catch(Exception e) {
       println ''
       e.printStackTrace(System.out);
