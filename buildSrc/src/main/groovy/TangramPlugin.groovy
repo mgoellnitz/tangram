@@ -155,7 +155,8 @@ class TangramUtilities {
   } // customizeWar()
 
   /**
-   *  Do JDO enhancement with datanucleus enhancer of classes from this jar
+   *  Do JDO enhancement with datanucleus enhancer of classes from the
+   *  callers javaCompile output set.
    */
   public nucleusEnhance() {
     try {
@@ -197,6 +198,10 @@ class TangramUtilities {
   } // jdoEnhance()
   
   
+  /**
+   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
+   * from the callers runtime classpath.
+   */
   public openjpaEnhance() {
     project.ant.taskdef(
       name : 'enhance',
@@ -209,6 +214,10 @@ class TangramUtilities {
   } // openjpaEnhance()
 
 
+  /**
+   * Call the EclipseLink Weaver for the callers jars as an ant tasks. 
+   * EclipseLink must be available from the callers runtime classpath.
+   */
   public eclipselinkWeave() {
     try {
       String jarPath = project.jar.outputs.files.asPath
@@ -234,6 +243,11 @@ class TangramUtilities {
   } // eclipselinkWeave()
 
   
+  /**
+   * Call the EclipseLink Weaver for the callers classes before packaging a jar.
+   * This is quite similar to the JDO case except that a specific persistence.xml
+   * is used which must reside in the weave/ subdirectory of the caller project.
+   */
   public internalJpaWeave() {
     try {
       /*
