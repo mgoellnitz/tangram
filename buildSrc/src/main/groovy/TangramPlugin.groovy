@@ -44,6 +44,7 @@ class TangramUtilities {
     project = p
   } 
     
+  
   /*
    *  extract base webarchive which must be the first webapp dependency of this project.
    *  Then copy JavaScript and CSS Codes and try to minify them.
@@ -127,6 +128,7 @@ class TangramUtilities {
     }
   } // overlayWebapp()
 
+  
   /**
    * customize war dependencies for non-clean build intended for system build
    */
@@ -154,11 +156,30 @@ class TangramUtilities {
     w.classpath = p.jar.outputs.files
   } // customizeWar()
 
+  
   /**
    *  Do JDO enhancement with datanucleus enhancer of classes from the
    *  callers javaCompile output set.
    */
-  public nucleusEnhance() {
+  public nucleusJdoEnhance() {
+    nucleusEnhance("JDO")
+  } // nucleusJdoEnhance()
+  
+  
+  /**
+   *  Do JPA enhancement with datanucleus enhancer of classes from the
+   *  callers javaCompile output set.
+   */
+  public nucleusJpaEnhance() {
+    nucleusEnhance("JPA")
+  } // nucleusJpaEnhance()
+  
+  
+  /**
+   *  Do enhancement with datanucleus enhancer of classes from the
+   *  callers javaCompile output set.
+   */
+  private nucleusEnhance(String api) {
     try {
       List<String> fileList = new ArrayList<String>()
       List<URL> urlList = new ArrayList<URL>()
@@ -182,7 +203,7 @@ class TangramUtilities {
       
       URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
       
-      DataNucleusEnhancer enhancer = new DataNucleusEnhancer()
+      DataNucleusEnhancer enhancer = new DataNucleusEnhancer(api)
       enhancer.setVerbose(true)
       enhancer.setSystemOut(true)
       enhancer.addFiles(filenames)
@@ -195,7 +216,7 @@ class TangramUtilities {
       e.printStackTrace(System.out);
       throw new GradleException('An error occurred enhancing persistence capable classes.', e)
     } // try/catch
-  } // jdoEnhance()
+  } // nucleusEnhance()
   
   
   /**
@@ -250,22 +271,6 @@ class TangramUtilities {
    */
   public internalJpaWeave() {
     try {
-      /*
-      String jarPath = project.jar.outputs.files.asPath
-      String tempPath = jarPath.replace('.jar', '-unwoven.jar')
-      println "libs: ${jarPath}"
-      File o = new File(jarPath)
-      o.renameTo(new File(tempPath))
-       */
-            
-      /*
-      String persistenceXml = project.configurations.providedCompile.asPath;
-      project.sourceSets['main'].resources.each() {
-      if (it.name.endsWith('persistence.xml')) persistenceXml = it.absolutePath
-      }
-      persistenceXml = persistenceXml.substring(0, persistenceXml.length()-'META-INT/persistence.xml'.length())
-       */
-           
       String persistenceXml = "${project.projectDir}/weave"
       println "persistence.xml: $persistenceXml"
       project.ant.taskdef(name: 'weave', 

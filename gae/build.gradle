@@ -45,5 +45,5 @@ dependencies {
 }
 
 compileJava.doLast { 
-  nucleusEnhance() 
+  nucleusJdoEnhance() 
 }
