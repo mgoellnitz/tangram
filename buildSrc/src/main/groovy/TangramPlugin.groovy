@@ -22,6 +22,9 @@ import org.datanucleus.enhancer.DataNucleusEnhancer
 import org.gradle.api.GradleException
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.bundling.War
+import com.avaje.ebean.enhance.agent.Transformer
+import com.avaje.ebean.enhance.ant.OfflineFileTransform
+
 
 class TangramPlugin implements Plugin<Project> {
 
@@ -181,11 +184,11 @@ class TangramUtilities {
    */
   private nucleusEnhance(String api) {
     try {
+      // Collect output paths and files
       List<String> fileList = new ArrayList<String>()
       List<URL> urlList = new ArrayList<URL>()
       project.sourceSets['main'].output.files.each {
         String urlstring = it.toURI().toURL()
-        // println "url: $urlstring"
         urlList.add(new URL(urlstring))
         project.fileTree(dir: it).each {
           if (it.name.endsWith(".class")) {
@@ -193,16 +196,17 @@ class TangramUtilities {
           } 
         }
       }
+      // Add compile classpath
       project.configurations.compile.files.each {
         String urlstring = it.toURI().toURL()
-        // println "url: $urlstring"
         urlList.add(new URL(urlstring))
       }
       String[] filenames = fileList.toArray()
-      URL[] urls = urlList.toArray();
-      
+      URL[] urls = urlList.toArray();      
+      // Build classloader from path element URLs
       URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
       
+      // Instanciate enhancer and pass filename list
       DataNucleusEnhancer enhancer = new DataNucleusEnhancer(api)
       enhancer.setVerbose(true)
       enhancer.setSystemOut(true)
@@ -293,4 +297,42 @@ class TangramUtilities {
     } // try/catch
   } // internalJpaWeave()
     
+  
+  /**
+   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
+   * from the callers runtime classpath.
+   */
+  public ebeanEnhance() {
+    // collect compile output paths as URLs
+    List<URL> urlList = new ArrayList<URL>()
+    String classSource = null
+    project.sourceSets['main'].output.files.each {
+      String urlstring = it.toURI().toURL()
+      if (classSource == null) {
+        classSource = urlstring.substring(6)
+      } // if
+      println "url: $urlstring"
+      urlList.add(new URL(urlstring))
+    }
+    // Add compile class path elements as urls
+    project.configurations.compile.files.each {
+      String urlstring = it.toURI().toURL()
+      urlList.add(new URL(urlstring))
+    }
+    URL[] urls = urlList.toArray()
+    URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
+    
+    // TODO:
+    String transformArgs = "debug=1"
+      
+    Transformer t = new Transformer(project.configurations.compile.asPath, transformArgs)
+    // Class destination has no function
+    // String classDestination = "$project.buildDir"
+    // println classDestination
+    // OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, classDestination)
+    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
+    ft.process(null);
+  } // ebeanEnhance()
+
+
 } // TangramUtilities

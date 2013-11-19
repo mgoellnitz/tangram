@@ -21,8 +21,12 @@ apply from: '../lib.gradle'
 dependencies {
   compile project (':tangram-mutable')
   
-  compile "org.avaje.ebeanorm:avaje-ebeanorm-api:3.1.1"
-  compile "org.avaje.ebeanorm:avaje-ebeanorm:3.2.4"
+  compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
+  compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
 
   testCompile "junit:junit:$versions.junit"
+}
+
+compileJava.doLast {
+  ebeanEnhance()
 }

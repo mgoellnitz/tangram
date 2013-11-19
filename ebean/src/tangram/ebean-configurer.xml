@@ -31,6 +31,20 @@
     <property name="activateCaching" value="true" />
   </bean>
  
+  <bean id="beanFactory" class="org.tangram.ebean.EBeanFactoryImpl">
+    <property name="basePackages">
+      <set>
+        <value>${bean.factory.application.base.package}</value>
+        <value>org.tangram.jpa</value>
+      </set>
+    </property>
+    <property name="activateCaching" value="${bean.factory.activate.caching}" />
+    <property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
+    <!--
+    <property name="configOverrides" ref="ebeanConfigOverrides" />
+    -->
+  </bean>
+
   <!-- this one moved out of components and is not auto-scanned anymore -->
 
   <bean id="persistentRestartCache" class="org.tangram.util.DummyRestartCache" />
