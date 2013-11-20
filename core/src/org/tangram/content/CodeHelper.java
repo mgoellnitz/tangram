@@ -16,11 +16,28 @@
  */
 package org.tangram.content;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * Constant string to be used as keys for the session store of an ftp session.
  */
 public class CodeHelper {
+
+    // private static final Log log = LogFactory.getLog(CodeHelper.class);
+
+    private static final Set<String> EXTENSION_TO_CUT = new HashSet<String>();
+
+
+    /**
+     * a set of ignorable extensions. Tweaked for use with NetBeans FTP uploader
+     */
+    static {
+        EXTENSION_TO_CUT.add(".new");
+        EXTENSION_TO_CUT.add(".old");
+    }
+
 
     /**
      * Avoid ambigouities with mimetypes for javascript and xml.
@@ -111,11 +128,8 @@ public class CodeHelper {
      */
     public static String getAnnotation(String filename) {
         int idx = filename.lastIndexOf('.');
-        // TODO: the use of these two should be switchable
-        if (filename.endsWith(".new")) {
-            filename = filename.substring(0, idx);
-        } // if
-        if (filename.endsWith(".old")) {
+        String extension = filename.substring(idx);
+        if (EXTENSION_TO_CUT.contains(extension)) {
             filename = filename.substring(0, idx);
         } // if
         idx = filename.lastIndexOf('.');
