@@ -28,22 +28,22 @@ def versions = new GroovyScriptEngine(roots).loadScriptByName('TangramVersions.g
 
 repositories {
   // most of the usual stuff
-  maven { url "http://repo1.maven.org/maven2" }
-  // For the latest groovy stuff
-  maven { url "http://repository.codehaus.org/org/codehaus/groovy" }
-  // needed for latest spring framework and security versions
-  maven { url "http://repository.springsource.com/maven/bundles/release" }
-  // needed for latest datanucleus versions
-  maven { url "http://www.datanucleus.org/downloads/maven2" }
+  mavenCentral()
 }
 
 dependencies {
   compile gradleApi()
   compile localGroovy()
   compile "com.yahoo.platform.yui:yuicompressor:$versions.yui"
+  // for the direct datanucleus enhancer
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
+  compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
+  // For the direct ebean enhancer
+  compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
+  compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
+  compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
   // compile "log4j:log4j:$versions.log4j"
   compile "$versions.jdo_api"
 }
