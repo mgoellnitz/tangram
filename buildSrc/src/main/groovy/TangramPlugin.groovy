@@ -309,7 +309,7 @@ class TangramUtilities {
     project.sourceSets['main'].output.files.each {
       String urlstring = it.toURI().toURL()
       if (classSource == null) {
-        classSource = urlstring.substring(6)
+        classSource = it.absolutePath
       } // if
       println "url: $urlstring"
       urlList.add(new URL(urlstring))
