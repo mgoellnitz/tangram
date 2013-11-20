@@ -18,7 +18,9 @@
  */
 package org.tangram.ebean;
 
-import com.avaje.ebean.Ebean;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.config.ServerConfig;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +48,10 @@ import org.tangram.mutable.MutableContent;
 public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBeanFactory {
 
     private static final Log log = LogFactory.getLog(EBeanFactoryImpl.class);
+
+    private ServerConfig serverConfig;
+
+    private EbeanServer server;
 
     protected List<Class<? extends MutableContent>> modelClasses = null;
 
@@ -120,6 +126,11 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     }
 
 
+    public void setServerConfig(ServerConfig serverConfig) {
+        this.serverConfig = serverConfig;
+    }
+
+
     protected Object getId(String internalId, Class<? extends Content> kindClass) {
         return internalId;
     } // getId()
@@ -154,7 +165,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
             if (log.isInfoEnabled()) {
                 log.info("getBean() "+kindClass.getName()+":"+internalId);
             } // if
-            result = (T)Ebean.find(kindClass, getId(internalId, kindClass));
+            result = (T) server.find(kindClass, getId(internalId, kindClass));
 
             if (activateCaching) {
                 cache.put(id, result);
@@ -243,7 +254,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         List<T> result = new ArrayList<T>();
         try {
             String shortTypeName = cls.getSimpleName();
-            com.avaje.ebean.Query<T> query = Ebean.find(cls);
+            com.avaje.ebean.Query<T> query = server.find(cls);
             if (orderProperty!=null) {
                 String asc = (ascending==Boolean.TRUE) ? " asc" : " desc";
                 query = query.orderBy(orderProperty+asc);
@@ -397,7 +408,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     public <T extends MutableContent> boolean persist(T bean) {
         boolean result = false;
         try {
-            Ebean.save(bean);
+            server.save(bean);
             // manager.getTransaction().commit();
             clearCacheFor(bean.getClass());
             result = true;
@@ -601,6 +612,14 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         final Collection<Class<? extends MutableContent>> classes = getAllClasses();
+
+        for (Class<? extends MutableContent> c : classes) {
+            if (log.isInfoEnabled()) {
+                log.info("afterPropertiesSet() class "+c.getName());
+            } // if
+            serverConfig.addClass(c);
+        } // for
+        server = EbeanServerFactory.create(serverConfig);
 
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {

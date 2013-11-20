@@ -21,13 +21,9 @@ package org.tangram.ebean;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import org.tangram.mutable.MutableCode;
 
 @Entity
-// TODO: EBean Inheritance strategies?
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ECode extends EContent implements MutableCode {
 
     private String annotation;

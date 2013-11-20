@@ -30,12 +30,30 @@
     <property name="order" value="10000"/>
     <property name="activateCaching" value="true" />
   </bean>
+  
+  <bean id="dataSourceConfig" class="com.avaje.ebean.config.DataSourceConfig">
+    <property name="driver" value="${tangram.ebean.driver}"/>
+    <property name="url" value="${tangram.ebean.url}"/>
+    <property name="username" value="${tangram.ebean.username}"/>
+    <property name="password" value="${tangram.ebean.password}"/>
+    <property name="heartbeatSql" value="${tangram.ebean.heartbeat.sql}"/>
+    <property name="maxConnections" value="${tangram.ebean.max.connections}"/>
+  </bean>
+  
+  <bean id="serverConfig" class="com.avaje.ebean.config.ServerConfig">
+    <property name="name" value="tangram"/>
+    <property name="defaultServer" value="false"/>
+    <property name="register" value="false"/>
+    <property name="ddlGenerate" value="true"/>
+    <property name="ddlRun" value="true"/>
+    <property name="dataSourceConfig" ref="dataSourceConfig"/>
+  </bean>
  
   <bean id="beanFactory" class="org.tangram.ebean.EBeanFactoryImpl">
     <property name="basePackages">
       <set>
         <value>${bean.factory.application.base.package}</value>
-        <value>org.tangram.jpa</value>
+        <value>org.tangram.ebean</value>
       </set>
     </property>
     <property name="activateCaching" value="${bean.factory.activate.caching}" />
@@ -43,6 +61,7 @@
     <!--
     <property name="configOverrides" ref="ebeanConfigOverrides" />
     -->
+    <property name="serverConfig" ref="serverConfig"/>
   </bean>
 
   <!-- this one moved out of components and is not auto-scanned anymore -->
