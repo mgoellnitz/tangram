@@ -322,9 +322,7 @@ class TangramUtilities {
     URL[] urls = urlList.toArray()
     URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
     
-    // TODO:
-    String transformArgs = "debug=1"
-      
+    String transformArgs = "debug=1"      
     Transformer t = new Transformer(project.configurations.compile.asPath, transformArgs)
     // Class destination has no function
     // String classDestination = "$project.buildDir"
@@ -333,6 +331,5 @@ class TangramUtilities {
     OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
     ft.process(null);
   } // ebeanEnhance()
-
 
 } // TangramUtilities

@@ -94,7 +94,6 @@ public class CodeController extends RenderingController {
                     String mimeType = code.getMimeType();
                     String folder = CodeHelper.getFolder(mimeType);
                     String extension = CodeHelper.getExtension(mimeType);
-                    // TODO: internally unified mimetype - use in code helper
                     mimeType = CodeHelper.getNormalizedMimeType(mimeType);
                     if (mimeType.startsWith("text/")) {
                         byte[] bytes = code.getCodeText().getBytes("UTF-8");
