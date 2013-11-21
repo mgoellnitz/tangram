@@ -1,8 +1,8 @@
 package org.tangram.gae.test;
 
 import java.lang.reflect.Method;
+import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.util.Assert;
 import org.tangram.gae.protection.PasswordProtection;
 
 public class GaeContentTest {
@@ -17,7 +17,7 @@ public class GaeContentTest {
                 flag = true;
             } // if
         } // for
-        Assert.isTrue(flag, "Classes not enhanced - output unusable");
+        Assert.assertTrue("Classes not enhanced - output unusable", flag);
     } // testIsEnhanced()
 
 } // GaeContentTest

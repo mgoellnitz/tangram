@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.jmx.access.InvocationFailureException;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
 
@@ -66,7 +65,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
      */
     @Override
     protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
-        throw new InvocationFailureException("GAE implementation is somewhat different");
+        throw new RuntimeException("GAE implementation is somewhat different");
     } // getObjectId()
 
 

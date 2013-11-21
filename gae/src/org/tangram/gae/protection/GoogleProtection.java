@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,20 +14,18 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.gae.protection;
-
-import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.util.StringUtils;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import javax.jdo.annotations.NotPersistent;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 
 @PersistenceCapable
 public class GoogleProtection extends AbstractProtection {
@@ -63,7 +61,7 @@ public class GoogleProtection extends AbstractProtection {
 
 
     private boolean isValidUser(User user) {
-        return StringUtils.hasText(allowedUsers) ? allowedUsers.indexOf(user.getNickname())>=0 : true;
+        return StringUtils.isNotBlank(allowedUsers) ? allowedUsers.indexOf(user.getNickname())>=0 : true;
     } // isValidUser()
 
 
