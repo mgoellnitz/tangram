@@ -228,12 +228,13 @@ class TangramUtilities {
    * from the callers runtime classpath.
    */
   public openjpaEnhance() {
+    String cp = project.runtimeClasspath.asPath+File.pathSeparator+"${project.projectDir}/enhance"
     project.ant.taskdef(
       name : 'enhance',
-      classpath : project.runtimeClasspath.asPath,
+      classpath : cp,
       classname : 'org.apache.openjpa.ant.PCEnhancerTask'
     )
-    project.ant.enhance(classpath : project.runtimeClasspath.asPath) {
+    project.ant.enhance(classpath : cp) {
       fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
     }
   } // openjpaEnhance()

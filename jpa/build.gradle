@@ -40,6 +40,7 @@ dependencies {
 
 /* For EcliseLink
 compileJava.doLast {
+  // uses persistence.xml in weave/
   internalJpaWeave()
 }
 */
@@ -47,5 +48,6 @@ compileJava.doLast {
 /* For OpenJPA
 */
 jar.doFirst {
+  // uses persistence.xml in enhance/
   openjpaEnhance()
 }
