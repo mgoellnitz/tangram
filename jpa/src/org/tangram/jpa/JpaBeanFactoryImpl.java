@@ -37,14 +37,11 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableContent;
+import org.tangram.util.ClassResolver;
 
 
 public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements JpaBeanFactory {
@@ -96,7 +93,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     public JpaBeanFactoryImpl() {
         basePackages = new HashSet<String>();
-        basePackages.add("org.tangram");
+        basePackages.add("org.tangram.jpa");
     } // JpaBeanFactoryImpl()
 
 
@@ -458,57 +455,20 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
-                        /*
-                         * new: we also want abstract classes and interfaces here, so override "isCandidateComponent()"
-                         * to leave out beanDefinition.getMetadata().isConcrete()
-                         */
-                        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true) {
-                            @Override
-                            protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-                                return (beanDefinition.getMetadata().isIndependent());
-                            }
-                        };
-                        provider.addIncludeFilter(new AssignableTypeFilter(JpaContent.class));
-
-                        // scan
-                        Set<BeanDefinition> components = new HashSet<BeanDefinition>();
-                        for (String pack : basePackages) {
-                            try {
-                                if (log.isInfoEnabled()) {
-                                    log.info("getAllClasses() "+pack+" "+components.size());
-                                } // if
-                                components.addAll(provider.findCandidateComponents(pack));
-                            } catch (Exception e) {
-                                log.error("getAllClasses() inner "+e.getMessage());
-                            } // try/catch
+                        ClassResolver resolver = new ClassResolver(basePackages);
+                        classNames = new ArrayList<String>();
+                        for (Class<? extends MutableContent> cls : resolver.getAnnotatedSubclasses(JpaContent.class, Entity.class)) {
+                            if (log.isInfoEnabled()) {
+                                log.info("getAllClasses() * "+cls.getName());
+                            } // if
+                            classNames.add(cls.getName());
+                            tableNameMapping.put(cls.getSimpleName(), cls);
+                            allClasses.add(cls);
                         } // for
                         if (log.isInfoEnabled()) {
-                            log.info("getAllClasses() size()="+components.size());
+                            log.info("getAllClasses() # class names "+classNames.size());
                         } // if
                         classNames = new ArrayList<String>();
-                        for (BeanDefinition component : components) {
-                            try {
-                                String beanClassName = component.getBeanClassName();
-                                if (log.isDebugEnabled()) {
-                                    log.debug("getAllClasses() component.getBeanClassName()="+beanClassName);
-                                } // if
-                                Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
-                                if ((cls.getAnnotation(Entity.class)!=null)&&JpaContent.class.isAssignableFrom(cls)) {
-                                    if (log.isInfoEnabled()) {
-                                        log.info("getAllClasses() * "+cls.getName());
-                                    } // if
-                                    classNames.add(beanClassName);
-                                    tableNameMapping.put(cls.getSimpleName(), cls);
-                                    allClasses.add(cls);
-                                } else {
-                                    if (log.isDebugEnabled()) {
-                                        log.debug("getAllClasses() "+cls.getName());
-                                    } // if
-                                } // if
-                            } catch (Exception e) {
-                                log.error("getAllClasses() inner", e);
-                            } // try/catch
-                        } // for
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         // re-fill runtimes caches from persistence startup cache
@@ -593,7 +553,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         } // for
 
         return result;
-    } // getImplementingClasses()
+    } // getImplementingClassesForModelClass()
 
 
     /**
