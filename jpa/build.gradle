@@ -38,9 +38,14 @@ dependencies {
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }
 
+/* For EcliseLink
 compileJava.doLast {
-  // For EcliseLink
-  // internalJpaWeave()
-  // For OpenJPA
+  internalJpaWeave()
+}
+*/
+
+/* For OpenJPA
+*/
+jar.doFirst {
   openjpaEnhance()
 }
