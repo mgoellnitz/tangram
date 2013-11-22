@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.controller;
+package org.tangram.spring;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,16 +29,19 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.controller.ControllerHook;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
-import org.tangram.link.LinkHandler;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
 
 /**
- * base class for controllers used for rendering something in the outcome. Just provides convenience methods.
+ * base class for springframrwork MVC controllers used for rendering something in the outcome.
+ *
+ * Just provides convenience methods.
  */
-public abstract class RenderingController implements LinkHandler {
+public abstract class RenderingController implements LinkFactory {
 
     private static final Log log = LogFactory.getLog(RenderingController.class);
 
@@ -48,7 +51,7 @@ public abstract class RenderingController implements LinkHandler {
     @Inject
     protected ModelAndViewFactory modelAndViewFactory;
 
-    private LinkFactory linkFactory;
+    private LinkFactoryAggregator linkFactory;
 
     @Autowired(required = false)
     private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
@@ -59,14 +62,14 @@ public abstract class RenderingController implements LinkHandler {
     }
 
 
-    public LinkFactory getLinkFactory() {
+    public LinkFactoryAggregator getLinkFactory() {
         return linkFactory;
     }
 
 
     // do autowiring here so the registration can be done automagically
     @Inject
-    public void setLinkFactory(LinkFactory linkFactory) {
+    public void setLinkFactory(LinkFactoryAggregator linkFactory) {
         this.linkFactory = linkFactory;
         this.linkFactory.registerHandler(this);
     }

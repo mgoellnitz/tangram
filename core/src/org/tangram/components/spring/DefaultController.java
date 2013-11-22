@@ -33,9 +33,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.content.Content;
-import org.tangram.controller.RenderingController;
+import org.tangram.spring.RenderingController;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
 @Controller
@@ -44,7 +44,7 @@ public class DefaultController extends RenderingController {
     private static final Log log = LogFactory.getLog(DefaultController.class);
 
     @Inject
-    LinkFactory linkFactory;
+    LinkFactoryAggregator linkFactory;
 
     @Autowired(required = false)
     protected HashSet<String> customLinkViews = new HashSet<String>();

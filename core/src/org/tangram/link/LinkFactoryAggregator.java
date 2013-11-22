@@ -18,38 +18,27 @@
  */
 package org.tangram.link;
 
-import java.util.Collection;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.tangram.view.TargetDescriptor;
-
 /**
+ * A link factory aggregator deals link regeneration by deletating to a set of registered different link factories.
  *
- * In the class the link hanlder gets extended by the URL parsing elements
- *
- * Implementing classes might need the bean factory and the default controller (to register which views are handled by
- * this implementation)
+ * It should be aware of the fact that there are "web application context names" to be prepended to the
+ * URLs returned in the Link instances from the underlying handler implementations.
  *
  */
-public interface LinkHandler extends LinkFactory {
+public interface LinkFactoryAggregator {
 
-    /**
-     * return all view's names the underlying implementation wants to handle itself
-     *
-     * @return collection of view names
-     */
-    Collection<String> getCustomViews();
+    String getPrefix(HttpServletRequest request);
 
 
-    /**
-     * return the id of the object to be show, null otherwise
-     *
-     * @param url
-     * @param response
-     *            for error handling
-     * @return
-     */
-    TargetDescriptor parseLink(String url, HttpServletResponse response);
+    void registerHandler(LinkFactory handler);
 
-} // LinkHandler
+
+    void unregisterHandler(LinkFactory handler);
+
+
+    Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
+
+} // LinkBuilder

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,16 +34,16 @@ import org.tangram.monitor.Statistics;
  * So this is the generic not just default implementation of a link factory.
  *
  */
-public class GenericLinkFactory implements LinkFactory {
+public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
-    private static final Log log = LogFactory.getLog(GenericLinkFactory.class);
+    private static final Log log = LogFactory.getLog(GenericLinkFactoryAggregator.class);
 
     @Inject
     private Statistics statistics;
 
     private String dispatcherPath = "";
 
-    private List<LinkHandler> handlers = new ArrayList<LinkHandler>();
+    private List<LinkFactory> handlers = new ArrayList<LinkFactory>();
 
 
     public String getDispatcherPath() {
@@ -57,13 +57,13 @@ public class GenericLinkFactory implements LinkFactory {
 
 
     @Override
-    public void registerHandler(LinkHandler handler) {
+    public void registerHandler(LinkFactory handler) {
         handlers.add(handler);
     } // registerHandler()
 
 
     @Override
-    public void unregisterHandler(LinkHandler handler) {
+    public void unregisterHandler(LinkFactory handler) {
         handlers.remove(handler);
     } // unregisterHandler()
 
@@ -105,7 +105,7 @@ public class GenericLinkFactory implements LinkFactory {
         if (bean==null) {
             throw new RuntimeException("No bean issued for link generation in action "+action+" for view "+view);
         } // if
-        for (LinkHandler handler : handlers) {
+        for (LinkFactory handler : handlers) {
             long startTime = System.currentTimeMillis();
             Link result = handler.createLink(request, response, bean, action, view);
             if (log.isDebugEnabled()) {

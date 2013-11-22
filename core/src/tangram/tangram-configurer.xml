@@ -41,7 +41,7 @@
 
   <bean id="modelAndViewFactory" class="org.tangram.view.DynamicModelAndViewFactory" />
 
-  <bean id="linkFactory" class="org.tangram.link.GenericLinkFactory">
+  <bean id="linkFactory" class="org.tangram.link.GenericLinkFactoryAggregator">
     <property name="dispatcherPath" value="${spring.dispatcher.servlet.path}" />
   </bean>
 

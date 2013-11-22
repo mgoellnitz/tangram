@@ -46,9 +46,9 @@ import org.tangram.Constants;
 import org.tangram.components.spring.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
-import org.tangram.controller.RenderingController;
+import org.tangram.spring.RenderingController;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
@@ -94,7 +94,7 @@ public class EditingController extends RenderingController {
     private ClassRepository classRepository;
 
     @Inject
-    private LinkFactory linkFactory;
+    private LinkFactoryAggregator linkFactory;
 
     private MutableBeanFactory beanFactory;
 

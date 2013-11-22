@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
 public class UniqueHostHook implements ControllerHook {
@@ -33,7 +33,7 @@ public class UniqueHostHook implements ControllerHook {
     private static Log log = LogFactory.getLog(UniqueHostHook.class);
 
     @Inject
-    private LinkFactory linkFactory;
+    private LinkFactoryAggregator linkFactory;
 
     private String primaryDomain = null;
 

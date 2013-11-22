@@ -271,8 +271,9 @@ class TangramUtilities {
   
   /**
    * Call the EclipseLink Weaver for the callers classes before packaging a jar.
-   * This is quite similar to the JDO case except that a specific persistence.xml
-   * is used which must reside in the weave/ subdirectory of the caller project.
+   * This is quite similar to the generic EclipseLink case except that a 
+   * specific persistence.xml is used which must reside in the weave/ subdirectory 
+   * of the caller project.
    */
   public internalJpaWeave() {
     try {

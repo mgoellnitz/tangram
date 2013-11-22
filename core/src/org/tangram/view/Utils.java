@@ -29,7 +29,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.tangram.content.BeanFactory;
-import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 
 
 public final class Utils {
@@ -40,7 +40,7 @@ public final class Utils {
 
     private static BeanFactory beanFactory = null;
 
-    private static LinkFactory linkFactory = null;
+    private static LinkFactoryAggregator linkFactory = null;
 
     private static ModelAndViewFactory modelAndViewFactory = null;
 
@@ -85,9 +85,9 @@ public final class Utils {
     } // getBeanFactory()
 
 
-    public static LinkFactory getLinkFactory() {
+    public static LinkFactoryAggregator getLinkFactory() {
         if (linkFactory==null) {
-            linkFactory = getBeanFromContext(LinkFactory.class);
+            linkFactory = getBeanFromContext(LinkFactoryAggregator.class);
         } // if
         return linkFactory;
     } // getLinkFactory()

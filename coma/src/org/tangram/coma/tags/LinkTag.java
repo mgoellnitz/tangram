@@ -29,7 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.view.Utils;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 
 public class LinkTag implements Tag, Serializable {
 
@@ -95,7 +95,7 @@ public class LinkTag implements Tag, Serializable {
         try {
             HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
             HttpServletResponse response = (HttpServletResponse)pageContext.getResponse();
-            LinkFactory builder = Utils.getLinkFactory();
+            LinkFactoryAggregator builder = Utils.getLinkFactory();
             if (log.isDebugEnabled()) {
                 log.debug("doEndTag() "+target+" "+view);
             } // if

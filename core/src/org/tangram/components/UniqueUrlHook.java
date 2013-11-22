@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.controller.ControllerHook;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 
 @Named
 public class UniqueUrlHook implements ControllerHook {
@@ -36,7 +36,7 @@ public class UniqueUrlHook implements ControllerHook {
     private static Log log = LogFactory.getLog(UniqueUrlHook.class);
 
     @Inject
-    private LinkFactory linkFactory;
+    private LinkFactoryAggregator linkFactory;
 
 
     @Override

@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.tangram.monitor.Statistics;
 
 public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
 

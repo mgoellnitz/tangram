@@ -59,14 +59,3 @@ task sourcesJar(type: Jar, dependsOn: classes) {
   classifier = 'sources'
   from sourceSets.main.allSource
 }
-
-// TODO: This is just a local mirror of the WebDAV repository at cloudbees
-// https://repository-tangram.forge.cloudbees.com/snapshot
-// but with the new maven-publish plugin WebDAV repositories seem to be an issue.
-publishing {
-  repositories {
-    maven {
-      url "file:v:/proj/tangram/mvnrepo"
-    }
-  }
-}

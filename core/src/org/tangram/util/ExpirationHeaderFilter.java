@@ -75,8 +75,8 @@ public class ExpirationHeaderFilter implements Filter {
         if (idx>0) {
             String extension = uri.substring(idx+1);
             Long timeObject = getTimeObject(extension);
-            if (log.isInfoEnabled()) {
-                log.info("doFilter("+uri+") extension="+extension+" timeObject="+timeObject);
+            if (log.isDebugEnabled()) {
+                log.debug("doFilter("+uri+") extension="+extension+" timeObject="+timeObject);
             } // if
             if (timeObject!=null) {
                 long time = timeObject;
@@ -86,8 +86,8 @@ public class ExpirationHeaderFilter implements Filter {
                         log.debug("doFilter() expirationValue="+expirationValue);
                     } // if
                     String expires = formatter.format(new Date(expirationValue));
-                    if (log.isInfoEnabled()) {
-                        log.info("doFilter() expires="+expires);
+                    if (log.isDebugEnabled()) {
+                        log.debug("doFilter() expires="+expires);
                     } // if
                     response.addHeader("Last-Modified", startTimeHeader);
                     response.addHeader("Etag", startTimeString+uri.hashCode()+"\"");

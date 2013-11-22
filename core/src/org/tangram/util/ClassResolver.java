@@ -20,6 +20,7 @@ package org.tangram.util;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -35,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  * Resolve classes or classnames from a given set of packages.
  *
  * One design goal in finding the classes was to hit the JAR files just once.
- * 
+ *
  */
 public class ClassResolver {
 
@@ -122,15 +123,38 @@ public class ClassResolver {
 
 
     /**
+     * Get classes from underlying packages satisfying the given annotation and superclass which are no interfaces.
+     */
+    public <T extends Object> Set<Class<T>> getSubclasses(Class<T> c) {
+        Set<Class<T>> result = new HashSet<Class<T>>();
+        Set<String> classNames = getClassNames();
+        for (String className : classNames) {
+            try {
+                @SuppressWarnings("unchecked")
+                Class<T> cls = (Class<T>) Class.forName(className);
+                if ((!c.isInterface()) && c.isAssignableFrom(cls) && ((c.getModifiers()&Modifier.ABSTRACT)==0)) {
+                    result.add(cls);
+                } // if
+            } catch (ClassNotFoundException e) {
+                log.error("getSubclasses()", e);
+            } // try/catch
+        } // if
+        return result;
+    } // getSubclasses()
+
+
+    /**
      * Get classes from underlying packages satisfying the given annotation and superclass.
+     * Interfaces are excluded.
      */
     public <T extends Object> Set<Class<T>> getAnnotatedSubclasses(Class<T> c, Class<? extends Annotation> annotation) {
         Set<Class<T>> result = new HashSet<Class<T>>();
         Set<String> classNames = getClassNames();
         for (String className : classNames) {
             try {
+                @SuppressWarnings("unchecked")
                 Class<T> cls = (Class<T>) Class.forName(className);
-                if ((cls.getAnnotation(annotation)!=null)&&c.isAssignableFrom(cls)) {
+                if ((cls.getAnnotation(annotation)!=null)&&c.isAssignableFrom(cls)&&(!c.isInterface())) {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {
