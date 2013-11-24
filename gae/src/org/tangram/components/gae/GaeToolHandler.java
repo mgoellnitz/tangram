@@ -78,7 +78,7 @@ public class GaeToolHandler implements LinkHandler {
             log.info("clearSessions() "+results.countEntities(limit)+" sessions still available");
         } // if
 
-        return new TargetDescriptor(statistics, null, null);
+        return TargetDescriptor.DONE;
     } // clearSessions()
 
 

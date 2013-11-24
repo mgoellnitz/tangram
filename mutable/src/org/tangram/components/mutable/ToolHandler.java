@@ -80,7 +80,7 @@ public class ToolHandler implements LinkHandler {
             } // if
         } // for
 
-        return new TargetDescriptor(statistics, null, null);
+        return TargetDescriptor.DONE;
     } // clearCaches()
 
 
