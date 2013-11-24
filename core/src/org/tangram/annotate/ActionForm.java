@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2012-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.annotate;
 
@@ -24,10 +24,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 
+ *
  * Annotation indicating that the annotated method parameter points to a form where all the HTML form parameters should
- * be stored in a decent converted way
- * 
+ * be stored in a decent converted way.
+ *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
