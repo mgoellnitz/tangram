@@ -143,7 +143,6 @@ public class ProtectionHook implements ControllerHook {
                 } // for
 
                 if (protection==null) {
-                    // TODO: Show nicer disallowance page.
                     necessaryProtectionKey = getFailingProtectionKey(request, protections);
                     if (necessaryProtectionKey!=null) {
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, necessaryProtectionKey);
