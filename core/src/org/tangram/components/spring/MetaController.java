@@ -19,6 +19,7 @@
 package org.tangram.components.spring;
 
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,10 +29,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
@@ -91,6 +94,14 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     private Map<String, LinkHandler> handlers;
 
+    private Map<String, Method> staticMethods = new HashMap<String, Method>();
+
+    private Map<String, Method> methods;
+
+    private Map<String, Object> staticAtHandlers = new HashMap<String, Object>();
+
+    private Map<String, Object> atHandlers;
+
     private Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
 
 
@@ -103,14 +114,46 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
 
     @Override
-    public void registerLinkHandler(LinkHandler scheme) {
-        staticLinkHandlers.put(scheme.getClass().getName(), scheme);
-        handlers.put(scheme.getClass().getName(), scheme);
+    public void registerLinkHandler(Object handler) {
+        if (handler instanceof LinkHandler) {
+            LinkHandler linkHandler = (LinkHandler) handler;
+            staticLinkHandlers.put(handler.getClass().getName(), linkHandler);
+            handlers.put(handler.getClass().getName(), linkHandler);
+        } else {
+            Class<? extends Object> handlerClass = handler.getClass();
+            if (handlerClass.getAnnotation(org.tangram.annotate.LinkHandler.class)!=null) {
+                for (Method m : handlerClass.getMethods()) {
+                    LinkAction linkAction = m.getAnnotation(LinkAction.class);
+                    if (log.isDebugEnabled()) {
+                        log.debug("registerLinkHandler() linkAction="+linkAction);
+                        log.debug("registerLinkHandler() method.getReturnType()="+m.getReturnType());
+                    } // if
+                    if (!TargetDescriptor.class.equals(m.getReturnType())) {
+                        linkAction = null;
+                    } // if
+                    if (linkAction!=null) {
+                        if (StringUtils.isNotBlank(linkAction.path())) {
+                            if (log.isInfoEnabled()) {
+                                log.info("registerLinkHandler() registing "+linkAction.path()+" for "+m.getName()+"@"+handler);
+                            } // if
+                            staticMethods.put(linkAction.path(), m);
+                            methods.put(linkAction.path(), m);
+                            staticAtHandlers.put(linkAction.path(), handler);
+                            atHandlers.put(linkAction.path(), handler);
+                        } // if
+                    } // if
+                } // for
+            } // if
+        } // if
     } // registerLinkHandler()
 
 
     @Override
     public void reset() {
+        methods = new HashMap<String, Method>();
+        methods.putAll(staticMethods);
+        atHandlers = new HashMap<String, Object>();
+        atHandlers.putAll(staticAtHandlers);
         handlers = new HashMap<String, LinkHandler>();
         handlers.putAll(staticLinkHandlers);
         // remove current custom views from default controller
@@ -142,12 +185,12 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     defaultController.getCustomLinkViews().addAll(schemeCustomViews);
                     if (log.isInfoEnabled()) {
                         log.info("reset() adding custom views "+schemeCustomViews);
-                        log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
+                        log.debug("reset() custom views in default controller "+defaultController.getCustomLinkViews());
                     } // if
                     handlers.put(annotation, linkHandler);
                 } else {
-                    if (log.isInfoEnabled()) {
-                        log.info("reset() "+clazz.getName()+" is not a LinkScheme");
+                    if (log.isDebugEnabled()) {
+                        log.debug("reset() "+clazz.getName()+" is not a LinkScheme");
                     } // if
                 } // if
             } catch (Throwable e) {
@@ -198,11 +241,17 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         if (log.isInfoEnabled()) {
             log.info("findMethod() trying to find "+methodName+" in "+target.getClass().getName());
         } // if
-        String key = target.getClass().getName()+"#"+methodName;
+        Class<? extends Object> targetClass = target.getClass();
+        String key = targetClass.getName()+"#"+methodName;
         Method method = cache.get(key);
         if (method!=null) {
             return method==NULL_METHOD ? null : method;
         } // if
+        /*
+         if (targetClass.getAnnotation(org.tangram.annotate.LinkHandler.class)==null) {
+         return null;
+         } // if
+         */
         Method[] methods = target.getClass().getMethods();
         for (Method m : methods) {
             if (m.getName().equals(methodName)) {
@@ -214,8 +263,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                 if (!TargetDescriptor.class.equals(m.getReturnType())) {
                     linkAction = null;
                 } // if
-                if (log.isInfoEnabled()) {
-                    log.info("findMethod() linkAction="+linkAction);
+                if (log.isDebugEnabled()) {
+                    log.debug("findMethod() linkAction="+linkAction);
                 } // if
                 if (linkAction!=null) {
                     method = m;
@@ -234,7 +283,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
             log.info("callAction() method="+method);
         } // if
 
-        // We don't want to access parameters via GET
+        // If we don't want to access parameters via GET
         // if ((method!=null)&&request.getMethod().equals("POST")) {
         if (method!=null) {
             // TODO: Do type conversion or binding with spring or its coversion service
@@ -303,20 +352,51 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     } // callAction()
 
 
+    private ModelAndView handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ModelAndView result = null;
+        if (resultDescriptor==null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            if (log.isInfoEnabled()) {
+                log.info("handleRequestInternal() received link "+resultDescriptor);
+            } // if
+            if (resultDescriptor!=TargetDescriptor.DONE) {
+                if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
+                    Link link = linkFactory.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
+                    response.sendRedirect(link.getUrl());
+                } else {
+                    result = modelAndViewFactory.createModelAndView(resultDescriptor.bean, resultDescriptor.view, request, response);
+                } // if
+            } // if
+        } // if
+        return result;
+    } // handleResultDescriptor()
+
+
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String url = request.getRequestURI().substring(linkFactory.getPrefix(request).length());
-        if (log.isDebugEnabled()) {
-            log.debug("handleRequestInternal() "+url);
+        if (log.isInfoEnabled()) {
+            log.info("handleRequestInternal() "+url);
         } // if
-        ModelAndView result = null;
-        for (String className : handlers.keySet()) {
-            try {
-                LinkHandler linkScheme = handlers.get(className);
-                TargetDescriptor descriptor = linkScheme.parseLink(url, response);
+        try {
+            for (Entry<String, Method> entry : methods.entrySet()) {
+                if (log.isInfoEnabled()) {
+                    log.info("handleRequestInternal() key url "+entry.getKey());
+                } // if
+                if (entry.getKey().equals(url)) {
+                    Object target = atHandlers.get(entry.getKey());
+                    TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
+                    TargetDescriptor resultDescriptor = callAction(request, response, entry.getValue(), descriptor, target);
+                    return handleResultDescriptor(resultDescriptor, request, response);
+                } // if
+            } // for
+            for (String className : handlers.keySet()) {
+                LinkHandler linkHandler = handlers.get(className);
+                TargetDescriptor descriptor = linkHandler.parseLink(url, response);
                 if (descriptor!=null) {
                     if (log.isInfoEnabled()) {
-                        log.info("handleRequestInternal() "+linkScheme.getClass().getName()+" hit for "+url);
+                        log.info("handleRequestInternal() "+linkHandler.getClass().getName()+" hit for "+url);
                     } // if
                     if (log.isDebugEnabled()) {
                         log.debug("handleRequestInternal() found bean "+descriptor.bean);
@@ -332,9 +412,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         if (log.isInfoEnabled()) {
                             log.info("handleRequestInternal() trying to call action "+descriptor.action);
                         } // if
-                        Method method = findMethod(linkScheme, descriptor.action);
-                        TargetDescriptor resultDescriptor = callAction(request, response, method, descriptor, linkScheme);
-                        // linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
+                        Method method = findMethod(linkHandler, descriptor.action);
+                        TargetDescriptor resultDescriptor = callAction(request, response, method, descriptor, linkHandler);
                         if (resultDescriptor==null) {
                             for (Object value : model.values()) {
                                 // This has to be checked because of special null values in context like $null
@@ -345,28 +424,17 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                                 } // if
                             } // for
                         } // if
-                        if (resultDescriptor==null) {
-                            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                        } else {
-                            if (log.isInfoEnabled()) {
-                                log.info("handleRequestInternal() received link "+resultDescriptor);
-                            } // if
-                            if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
-                                Link link = linkFactory.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
-                                response.sendRedirect(link.getUrl());
-                            } else {
-                                result = modelAndViewFactory.createModelAndView(resultDescriptor.bean, resultDescriptor.view, request, response);
-                            } // if
-                        } // if
-                        return result;
+                        return handleResultDescriptor(resultDescriptor, request, response);
                     } // if
                 } // if
-            } catch (Throwable ex) {
-                return modelAndViewFactory.createModelAndView(ex, request, response);
-            } // try/catch
-        } // for
+            } // for
+        } catch (Throwable ex) {
+            return modelAndViewFactory.createModelAndView(ex, request, response);
+        } // try/catch
+
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        return result;
+
+        return null;
     } // handleRequestInternal()
 
 

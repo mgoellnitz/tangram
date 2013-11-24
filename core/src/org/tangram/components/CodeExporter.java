@@ -20,7 +20,6 @@ package org.tangram.components;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -34,10 +33,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
+import org.tangram.annotate.LinkHandler;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
-import org.tangram.link.Link;
-import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.view.TargetDescriptor;
 
@@ -46,7 +44,8 @@ import org.tangram.view.TargetDescriptor;
  * Export all codes in repository in one structured ZIP file.
  */
 @Named
-public class CodeExporter implements LinkHandler {
+@LinkHandler
+public class CodeExporter {
 
     private static final Log log = LogFactory.getLog(CodeExporter.class);
 
@@ -62,7 +61,7 @@ public class CodeExporter implements LinkHandler {
     } // getFilename()
 
 
-    @LinkAction
+    @LinkAction(path = "/codes.zip")
     public TargetDescriptor codes(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!request.getRequestURI().endsWith(".zip")) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -105,30 +104,8 @@ public class CodeExporter implements LinkHandler {
         zos.finish();
         zos.close();
 
-        return new TargetDescriptor(this, null, null);
+        return TargetDescriptor.DONE;
     } // codes()
-
-
-    @Override
-    public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
-        return null;
-    } // createLink()
-
-
-    @Override
-    public Collection<String> getCustomViews() {
-        return Collections.emptySet();
-    } // getCustomViews()
-
-
-    @Override
-    public TargetDescriptor parseLink(String uri, HttpServletResponse response) {
-        TargetDescriptor result = null;
-        if ("/codes.zip".equals(uri)) {
-            result = new TargetDescriptor(this, null, "codes");
-        } // if
-        return result;
-    } // parseLink()
 
 
     @PostConstruct

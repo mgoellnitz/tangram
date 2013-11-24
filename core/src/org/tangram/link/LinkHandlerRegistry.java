@@ -26,6 +26,6 @@ package org.tangram.link;
  */
 public interface LinkHandlerRegistry {
 
-    void registerLinkHandler(LinkHandler scheme);
+    void registerLinkHandler(Object scheme);
 
 } // LinkHandlerRegistry
