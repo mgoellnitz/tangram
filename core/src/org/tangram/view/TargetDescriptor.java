@@ -28,6 +28,12 @@ package org.tangram.view;
  */
 public class TargetDescriptor {
 
+    /**
+     * Target Descriptor instance indicating that we're done with this request
+     * and should not try to find other applicable actions or views.
+     */
+    public static TargetDescriptor DONE = new TargetDescriptor(null, null, null);
+
     public TargetDescriptor(Object bean, String view, String action) {
         this.bean = bean;
         this.view = view;
