@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2012-2013 Martin Goellnitz
+ * Copyright 2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,10 +23,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Class marker indicating that the given class contains @LinkAction methods.
+ * If implementing classes don't need any additional functions from the LinkHandler interface but just
+ * contain @LinkAction methods with a path specified, they can be marked with this annotation to get
+ * automatically recognized by the MetaController.
+ */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface LinkAction {
+@Target(ElementType.TYPE)
+public @interface LinkHandler {
 
-    String path() default "";
-
-} // LinkAction
+} // LinkHandler
