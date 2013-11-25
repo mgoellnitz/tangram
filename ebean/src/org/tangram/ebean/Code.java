@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 import org.tangram.mutable.MutableCode;
 
 @Entity
-public class ECode extends EContent implements MutableCode {
+public class Code extends EContent implements MutableCode {
 
     private String annotation;
 
@@ -82,4 +82,4 @@ public class ECode extends EContent implements MutableCode {
         return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     }
 
-} // ECode
+} // Code
