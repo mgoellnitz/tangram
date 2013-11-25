@@ -19,8 +19,6 @@
 package org.tangram.components.mutable;
 
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.Collections;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,9 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
+import org.tangram.annotate.LinkHandler;
 import org.tangram.content.Content;
-import org.tangram.link.Link;
-import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.monitor.Statistics;
 import org.tangram.mutable.MutableBeanFactory;
@@ -46,8 +43,10 @@ import org.tangram.view.TargetDescriptor;
  *
  * This has been reworked from a spring @controller to a tangram link handler
  */
+
 @Named
-public class ToolHandler implements LinkHandler {
+@LinkHandler
+public class ToolHandler  {
 
     private static final Log log = LogFactory.getLog(ToolHandler.class);
 
@@ -61,7 +60,7 @@ public class ToolHandler implements LinkHandler {
     private MutableBeanFactory beanFactory;
 
 
-    @LinkAction
+    @LinkAction(path = "/clear/caches")
     public TargetDescriptor clearCaches(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getParameter(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not clear cache");
@@ -82,28 +81,6 @@ public class ToolHandler implements LinkHandler {
 
         return TargetDescriptor.DONE;
     } // clearCaches()
-
-
-    @Override
-    public Link createLink(HttpServletRequest req, HttpServletResponse resp, Object bean, String view, String action) {
-        return null;
-    } // createLink()
-
-
-    @Override
-    public Collection<String> getCustomViews() {
-        return Collections.emptySet();
-    } // getCustomViews()
-
-
-    @Override
-    public TargetDescriptor parseLink(String uri, HttpServletResponse response) {
-        TargetDescriptor result = null;
-        if ("/clear/caches".equals(uri)) {
-            result = new TargetDescriptor(this, null, "clearCaches");
-        } // if
-        return result;
-    } // parseLink()
 
 
     @PostConstruct
