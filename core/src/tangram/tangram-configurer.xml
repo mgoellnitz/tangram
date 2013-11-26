@@ -45,7 +45,7 @@
     <property name="dispatcherPath" value="${spring.dispatcher.servlet.path}" />
   </bean>
 
-  <!-- mapping for all of our and your @ccontrollers -->
+  <!-- mapping for all of our and your @controllers -->
   <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
     <property name="order" value="10" />
     <property name="interceptors" ref="interceptors" />

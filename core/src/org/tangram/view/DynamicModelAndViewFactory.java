@@ -39,7 +39,7 @@ import org.tangram.logic.Shim;
 import org.tangram.logic.ViewShim;
 
 /**
- * This ModelAndView factory implementation adds specia objects called shims to the context.
+ * This ModelAndView factory implementation adds special objects called shims to the context.
  *
  * Shims are functional enhancements of the means from the model. They carry functions while beans carry data.
  *
