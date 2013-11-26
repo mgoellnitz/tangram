@@ -94,7 +94,7 @@ public class ClassResolver {
         for (String packageName : packageNames) {
             addUrlsForPackage(urls, packageName);
         } // if
-        // log.info("afterPropertiesSet() url # "+urls.size());
+        // log.info("getClassNames() url # "+urls.size());
         for (URL u : urls) {
             try {
                 JarInputStream is = new JarInputStream(u.openStream());
@@ -103,13 +103,13 @@ public class ClassResolver {
                     final String name = entry.getName().replace('/', '.');
                     if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
                         String className = name.substring(0, name.length()-6);
-                        // log.info("afterPropertiesSet() class name "+className);
+                        // log.info("getClassNames() class name "+className);
                         boolean add = false;
                         for (String packageName : packageNames) {
                             add = add||(className.startsWith(packageName));
                         } // if
                         if (add) {
-                            // log.info("afterPropertiesSet(): "+className);
+                            // log.info("getClassNames(): "+className);
                             classNames.add(className);
                         } // if
                     } // if
@@ -132,7 +132,7 @@ public class ClassResolver {
             try {
                 @SuppressWarnings("unchecked")
                 Class<T> cls = (Class<T>) Class.forName(className);
-                if ((!c.isInterface()) && c.isAssignableFrom(cls) && ((c.getModifiers()&Modifier.ABSTRACT)==0)) {
+                if ((!cls.isInterface()) && c.isAssignableFrom(cls) && ((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {
@@ -154,7 +154,7 @@ public class ClassResolver {
             try {
                 @SuppressWarnings("unchecked")
                 Class<T> cls = (Class<T>) Class.forName(className);
-                if ((cls.getAnnotation(annotation)!=null)&&c.isAssignableFrom(cls)&&(!c.isInterface())) {
+                if ((cls.getAnnotation(annotation)!=null)&&c.isAssignableFrom(cls)&&(!cls.isInterface())) {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {
