@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2009
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.spring;
 
@@ -22,9 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
@@ -93,10 +91,8 @@ public class StreamingMultipartResolver implements MultipartResolver {
                     multipartFileContentTypes.put(name, file.getContentType());
                 } // if
             } // while
-        } catch (IOException e) {
-            throw new MultipartException("something went wrong here", e);
-        } catch (FileUploadException e) {
-            throw new MultipartException("something went wrong here", e);
+        } catch (IOException | FileUploadException e) {
+            throw new MultipartException("Error uploading a file", e);
         } // try/catch
 
         return new DefaultMultipartHttpServletRequest(request, multipartFiles, multipartParameters, multipartFileContentTypes);
@@ -113,7 +109,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
      * <p>
      * The default implementation checks the request encoding, falling back to the default encoding specified for this
      * resolver.
-     * 
+     *
      * @param request
      *            current HTTP request
      * @return the encoding for the request (never <code>null</code>)
