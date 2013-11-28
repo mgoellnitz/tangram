@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +47,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import org.tangram.annotate.ActionForm;
 import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
+import org.tangram.annotate.LinkPart;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
@@ -94,13 +97,13 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     private Map<String, LinkHandler> handlers;
 
-    private Map<String, Method> staticMethods = new HashMap<String, Method>();
+    private Map<Pattern, Method> staticMethods = new HashMap<Pattern, Method>();
 
-    private Map<String, Method> methods;
+    private Map<Pattern, Method> methods;
 
-    private Map<String, Object> staticAtHandlers = new HashMap<String, Object>();
+    private Map<Pattern, Object> staticAtHandlers = new HashMap<Pattern, Object>();
 
-    private Map<String, Object> atHandlers;
+    private Map<Pattern, Object> atHandlers;
 
     private Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
 
@@ -133,13 +136,14 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     } // if
                     if (linkAction!=null) {
                         if (StringUtils.isNotBlank(linkAction.path())) {
+                            Pattern pathPattern = Pattern.compile(linkAction.path().replace("/", "\\/"));
                             if (log.isInfoEnabled()) {
-                                log.info("registerLinkHandler() registing "+linkAction.path()+" for "+m.getName()+"@"+handler);
+                                log.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
                             } // if
-                            staticMethods.put(linkAction.path(), m);
-                            methods.put(linkAction.path(), m);
-                            staticAtHandlers.put(linkAction.path(), handler);
-                            atHandlers.put(linkAction.path(), handler);
+                            staticMethods.put(pathPattern, m);
+                            methods.put(pathPattern, m);
+                            staticAtHandlers.put(pathPattern, handler);
+                            atHandlers.put(pathPattern, handler);
                         } // if
                     } // if
                 } // for
@@ -150,9 +154,9 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     @Override
     public void reset() {
-        methods = new HashMap<String, Method>();
+        methods = new HashMap<Pattern, Method>();
         methods.putAll(staticMethods);
-        atHandlers = new HashMap<String, Object>();
+        atHandlers = new HashMap<Pattern, Object>();
         atHandlers.putAll(staticAtHandlers);
         handlers = new HashMap<String, LinkHandler>();
         handlers.putAll(staticLinkHandlers);
@@ -203,7 +207,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         if (log.isInfoEnabled()) {
             log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
         } // if
-    } // fillSchemes()
+    } // reset()
 
 
     /**
@@ -276,15 +280,13 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     } // findMethod()
 
 
-    private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Method method, TargetDescriptor descriptor,
+    private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Matcher matcher, Method method, TargetDescriptor descriptor,
                                         Object target) throws Throwable, IllegalAccessException {
         TargetDescriptor result = null;
-        if (log.isInfoEnabled()) {
-            log.info("callAction() method="+method);
+        if (log.isDebugEnabled()) {
+            log.debug("callAction() method="+method);
         } // if
 
-        // If we don't want to access parameters via GET
-        // if ((method!=null)&&request.getMethod().equals("POST")) {
         if (method!=null) {
             // TODO: Do type conversion or binding with spring or its coversion service
             PropertyConverter propertyConverter = Utils.getPropertyConverter();
@@ -302,14 +304,23 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     parameters.add(response);
                 } // if
                 for (Annotation annotation : annotations) {
+                    if (annotation instanceof LinkPart) {
+                        int partNumber = ((LinkPart) annotation).number();
+                        String valueString = matcher.group(partNumber);
+                        if (log.isDebugEnabled()) {
+                            log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
+                        } // if
+                        Object value = propertyConverter.getStorableObject(valueString, type, request);
+                        parameters.add(value);
+                    } // if
                     if (annotation instanceof ActionParameter) {
                         String parameterName = ((ActionParameter) annotation).name();
                         if ("--empty--".equals(parameterName)) {
                             parameterName = type.getSimpleName().toLowerCase();
                         } // if
                         String valueString = request.getParameter(parameterName);
-                        if (log.isInfoEnabled()) {
-                            log.info("callAction() parameter "+parameterName+" should be of type "+type.getName());
+                        if (log.isDebugEnabled()) {
+                            log.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
                         } // if
                         Object value = propertyConverter.getStorableObject(valueString, type, request);
                         parameters.add(value);
@@ -333,7 +344,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
             } // for
 
             if (log.isInfoEnabled()) {
-                log.info("callAction() calling method");
+                log.info("callAction() calling method "+method.getName()+" with "+parameters.size()+" parameters");
             } // if
             try {
                 descriptor = (TargetDescriptor) method.invoke(target, parameters.toArray());
@@ -380,14 +391,19 @@ public class MetaController extends AbstractController implements LinkHandlerReg
             log.info("handleRequestInternal() "+url);
         } // if
         try {
-            for (Entry<String, Method> entry : methods.entrySet()) {
-                if (log.isInfoEnabled()) {
-                    log.info("handleRequestInternal() key url "+entry.getKey());
+            for (Entry<Pattern, Method> entry : methods.entrySet()) {
+                Pattern p = entry.getKey();
+                if (log.isDebugEnabled()) {
+                    log.debug("handleRequestInternal() url pattern "+p.pattern());
                 } // if
-                if (entry.getKey().equals(url)) {
+                Matcher matcher = p.matcher(url);
+                if (matcher.matches()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("handleRequestInternal() match "+matcher.groupCount());
+                    } // if
                     Object target = atHandlers.get(entry.getKey());
                     TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
-                    TargetDescriptor resultDescriptor = callAction(request, response, entry.getValue(), descriptor, target);
+                    TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
                     return handleResultDescriptor(resultDescriptor, request, response);
                 } // if
             } // for
@@ -409,18 +425,18 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         } // if
                         return modelAndViewFactory.createModelAndView(model, descriptor.view);
                     } else {
-                        if (log.isInfoEnabled()) {
-                            log.info("handleRequestInternal() trying to call action "+descriptor.action);
+                        if (log.isDebugEnabled()) {
+                            log.debug("handleRequestInternal() trying to call action "+descriptor.action);
                         } // if
                         Method method = findMethod(linkHandler, descriptor.action);
-                        TargetDescriptor resultDescriptor = callAction(request, response, method, descriptor, linkHandler);
+                        TargetDescriptor resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);
                         if (resultDescriptor==null) {
                             for (Object value : model.values()) {
                                 // This has to be checked because of special null values in context like $null
                                 // if the link is already set don't try to call other methods
                                 if ((value!=null)&&(resultDescriptor==null)) {
                                     method = findMethod(value, descriptor.action);
-                                    resultDescriptor = callAction(request, response, method, descriptor, value);
+                                    resultDescriptor = callAction(request, response, null, method, descriptor, value);
                                 } // if
                             } // for
                         } // if
