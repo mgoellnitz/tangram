@@ -238,7 +238,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             log.debug("createBean() creating new instance of "+cls.getName());
         } // if
         T bean = manager.newInstance(cls);
-        
+
         statistics.increase("create bean");
         return bean;
     } // createBean()
@@ -255,9 +255,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             log.error("persistUncommitted()", e);
             if (manager!=null) {
                 // yes we saw situations where this was not the case thus hiding other errors!
-                if (manager.currentTransaction().isActive()) {
-                    manager.currentTransaction().rollback();
-                } // if
+                rollbackTransaction();
             } // if
         } // try/catch/finally
         return result;

@@ -20,6 +20,7 @@ package org.tangram.ebean;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.Transaction;
 import com.avaje.ebean.config.ServerConfig;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     private ServerConfig serverConfig;
 
     private EbeanServer server;
+
+    private Transaction currentTransaction = null;
 
     protected List<Class<? extends MutableContent>> modelClasses = null;
 
@@ -203,30 +206,24 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     @Override
     public void beginTransaction() {
-        if (server.currentTransaction()!=null) {
-            if (!server.currentTransaction().isActive()) {
-                server.beginTransaction();
-            } // if
+        if (currentTransaction==null) {
+            server.beginTransaction();
         } // if
     } // beginTransaction()
 
 
     @Override
     public void commitTransaction() {
-        if (server.currentTransaction()!=null) {
-            if (server.currentTransaction().isActive()) {
-                server.currentTransaction().commit();
-            } // if
+        if (currentTransaction!=null) {
+            currentTransaction.commit();
         } // if
     } // commitTransaction()
 
 
     @Override
     public void rollbackTransaction() {
-        if (server.currentTransaction()!=null) {
-            if (server.currentTransaction().isActive()) {
-                server.currentTransaction().rollback();
-            } // if
+        if (currentTransaction!=null) {
+            currentTransaction.rollback();
         } // if
     } // rollbackTransaction()
 
@@ -325,11 +322,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         } catch (Exception e) {
             log.error("persist()", e);
             if (rollback) {
-                if (server.currentTransaction()!=null) {
-                    if (server.currentTransaction().isActive()) {
-                        server.currentTransaction().rollback();
-                    } // if
-                } // if
+                rollbackTransaction();
             } // if
         } // try/catch/finally
         return result;

@@ -334,9 +334,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             log.error("persist()", e);
             if (manager!=null) {
                 // yes we saw situations where this was not the case thus hiding other errors!
-                if (manager.getTransaction().isActive()) {
-                    manager.getTransaction().rollback();
-                } // if
+                rollbackTransaction();
             } // if
         } // try/catch/finally
         return result;
