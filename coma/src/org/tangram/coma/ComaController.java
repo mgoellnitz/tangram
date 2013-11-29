@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.tangram.spring.RenderingController;
+import org.tangram.controller.RenderingBase;
 import org.tangram.view.Utils;
 import org.tangram.link.Link;
 
 @Controller
-public class ComaController extends RenderingController {
+public class ComaController extends RenderingBase {
 
     private static final Log log = LogFactory.getLog(ComaController.class);
 

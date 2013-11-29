@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.spring;
+package org.tangram.controller;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
-import org.tangram.controller.ControllerHook;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
@@ -36,18 +35,17 @@ import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
 
 /**
- * base class for springframrwork MVC @controllers used for rendering something in the outcome.
+ * base class for spring MVC @controllers used for rendering something in the outcome.
  *
  * Just provides convenience methods.
  *
- * Now independent of any springframework classes to be able ot support other frameworks and environments
+ * Now independent of any spring classes to be able ot support other frameworks and environments
  * in the future.
  *
  */
-// TODO: Move to new correct package again
-public abstract class RenderingController implements LinkFactory {
+public abstract class RenderingBase implements LinkFactory {
 
-    private static final Log log = LogFactory.getLog(RenderingController.class);
+    private static final Log log = LogFactory.getLog(RenderingBase.class);
 
     @Inject
     protected BeanFactory beanFactory;
@@ -77,7 +75,7 @@ public abstract class RenderingController implements LinkFactory {
     @Inject
     public void setLinkFactory(LinkFactoryAggregator linkFactory) {
         this.linkFactory = linkFactory;
-        this.linkFactory.registerHandler(this);
+        this.linkFactory.registerFactory(this);
     }
 
 
@@ -122,4 +120,4 @@ public abstract class RenderingController implements LinkFactory {
     @Override
     public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
-} // RenderingController
+} // RenderingBase

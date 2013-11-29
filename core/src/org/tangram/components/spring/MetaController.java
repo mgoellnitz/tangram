@@ -112,7 +112,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     @Inject
     public void setLinkFactory(LinkFactoryAggregator linkFactory) {
         this.linkFactory = linkFactory;
-        this.linkFactory.registerHandler(this);
+        this.linkFactory.registerFactory(this);
     }
 
 

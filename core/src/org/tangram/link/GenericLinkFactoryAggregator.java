@@ -57,9 +57,9 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
 
     @Override
-    public void registerHandler(LinkFactory handler) {
+    public void registerFactory(LinkFactory handler) {
         handlers.add(handler);
-    } // registerHandler()
+    } // registerFactory()
 
 
     @Override

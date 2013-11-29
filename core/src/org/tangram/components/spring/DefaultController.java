@@ -33,13 +33,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.content.Content;
-import org.tangram.spring.RenderingController;
+import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
 @Controller
-public class DefaultController extends RenderingController {
+public class DefaultController extends RenderingBase {
 
     private static final Log log = LogFactory.getLog(DefaultController.class);
 
@@ -101,7 +101,7 @@ public class DefaultController extends RenderingController {
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
             if ( !customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
-                return RenderingController.createDefaultLink(bean, action, view);
+                return RenderingBase.createDefaultLink(bean, action, view);
             } // if
         } // if
         return null;

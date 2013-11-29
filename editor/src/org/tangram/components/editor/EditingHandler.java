@@ -46,14 +46,13 @@ import org.tangram.annotate.LinkPart;
 import org.tangram.components.spring.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
+import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
-import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
-import org.tangram.spring.RenderingController;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
@@ -66,7 +65,7 @@ import org.tangram.view.Utils;
  */
 @Named
 @LinkHandler
-public class EditingHandler extends RenderingController implements LinkFactory {
+public class EditingHandler extends RenderingBase implements LinkFactory {
 
     private static final Log log = LogFactory.getLog(EditingHandler.class);
 
@@ -104,10 +103,6 @@ public class EditingHandler extends RenderingController implements LinkFactory {
 
     @Inject
     private ClassRepository classRepository;
-
-    @Inject
-    private LinkFactoryAggregator linkFactory;
-
 
     @Inject
     public void setDefaultController(DefaultController defaultController) {
@@ -503,7 +498,6 @@ public class EditingHandler extends RenderingController implements LinkFactory {
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        linkFactory.registerHandler(this);
         registry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

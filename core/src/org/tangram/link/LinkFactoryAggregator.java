@@ -33,7 +33,7 @@ public interface LinkFactoryAggregator {
     String getPrefix(HttpServletRequest request);
 
 
-    void registerHandler(LinkFactory handler);
+    void registerFactory(LinkFactory handler);
 
 
     void unregisterHandler(LinkFactory handler);
