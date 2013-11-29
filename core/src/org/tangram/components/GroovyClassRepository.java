@@ -19,6 +19,7 @@
 package org.tangram.components;
 
 import groovy.lang.GroovyClassLoader;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,6 @@ import org.codehaus.groovy.control.Phases;
 import org.codehaus.groovy.tools.GroovyClass;
 import org.tangram.Constants;
 import org.tangram.PersistentRestartCache;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.logic.ClassRepository;
@@ -170,6 +170,18 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     } // get()
 
 
+    @SuppressWarnings("unchecked")
+    public <T extends Object> Map<String, Class<T>> getAnnotated(Class<? extends Annotation> cls) {
+        Map<String, Class<T>> result = new HashMap<String, Class<T>>();
+        for (Map.Entry<String, Class<? extends Object>> entry : classes.entrySet()) {
+            if (entry.getValue().getAnnotation(cls)!=null) {
+                result.put(entry.getKey(), (Class<T>) entry.getValue());
+            } // if
+        } // for
+        return result;
+    } // getAnnotated()
+
+
     public Class<? extends Object> get(String className) {
         return classes.get(className);
     } // get()
@@ -206,6 +218,14 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                 classes.put(clazz.getName(), clazz);
             } // for
         } // if
+    } // overrideClass()
+
+
+    /**
+     * TODO: Hack for now since it does not deal with the byte codes.
+     */
+    public void overrideClass(Class<? extends Object> cls) {
+        classes.put(cls.getName(), cls);
     } // overrideClass()
 
 

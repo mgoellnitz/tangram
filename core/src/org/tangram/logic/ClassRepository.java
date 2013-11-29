@@ -18,6 +18,7 @@
  */
 package org.tangram.logic;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Set;
 import org.tangram.content.BeanListener;
@@ -47,6 +48,15 @@ public interface ClassRepository {
 
     /**
      * Get classes from this repository being subclasses of a given class.
+     * @param <T>
+     * @param cls base class for the result
+     * @return map code resource annotation to class instance
+     */
+    <T extends Object> Map<String, Class<T>> getAnnotated(Class<? extends Annotation> annotation);
+
+
+    /**
+     * Get classes from this repository being subclasses with a given annotation.
      * @param <T>
      * @param cls base class for the result
      * @return map code resource annotation to class instance
