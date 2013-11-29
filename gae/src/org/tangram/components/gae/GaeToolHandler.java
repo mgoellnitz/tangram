@@ -76,7 +76,7 @@ public class GaeToolHandler {
             log.info("clearSessions() "+results.countEntities(limit)+" sessions still available");
         } // if
 
-        return TargetDescriptor.DONE;
+        return new TargetDescriptor(statistics, null, null);
     } // clearSessions()
 
 

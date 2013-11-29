@@ -79,7 +79,7 @@ public class ToolHandler  {
             } // if
         } // for
 
-        return TargetDescriptor.DONE;
+        return new TargetDescriptor(statistics, null, null);
     } // clearCaches()
 
 
