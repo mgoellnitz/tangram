@@ -286,8 +286,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
      * @return Class for the given type name or null
      */
     private Class<? extends MutableContent> loadClass(String typeName) {
-        // Class<MutableContent> cls = (Class<MutableContent>)(this.getClass().getClassLoader().loadClass(typeName));
-        // TODO: do this more efficiently
         Class<? extends MutableContent> cls = null;
         for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
             if (c.getName().equals(typeName)) {

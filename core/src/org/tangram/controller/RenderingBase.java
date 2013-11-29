@@ -55,8 +55,6 @@ public abstract class RenderingBase implements LinkFactory {
 
     private LinkFactoryAggregator linkFactory;
 
-    // @Autowired(required = false)
-    // TODO: Odd feature of JSR330: no optional injections possible so there must be at least one hook
     @Inject
     private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
 
