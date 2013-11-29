@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,10 +25,11 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import org.tangram.content.Content;
+import org.tangram.feature.protection.Protection;
 import org.tangram.gae.GaeContent;
 
 @PersistenceCapable
-public abstract class AbstractProtection extends GaeContent implements org.tangram.feature.protection.Protection {
+public abstract class AbstractProtection extends GaeContent implements Protection {
 
     @Persistent
     private Text description;
