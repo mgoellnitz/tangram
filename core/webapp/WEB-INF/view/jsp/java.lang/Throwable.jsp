@@ -11,8 +11,9 @@
 <head>
 <title>Tangram - ${self}</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/screen.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print"/>
+<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/screen.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/print.css" type="text/css" media="print"/>
+<link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/favicon.ico" />
 </head>
 <body>
 <h1>
@@ -20,6 +21,9 @@
 <c:when test="${! empty self.message}">${self.message}</c:when>
 <c:otherwise>${self.class.name}</c:otherwise></c:choose>
 </h1>
+<p>Tangram went to pieces for some internal reason.</p>
+<div><img src="<%=Utils.getUriPrefix(request)%>/t/e/7TangramTeile.gif"/></div>
+<hr/>  
 <pre>
 <%
 StringWriter stringWriter = new StringWriter();
