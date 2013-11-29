@@ -27,39 +27,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
+import org.tangram.annotate.ActionParameter;
+import org.tangram.annotate.LinkAction;
+import org.tangram.annotate.LinkHandler;
+import org.tangram.annotate.LinkPart;
 import org.tangram.components.spring.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
+import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 import org.tangram.spring.RenderingController;
 import org.tangram.view.PropertyConverter;
+import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 
 
-@Controller
-public class EditingController extends RenderingController {
+/**
+ * Request handling component for the editing facility.
+ *
+ * This class does all the magic not found in the templates of the editor including URL generation and handling.
+ */
+@Named
+@LinkHandler
+public class EditingHandler extends RenderingController implements LinkFactory {
 
-    private static final Log log = LogFactory.getLog(EditingController.class);
+    private static final Log log = LogFactory.getLog(EditingHandler.class);
 
     public static final String EDIT_TARGET = "_tangram_editor";
 
@@ -88,6 +97,9 @@ public class EditingController extends RenderingController {
     } // static
 
     @Inject
+    private LinkHandlerRegistry registry;
+
+    @Inject
     private PropertyConverter propertyConverter;
 
     @Inject
@@ -95,15 +107,6 @@ public class EditingController extends RenderingController {
 
     @Inject
     private LinkFactoryAggregator linkFactory;
-
-    private MutableBeanFactory beanFactory;
-
-
-    @Inject
-    public void setBeanFactory(MutableBeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-        super.beanFactory = beanFactory;
-    }
 
 
     @Inject
@@ -118,18 +121,14 @@ public class EditingController extends RenderingController {
     } // getMutableBeanFactory()
 
 
-    private ModelAndView redirect(HttpServletRequest request, HttpServletResponse response, Content content) throws IOException {
-        // was:
-        // return modelAndViewFactory.createModelAndView(content, EDIT_VIEW+getVariant(request), request, response);
-        Link link = linkFactory.createLink(request, response, content, EDIT_VIEW, null);
-        response.sendRedirect(link.getUrl());
-        return null;
+    private TargetDescriptor describeTarget(Content bean) throws IOException {
+        return new TargetDescriptor(bean, null, EDIT_VIEW);
     } // redirect()
 
 
-    @RequestMapping(value = "/store/id_{id}")
+    @LinkAction("/store/id_(.*)")
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public ModelAndView store(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+    public TargetDescriptor store(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
@@ -241,7 +240,7 @@ public class EditingController extends RenderingController {
              } // for
              */
 
-            if (!beanFactory.persist(bean)) {
+            if (!getMutableBeanFactory().persist(bean)) {
                 throw new Exception("Could not persist bean "+bean.getId());
             } // if
 
@@ -253,9 +252,9 @@ public class EditingController extends RenderingController {
                 throw e;
             } // if
 
-            return redirect(request, response, bean);
+            return describeTarget(bean);
         } catch (Exception e) {
-            return modelAndViewFactory.createModelAndView(e, request, response);
+            return new TargetDescriptor(e, null, null);
         } // try/catch
     } // store()
 
@@ -304,9 +303,9 @@ public class EditingController extends RenderingController {
     } // loadClass()
 
 
-    @RequestMapping(value = "/create")
-    public ModelAndView create(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
-                               HttpServletResponse response) {
+    @LinkAction("/create")
+    public TargetDescriptor create(@ActionParameter(PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
+                                   HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("create() creating new instance of type "+typeName);
@@ -317,24 +316,24 @@ public class EditingController extends RenderingController {
             @SuppressWarnings("unchecked")
             Class<? extends MutableContent> cls = loadClass(typeName);
             MutableContent content = getMutableBeanFactory().createBean(cls);
-            if (beanFactory.persist(content)) {
+            if (getMutableBeanFactory().persist(content)) {
                 if (log.isDebugEnabled()) {
                     log.debug("create() content="+content);
                     log.debug("create() id="+content.getId());
                 } // if
-                return redirect(request, response, content);
+                return describeTarget(content);
             } // if
-            return modelAndViewFactory.createModelAndView(new Exception("Cannot persist new "+typeName), request, response);
+            return new TargetDescriptor(new Exception("Cannot persist new "+typeName), null, null);
         } catch (Exception e) {
             log.error("create() error while creating object ", e);
-            return modelAndViewFactory.createModelAndView(e, request, response);
+            return new TargetDescriptor(e, null, null);
         } // try/catch
     } // create()
 
 
-    @RequestMapping(value = "/list")
+    @LinkAction("/list")
     @SuppressWarnings("unchecked")
-    public ModelAndView list(@RequestParam(value = PARAMETER_CLASS_NAME, required = false) String typeName,
+    public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
                              HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
@@ -350,7 +349,7 @@ public class EditingController extends RenderingController {
                 cls = classes.iterator().next();
             } // if
             // try to take class from provided classes
-            if (StringUtils.hasText(typeName)) {
+            if (StringUtils.isNotBlank(typeName)) {
                 for (Class<? extends MutableContent> c : classes) {
                     if (c.getName().equals(typeName)) {
                         cls = c;
@@ -368,26 +367,25 @@ public class EditingController extends RenderingController {
                 } // try/catch
             } // if
             response.setContentType("text/html; charset=UTF-8");
-            Map<String, Object> model = new HashMap<String, Object>();
-            model.put(Constants.THIS, contents);
-            model.put("request", request);
-            model.put("response", response);
-            model.put("classes", classes);
-            model.put("prefix", Utils.getUriPrefix(request));
+            request.setAttribute(Constants.THIS, contents);
+            request.setAttribute("request", request);
+            request.setAttribute("response", response);
+            request.setAttribute("classes", classes);
+            request.setAttribute("prefix", Utils.getUriPrefix(request));
             if (cls!=null) {
                 Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
-                model.put("designClass", designClass);
-                model.put("designClassPackage", designClass.getPackage());
+                request.setAttribute("designClass", designClass);
+                request.setAttribute("designClassPackage", designClass.getPackage());
             } // if
-            return modelAndViewFactory.createModelAndView(model, "tangramEditorList"+getVariant(request));
+            return new TargetDescriptor(contents, "tangramEditorList"+getVariant(request), null);
         } catch (Exception e) {
-            return modelAndViewFactory.createModelAndView(e, request, response);
+            return new TargetDescriptor(e, null, null);
         } // try/catch
     } // list()
 
 
-    @RequestMapping(value = "/edit/id_{id}")
-    public ModelAndView edit(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) {
+    @LinkAction("/edit/id_(.*)")
+    public TargetDescriptor edit(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("edit() editing "+id);
@@ -397,30 +395,30 @@ public class EditingController extends RenderingController {
             } // if
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
-            ModelAndView mav = modelAndViewFactory.createModelAndView(content, "edit"+getVariant(request), request, response);
-            Map<String, Object> model = mav.getModel();
-            model.put(ATTRIBUTE_WRAPPER, Utils.createWrapper(content));
+
+            request.setAttribute(ATTRIBUTE_WRAPPER, Utils.createWrapper(content));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
-                model.put("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
+                request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
-            model.put("classes", getMutableBeanFactory().getClasses());
-            model.put("prefix", Utils.getUriPrefix(request));
+            request.setAttribute("classes", getMutableBeanFactory().getClasses());
+            request.setAttribute("prefix", Utils.getUriPrefix(request));
             Class<? extends Content> cls = content.getClass();
             final Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
-            model.put("designClass", designClass);
-            model.put("designClassPackage", designClass.getPackage());
-            return mav;
+            request.setAttribute("designClass", designClass);
+            request.setAttribute("designClassPackage", designClass.getPackage());
+
+            return new TargetDescriptor(content, "edit"+getVariant(request), null);
         } catch (Exception e) {
-            return modelAndViewFactory.createModelAndView(e, request, response);
+            return new TargetDescriptor(e, null, null);
         } // try/catch
     } // edit()
 
 
     // Changed to method get for new class selection mimik
-    @RequestMapping(method = {RequestMethod.GET}, value = "/link")
-    public ModelAndView link(@RequestParam(value = PARAMETER_CLASS_NAME) String typeName,
-                             @RequestParam(value = PARAMETER_ID) String id, @RequestParam(value = PARAMETER_PROPERTY) String propertyName,
+    @LinkAction("/link")
+    public TargetDescriptor link(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
+                             @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
                              HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
@@ -432,7 +430,7 @@ public class EditingController extends RenderingController {
             @SuppressWarnings("unchecked")
             Class<? extends MutableContent> cls = loadClass(typeName);
             MutableContent content = getMutableBeanFactory().createBean(cls);
-            if (beanFactory.persist(content)) {
+            if (getMutableBeanFactory().persist(content)) {
                 if (log.isDebugEnabled()) {
                     log.debug("link() content="+content);
                     log.debug("link() id="+content.getId());
@@ -449,13 +447,13 @@ public class EditingController extends RenderingController {
                 list.add(content);
 
                 wrapper.setPropertyValue(propertyName, list);
-                beanFactory.persist(bean);
-                return redirect(request, response, content);
+                getMutableBeanFactory().persist(bean);
+                return describeTarget(content);
             } else {
                 throw new Exception("could not create new instance of type "+typeName);
             } // if
         } catch (Exception e) {
-            return modelAndViewFactory.createModelAndView(e, request, response);
+            return new TargetDescriptor(e, null, null);
         } // try/catch
     } // link()
 
@@ -502,4 +500,11 @@ public class EditingController extends RenderingController {
         return result;
     } // createLink()
 
-} // EditingController
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        linkFactory.registerHandler(this);
+        registry.registerLinkHandler(this);
+    } // afterPropertiesSet()
+
+} // EditingHandler
