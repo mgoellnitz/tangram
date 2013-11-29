@@ -27,6 +27,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface LinkPart {
 
-    int number() default 1; // Starting with 1!
+    int value() default 1; // Starting with 1!
 
 } // LinkPart

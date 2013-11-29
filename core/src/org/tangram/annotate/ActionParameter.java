@@ -33,6 +33,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface ActionParameter {
 
-    String name() default "--empty--";
+    // Name of the parameter
+    String value() default "--empty--";
 
 } // ActionParamter

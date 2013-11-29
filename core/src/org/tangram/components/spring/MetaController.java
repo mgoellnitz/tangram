@@ -305,7 +305,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                 } // if
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof LinkPart) {
-                        int partNumber = ((LinkPart) annotation).number();
+                        int partNumber = ((LinkPart) annotation).value();
                         String valueString = matcher.group(partNumber);
                         if (log.isDebugEnabled()) {
                             log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
@@ -314,7 +314,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         parameters.add(value);
                     } // if
                     if (annotation instanceof ActionParameter) {
-                        String parameterName = ((ActionParameter) annotation).name();
+                        String parameterName = ((ActionParameter) annotation).value();
                         if ("--empty--".equals(parameterName)) {
                             parameterName = type.getSimpleName().toLowerCase();
                         } // if

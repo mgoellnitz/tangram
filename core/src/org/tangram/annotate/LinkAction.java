@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface LinkAction {
 
+    // uri path
     String value() default "";
 
 } // LinkAction
