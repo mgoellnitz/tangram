@@ -135,8 +135,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         linkAction = null;
                     } // if
                     if (linkAction!=null) {
-                        if (StringUtils.isNotBlank(linkAction.path())) {
-                            Pattern pathPattern = Pattern.compile(linkAction.path().replace("/", "\\/"));
+                        if (StringUtils.isNotBlank(linkAction.value())) {
+                            Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
                             if (log.isInfoEnabled()) {
                                 log.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
                             } // if

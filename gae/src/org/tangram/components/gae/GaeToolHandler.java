@@ -53,7 +53,7 @@ public class GaeToolHandler {
     private Statistics statistics;
 
 
-    @LinkAction(path = "/clear/sessions")
+    @LinkAction("/clear/sessions")
     public TargetDescriptor clearSessions(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getParameter(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not clear cache");

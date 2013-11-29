@@ -61,7 +61,7 @@ public class CodeExporter {
     } // getFilename()
 
 
-    @LinkAction(path = "/codes.zip")
+    @LinkAction("/codes.zip")
     public TargetDescriptor codes(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (!request.getRequestURI().endsWith(".zip")) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

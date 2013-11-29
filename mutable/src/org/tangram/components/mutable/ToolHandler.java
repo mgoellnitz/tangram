@@ -60,7 +60,7 @@ public class ToolHandler  {
     private MutableBeanFactory beanFactory;
 
 
-    @LinkAction(path = "/clear/caches")
+    @LinkAction("/clear/caches")
     public TargetDescriptor clearCaches(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getParameter(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not clear cache");
