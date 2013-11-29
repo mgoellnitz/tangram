@@ -206,25 +206,33 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     @Override
     public void beginTransaction() {
-        if (currentTransaction==null) {
-            server.beginTransaction();
-        } // if
+        synchronized (server) {
+            if (currentTransaction==null) {
+                currentTransaction = server.beginTransaction();
+            } // if
+        } // synchronized
     } // beginTransaction()
 
 
     @Override
     public void commitTransaction() {
-        if (currentTransaction!=null) {
-            currentTransaction.commit();
-        } // if
+        synchronized (server) {
+            if (currentTransaction!=null) {
+                currentTransaction.commit();
+                currentTransaction = null;
+            } // if
+        } // synchronized
     } // commitTransaction()
 
 
     @Override
     public void rollbackTransaction() {
-        if (currentTransaction!=null) {
-            currentTransaction.rollback();
-        } // if
+        synchronized (server) {
+            if (currentTransaction!=null) {
+                currentTransaction.rollback();
+                currentTransaction = null;
+            } // if
+        } // synchronized
     } // rollbackTransaction()
 
 
