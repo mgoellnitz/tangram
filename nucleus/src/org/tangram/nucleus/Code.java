@@ -21,6 +21,8 @@ package org.tangram.nucleus;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.jdo.annotations.PersistenceCapable;
+import org.tangram.content.CodeResource;
+import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
 
 /**
@@ -88,5 +90,11 @@ public class Code extends NucleusContent implements MutableCode {
     public InputStream getStream() throws Exception {
         return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     }
+
+    @Override
+    public int compareTo(Content o) {
+        return (o instanceof Code) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource) o).getMimeType()+((CodeResource) o).getAnnotation())
+                : super.compareTo(o);
+    } // compareTo()
 
 } // Code
