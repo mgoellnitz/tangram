@@ -10,7 +10,7 @@
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.view.Utils"
 %><%@page import="org.tangram.mutable.MutableContent"
-%><%@page import="org.tangram.components.editor.EditingController"
+%><%@page import="org.tangram.components.editor.EditingHandler"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -45,7 +45,7 @@ BeanWrapper bw = Utils.createWrapper(request.getAttribute(Constants.THIS));
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
-    if (!EditingController.SYSTEM_PROPERTIES.contains(key)) {          
+    if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {          
         if (desc.getWriteMethod() != null) {
     Object value = bw.getPropertyValue(key);
     @SuppressWarnings("unchecked")
@@ -82,7 +82,7 @@ if (c != null) {
     %><%=annotation == null ? "" : annotation+" ist kein<br/>gültiger Klassenname!"%><%
 } // if
 for (PropertyDescriptor p : ps) {
-    if ((p.getReadMethod() != null) && (!EditingController.SYSTEM_PROPERTIES.contains(p.getName()))) {
+    if ((p.getReadMethod() != null) && (!EditingHandler.SYSTEM_PROPERTIES.contains(p.getName()))) {
         String delimiter = "</span> :";
         if ((p.getName()+p.getPropertyType().getSimpleName()).length() > 18) {
             delimiter = "</span><br/>&#160;&#160;:";
@@ -169,7 +169,7 @@ if (value instanceof Collection) {
 <br/><c:forEach items="${propertyValue}" var="item">
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach>
-<select name="<%=EditingController.PARAMETER_CLASS_NAME%>" id="select<%=fid%>">
+<select name="<%=EditingHandler.PARAMETER_CLASS_NAME%>" id="select<%=fid%>">
 <c:forEach items="${beanFactory.implementingClassesMap[elementClass]}" var="c"
 ><option value="${c.name}">${c.simpleName}</option>
 </c:forEach
@@ -177,7 +177,7 @@ if (value instanceof Collection) {
 <script language="JavaScript">
 function new<%=fid%>() {
 	var e = document.getElementById('select<%=fid%>');
-	var url = '<cms:link bean="${self}" action="link"/>?<%=EditingController.PARAMETER_PROPERTY%>=<%=key%>&<%=EditingController.PARAMETER_ID%>=${self.id}&<%=EditingController.PARAMETER_CLASS_NAME%>='+e.value
+	var url = '<cms:link bean="${self}" action="link"/>?<%=EditingHandler.PARAMETER_PROPERTY%>=<%=key%>&<%=EditingHandler.PARAMETER_ID%>=${self.id}&<%=EditingHandler.PARAMETER_CLASS_NAME%>='+e.value
 	location.href=url;
 } //
 </script>
