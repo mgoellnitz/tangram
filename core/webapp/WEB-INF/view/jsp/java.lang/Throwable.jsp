@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/print.css" type="text/css" media="print"/>
 <link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/favicon.ico" />
 </head>
-<body>
+<body style="background-color: white;">
 <h1>
 <c:choose><c:when test="${! empty self.localizedMessage}">${self.localizedMessage}</c:when>
 <c:when test="${! empty self.message}">${self.message}</c:when>
