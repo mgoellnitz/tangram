@@ -37,11 +37,11 @@ public abstract class EContent implements MutableContent {
 
     @Id
     @GeneratedValue
-    private Integer internalId;
+    private Integer id;
 
 
     public Integer getInternalId() {
-        return internalId;
+        return id;
     }
 
 
@@ -56,8 +56,7 @@ public abstract class EContent implements MutableContent {
         if (kind.indexOf('$') >= 0) {
             kind = getClass().getSuperclass().getSimpleName();
         } // if
-        return kind+":"+internalId;
-        // return id;
+        return kind+":"+id;
     } // getId()
 
 
