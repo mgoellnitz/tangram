@@ -65,7 +65,8 @@ public class StorFtpCommandHandler extends StorCommandHandler {
                 String annotation = CodeHelper.getAnnotation(filename);
                 CodeResource lookup = cache.get(annotation);
                 final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
-                MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBeanForUpdate(codeClass, lookup.getId());
+                MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
+                beanFactory.beginTransaction();
 
                 code.setAnnotation(annotation);
                 code.setCode(new String(data, "UTF-8").toCharArray());

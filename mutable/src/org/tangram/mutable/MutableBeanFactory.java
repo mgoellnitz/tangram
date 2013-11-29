@@ -27,27 +27,13 @@ import org.tangram.content.Content;
 
 public interface MutableBeanFactory extends BeanFactory {
 
-    /**
-     *
-     * Get a bean of a given type with a given id. You MUST call persist() after using this method! The resulting bean
-     * must adhere to both conditions: id and type.
-     *
-     * @param <T>
-     * @param cls
-     * @param id
-     * @return
-     */
-    <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id);
+    public void beginTransaction();
 
 
-    /**
-     *
-     * Get bean with a given id. You MUST call persist() after using this method!
-     *
-     * @param id
-     * @return
-     */
-    MutableContent getBeanForUpdate(String id);
+    public void commitTransaction();
+
+
+    public void rollbackTransaction();
 
 
     /**
@@ -68,6 +54,16 @@ public interface MutableBeanFactory extends BeanFactory {
      * @return true if persisting could be completed successfully
      */
     <T extends MutableContent> boolean persist(T bean);
+
+
+    /**
+     * Persist a given bean and don't close the open transaction.
+     *
+     * @param <T>
+     * @param bean
+     * @return true if persisting could be completed successfully
+     */
+    <T extends MutableContent> boolean persistUncommitted(T bean);
 
 
     /**

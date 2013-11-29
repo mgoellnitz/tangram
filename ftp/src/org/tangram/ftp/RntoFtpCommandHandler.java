@@ -61,7 +61,8 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
         } // if
         if (id!=null) {
             final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
-            MutableCode code = beanFactory.getBeanForUpdate(codeClass, id);
+            MutableCode code = beanFactory.getBean(codeClass, id);
+            beanFactory.beginTransaction();
             if (code!=null) {
                 code.setAnnotation(CodeHelper.getAnnotation(newName));
                 beanFactory.persist(code);

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
@@ -37,10 +36,15 @@ import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
 
 /**
- * base class for springframrwork MVC controllers used for rendering something in the outcome.
+ * base class for springframrwork MVC @controllers used for rendering something in the outcome.
  *
  * Just provides convenience methods.
+ *
+ * Now independent of any springframework classes to be able ot support other frameworks and environments
+ * in the future.
+ *
  */
+// TODO: Move to new correct package again
 public abstract class RenderingController implements LinkFactory {
 
     private static final Log log = LogFactory.getLog(RenderingController.class);
@@ -53,7 +57,9 @@ public abstract class RenderingController implements LinkFactory {
 
     private LinkFactoryAggregator linkFactory;
 
-    @Autowired(required = false)
+    // @Autowired(required = false)
+    // TODO: Odd feature of JSR330: no optional injections possible so there must be at least one hook
+    @Inject
     private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
 
 

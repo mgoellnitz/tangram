@@ -35,6 +35,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.BeanListener;
@@ -217,17 +219,27 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
 
     @Override
-    public <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id) {
-        T bean = getBean(cls, id);
-        manager.getTransaction().begin();
-        return bean;
-    } // getBeanForUpdate()
+    public void beginTransaction() {
+        if (!manager.getTransaction().isActive()) {
+            manager.getTransaction().begin();;
+        } // if
+    } // beginTransaction()
 
 
     @Override
-    public JpaContent getBeanForUpdate(String id) {
-        return getBeanForUpdate(JpaContent.class, id);
-    } // getBeanForUpdate()
+    public void commitTransaction() {
+        if (manager.getTransaction().isActive()) {
+            manager.getTransaction().commit();;
+        } // if
+    } // commitTransaction()
+
+
+    @Override
+    public void rollbackTransaction() {
+        if (manager.getTransaction().isActive()) {
+            manager.getTransaction().rollback();;
+        } // if
+    } // rollbackTransaction()
 
 
     /**
@@ -241,21 +253,94 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @Override
     public <T extends MutableContent> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
         if (log.isDebugEnabled()) {
-            log.debug("createBean() obtaining persistence manager");
+            log.debug("createBean() beginning transaction");
         } // if
-        manager.getTransaction().begin();
+        beginTransaction();
+
         if (log.isDebugEnabled()) {
             log.debug("createBean() creating new instance of "+cls.getName());
         } // if
-
         T bean = cls.newInstance();
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() populating new instance");
-        } // if
 
         statistics.increase("create bean");
         return bean;
     } // createBean()
+
+
+    @SuppressWarnings("unchecked")
+    private <T extends MutableContent> Class<T> getKeyClass(String key) {
+        String className = key.split(":")[0];
+        return (Class<T>) getClassForName(className);
+    } // getKeyClass()
+
+
+    @Override
+    public void clearCacheFor(Class<? extends Content> cls) {
+        statistics.increase("bean cache clear");
+        cache.clear();
+        if (log.isInfoEnabled()) {
+            log.info("clearCacheFor() "+cls.getSimpleName());
+        } // if
+        try {
+            // clear query cache first since listeners might want to use query to obtain fresh data
+            Collection<String> removeKeys = new HashSet<String>();
+            for (Object keyObject : queryCache.keySet()) {
+                String key = (String) keyObject;
+                Class<? extends Content> c = getKeyClass(key);
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    removeKeys.add(key);
+                } // if
+            } // for
+            for (String key : removeKeys) {
+                queryCache.remove(key);
+            } // for
+            startupCache.put(QUERY_CACHE_KEY, queryCache);
+
+            for (Class<? extends Content> c : getListeners().keySet()) {
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    List<BeanListener> listeners = getListeners().get(c);
+                    if (log.isInfoEnabled()) {
+                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                    } // if
+                    if (listeners!=null) {
+                        for (BeanListener listener : listeners) {
+                            listener.reset();
+                        } // for
+                    } // if
+                } // if
+            } // for
+        } catch (Exception e) {
+            log.error("clearCacheFor() "+cls.getSimpleName(), e);
+        } // try/catch
+    } // clearCacheFor()
+
+
+    @Override
+    public <T extends MutableContent> boolean persistUncommitted(T bean) {
+        boolean result = false;
+        try {
+            manager.persist(bean);
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("persist()", e);
+            if (manager!=null) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                if (manager.getTransaction().isActive()) {
+                    manager.getTransaction().rollback();
+                } // if
+            } // if
+        } // try/catch/finally
+        return result;
+    } // persist()
 
 
     @Override
@@ -362,83 +447,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // listBeans()
 
 
-    @SuppressWarnings("unchecked")
-    private <T extends MutableContent> Class<T> getKeyClass(String key) {
-        String className = key.split(":")[0];
-        return (Class<T>) getClassForName(className);
-    } // getKeyClass()
-
-
-    @Override
-    public void clearCacheFor(Class<? extends Content> cls) {
-        statistics.increase("bean cache clear");
-        cache.clear();
-        if (log.isInfoEnabled()) {
-            log.info("clearCacheFor() "+cls.getSimpleName());
-        } // if
-        try {
-            // clear query cache first since listeners might want to use query to obtain fresh data
-            Collection<String> removeKeys = new HashSet<String>();
-            for (Object keyObject : queryCache.keySet()) {
-                String key = (String) keyObject;
-                Class<? extends Content> c = getKeyClass(key);
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    removeKeys.add(key);
-                } // if
-            } // for
-            for (String key : removeKeys) {
-                queryCache.remove(key);
-            } // for
-            startupCache.put(QUERY_CACHE_KEY, queryCache);
-
-            for (Class<? extends Content> c : getListeners().keySet()) {
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    List<BeanListener> listeners = getListeners().get(c);
-                    if (log.isInfoEnabled()) {
-                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
-                    } // if
-                    if (listeners!=null) {
-                        for (BeanListener listener : listeners) {
-                            listener.reset();
-                        } // for
-                    } // if
-                } // if
-            } // for
-        } catch (Exception e) {
-            log.error("clearCacheFor() "+cls.getSimpleName(), e);
-        } // try/catch
-    } // clearCacheFor()
-
-
-    @Override
-    public <T extends MutableContent> boolean persist(T bean) {
-        boolean result = false;
-        try {
-            manager.persist(bean);
-            manager.getTransaction().commit();
-            clearCacheFor(bean.getClass());
-            result = true;
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (manager!=null) {
-                // yes we saw situations where this was not the case thus hiding other errors!
-                if (manager.getTransaction().isActive()) {
-                    manager.getTransaction().rollback();
-                } // if
-            } // if
-        } // try/catch/finally
-        return result;
-    } // persist()
-
-
     protected String getClassNamesCacheKey() {
         return "tangram-class-names";
     } // getClassNamesCacheKey()
@@ -484,7 +492,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 } catch (Exception e) {
                     log.error("getAllClasses() outer", e);
                 } // try/catch
-                allClasses.addAll(additionalClasses);
             } // if
         } // synchronized
         return allClasses;
@@ -509,7 +516,19 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                     } // compareTo()
 
                 };
+                modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
+                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
+                for (Class<? extends MutableContent> mc : modelClasses) {
+                    log.info("getClasses() setting table mapping for "+mc);
+                    tableNameMapping.put(mc.getSimpleName(), mc);
+                    // TODO: doesn't help much
+                    /*
+                     log.info("getClasses() adding meta data for "+mc);
+                     OpenJPAConfiguration configuration = ((OpenJPAEntityManagerFactory)getManager().getEntityManagerFactory()).getConfiguration();
+                     configuration.getMetaDataRepositoryInstance().addMetaData(mc);
+                     */
+                } // for
             } // if
         } // if
         return modelClasses;
@@ -521,10 +540,20 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     @Override
     public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
-        additionalClasses = (classes==null) ? new HashSet<Class<? extends MutableContent>>() : classes;
-        allClasses = null;
+        Set<Class<? extends MutableContent>> classSet = new HashSet<Class<? extends MutableContent>>();
+        if (classes!=null) {
+            for (Class<? extends MutableContent> cls : classes) {
+                if (JpaContent.class.isAssignableFrom(cls)) {
+                    if (cls.getAnnotation(Entity.class)!=null) {
+                        if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                            classSet.add(cls);
+                        } // if
+                    } // if
+                } // if
+            } // for
+        } // if
+        additionalClasses = classSet;
         modelClasses = null;
-        afterPropertiesSet();
     } // setAdditionalClasses()
 
 
@@ -586,14 +615,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        // be restart aware
-        if (manager!=null) {
-            manager.close();
-        } // if
-        if (managerFactory!=null) {
-            managerFactory.close();
-        } // if
-
         Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
         if (log.isInfoEnabled()) {
             log.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
@@ -615,11 +636,21 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
         // here we go with the basic stuff
         managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
+        manager = managerFactory.createEntityManager();
+
         if (log.isInfoEnabled()) {
             log.info("afterPropertiesSet() manager factory: "+managerFactory.getClass().getName());
+            Metamodel metamodel = manager.getMetamodel();
+            if (metamodel!=null) {
+                Set<EntityType<?>> entities = metamodel.getEntities();
+                for (EntityType<?> entity : entities) {
+                    log.info("afterPropertiesSet() manager factory: "+entity.getName()+"/"+entity.getJavaType().getName());
+                } // for
+            } else {
+                log.info("afterPropertiesSet() not meta model");
+            } // if
         } // if
 
-        manager = managerFactory.createEntityManager();
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;

@@ -199,19 +199,27 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
-    public <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id) {
-        T bean = getBean(cls, id);
+    public void beginTransaction() {
         if (!manager.currentTransaction().isActive()) {
             manager.currentTransaction().begin();
         } // if
-        return bean;
-    } // getBeanForUpdate()
+    } // beginTransaction()
 
 
     @Override
-    public MutableContent getBeanForUpdate(String id) {
-        return getBeanForUpdate(JdoContent.class, id);
-    } // getBeanForUpdate()
+    public void commitTransaction() {
+        if (manager.currentTransaction().isActive()) {
+            manager.currentTransaction().commit();
+        } // if
+    } // commitTransaction()
+
+
+    @Override
+    public void rollbackTransaction() {
+        if (manager.currentTransaction().isActive()) {
+            manager.currentTransaction().commit();
+        } // if
+    } // rollbackTransaction()
 
 
     /**
@@ -222,21 +230,38 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @Override
     public <T extends MutableContent> T createBean(Class<T> cls) {
         if (log.isDebugEnabled()) {
-            log.debug("createBean() obtaining persistence manager");
+            log.debug("createBean() beginning transaction");
         } // if
-        if (!manager.currentTransaction().isActive()) {
-            manager.currentTransaction().begin();
-        } // if
+        beginTransaction();
+
         if (log.isDebugEnabled()) {
             log.debug("createBean() creating new instance of "+cls.getName());
         } // if
         T bean = manager.newInstance(cls);
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() populating new instance");
-        } // if
+        
         statistics.increase("create bean");
         return bean;
     } // createBean()
+
+
+    @Override
+    public <T extends MutableContent> boolean persistUncommitted(T bean) {
+        boolean result = false;
+        try {
+            manager.makePersistent(bean);
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("persistUncommitted()", e);
+            if (manager!=null) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                if (manager.currentTransaction().isActive()) {
+                    manager.currentTransaction().rollback();
+                } // if
+            } // if
+        } // try/catch/finally
+        return result;
+    } // persistUncommitted()
 
 
     @Override
@@ -394,27 +419,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             log.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
-
-
-    @Override
-    public <T extends MutableContent> boolean persist(T bean) {
-        boolean result = false;
-        try {
-            manager.makePersistent(bean);
-            manager.currentTransaction().commit();
-            clearCacheFor(bean.getClass());
-            result = true;
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (manager!=null) {
-                // yes we saw situations where this was not the case thus hiding other errors!
-                if (manager.currentTransaction().isActive()) {
-                    manager.currentTransaction().rollback();
-                } // if
-            } // if
-        } // try/catch/finally
-        return result;
-    } // persist()
 
 
     /**

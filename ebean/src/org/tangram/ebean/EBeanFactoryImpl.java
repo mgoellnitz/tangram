@@ -202,18 +202,33 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
 
     @Override
-    public <T extends MutableContent> T getBeanForUpdate(Class<T> cls, String id) {
-        T bean = getBean(cls, id);
-        // TODO: Transactions
-        // manager.getTransaction().begin();
-        return bean;
-    } // getBeanForUpdate()
+    public void beginTransaction() {
+        if (server.currentTransaction()!=null) {
+            if (!server.currentTransaction().isActive()) {
+                server.beginTransaction();
+            } // if
+        } // if
+    } // beginTransaction()
 
 
     @Override
-    public EContent getBeanForUpdate(String id) {
-        return getBeanForUpdate(EContent.class, id);
-    } // getBeanForUpdate()
+    public void commitTransaction() {
+        if (server.currentTransaction()!=null) {
+            if (server.currentTransaction().isActive()) {
+                server.currentTransaction().commit();
+            } // if
+        } // if
+    } // commitTransaction()
+
+
+    @Override
+    public void rollbackTransaction() {
+        if (server.currentTransaction()!=null) {
+            if (server.currentTransaction().isActive()) {
+                server.currentTransaction().rollback();
+            } // if
+        } // if
+    } // rollbackTransaction()
 
 
     /**
@@ -227,22 +242,98 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     @Override
     public <T extends MutableContent> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
         if (log.isDebugEnabled()) {
-            log.debug("createBean() obtaining persistence manager");
+            log.debug("createBean() beginning transaction");
         } // if
-        // TODO: transactions with ebean
-        // manager.getTransaction().begin();
+        beginTransaction();
+
         if (log.isDebugEnabled()) {
             log.debug("createBean() creating new instance of "+cls.getName());
         } // if
-
         T bean = cls.newInstance();
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() populating new instance");
-        } // if
 
         statistics.increase("create bean");
         return bean;
     } // createBean()
+
+
+    @SuppressWarnings("unchecked")
+    private <T extends MutableContent> Class<T> getKeyClass(String key) {
+        String className = key.split(":")[0];
+        return (Class<T>) getClassForName(className);
+    } // getKeyClass()
+
+
+    @Override
+    public void clearCacheFor(Class<? extends Content> cls) {
+        statistics.increase("bean cache clear");
+        cache.clear();
+        if (log.isInfoEnabled()) {
+            log.info("clearCacheFor() "+cls.getSimpleName());
+        } // if
+        try {
+            // clear query cache first since listeners might want to use query to obtain fresh data
+            Collection<String> removeKeys = new HashSet<String>();
+            for (Object keyObject : queryCache.keySet()) {
+                String key = (String) keyObject;
+                Class<? extends Content> c = getKeyClass(key);
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    removeKeys.add(key);
+                } // if
+            } // for
+            for (String key : removeKeys) {
+                queryCache.remove(key);
+            } // for
+            startupCache.put(QUERY_CACHE_KEY, queryCache);
+
+            for (Class<? extends Content> c : getListeners().keySet()) {
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    List<BeanListener> listeners = getListeners().get(c);
+                    if (log.isInfoEnabled()) {
+                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                    } // if
+                    if (listeners!=null) {
+                        for (BeanListener listener : listeners) {
+                            listener.reset();
+                        } // for
+                    } // if
+                } // if
+            } // for
+        } catch (Exception e) {
+            log.error("clearCacheFor() "+cls.getSimpleName(), e);
+        } // try/catch
+    } // clearCacheFor()
+
+
+    @Override
+    public <T extends MutableContent> boolean persistUncommitted(T bean) {
+        boolean result = false;
+        boolean rollback = false;
+        try {
+            rollback = true;
+            server.save(bean);
+            rollback = false;
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("persist()", e);
+            if (rollback) {
+                if (server.currentTransaction()!=null) {
+                    if (server.currentTransaction().isActive()) {
+                        server.currentTransaction().rollback();
+                    } // if
+                } // if
+            } // if
+        } // try/catch/finally
+        return result;
+    } // persistUncommitted()
 
 
     @Override
@@ -343,84 +434,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         } // if
         return result;
     } // listBeans()
-
-
-    @SuppressWarnings("unchecked")
-    private <T extends MutableContent> Class<T> getKeyClass(String key) {
-        String className = key.split(":")[0];
-        return (Class<T>) getClassForName(className);
-    } // getKeyClass()
-
-
-    @Override
-    public void clearCacheFor(Class<? extends Content> cls) {
-        statistics.increase("bean cache clear");
-        cache.clear();
-        if (log.isInfoEnabled()) {
-            log.info("clearCacheFor() "+cls.getSimpleName());
-        } // if
-        try {
-            // clear query cache first since listeners might want to use query to obtain fresh data
-            Collection<String> removeKeys = new HashSet<String>();
-            for (Object keyObject : queryCache.keySet()) {
-                String key = (String) keyObject;
-                Class<? extends Content> c = getKeyClass(key);
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    removeKeys.add(key);
-                } // if
-            } // for
-            for (String key : removeKeys) {
-                queryCache.remove(key);
-            } // for
-            startupCache.put(QUERY_CACHE_KEY, queryCache);
-
-            for (Class<? extends Content> c : getListeners().keySet()) {
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    List<BeanListener> listeners = getListeners().get(c);
-                    if (log.isInfoEnabled()) {
-                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
-                    } // if
-                    if (listeners!=null) {
-                        for (BeanListener listener : listeners) {
-                            listener.reset();
-                        } // for
-                    } // if
-                } // if
-            } // for
-        } catch (Exception e) {
-            log.error("clearCacheFor() "+cls.getSimpleName(), e);
-        } // try/catch
-    } // clearCacheFor()
-
-
-    @Override
-    public <T extends MutableContent> boolean persist(T bean) {
-        boolean result = false;
-        boolean rollback = false;
-        try {
-            server.beginTransaction();
-            rollback = true;
-            server.save(bean);
-            server.commitTransaction();
-            rollback = false;
-            clearCacheFor(bean.getClass());
-            result = true;
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (rollback) {
-                server.rollbackTransaction();
-            } // if
-        } // try/catch/finally
-        return result;
-    } // persist()
 
 
     protected String getClassNamesCacheKey() {

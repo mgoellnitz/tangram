@@ -35,7 +35,7 @@ import org.tangram.monitor.Statistics;
 /**
  * Common stuff for all bean factories dealing with mutable content.
  */
-public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory implements MutableBeanFactory {
 
     protected static final String QUERY_CACHE_KEY = "tangram.query.cache";
 
@@ -53,6 +53,16 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory {
     protected Map<Class<? extends Content>, List<BeanListener>> getListeners() {
         return attachedListeners;
     } // getListeners() {
+
+
+    @Override
+    public <T extends MutableContent> boolean persist(T bean) {
+        final boolean result = persistUncommitted(bean);
+        if (result) {
+            commitTransaction();
+        } // if
+        return result;
+    } // persistUncommitted()
 
 
     /**
