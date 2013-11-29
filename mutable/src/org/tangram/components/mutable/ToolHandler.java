@@ -133,6 +133,7 @@ public class ToolHandler {
     } // contentExport()
 
 
+    @SuppressWarnings("unchecked")
     private TargetDescriptor doImport(Reader input, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not execute action");
