@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.components;
@@ -37,6 +37,7 @@ import org.tangram.feature.protection.ProtectedContent;
 import org.tangram.feature.protection.Protection;
 import org.tangram.view.TargetDescriptor;
 
+
 @Named
 public class ProtectionHook implements ControllerHook {
 
@@ -46,7 +47,9 @@ public class ProtectionHook implements ControllerHook {
     private BeanFactory beanFactory;
 
 
-    /*** Protections ***/
+    /**
+     * * Protections **
+     */
 
     @SuppressWarnings("unchecked")
     public Map<String, Protection> getRequiredProtections(ProtectedContent content) {
@@ -55,7 +58,7 @@ public class ProtectionHook implements ControllerHook {
 
         if (content instanceof Protection) {
             result = new HashMap<String, Protection>();
-            Protection prot = (Protection)content;
+            Protection prot = (Protection) content;
             result.put(prot.getProtectionKey(), prot);
         } else {
             List<Protection> protections = beanFactory.listBeans(Protection.class);
@@ -82,7 +85,7 @@ public class ProtectionHook implements ControllerHook {
 
     private String getFailingProtectionKey(HttpServletRequest request, Map<String, Protection> protections) throws Exception {
         for (Protection p : protections.values()) {
-            if ( !p.isContentVisible(request)) {
+            if (!p.isContentVisible(request)) {
                 return p.getProtectionKey();
             } // if
         } // for
@@ -95,11 +98,17 @@ public class ProtectionHook implements ControllerHook {
 
         List<? extends Content> path = protectedContent.getProtectionPath();
 
-        for (Content protectedTopic : p.getProtectedContents()) {
-            if (path.contains(protectedTopic)) {
-                result = true;
+        try {
+            if (p.getProtectedContents()!=null) {
+                for (Content protectedTopic : p.getProtectedContents()) {
+                    if (path.contains(protectedTopic)) {
+                        result = true;
+                    } // if
+                } // for
             } // if
-        } // for
+        } catch (Exception e) {
+            log.error("isProtectedBy()", e);
+        } // try/catch
 
         return result;
     } // isProtectedBy()
@@ -107,11 +116,11 @@ public class ProtectionHook implements ControllerHook {
 
     @Override
     public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+                             HttpServletResponse response) throws Exception {
         Protection protection = null;
         String loginResult = null;
         if (descriptor.bean instanceof ProtectedContent) {
-            ProtectedContent protectedContent = (ProtectedContent)(descriptor.bean);
+            ProtectedContent protectedContent = (ProtectedContent) (descriptor.bean);
             Map<String, Protection> protections = getRequiredProtections(protectedContent);
 
             if (log.isInfoEnabled()) {
