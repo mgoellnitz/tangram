@@ -4,15 +4,15 @@
     import="java.util.ArrayList"%><%@page
     import="org.tangram.view.Utils"%><%@page
     import="org.tangram.content.BeanFactory"%><%@page
-    import="org.tangram.link.LinkFactory"%><%@page
+    import="org.tangram.link.LinkFactoryAggregator"%><%@page
     import="org.tangram.Constants"%><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
         String view = (String)request.getAttribute("embedded.link.view");
         String action = (String)request.getAttribute("embedded.link.action");
         BeanFactory beanFactory = Utils.getBeanFactory();
-        LinkFactory linkFactory = Utils.getLinkFactory();
-        Pattern p = Pattern.compile("http://[a-zA-Z0-9:]*\"");
+        LinkFactoryAggregator linkFactory = Utils.getLinkFactory();
+        Pattern p = Utils.getIdPattern();
 
         StringBuffer valueString = new StringBuffer(new String(t));
         Matcher m = p.matcher(valueString);

@@ -20,6 +20,7 @@ package org.tangram.view;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -34,13 +35,15 @@ import org.tangram.link.LinkFactoryAggregator;
 
 public final class Utils {
 
+    private final static Pattern ID_PATTERN = Pattern.compile("http://[a-zA-Z0-9:]*\"");
+
     private static Log log = LogFactory.getLog(Utils.class);
 
     private static ApplicationContext applicationContext;
 
     private static BeanFactory beanFactory = null;
 
-    private static LinkFactoryAggregator linkFactory = null;
+    private static LinkFactoryAggregator linkFactoryAggregator = null;
 
     private static ModelAndViewFactory modelAndViewFactory = null;
 
@@ -86,10 +89,10 @@ public final class Utils {
 
 
     public static LinkFactoryAggregator getLinkFactory() {
-        if (linkFactory==null) {
-            linkFactory = getBeanFromContext(LinkFactoryAggregator.class);
+        if (linkFactoryAggregator==null) {
+            linkFactoryAggregator = getBeanFromContext(LinkFactoryAggregator.class);
         } // if
-        return linkFactory;
+        return linkFactoryAggregator;
     } // getLinkFactory()
 
 
@@ -186,6 +189,11 @@ public final class Utils {
         } // try/catch
         return wrapper;
     } // createWrapper()
+
+
+    public static Pattern getIdPattern() {
+        return ID_PATTERN;
+    } // getIdPattern()
 
 
     /**
