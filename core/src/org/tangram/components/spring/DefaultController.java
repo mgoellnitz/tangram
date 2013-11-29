@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.components.spring;
@@ -33,13 +33,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.content.Content;
+import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
+
+/**
+ * This controller implementation provides a default URL format
+ *
+ * /&lt;prefix&gt;/id_&lt;id&gt(/view_&lt;view&gt)
+ *
+ * and a way to handle those urls passing the content id and optionally the view name to the content and
+ * view layers of the framework.
+ */
 @Controller
-public class DefaultController extends RenderingBase {
+public class DefaultController extends RenderingBase implements CustomViewProvider {
 
     private static final Log log = LogFactory.getLog(DefaultController.class);
 
@@ -57,7 +67,7 @@ public class DefaultController extends RenderingBase {
 
     @RequestMapping(value = "/id_{id}/view_{view}")
     public ModelAndView render(@PathVariable("id") String id, @PathVariable("view") String view, HttpServletRequest request,
-            HttpServletResponse response) {
+                               HttpServletResponse response) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("render() id="+id);
@@ -100,7 +110,7 @@ public class DefaultController extends RenderingBase {
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
-            if ( !customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
+            if (!customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
                 return RenderingBase.createDefaultLink(bean, action, view);
             } // if
         } // if

@@ -40,7 +40,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -52,6 +51,7 @@ import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
 import org.tangram.controller.ControllerHook;
+import org.tangram.controller.CustomViewProvider;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
@@ -78,8 +78,9 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     private BeanFactory beanFactory;
 
     @Inject
-    private DefaultController defaultController;
+    private CustomViewProvider customViewProvider;
 
+    @Inject
     private LinkFactoryAggregator linkFactory;
 
     @Inject
@@ -88,8 +89,11 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     @Inject
     private ClassRepository classRepository;
 
-    @Autowired(required = false)
+    @Inject
     private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
+
+    @Inject
+    private PropertyConverter propertyConverter;
 
     private Map<String, Method> cache = new HashMap<String, Method>();
 
@@ -106,14 +110,6 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     private Map<Pattern, Object> atHandlers;
 
     private Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
-
-
-    // do autowiring here so the registration can be done automagically
-    @Inject
-    public void setLinkFactory(LinkFactoryAggregator linkFactory) {
-        this.linkFactory = linkFactory;
-        this.linkFactory.registerFactory(this);
-    }
 
 
     @Override
@@ -163,11 +159,11 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         // remove current custom views from default controller
         for (Object key : customViews.keySet()) {
             for (String view : customViews.get(key)) {
-                defaultController.getCustomLinkViews().remove(view);
+                customViewProvider.getCustomLinkViews().remove(view);
             } // for
         } // for
         if (log.isInfoEnabled()) {
-            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
+            log.info("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
         } // if
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
@@ -186,10 +182,10 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     } // if
                     Collection<String> schemeCustomViews = linkHandler.getCustomViews();
                     customViews.put(linkHandler, schemeCustomViews);
-                    defaultController.getCustomLinkViews().addAll(schemeCustomViews);
+                    customViewProvider.getCustomLinkViews().addAll(schemeCustomViews);
                     if (log.isInfoEnabled()) {
                         log.info("reset() adding custom views "+schemeCustomViews);
-                        log.debug("reset() custom views in default controller "+defaultController.getCustomLinkViews());
+                        log.debug("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
                     } // if
                     handlers.put(annotation, linkHandler);
                 } else {
@@ -205,7 +201,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
             } // try/catch
         } // for
         if (log.isInfoEnabled()) {
-            log.info("reset() custom views in default controller "+defaultController.getCustomLinkViews());
+            log.info("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
         } // if
     } // reset()
 
@@ -288,8 +284,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         } // if
 
         if (method!=null) {
-            // TODO: Do type conversion or binding with spring or its coversion service
-            PropertyConverter propertyConverter = Utils.getPropertyConverter();
+            // TODO: Do type conversion or binding with spring or its conversion service
             descriptor.action = null;
             List<Object> parameters = new ArrayList<Object>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
@@ -469,6 +464,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
+        linkFactory.registerFactory(this);
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()

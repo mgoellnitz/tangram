@@ -43,9 +43,9 @@ import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
-import org.tangram.components.spring.DefaultController;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
+import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
@@ -104,11 +104,12 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @Inject
     private ClassRepository classRepository;
 
+
     @Inject
-    public void setDefaultController(DefaultController defaultController) {
+    public void setCustomViewProvider(CustomViewProvider customViewProvider) {
         // Automagically set edit view
-        defaultController.getCustomLinkViews().add("edit");
-    } // setDefaultController()
+        customViewProvider.getCustomLinkViews().add("edit");
+    } // setCustomViewProvider()
 
 
     private MutableBeanFactory getMutableBeanFactory() {
@@ -327,7 +328,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @LinkAction("/list")
     @SuppressWarnings("unchecked")
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
-                             HttpServletRequest request, HttpServletResponse response) {
+                                 HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("list() listing instances of type '"+typeName+"'");
@@ -411,8 +412,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     // Changed to method get for new class selection mimik
     @LinkAction("/link")
     public TargetDescriptor link(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
-                             @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
-                             HttpServletRequest request, HttpServletResponse response) {
+                                 @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
+                                 HttpServletRequest request, HttpServletResponse response) {
         try {
             if (log.isInfoEnabled()) {
                 log.info("link() creating new instance of type "+typeName);
