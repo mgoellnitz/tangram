@@ -28,6 +28,9 @@ public class TangramVersions {
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
   String ant = '1.8.4'
   String xstream = '1.4.4'
+  
+  String guice = '3.0'
+  String mycila = '3.2.ga'
 
   String springframework = '3.1.4.RELEASE'
   String springsecurity = '3.1.4.RELEASE'
