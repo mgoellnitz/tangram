@@ -43,9 +43,9 @@ import org.tangram.view.TargetDescriptor;
  */
 @Named
 @LinkHandler
-public class ComaController extends RenderingBase {
+public class ComaHandler extends RenderingBase {
 
-    private static final Log log = LogFactory.getLog(ComaController.class);
+    private static final Log log = LogFactory.getLog(ComaHandler.class);
 
     // @Autowired(required = false)
     @Inject
@@ -140,4 +140,4 @@ public class ComaController extends RenderingBase {
         linkHandlerRegistry.registerLinkHandler(this);
     } // afterPropertiesSet()
 
-} // ComaController
+} // ComaHandler
