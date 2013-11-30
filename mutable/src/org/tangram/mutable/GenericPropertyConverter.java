@@ -19,7 +19,7 @@
 package org.tangram.mutable;
 
 import javax.servlet.ServletRequest;
-import org.tangram.view.PropertyConverter;
+import org.tangram.view.AbstractPropertyConverter;
 
 
 /**
@@ -27,7 +27,7 @@ import org.tangram.view.PropertyConverter;
  *
  * Generic in the sense that we can use it for JDO, JPA and EBean alike.
  */
-public class GenericPropertyConverter extends PropertyConverter {
+public class GenericPropertyConverter extends AbstractPropertyConverter {
 
     @Override
     public Object createBlob(byte[] octets) {

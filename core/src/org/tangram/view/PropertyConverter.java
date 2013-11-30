@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,225 +18,45 @@
  */
 package org.tangram.view;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.inject.Inject;
 import javax.servlet.ServletRequest;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.tangram.content.BeanFactory;
-import org.tangram.content.Content;
-import org.tangram.view.jsp.IncludeTag;
 
 
 /**
- * Used to manually convert human readable values from forms to objects and vice versa.
+ * Instances are sed to explicitly convert human readable values from forms to objects and vice versa.
+ *
+ * Huma readable in this case means mere strings whire are also used on parameter or url passing of values.
  */
-public abstract class PropertyConverter {
+public interface PropertyConverter {
 
-    public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9]+)";
-
-    public static final String DEFAULT_DATE_FORMAT = "hh:mm:ss dd.MM.yyyy zzz";
-
-    private static final Log log = LogFactory.getLog(PropertyConverter.class);
-
-    private DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-
-    @Inject
-    private BeanFactory beanFactory;
-
-
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = new SimpleDateFormat(dateFormat);
-    } // setDateFormat()
-
-
-    @SuppressWarnings("unchecked")
-    public String getEditString(Object o) {
-        try {
-            if (o==null) {
-                return "";
-            } // if
-            if (o instanceof List) {
-                String result = "";
-                List<? extends Object> list = (List<? extends Object>) o;
-                for (Object i : list) {
-                    if (i instanceof Content) {
-                        result = result+((Content) i).getId()+", ";
-                    } else {
-                        result = result+i+",";
-                    } // if
-                } // for
-                return result;
-            } else if (o instanceof Content) {
-                return ((Content) o).getId();
-            } else if (o instanceof Date) {
-                return dateFormat.format(o);
-            } else {
-                return o.toString();
-            } // if
-        } catch (Exception e) {
-            log.error("getEditString() ", e);
-            return "error while converting "+o;
-        } // try/catch
-    } // getEditString()
-
-
-    private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title, ServletRequest request) {
-        List<T> result = new ArrayList<T>();
-
-        if (StringUtils.isNotBlank(title)) {
-            List<T> beans = beanFactory.listBeans(c);
-            if (log.isDebugEnabled()) {
-                log.debug("getObjectsViaDescription("+title+") checking "+beans);
-            } // if
-            for (T bean : beans) {
-                try {
-                    if (log.isDebugEnabled()) {
-                        log.debug("getObjectsViaDescription() checking "+bean);
-                    } // if
-                    BufferResponse r = new BufferResponse();
-                    Map<String, Object> model = Utils.getModelAndViewFactory().createModel(bean, request, r);
-                    IncludeTag.render(r.getWriter(), model, "description");
-                    String description = r.getContents();
-                    if (log.isDebugEnabled()) {
-                        log.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);
-                    } // if
-                    if (description.indexOf(title)>=0) {
-                        result.add(bean);
-                    } // if
-                } catch (IOException ioe) {
-                    log.error("getObjectsViaDescription() ignoring element "+bean, ioe);
-                } // try/catch
-            } // for
-        } // if
-
-        if (log.isDebugEnabled()) {
-            log.debug("getObjectsViaDescription("+title+") result="+result);
-        } // if
-        return result;
-    } // getObjectsViaDescription()
-
-
-    private <T extends Content> T getObjectViaDescription(Class<T> c, String title, ServletRequest request) {
-        T result = null;
-
-        List<T> suggestions = getObjectsViaDescription(c, title, request);
-        if (suggestions.size()==1) {
-            result = suggestions.get(0);
-        } // if
-
-        return result;
-    } // getObjectViaDescription()
+    /**
+     * get readable / string passable representation of an object.
+     *
+     * The set of reasonable classes usable with this method depends on the given implementation.
+     *
+     * @param o object to convert
+     * @return string describing o
+     */
+    String getEditString(Object o);
 
 
     /**
-     * Create an ID matcher from ID_PATTERN to get ids from input strings
-     * 
-     * @param idString string which might contain a valid content id
-     * @return  Matcher instance from given string and ID_PATTERN
+     *
+     * Convert a string in a request and environment context in to an object.
+     *
+     * @param valueString string describing an object
+     * @param cls class expected for the result
+     * @param request request used when passing the string to convert
+     * @return object representation of valueString
      */
-    private Matcher createIdMatcher(String idString) {
-        Pattern p = Pattern.compile(ID_PATTERN);
-        Matcher m = p.matcher(idString);
-        return m;
-    } // createidMatcher()
+    Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request);
 
 
-    private Object getReferenceValue(Class<? extends Content> cls, ServletRequest request, String valueString) {
-        Object value = null;
-        Matcher m = createIdMatcher(valueString);
-        if (m.find()) {
-            valueString = m.group(1);
-            if (log.isInfoEnabled()) {
-                log.info("getReferenceValue() pattern match result "+valueString);
-            } // if
-            value = beanFactory.getBean(valueString);
-        } else {
-            if (log.isWarnEnabled()) {
-                log.warn("getReferenceValue() we should have checked for selection via description template");
-            } // if
-            value = getObjectViaDescription(cls, valueString.trim(), request);
-            if (value!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("getReferenceValue() found a value from description "+value);
-                } // if
-            } // if
-        } // if
-        return value;
-    } // getReferenceValue()
-
-
-    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
-        Object value = null;
-        if (valueString==null) {
-            return null;
-        } // if
-        if (log.isDebugEnabled()) {
-            log.debug("getStorableObject() required type is "+cls.getName());
-        } // if
-        if (cls==String.class) {
-            value = StringUtils.isNotBlank(valueString) ? ""+valueString : null;
-        } else if (cls==Date.class) {
-            try {
-                value = dateFormat.parseObject(valueString);
-            } catch (ParseException pe) {
-                log.error("getStorableObject() cannot parse as Date: "+valueString);
-            } // try/catch
-        } else if (cls==Integer.class) {
-            value = StringUtils.isNotBlank(valueString) ? Integer.parseInt(valueString) : null;
-        } else if (cls==Float.class) {
-            value = StringUtils.isNotBlank(valueString) ? Float.parseFloat(valueString) : null;
-        } else if (cls==Boolean.class) {
-            value = Boolean.parseBoolean(valueString);
-        } else if (cls==List.class) {
-            if (log.isDebugEnabled()) {
-                log.debug("getStorableObject() splitting "+valueString);
-            } // if
-            String[] idStrings = valueString.split(",");
-            List<Object> elements = new ArrayList<Object>();
-            for (String idString : idStrings) {
-                idString = idString.trim();
-                if (log.isDebugEnabled()) {
-                    log.debug("getStorableObject() idString="+idString);
-                } // if
-                if (StringUtils.isNotBlank(idString)) {
-                    Object o = null;
-                    Matcher m = createIdMatcher(idString);
-                    if (m.find()) {
-                        idString = m.group(1);
-                        if (log.isInfoEnabled()) {
-                            log.info("getStorableObject() pattern match result "+idString);
-                        } // if
-                        elements.add(beanFactory.getBean(idString));
-                    } else {
-                        List<Content> results = getObjectsViaDescription(Content.class, idString, request);
-                        if (results.size()>0) {
-                            elements.addAll(results);
-                        } // if
-                    } // if
-                } // if
-            } // for
-            value = elements;
-        } else if (Content.class.isAssignableFrom(cls)) {
-            @SuppressWarnings("unchecked")
-            Class<? extends Content> cc = (Class<? extends Content>) cls;
-            value = getReferenceValue(cc, request, valueString);
-        } // if
-        return value;
-    } // getStorableObject()
-
-
-
+    /**
+     * Does the underlying implementation consider the given type to be a blob.
+     *
+     * @param cls
+     * @return true if cls is considered a blob representation
+     */
     public abstract boolean isBlobType(Class<?> cls);
 
 
@@ -249,9 +69,21 @@ public abstract class PropertyConverter {
     public abstract long getBlobLength(Object o);
 
 
+    /**
+     * Does the underlying implementation consider the given type to be a (long, structured) text.
+     *
+     * @param cls
+     * @return true if cls is considered a text representation
+     */
     public abstract boolean isTextType(Class<?> cls);
 
 
+    /**
+     * Create an instance of the blob type (s.a.) from the given bytes.
+     *
+     * @param octets
+     * @return
+     */
     public abstract Object createBlob(byte[] octets);
 
 } // PropertyConverter

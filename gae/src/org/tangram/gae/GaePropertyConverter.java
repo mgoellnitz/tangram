@@ -24,14 +24,14 @@ import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tangram.view.PropertyConverter;
+import org.tangram.view.AbstractPropertyConverter;
 
 /**
- * Property converter dealing with special blob and text types of Google App Engine.
+ * Property converter dealing with special blob and text types of the Google App Engine.
  */
-public class GaePropertyConverter extends PropertyConverter {
+public class GaePropertyConverter extends AbstractPropertyConverter {
 
-    private static final Log log = LogFactory.getLog(PropertyConverter.class);
+    private static final Log log = LogFactory.getLog(AbstractPropertyConverter.class);
 
 
     @Override
