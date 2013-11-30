@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view;
@@ -37,6 +37,7 @@ import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
 import org.tangram.logic.Shim;
 import org.tangram.logic.ViewShim;
+
 
 /**
  * This ModelAndView factory implementation adds special objects called shims to the context.
@@ -94,9 +95,9 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
 
         for (Class<Shim> c : classRepository.get(Shim.class).values()) {
             try {
-                ParameterizedType pt = ((ParameterizedType)c.getGenericSuperclass());
+                ParameterizedType pt = ((ParameterizedType) c.getGenericSuperclass());
                 Type[] actualTypes = pt.getActualTypeArguments();
-                Class<Content> beanClass = (Class<Content>)(actualTypes[0]);
+                Class<Content> beanClass = (Class<Content>) (actualTypes[0]);
                 String className = c.getName();
                 if (ViewShim.class.isAssignableFrom(c)) {
                     if (log.isInfoEnabled()) {
@@ -124,7 +125,7 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
 
 
     private List<Constructor<Shim>> getShimsFor(Map<String, List<Constructor<Shim>>> definedShims,
-            Map<String, List<Constructor<Shim>>> cachedShims, Class<? extends Object> shimFor) {
+                                                Map<String, List<Constructor<Shim>>> cachedShims, Class<? extends Object> shimFor) {
         // try this first, since we hope to deal with data views most times
         List<Constructor<Shim>> result = cachedShims.get(shimFor.getName());
         if (result==null) {
@@ -133,7 +134,7 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
             if (log.isDebugEnabled()) {
                 log.debug("getShimsFor() defining shims for "+shimFor.getName());
             } // if
-            while ((shimFor!=null)&&( !"JdoContent".equals(shimFor.getSimpleName()))) {
+            while ((shimFor!=null)&&(!"JdoContent".equals(shimFor.getSimpleName()))) {
                 List<Constructor<Shim>> shims = definedShims.get(shimFor.getName());
                 if (shims!=null) {
                     result.addAll(shims);
@@ -198,7 +199,7 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
     public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = super.createModel(bean, request, response);
 
-        Map<String, Object> shims = getShims((HttpServletRequest)request, bean);
+        Map<String, Object> shims = getShims((HttpServletRequest) request, bean);
         for (String key : shims.keySet()) {
             model.put(key, shims.get(key));
         } // for
@@ -209,8 +210,11 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        classRepository.addListener(this);
-        reset();
+        // actually in real world scenarios this should always be true
+        if (classRepository!=null) {
+            classRepository.addListener(this);
+            reset();
+        } // if
     } // afterPropertiesSet()
 
 } // DynamicModelAndViewFactory
