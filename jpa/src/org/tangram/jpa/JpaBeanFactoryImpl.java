@@ -46,6 +46,12 @@ import org.tangram.mutable.MutableContent;
 import org.tangram.util.ClassResolver;
 
 
+/**
+ * BeanFactory implementation for use with Java Persistence API.
+ *
+ * For the moment this is either an OpenJPA or an EclipseLink specific solution dependending on the
+ * comments in the build file.
+ */
 public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements JpaBeanFactory {
 
     private static final Log log = LogFactory.getLog(JpaBeanFactoryImpl.class);
