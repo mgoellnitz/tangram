@@ -43,9 +43,11 @@ import org.tangram.view.jsp.IncludeTag;
  */
 public abstract class PropertyConverter {
 
-    private static final Log log = LogFactory.getLog(PropertyConverter.class);
+    public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9]+)";
 
     public static final String DEFAULT_DATE_FORMAT = "hh:mm:ss dd.MM.yyyy zzz";
+
+    private static final Log log = LogFactory.getLog(PropertyConverter.class);
 
     private DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 
@@ -137,9 +139,14 @@ public abstract class PropertyConverter {
     } // getObjectViaDescription()
 
 
+    /**
+     * Create an ID matcher from ID_PATTERN to get ids from input strings
+     * 
+     * @param idString string which might contain a valid content id
+     * @return  Matcher instance from given string and ID_PATTERN
+     */
     private Matcher createIdMatcher(String idString) {
-        // Filter out possible single ID from input
-        Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
+        Pattern p = Pattern.compile(ID_PATTERN);
         Matcher m = p.matcher(idString);
         return m;
     } // createidMatcher()

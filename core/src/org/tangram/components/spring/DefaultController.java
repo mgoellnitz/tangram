@@ -21,12 +21,10 @@ package org.tangram.components.spring;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +34,6 @@ import org.tangram.content.Content;
 import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
 
@@ -53,11 +50,7 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
 
     private static final Log log = LogFactory.getLog(DefaultController.class);
 
-    @Inject
-    LinkFactoryAggregator linkFactory;
-
-    @Autowired(required = false)
-    protected HashSet<String> customLinkViews = new HashSet<String>();
+    private HashSet<String> customLinkViews = new HashSet<String>();
 
 
     public Set<String> getCustomLinkViews() {
@@ -84,7 +77,7 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
             if (customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
                 Link redirectLink = null;
                 try {
-                    redirectLink = linkFactory.createLink(request, response, content, null, view);
+                    redirectLink = getLinkFactory().createLink(request, response, content, null, view);
                     response.setHeader("Location", redirectLink.getUrl());
                     response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 } catch (Exception e) {

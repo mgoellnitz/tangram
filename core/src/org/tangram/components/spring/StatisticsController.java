@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.components.spring;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
+
 
 @Controller
 public class StatisticsController implements Statistics {
@@ -62,7 +63,7 @@ public class StatisticsController implements Statistics {
 
 
     @Override
-	public void avg(String eventIdentifier, long value) {
+    public void avg(String eventIdentifier, long value) {
         String countKey = eventIdentifier+" count";
         increase(countKey);
         long median = (counter.containsKey(eventIdentifier) ? counter.get(eventIdentifier) : 0);
