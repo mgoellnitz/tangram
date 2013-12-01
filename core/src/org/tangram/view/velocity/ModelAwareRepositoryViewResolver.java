@@ -69,10 +69,12 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
     @Override
     protected View resolveView(String path, Locale locale) throws Exception {
         View result = null;
-        CodeResource template = codeResourceCache.get("text/html", path);
-        if (template==null) {
-            template = codeResourceCache.get("text/xml", path);
-        } // if
+        CodeResource template = null;
+        for (String type : supportedContenTypes) {
+            if (template==null) {
+                template = codeResourceCache.get(type, path);
+            } // if
+        } // for
         if (template!=null) {
             String mimeType = template.getMimeType();
             if (supportedContenTypes.contains(mimeType)) {
