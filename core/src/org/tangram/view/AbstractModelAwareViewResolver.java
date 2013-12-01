@@ -38,6 +38,8 @@ import org.tangram.monitor.Statistics;
 
 public abstract class AbstractModelAwareViewResolver implements ModelAwareViewResolver {
 
+    private static Log log = LogFactory.getLog(AbstractModelAwareViewResolver.class);
+
     private final static View NOT_FOUND_DUMMY = new View() {
 
         @Override
@@ -52,7 +54,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
     };
 
-    String name = getClass().getSimpleName();
+    private String name = getClass().getSimpleName();
 
     private int order = Integer.MAX_VALUE;
 
@@ -62,8 +64,6 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
 
     @Inject
     private Statistics statistics;
-
-    private static Log log = LogFactory.getLog(AbstractModelAwareViewResolver.class);
 
 
     public String getName() {
@@ -130,6 +130,7 @@ public abstract class AbstractModelAwareViewResolver implements ModelAwareViewRe
                 log.debug("checkView() result="+result);
             } // if
         } catch (Exception e) {
+            // TODO: Velocity dependency at the wrong place
             if (e.getCause() instanceof ParseErrorException) {
                 throw (RuntimeException) (e.getCause());
             } else {

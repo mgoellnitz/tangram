@@ -23,10 +23,10 @@ import java.io.InputStream;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
@@ -37,6 +37,8 @@ import org.tangram.Constants;
 public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements
         ServletContextAware {
 
+    private static Log log = LogFactory.getLog(ModelAwareInternalResourceViewResolver.class);
+
     private UrlBasedViewResolver delegate;
 
     private String filePathPrefix;
@@ -44,8 +46,6 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
     private String prefix;
 
     private String suffix;
-
-    private static Log log = LogFactory.getLog(ModelAwareInternalResourceViewResolver.class);
 
 
     public UrlBasedViewResolver getDelegate() {
@@ -136,7 +136,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
         if (simpleName.endsWith("[]")) {
             simpleName = simpleName.replace("[]", "_array");
         } // if
-        String viewPrefix = StringUtils.hasText(packageName) ? packageName+"/" : "";
+        String viewPrefix = StringUtils.isNotBlank(packageName) ? packageName+"/" : "";
         return viewPrefix+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
     } // getFullViewName()
 
