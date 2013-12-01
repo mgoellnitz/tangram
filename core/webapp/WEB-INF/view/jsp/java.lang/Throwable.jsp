@@ -28,7 +28,7 @@
 <%
 StringWriter stringWriter = new StringWriter();
 PrintWriter writer = new PrintWriter(stringWriter);
-Exception e = (Exception)request.getAttribute(Constants.THIS);
+Throwable e = (Throwable)request.getAttribute(Constants.THIS);
 e.printStackTrace(writer);
 %><%=stringWriter.toString()%>
 </pre>
