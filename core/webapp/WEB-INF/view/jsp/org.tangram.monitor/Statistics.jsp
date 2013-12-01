@@ -9,8 +9,8 @@
 <head>
 <title>Tangram - Statistics</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/screen.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print"/>
+<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/screen.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/print.css" type="text/css" media="print"/>
 <link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/e/favicon.ico" />
 </head>
 <body>
@@ -20,8 +20,7 @@
 <c:forEach items="${self.counter}" var="item">
 <div class="cms_editor_row">
 <span class="cms_editor_label">${item.key}</span>: ${item.value}
-</div>
-</c:forEach>
-<cms:include bean="${self}" view="tangramEditorFooter" />
-</body>
+</div></c:forEach>
+<cms:include bean="${self}" view="tangramEditorFooter" 
+/></body>
 </html>
