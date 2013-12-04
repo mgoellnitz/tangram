@@ -20,113 +20,17 @@ package org.tangram.view;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.PropertyAccessorFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.convert.ConversionService;
-import org.tangram.content.BeanFactory;
-import org.tangram.link.LinkFactoryAggregator;
 
 
 public final class Utils {
 
-    private final static Pattern ID_PATTERN = Pattern.compile("http://[a-zA-Z0-9:]*\"");
-
-    private static Log log = LogFactory.getLog(Utils.class);
-
-    private static ApplicationContext applicationContext;
-
-    private static BeanFactory beanFactory = null;
-
-    private static LinkFactoryAggregator linkFactoryAggregator = null;
-
-    private static ModelAndViewFactory modelAndViewFactory = null;
-
-    private static ViewHandler viewHandler = null;
-
-    private static PropertyConverter propertyConverter = null;
+    private static final Log log = LogFactory.getLog(Utils.class);
 
     private static String uriPrefix = null;
-
-    private static ConversionService conversionService;
-
-
-    public static void setApplicationContext(ApplicationContext context) {
-        applicationContext = context;
-    }
-
-
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-
-
-    public static <T extends Object> T getBeanFromContext(Class<? extends T> cls) {
-        T result = null;
-        ApplicationContext appContext = getApplicationContext();
-        if (appContext!=null) {
-            result = appContext.getBean(cls);
-        } // if
-        if (result==null) {
-            throw new RuntimeException("getBeanFromContext() no item of type "+cls.getName()+" available.");
-        } // if
-        return result;
-    } // getBeanFromContext()
-
-
-    public static BeanFactory getBeanFactory() {
-        if (beanFactory==null) {
-            beanFactory = getBeanFromContext(BeanFactory.class);
-        } // if
-        return beanFactory;
-    } // getBeanFactory()
-
-
-    public static LinkFactoryAggregator getLinkFactory() {
-        if (linkFactoryAggregator==null) {
-            linkFactoryAggregator = getBeanFromContext(LinkFactoryAggregator.class);
-        } // if
-        return linkFactoryAggregator;
-    } // getLinkFactory()
-
-
-    public static ModelAndViewFactory getModelAndViewFactory() {
-        if (modelAndViewFactory==null) {
-            modelAndViewFactory = getBeanFromContext(ModelAndViewFactory.class);
-        } // if
-        return modelAndViewFactory;
-    } // getModelAndViewFactory()
-
-
-    public static ViewHandler getViewHandler() {
-        if (viewHandler==null) {
-            viewHandler = getBeanFromContext(ViewHandler.class);
-        } // if
-        return viewHandler;
-    } // getViewHandler()
-
-
-    public static PropertyConverter getPropertyConverter() {
-        if (propertyConverter==null) {
-            propertyConverter = getBeanFromContext(PropertyConverter.class);
-        } // if
-        return propertyConverter;
-    } // getPropertyConverter()
-
-
-    public static ConversionService getConversionsService() {
-        if (conversionService==null) {
-            conversionService = Utils.getBeanFromContext(ConversionService.class);
-        } // if
-        return conversionService;
-    } // getConversionsService()
-
 
 
     /**
@@ -164,36 +68,6 @@ public final class Utils {
         } // if
         return uriPrefix;
     } // getUriPrefix()
-
-
-    /**
-     * create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
-     *
-     * @param bean
-     * @param conversionService
-     * @return
-     */
-    public static BeanWrapper createWrapper(Object bean) {
-        BeanWrapper wrapper;
-        wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
-        try {
-            ConversionService conversionService = getConversionsService();
-            if (conversionService!=null) {
-                wrapper.setConversionService(conversionService);
-            } // if
-            if (log.isInfoEnabled()) {
-                log.info("createWrapper() conversion service "+wrapper.getConversionService());
-            } // if
-        } catch (Exception e) {
-            // conversion services are still optional for some time
-        } // try/catch
-        return wrapper;
-    } // createWrapper()
-
-
-    public static Pattern getIdPattern() {
-        return ID_PATTERN;
-    } // getIdPattern()
 
 
     /**

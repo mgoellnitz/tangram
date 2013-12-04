@@ -24,9 +24,9 @@ import javax.jdo.JDOHelper;
 import javax.jdo.annotations.NotPersistent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tangram.components.TangramServices;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableContent;
-import org.tangram.view.Utils;
 
 
 
@@ -114,7 +114,7 @@ public abstract class JdoContent implements MutableContent {
      */
     @Deprecated
     protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
-        return Utils.getBeanFactory().getBean(cls, id);
+        return TangramServices.getBeanFactory().getBean(cls, id);
     } // getContent()
 
 
@@ -130,7 +130,7 @@ public abstract class JdoContent implements MutableContent {
         if (ids!=null) {
             result = new ArrayList<T>(ids.size());
             for (String id : ids) {
-                result.add(Utils.getBeanFactory().getBean(cls, id));
+                result.add(TangramServices.getBeanFactory().getBean(cls, id));
             } // for
         } // if
         return result;

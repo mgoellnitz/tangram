@@ -22,9 +22,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.tangram.components.CodeResourceCache;
 
+
+/**
+ * This dummy bean statically injects the code resource cache into the velocity resource loader.
+ *
+ * This is a dangerous hack since it must be called before the spring velocity initialization
+ * which depends on the order of bean definitions in the tangram-configurer.xml
+ */
 @Named
 public class VelocityPatchBean {
-
 
     @Inject
     public void setCodeResourceCache(CodeResourceCache codeResourceCache) {

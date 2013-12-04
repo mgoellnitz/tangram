@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.view.velocity;
+package org.tangram.spring.view;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,7 +30,6 @@ import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
-import org.tangram.view.AbstractModelAwareViewResolver;
 
 
 public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewResolver implements BeanListener {

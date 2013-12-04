@@ -22,18 +22,19 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 
 /**
- * Factory implementaiton to create model and view instances for spring.
+ * Factory implementation to create instances describing a view and its context.
+ * The context in this case is describes as a multi value model taken from a hash map.
+ *
  * Despite it's name it's not really the default for tangram anymore.
  *
  * In its very heart this is just a collection of helper methods, but together with the groovy-implementation
  * it gets a powerful tool for populating contexts of velocity templates with useful stuff and methods.
  *
  */
-public class DefaultModelAndViewFactory implements ModelAndViewFactory {
+public class DefaultViewContextFactory implements ViewContextFactory {
 
     @Override
     public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
@@ -46,21 +47,21 @@ public class DefaultModelAndViewFactory implements ModelAndViewFactory {
 
 
     @Override
-    public ModelAndView createModelAndView(Map<String, Object> model, String view) {
-        return model==null ? null : (new ModelAndView(view==null ? Constants.DEFAULT_VIEW : view, model));
+    public ViewContext createViewContext(Map<String, Object> model, String view) {
+        return model==null ? null : (new SimpleViewContext(view==null ? Constants.DEFAULT_VIEW : view, model));
     } // createModelAndView()
 
 
     @Override
-    public ModelAndView createModelAndView(Object bean, String view, ServletRequest request, ServletResponse response) {
+    public ViewContext createViewContext(Object bean, String view, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = createModel(bean, request, response);
-        return createModelAndView(model, view);
+        return createViewContext(model, view);
     } // createModelAndView()
 
 
     @Override
-    public ModelAndView createModelAndView(Object bean, ServletRequest request, ServletResponse response) {
-        return createModelAndView(bean, null, request, response);
+    public ViewContext createViewContext(Object bean, ServletRequest request, ServletResponse response) {
+        return createViewContext(bean, null, request, response);
     } // createModelAndView()
 
-} // DefaultModelAndViewFactory
+} // DefaultViewContextFactory

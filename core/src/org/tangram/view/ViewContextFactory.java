@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,28 +14,25 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.view;
 
 import java.util.Map;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-
-public interface ModelAndViewFactory {
+public interface ViewContextFactory {
 
     Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response);
 
 
-    ModelAndView createModelAndView(Map<String, Object> model, String view);
+    ViewContext createViewContext(Map<String, Object> model, String view);
 
 
-    ModelAndView createModelAndView(Object bean, String view, ServletRequest request, ServletResponse response);
+    ViewContext createViewContext(Object bean, String view, ServletRequest request, ServletResponse response);
 
 
-    ModelAndView createModelAndView(Object bean, ServletRequest request, ServletResponse response);
+    ViewContext createViewContext(Object bean, ServletRequest request, ServletResponse response);
 
-} // ModelAndViewFactory
+} // ViewContextFactory

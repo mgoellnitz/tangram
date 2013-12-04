@@ -31,8 +31,8 @@ import org.tangram.content.Content;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
-import org.tangram.view.ModelAndViewFactory;
 import org.tangram.view.TargetDescriptor;
+import org.tangram.view.ViewContextFactory;
 
 /**
  * base class for spring MVC @controllers used for rendering something in the outcome.
@@ -51,7 +51,7 @@ public abstract class RenderingBase implements LinkFactory {
     protected BeanFactory beanFactory;
 
     @Inject
-    protected ModelAndViewFactory modelAndViewFactory;
+    protected ViewContextFactory viewContextFactory;
 
     private LinkFactoryAggregator linkFactory;
 
@@ -88,7 +88,7 @@ public abstract class RenderingBase implements LinkFactory {
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        Map<String, Object> model = modelAndViewFactory.createModel(descriptor.bean, request, response);
+        Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
         try {
             for (ControllerHook controllerHook : controllerHooks) {
                 controllerHook.intercept(descriptor, model, request, response);

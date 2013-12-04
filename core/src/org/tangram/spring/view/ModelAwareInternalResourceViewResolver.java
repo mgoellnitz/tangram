@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.view;
+package org.tangram.spring.view;
 
 import java.io.File;
 import java.io.InputStream;
@@ -34,8 +34,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.tangram.Constants;
 
 
-public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements
-        ServletContextAware {
+public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements ServletContextAware {
 
     private static Log log = LogFactory.getLog(ModelAwareInternalResourceViewResolver.class);
 
@@ -88,16 +87,19 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
     protected View checkResourceExists(View result) {
         String url = ((AbstractUrlBasedView) result).getUrl();
         int idx = url.indexOf('/');
+        if (log.isInfoEnabled()) {
+            log.info("checkResourceExists("+url+")");
+        } // if
         if (idx!=0) {
             // TODO: this code is unused for now - we'd like to have VTL or
             // stuff like that on the classpath which comes with Servlet 3
             idx++;
-            if (log.isInfoEnabled()) {
-                log.info("checkResourceExists("+url+")");
+            if (log.isDebugEnabled()) {
+                log.debug("checkResourceExists("+url+")");
             } // if
             InputStream is = getClass().getResourceAsStream(url);
-            if (log.isInfoEnabled()) {
-                log.info("checkResourceExists("+url+") is="+is);
+            if (log.isDebugEnabled()) {
+                log.debug("checkResourceExists("+url+") is="+is);
             } // if
             if (is!=null) {
                 if (log.isInfoEnabled()) {
@@ -113,7 +115,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
             } // if
         } else {
             if (idx==0) {
-                // TODO: This only wirks with exploded deployments
+                // TODO: This only works with exploded deployments
                 File f = new File(filePathPrefix+url);
                 if (log.isInfoEnabled()) {
                     log.info("checkResourceExists() f="+f.getAbsolutePath());
@@ -123,7 +125,9 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
                 } // if
             } else {
                 // meaning idx < 0 - no slash in url
-                log.warn("checkResourceExists() strange resource name "+url);
+                if (log.isWarnEnabled()) {
+                    log.warn("checkResourceExists() strange resource name "+url);
+                } // if
                 result = null;
             } // if
         } // if

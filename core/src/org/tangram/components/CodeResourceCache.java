@@ -43,7 +43,7 @@ public class CodeResourceCache implements BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
-    private static Log log = LogFactory.getLog(CodeResourceCache.class);
+    private static final Log log = LogFactory.getLog(CodeResourceCache.class);
 
     @Inject
     private PersistentRestartCache startupCache;

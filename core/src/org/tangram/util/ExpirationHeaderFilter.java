@@ -37,6 +37,7 @@ public class ExpirationHeaderFilter implements Filter {
     private DateFormat formatter;
 
     private String startTimeString;
+
     private String startTimeHeader;
 
 
@@ -49,6 +50,7 @@ public class ExpirationHeaderFilter implements Filter {
     } // ExpirationHeaderFilter()
 
 
+    @Override
     public void destroy() {
         extensionTimes = new HashMap<String, Long>();
     } // destroy()
@@ -67,6 +69,7 @@ public class ExpirationHeaderFilter implements Filter {
     } // getTimeObject()
 
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) resp;
         response.setHeader("X-Tangram", "ExpirationFilter");
@@ -81,7 +84,7 @@ public class ExpirationHeaderFilter implements Filter {
             if (timeObject!=null) {
                 long time = timeObject;
                 if (time>0) {
-                    long expirationValue = System.currentTimeMillis() +time;
+                    long expirationValue = System.currentTimeMillis()+time;
                     if (log.isDebugEnabled()) {
                         log.debug("doFilter() expirationValue="+expirationValue);
                     } // if
@@ -99,6 +102,7 @@ public class ExpirationHeaderFilter implements Filter {
     } // doFilter()
 
 
+    @Override
     public void init(FilterConfig config) throws ServletException {
         String expiry = config.getInitParameter("expirations");
         if (expiry!=null) {

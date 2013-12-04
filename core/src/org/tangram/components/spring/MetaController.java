@@ -58,10 +58,11 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
-import org.tangram.view.ModelAndViewFactory;
+import org.tangram.spring.view.SpringViewIncluder;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
-import org.tangram.view.Utils;
+import org.tangram.view.ViewContext;
+import org.tangram.view.ViewContextFactory;
 
 
 @Controller
@@ -84,7 +85,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     private LinkFactoryAggregator linkFactory;
 
     @Inject
-    protected ModelAndViewFactory modelAndViewFactory;
+    protected ViewContextFactory viewContextFactory;
 
     @Inject
     private ClassRepository classRepository;
@@ -219,7 +220,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        Map<String, Object> model = modelAndViewFactory.createModel(descriptor.bean, request, response);
+        Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
         try {
             for (ControllerHook controllerHook : controllerHooks) {
                 if (log.isDebugEnabled()) {
@@ -231,7 +232,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                 } // if
             } // for
         } catch (Exception e) {
-            return modelAndViewFactory.createModel(e, request, response);
+            return viewContextFactory.createModel(e, request, response);
         } // try/catch
         return model;
     } // createModel()
@@ -323,7 +324,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     if (annotation instanceof ActionForm) {
                         try {
                             Object form = type.newInstance();
-                            BeanWrapper wrapper = Utils.createWrapper(form);
+                            BeanWrapper wrapper = TangramSpringServices.createWrapper(form);
                             for (PropertyDescriptor property : wrapper.getPropertyDescriptors()) {
                                 String propertyName = property.getName();
                                 String valueString = request.getParameter(propertyName);
@@ -358,20 +359,20 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     } // callAction()
 
 
-    private ModelAndView handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ModelAndView result = null;
+    private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ViewContext result = null;
         if (resultDescriptor==null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         } else {
             if (log.isInfoEnabled()) {
-                log.info("handleRequestInternal() received link "+resultDescriptor);
+                log.info("handleResultDescriptor() received link "+resultDescriptor);
             } // if
             if (resultDescriptor!=TargetDescriptor.DONE) {
                 if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
                     Link link = linkFactory.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
                     response.sendRedirect(link.getUrl());
                 } else {
-                    result = modelAndViewFactory.createModelAndView(resultDescriptor.bean, resultDescriptor.view, request, response);
+                    result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
                 } // if
             } // if
         } // if
@@ -399,7 +400,11 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     Object target = atHandlers.get(entry.getKey());
                     TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
                     TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
-                    return handleResultDescriptor(resultDescriptor, request, response);
+                    ViewContext viewContext = handleResultDescriptor(resultDescriptor, request, response);
+                    if (log.isDebugEnabled()) {
+                        log.debug("handleRequestInternal() view context "+viewContext);
+                    } // if
+                    return SpringViewIncluder.createModelAndView(viewContext);
                 } // if
             } // for
             for (String className : handlers.keySet()) {
@@ -418,7 +423,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         if (log.isInfoEnabled()) {
                             log.info("handleRequestInternal() handing over to view "+descriptor.view);
                         } // if
-                        return modelAndViewFactory.createModelAndView(model, descriptor.view);
+                        ViewContext viewContext = viewContextFactory.createViewContext(model, descriptor.view);
+                        return SpringViewIncluder.createModelAndView(viewContext);
                     } else {
                         if (log.isDebugEnabled()) {
                             log.debug("handleRequestInternal() trying to call action "+descriptor.action);
@@ -435,12 +441,14 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                                 } // if
                             } // for
                         } // if
-                        return handleResultDescriptor(resultDescriptor, request, response);
+                        ViewContext viewContext = handleResultDescriptor(resultDescriptor, request, response);
+                        return SpringViewIncluder.createModelAndView(viewContext);
                     } // if
                 } // if
             } // for
         } catch (Throwable ex) {
-            return modelAndViewFactory.createModelAndView(ex, request, response);
+            ViewContext viewContext = viewContextFactory.createViewContext(ex, request, response);
+            return SpringViewIncluder.createModelAndView(viewContext);
         } // try/catch
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);

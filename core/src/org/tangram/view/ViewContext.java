@@ -16,25 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.spring;
+package org.tangram.view;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.tangram.view.Utils;
+import java.util.Map;
 
+/**
+ * Instances describe the context in which a view is executed.
+ *
+ * Mostly this means the name of the view and the named objects available during rendering
+ */
+public interface ViewContext {
 
-@Named
-public class ContextProvider implements ApplicationContextAware {
+    String getViewName();
 
-    private ApplicationContext applicationContext;
+    Map<String, Object> getModel();
 
-
-    @Inject
-    public void setApplicationContext(ApplicationContext context) {
-        this.applicationContext = context;
-        Utils.setApplicationContext(this.applicationContext);
-    } // setApplicationContext()
-
-} // ContextProvider
+} // ViewContext

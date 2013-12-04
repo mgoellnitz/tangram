@@ -26,7 +26,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.View;
-import org.tangram.view.ModelAwareInternalResourceViewResolver;
+import org.tangram.spring.view.ModelAwareInternalResourceViewResolver;
 
 public class DocumentTypeResourceViewResolver extends ModelAwareInternalResourceViewResolver {
 

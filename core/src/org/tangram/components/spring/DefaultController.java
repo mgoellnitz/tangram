@@ -34,7 +34,9 @@ import org.tangram.content.Content;
 import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
+import org.tangram.spring.view.SpringViewIncluder;
 import org.tangram.view.TargetDescriptor;
+import org.tangram.view.ViewContext;
 
 
 /**
@@ -87,9 +89,11 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
                 return null;
             } // if
             Map<String, Object> model = createModel(new TargetDescriptor(content, view, null), request, response);
-            return modelAndViewFactory.createModelAndView(model, view);
+            ViewContext viewContext = viewContextFactory.createViewContext(model, view);
+            return SpringViewIncluder.createModelAndView(viewContext);
         } catch (Exception e) {
-            return modelAndViewFactory.createModelAndView(e, request, response);
+            ViewContext viewContext = viewContextFactory.createViewContext(e, request, response);
+            return SpringViewIncluder.createModelAndView(viewContext);
         } // try/catch
     } // render()
 

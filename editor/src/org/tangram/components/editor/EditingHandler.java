@@ -43,6 +43,7 @@ import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
+import org.tangram.components.spring.TangramSpringServices;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.CustomViewProvider;
@@ -130,7 +131,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 throw new Exception("User may not edit");
             } // if
             MutableContent bean = beanFactory.getBean(MutableContent.class, id);
-            BeanWrapper wrapper = Utils.createWrapper(bean);
+            BeanWrapper wrapper = TangramSpringServices.createWrapper(bean);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
 
@@ -217,7 +218,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
             bean = getMutableBeanFactory().getBean(MutableContent.class, id);
             getMutableBeanFactory().beginTransaction();
-            wrapper = Utils.createWrapper(bean);
+            wrapper = TangramSpringServices.createWrapper(bean);
             Exception e = null;
             for (String propertyName : newValues.keySet()) {
                 try {
@@ -390,7 +391,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
 
-            request.setAttribute(ATTRIBUTE_WRAPPER, Utils.createWrapper(content));
+            request.setAttribute(ATTRIBUTE_WRAPPER, TangramSpringServices.createWrapper(content));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
                 request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
@@ -433,7 +434,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 // re-get for update to avoid xg transactions where ever possible
                 MutableContent bean = getMutableBeanFactory().getBean(MutableContent.class, id);
                 getMutableBeanFactory().beginTransaction();
-                BeanWrapper wrapper = Utils.createWrapper(bean);
+                BeanWrapper wrapper = TangramSpringServices.createWrapper(bean);
 
                 Object listObject = wrapper.getPropertyValue(propertyName);
                 @SuppressWarnings("unchecked")

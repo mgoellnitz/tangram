@@ -34,8 +34,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.OrderComparator;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.View;
-import org.tangram.view.ModelAwareViewResolver;
-import org.tangram.view.ViewHandler;
+import org.tangram.spring.view.ModelAwareViewResolver;
+import org.tangram.spring.view.ViewHandler;
 
 @Named
 public class TangramViewHandler implements ViewHandler, ApplicationContextAware {

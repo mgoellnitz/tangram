@@ -28,12 +28,12 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
-import org.tangram.view.Utils;
-import org.tangram.view.jsp.IncludeTag;
+import org.tangram.util.ServiceLocator;
+import org.tangram.view.ViewIncluder;
 
 public class IncludeDirective extends Directive {
 
-    // private static final Log log = LogFactory.getLog(IncludeDirective.class);
+    private static final ViewIncluder includer = ServiceLocator.get(ViewIncluder.class);
 
     @Override
     public String getName() {
@@ -67,7 +67,7 @@ public class IncludeDirective extends Directive {
         } // if
 
         // copy model from original context
-        Map<String, Object> model = Utils.getModelAndViewFactory().createModel(bean, request, response);
+        Map<String, Object> model = includer.createModel(bean, request, response);
         Object[] keys = context.getKeys();
         for (Object key : keys) {
             String k = ""+key;
@@ -77,7 +77,7 @@ public class IncludeDirective extends Directive {
         } // for
         model.remove("springMacroRequestContext");
 
-        IncludeTag.render(writer, model, view);
+        includer.render(writer, model, view);
         return false;
     } // render()
 

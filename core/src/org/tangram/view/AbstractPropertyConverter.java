@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -33,9 +32,10 @@ import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
-import org.tangram.view.jsp.IncludeTag;
+import org.tangram.util.ServiceLocator;
 
 
 /**
@@ -43,13 +43,11 @@ import org.tangram.view.jsp.IncludeTag;
  */
 public abstract class AbstractPropertyConverter implements PropertyConverter {
 
-    public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9]+)";
-
-    public static final String DEFAULT_DATE_FORMAT = "hh:mm:ss dd.MM.yyyy zzz";
-
     private static final Log log = LogFactory.getLog(AbstractPropertyConverter.class);
 
-    private DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
+    private static final ViewIncluder includer = ServiceLocator.get(ViewIncluder.class);
+
+    private DateFormat dateFormat = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
 
     @Inject
     private BeanFactory beanFactory;
@@ -105,8 +103,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                         log.debug("getObjectsViaDescription() checking "+bean);
                     } // if
                     BufferResponse r = new BufferResponse();
-                    Map<String, Object> model = Utils.getModelAndViewFactory().createModel(bean, request, r);
-                    IncludeTag.render(r.getWriter(), model, "description");
+                    includer.render(r.getWriter(), bean, "description", request, r);
                     String description = r.getContents();
                     if (log.isDebugEnabled()) {
                         log.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);
@@ -146,7 +143,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
      * @return  Matcher instance from given string and ID_PATTERN
      */
     private Matcher createIdMatcher(String idString) {
-        Pattern p = Pattern.compile(ID_PATTERN);
+        Pattern p = Pattern.compile(Constants.ID_PATTERN);
         Matcher m = p.matcher(idString);
         return m;
     } // createidMatcher()

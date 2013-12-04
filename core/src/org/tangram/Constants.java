@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,12 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram;
 
@@ -31,9 +31,10 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
+import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 
 public final class Constants {
 
@@ -41,6 +42,22 @@ public final class Constants {
 
     public static final String THIS = "self";
 
+    /**
+     * Default date format string for http headers and the like
+     */
+    public static final String DEFAULT_DATE_FORMAT = "hh:mm:ss dd.MM.yyyy zzz";
+
+    /**
+     * Pattern string to find IDs in Strings
+     */
+    public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9]+)";
+
+
+    /**
+     * Pattern to find IDs in (rich/long) text
+     */
+    public final static Pattern TEXT_ID_PATTERN = Pattern.compile("http://[a-zA-Z0-9:]*\"");
+    
     /**
      * name of the default view if value null cannot be used
      */
@@ -78,7 +95,7 @@ public final class Constants {
     public static final String ATTRIBUTE_PROTECTION = "protection";
 
     /**
-     * 
+     *
      */
     public static final String ATTRIBUTE_LIVE_SYSTEM = "tangramLiveSystem";
 
@@ -110,6 +127,7 @@ public final class Constants {
     private static final int SUFFIX_LENGTH = SUFFIX.length();
 
 
+
     private static String[] getResourceListing(URL pathUrl, String prefix, String suffix) throws URISyntaxException,
             IOException {
         if ("file".equals(pathUrl.getProtocol())) {
@@ -133,6 +151,7 @@ public final class Constants {
 
         return new String[0];
     } // getResourceListing()
+
 
     static {
         try {

@@ -18,26 +18,17 @@
  */
 package org.tangram.view.jsp;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.Locale;
-import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.tangram.Constants;
-import org.tangram.view.ModelAndViewFactory;
-import org.tangram.view.Utils;
-import org.tangram.view.ViewHandler;
+import org.tangram.util.ServiceLocator;
+import org.tangram.view.ViewIncluder;
 
 
 public class IncludeTag implements Tag, Serializable {
@@ -45,6 +36,8 @@ public class IncludeTag implements Tag, Serializable {
     private static final Log log = LogFactory.getLog(IncludeTag.class);
 
     private static final long serialVersionUID = -5289460956117400994L;
+
+    private static final ViewIncluder includer = ServiceLocator.get(ViewIncluder.class);
 
     private PageContext pc = null;
 
@@ -93,48 +86,6 @@ public class IncludeTag implements Tag, Serializable {
     }
 
 
-    public static void render(Writer out, Map<String, Object> model, String view) throws IOException {
-        ServletRequest request = (ServletRequest) model.get("request");
-        ServletResponse response = (ServletResponse) model.get("response");
-
-        ViewHandler viewHandler = Utils.getViewHandler();
-        if (viewHandler==null) {
-            throw new RuntimeException("No view handler found");
-        } // if
-
-        ModelAndViewFactory mavf = Utils.getModelAndViewFactory();
-        ModelAndView mav = mavf.createModelAndView(model, view);
-        View effectiveView = mav.getView();
-        if (log.isDebugEnabled()) {
-            log.debug("render() effectiveView="+effectiveView);
-        } // if
-        try {
-            if (effectiveView==null) {
-                String viewName = mav.getViewName();
-                if (viewName==null) {
-                    viewName = Constants.DEFAULT_VIEW;
-                } // if
-
-                effectiveView = viewHandler.resolveView(viewName, mav.getModel(), Locale.getDefault(), request);
-            } // if
-
-            if (out!=null) {
-                out.flush();
-            } // if
-            if (log.isDebugEnabled()) {
-                log.debug("render() model="+mav.getModel());
-                log.debug("render("+mav.getViewName()+") effectiveView="+effectiveView);
-            } // if
-            effectiveView.render(mav.getModel(), (HttpServletRequest) request, (HttpServletResponse) response);
-        } catch (Exception e) {
-            log.error("render() #"+view, e);
-            if (out!=null) {
-                out.write(e.getLocalizedMessage());
-            } // if
-        } // try/catch
-    } // render()
-
-
     public static void render(ServletRequest request, ServletResponse resp, Writer out, Object bean, String view) {
         if (bean==null) {
             return;
@@ -148,10 +99,7 @@ public class IncludeTag implements Tag, Serializable {
                 log.debug("render() bean="+bean.getClass().getName()+" #"+view);
             } // if
 
-            ModelAndViewFactory mavf = Utils.getModelAndViewFactory();
-            Map<String, Object> model = mavf.createModel(bean, request, resp);
-
-            render(out, model, view);
+            includer.render(out, bean, view, request, resp);
         } catch (Exception e) {
             log.error("render() bean="+bean.getClass().getName()+" #"+view, e);
         } // try/catch
@@ -168,7 +116,7 @@ public class IncludeTag implements Tag, Serializable {
     @Override
     public int doEndTag() throws JspException {
         if (log.isDebugEnabled()) {
-            log.debug("doEndTag("+Thread.currentThread().getId()+") view ******************* "+view);
+            log.debug("doEndTag("+Thread.currentThread().getId()+") view "+view);
         } // if
         /*
          @SuppressWarnings("unchecked")

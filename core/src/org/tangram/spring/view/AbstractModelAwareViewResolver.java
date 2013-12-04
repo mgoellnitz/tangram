@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.view;
+package org.tangram.spring.view;
 
+import org.tangram.spring.view.ModelAwareViewResolver;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;

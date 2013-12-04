@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.spring;
@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.Constants;
+
 
 /**
  *
@@ -46,16 +47,11 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
     private static final Log log = LogFactory.getLog(PasswordInterceptor.class);
 
-    private Set<String> freeUrls;
+    private Set<String> freeUrls = new HashSet<String>();
 
     private Set<String> allowedUsers = new HashSet<String>();
 
     private Set<String> adminUsers = new HashSet<String>();
-
-
-    public Set<String> getFreeUrls() {
-        return freeUrls;
-    }
 
 
     public void setFreeUrls(Set<String> freeUrls) {
@@ -63,18 +59,8 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
     }
 
 
-    public Set<String> getAllowedUsers() {
-        return allowedUsers;
-    }
-
-
     public void setAllowedUsers(Set<String> allowedUsers) {
         this.allowedUsers = allowedUsers;
-    }
-
-
-    public Set<String> getAdminUsers() {
-        return adminUsers;
     }
 
 
@@ -91,7 +77,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             log.debug("preHandle() detected URI "+thisURL);
         } // if
 
-        if ( !getFreeUrls().contains(thisURL)) {
+        if (!freeUrls.contains(thisURL)) {
             Principal principal = request.getUserPrincipal();
 
             if (principal!=null) {
@@ -102,7 +88,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                 if (adminUsers.contains(userName)) {
                     request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                 } // if
-                if ((allowedUsers.size()>0)&&( !allowedUsers.contains(userName))) {
+                if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
                     if (log.isWarnEnabled()) {
                         log.warn("preHandle() user not allowed to access page: "+userName);
                     } // if

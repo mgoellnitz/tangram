@@ -24,13 +24,4 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-  <!-- velocity activation for view in jdo based repository -->
-
-  <bean id="velocityRepositoryViewResolver" class="org.tangram.view.velocity.ModelAwareRepositoryViewResolver">
-    <property name="name" value="Velocity Resources" />
-    <property name="delegate" ref="plainRepositoryVelocityViewResolver" />
-    <property name="order" value="10000"/>
-    <property name="activateCaching" value="true" />
-  </bean>
- 
 </beans>

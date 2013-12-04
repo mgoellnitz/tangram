@@ -40,7 +40,7 @@ import org.tangram.logic.ViewShim;
 
 
 /**
- * This ModelAndView factory implementation adds special objects called shims to the context.
+ * This ViewContext factory implementation adds special objects called shims to the context.
  *
  * Shims are functional enhancements of the means from the model. They carry functions while beans carry data.
  *
@@ -49,9 +49,9 @@ import org.tangram.logic.ViewShim;
  * The implementing classes are taken from a classRepository which may be dynamically filled.
  *
  */
-public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory implements BeanListener {
+public class DynamicViewContextFactory extends DefaultViewContextFactory implements BeanListener {
 
-    private static final Log log = LogFactory.getLog(DynamicModelAndViewFactory.class);
+    private static final Log log = LogFactory.getLog(DynamicViewContextFactory.class);
 
     @Inject
     private ClassRepository classRepository;
@@ -217,4 +217,4 @@ public class DynamicModelAndViewFactory extends DefaultModelAndViewFactory imple
         } // if
     } // afterPropertiesSet()
 
-} // DynamicModelAndViewFactory
+} // DynamicViewContextFactory

@@ -9,24 +9,33 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.monitor;
+package org.tangram.spring;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.tangram.monitor.Statistics;
 
+
+/**
+ * The time measuring interceptor collects the average request handling times for any intercepted call.
+ *
+ * The result is calculated by means of the tangram statistics facility and a set of URLs to be ignored
+ * can be filled with URIs if needed.
+ */
 public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
 
-    private Set<String> freeUrls;
+    private Set<String> freeUrls = new HashSet<String>();
 
     @Inject
     private Statistics statistics;
@@ -53,8 +62,8 @@ public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
         String thisURL = request.getRequestURI();
-        if ( !getFreeUrls().contains(thisURL)) {
-            Long startTime = (Long)request.getAttribute("start.time");
+        if (!getFreeUrls().contains(thisURL)) {
+            Long startTime = (Long) request.getAttribute("start.time");
             statistics.avg("page render time", System.currentTimeMillis()-startTime);
         } // if
         super.afterCompletion(request, response, handler, ex);

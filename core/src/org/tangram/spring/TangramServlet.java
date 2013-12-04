@@ -27,7 +27,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
-import org.tangram.view.ViewHandler;
+import org.tangram.spring.view.ViewHandler;
 
 public class TangramServlet extends DispatcherServlet {
 

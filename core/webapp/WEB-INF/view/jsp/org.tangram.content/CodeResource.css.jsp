@@ -1,27 +1,17 @@
 <%@page isELIgnored="false" language="java" pageEncoding="UTF-8" session="false"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
+%><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat"
+%><%@page import="java.io.InputStreamReader"
 %><%@page import="org.tangram.content.CodeResource"
 %><%@page import="org.tangram.Constants"
+%><%@page import="org.tangram.components.spring.TangramSpringServices"
 %><%@page import="com.yahoo.platform.yui.compressor.CssCompressor"
-%><%@page import="org.springframework.context.ApplicationContext"
-%><%@page import="org.springframework.web.servlet.DispatcherServlet"
-%><%@page import="java.text.DateFormat"
-%><%@page import="java.io.InputStreamReader"
-%><%@page import="java.util.Calendar"
-%><%@page import="java.util.TimeZone"
-%><%@page import="java.util.Map"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard code mimetype
 response.setContentType("text/css");
-
-ApplicationContext appContext = (ApplicationContext)request.getAttribute(DispatcherServlet.WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-DateFormat httpDateFormat = appContext.getBean("httpHeaderDateFormat", DateFormat.class);
-httpDateFormat.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
-
-@SuppressWarnings("rawtypes")
-Map viewSettings = appContext.getBean("viewSettings", Map.class);
+DateFormat httpDateFormat = TangramSpringServices.getHttpHeaderDateFormat();
+Map<String, Object> viewSettings = TangramSpringServices.getViewSettings();
 int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("cssCacheTime"));
-
 Calendar calendar = Calendar.getInstance();
 response.setHeader("Last-modified", httpDateFormat.format(calendar.getTime()));
 calendar.add(Calendar.MINUTE, cacheTimeMinutes);
