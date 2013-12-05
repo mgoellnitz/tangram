@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanWrapper;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.tangram.Constants;
@@ -43,7 +42,6 @@ import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
-import org.tangram.components.spring.TangramSpringServices;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.CustomViewProvider;
@@ -54,6 +52,7 @@ import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
+import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
@@ -131,7 +130,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 throw new Exception("User may not edit");
             } // if
             MutableContent bean = beanFactory.getBean(MutableContent.class, id);
-            BeanWrapper wrapper = TangramSpringServices.createWrapper(bean);
+            JavaBean wrapper = new JavaBean(bean);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
 
@@ -157,7 +156,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                             log.info(msg.toString());
                         } // if
 
-                        Class cls = wrapper.getPropertyType(key);
+                        Class cls = wrapper.getType(key);
                         String valueString = values.length==1 ? values[0] : "";
                         Object value = propertyConverter.getStorableObject(valueString, cls, request);
                         if (log.isInfoEnabled()) {
@@ -200,7 +199,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                                     log.info("multipart file "+key);
                                 } // if
 
-                                Class cls = wrapper.getPropertyType(key);
+                                Class cls = wrapper.getType(key);
                                 if (propertyConverter.isBlobType(cls)) {
                                     byte[] octets = entry.getValue().getBytes();
                                     if (log.isDebugEnabled()) {
@@ -218,11 +217,11 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
             bean = getMutableBeanFactory().getBean(MutableContent.class, id);
             getMutableBeanFactory().beginTransaction();
-            wrapper = TangramSpringServices.createWrapper(bean);
+            wrapper = new JavaBean(bean);
             Exception e = null;
             for (String propertyName : newValues.keySet()) {
                 try {
-                    wrapper.setPropertyValue(propertyName, newValues.get(propertyName));
+                    wrapper.set(propertyName, newValues.get(propertyName));
                 } catch (Exception ex) {
                     e = new Exception("Cannot set value for "+propertyName, ex);
                 } // try/catch
@@ -391,7 +390,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
 
-            request.setAttribute(ATTRIBUTE_WRAPPER, TangramSpringServices.createWrapper(content));
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
                 request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
@@ -434,14 +432,14 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 // re-get for update to avoid xg transactions where ever possible
                 MutableContent bean = getMutableBeanFactory().getBean(MutableContent.class, id);
                 getMutableBeanFactory().beginTransaction();
-                BeanWrapper wrapper = TangramSpringServices.createWrapper(bean);
+                JavaBean wrapper = new JavaBean(bean);
 
-                Object listObject = wrapper.getPropertyValue(propertyName);
+                Object listObject = wrapper.get(propertyName);
                 @SuppressWarnings("unchecked")
                 List<Object> list = (List<Object>) listObject;
                 list.add(content);
 
-                wrapper.setPropertyValue(propertyName, list);
+                wrapper.set(propertyName, list);
                 getMutableBeanFactory().persist(bean);
                 return describeTarget(content);
             } else {

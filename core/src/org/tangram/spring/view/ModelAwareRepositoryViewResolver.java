@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityView;
-import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
@@ -43,6 +42,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
 
 
     public ModelAwareRepositoryViewResolver() {
+        super(false, ".");
         supportedContenTypes = new HashSet<String>();
         supportedContenTypes.add("text/html");
         supportedContenTypes.add("text/xml");
@@ -91,12 +91,6 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
         } // if
         return result;
     } // resolveViewName()
-
-
-    @Override
-    protected String getFullViewName(String view, String packageName, String simpleName) {
-        return packageName+"."+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
-    } // getFullViewName()
 
 
     @Override

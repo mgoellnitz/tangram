@@ -5,8 +5,8 @@
 %><%@page import="java.util.Collection"
 %><%@page import="java.lang.reflect.Modifier"
 %><%@page import="java.beans.PropertyDescriptor"
-%><%@page import="org.springframework.beans.BeanWrapper"
 %><%@page import="org.tangram.Constants"
+%><%@page import="org.tangram.util.JavaBean"
 %><%@page import="org.tangram.view.Utils"
 %><%@page import="org.tangram.mutable.MutableContent"
 %><%@page import="org.tangram.components.TangramServices"
@@ -36,24 +36,24 @@ Typ: </span>${designClassPackage.name}.<span class="cms_editor_title">${designCl
 </div>
 <div class="cms_editor_table">
 <%
-BeanWrapper bw = TangramSpringServices.createWrapper(request.getAttribute(Constants.THIS));
+JavaBean bw = new JavaBean(request.getAttribute(Constants.THIS));
 for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
     String key = desc.getName();
 
     if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {          
       if (desc.getWriteMethod() != null) {
-        Object value = bw.getPropertyValue(key); 
+        Object value = bw.get(key); 
         @SuppressWarnings("rawtypes")
-        Class type = bw.getPropertyType(key);
+        Class type = bw.getType(key);
 %><div class="cms_editor_row"><span class="cms_editor_label"><%=key%></span> (<%=type.getSimpleName()%><% 
 if (value instanceof Collection) {
-	Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+	Class<? extends Object> elementClass = bw.getCollectionType(key);
 	boolean abstractClass = (elementClass.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT;
 	%>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
 } // if
 %>)<br/><%
     if (TangramServices.getPropertyConverter().isBlobType(type)) {
-      long blobLength = TangramServices.getPropertyConverter().getBlobLength(bw.getPropertyValue(key));
+      long blobLength = TangramServices.getPropertyConverter().getBlobLength(bw.get(key));
 %><div class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</div><%
     } else {
 %><div class="cms_editor_field_value">
@@ -67,7 +67,7 @@ if (value instanceof Collection) {
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=TangramServices.getPropertyConverter().getEditString(value)%>" />
 <%
 if (value instanceof Collection) {
-  Class<? extends Object> elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+  Class<? extends Object> elementClass = bw.getCollectionType(key)
   boolean abstractClass = (elementClass.getModifiers() | Modifier.ABSTRACT) == Modifier.ABSTRACT;
   request.setAttribute("propertyValue", value);
   request.setAttribute("elementClass", elementClass); 

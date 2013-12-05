@@ -18,7 +18,6 @@
  */
 package org.tangram.components.spring;
 
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -59,6 +57,7 @@ import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.spring.view.SpringViewIncluder;
+import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.ViewContext;
@@ -324,12 +323,11 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     if (annotation instanceof ActionForm) {
                         try {
                             Object form = type.newInstance();
-                            BeanWrapper wrapper = TangramSpringServices.createWrapper(form);
-                            for (PropertyDescriptor property : wrapper.getPropertyDescriptors()) {
-                                String propertyName = property.getName();
+                            JavaBean wrapper = new JavaBean(form);
+                            for (String propertyName : wrapper.propertyNames()) {
                                 String valueString = request.getParameter(propertyName);
-                                Object value = propertyConverter.getStorableObject(valueString, property.getPropertyType(), request);
-                                wrapper.setPropertyValue(propertyName, value);
+                                Object value = propertyConverter.getStorableObject(valueString, wrapper.getType(propertyName), request);
+                                wrapper.set(propertyName, value);
                             } // for
                             parameters.add(form);
                         } catch (Exception e) {

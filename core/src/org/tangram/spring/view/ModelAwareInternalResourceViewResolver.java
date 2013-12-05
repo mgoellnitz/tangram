@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -31,7 +30,6 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
-import org.tangram.Constants;
 
 
 public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements ServletContextAware {
@@ -45,6 +43,11 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
     private String prefix;
 
     private String suffix;
+
+
+    public ModelAwareInternalResourceViewResolver() {
+        super(true, "/");
+    } // ModelAwareInternalResourceViewResolver
 
 
     public UrlBasedViewResolver getDelegate() {
@@ -133,16 +136,6 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
         } // if
         return result;
     } // checkResourceExists()
-
-
-    @Override
-    protected String getFullViewName(String view, String packageName, String simpleName) {
-        if (simpleName.endsWith("[]")) {
-            simpleName = simpleName.replace("[]", "_array");
-        } // if
-        String viewPrefix = StringUtils.isNotBlank(packageName) ? packageName+"/" : "";
-        return viewPrefix+simpleName+(Constants.DEFAULT_VIEW.equals(view) ? "" : "."+view);
-    } // getFullViewName()
 
 
     @Override

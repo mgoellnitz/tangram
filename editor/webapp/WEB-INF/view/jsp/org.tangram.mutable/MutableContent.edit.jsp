@@ -5,9 +5,9 @@
 %><%@page import="java.util.Collection"
 %><%@page import="java.lang.reflect.Modifier"
 %><%@page import="java.beans.PropertyDescriptor"
-%><%@page import="org.springframework.beans.BeanWrapper"
 %><%@page import="org.springframework.beans.BeanUtils"
 %><%@page import="org.tangram.Constants"
+%><%@page import="org.tangram.util.JavaBean"
 %><%@page import="org.tangram.view.Utils"
 %><%@page import="org.tangram.mutable.MutableContent"
 %><%@page import="org.tangram.components.TangramServices"
@@ -43,20 +43,18 @@ Typ: ${designClassPackage.name}.<span class="cms_editor_title">${designClass.sim
 <table class="cms_editor_table">
 <%
 int fid = 0; // form ids
-BeanWrapper bw = TangramSpringServices.createWrapper(request.getAttribute(Constants.THIS));
-for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
-    String key = desc.getName();
-
+JavaBean bw = new JavaBean(request.getAttribute(Constants.THIS));
+for (String key : bw.propertyNames()) {
     if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {          
-        if (desc.getWriteMethod() != null) {
-    Object value = bw.getPropertyValue(key);
+        if (bw.isWritable(key)) {
+    Object value = bw.get(key);
     @SuppressWarnings("unchecked")
-    Class<? extends Object> type = bw.getPropertyType(key);
+    Class<? extends Object> type = bw.getType(key);
 %><tr class="cms_editor_row"><td class="cms_editor_label_td"><%=key%>:
 <% 
-if ((TangramServices.getPropertyConverter().isTextType(type)) &&("code".equals(key)) && bw.isReadableProperty("mimeType") && (!(""+bw.getPropertyValue("mimeType")).equals("text/javascript")) && (!(""+bw.getPropertyValue("mimeType")).equals("text/css"))) {
+if ((TangramServices.getPropertyConverter().isTextType(type)) &&("code".equals(key)) && bw.isReadable("mimeType") && (!(""+bw.get("mimeType")).equals("text/javascript")) && (!(""+bw.get("mimeType")).equals("text/css"))) {
 Class<? extends Object> c = null;
-Object annotation = bw.getPropertyValue("annotation");
+Object annotation = bw.get("annotation");
 String className = annotation == null ? null : ""+annotation;
 try {
     c = Class.forName(className);
@@ -74,7 +72,7 @@ request.setAttribute("errorStyle", (c == null) ? "color: #FF0000;" : "");%>
 PropertyDescriptor[] ps = new PropertyDescriptor[0];
 if (c != null) {
     ps = BeanUtils.getPropertyDescriptors(c);
-    String mimeType = ""+bw.getPropertyValue("mimeType");
+    String mimeType = ""+bw.get("mimeType");
 	if ("application/x-groovy".equals(mimeType)) {
     %>delegate kennt<br/><%
     } else {
@@ -96,7 +94,7 @@ for (PropertyDescriptor p : ps) {
 } // if
 %></td><%
 if (TangramServices.getPropertyConverter().isBlobType(type)) {
-    long blobLength = TangramServices.getPropertyConverter().getBlobLength(bw.getPropertyValue(key));
+    long blobLength = TangramServices.getPropertyConverter().getBlobLength(bw.get(key));
 %><td class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</td><%
     } else {
 %><td class="cms_editor_field_value">
@@ -115,7 +113,7 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
         String parserfile = "";
         String stylesheet = "";
         try {
-            String mimeType = ""+bw.getPropertyValue("mimeType");
+            String mimeType = ""+bw.get("mimeType");
             if ("application/x-groovy".equals(mimeType)) {
                 parserfile = "['tokenizegroovy.js', 'parsegroovy.js']";
                 stylesheet = "'"+Utils.getUriPrefix(request)+"/editor/codemirror/css/groovycolors.css'";
@@ -159,7 +157,7 @@ CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=TangramServices.getPropertyConverter().getEditString(value)%>" />
  (<%=type.getSimpleName()%><%
 if (value instanceof Collection) {
-  Class<? extends Object>  elementClass = bw.getPropertyTypeDescriptor(key).getElementType();
+  Class<? extends Object>  elementClass = bw.getCollectionType(key);
   boolean abstractClass = (elementClass.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT;
   if (elementClass != Object.class) {
 %>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%

@@ -25,8 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.ConversionService;
@@ -136,9 +134,8 @@ public class TangramSpringServices implements ApplicationContextAware {
      * @param bean
      * @param conversionService
      * @return
-     */
-    public static BeanWrapper createWrapper(Object bean) {
-        BeanWrapper wrapper;
+    public static Bean Wrapper createWrapper(Object bean) {
+        Bean Wrapper wrapper;
         wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
         try {
             ConversionService converter = TangramSpringServices.getConversionService();
@@ -152,6 +149,7 @@ public class TangramSpringServices implements ApplicationContextAware {
             // conversion services are still optional for some time
         } // try/catch
         return wrapper;
-    } // createWrapper()
+    }
+     */
 
 } // TangramSpringServices
