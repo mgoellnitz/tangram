@@ -28,12 +28,13 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
+import org.tangram.components.TangramServices;
 import org.tangram.util.ServiceLocator;
-import org.tangram.view.ViewIncluder;
+import org.tangram.view.ViewUtilities;
 
 public class IncludeDirective extends Directive {
 
-    private static final ViewIncluder includer = ServiceLocator.get(ViewIncluder.class);
+    private static final ViewUtilities includer = ServiceLocator.get(ViewUtilities.class);
 
     @Override
     public String getName() {
@@ -67,7 +68,7 @@ public class IncludeDirective extends Directive {
         } // if
 
         // copy model from original context
-        Map<String, Object> model = includer.createModel(bean, request, response);
+        Map<String, Object> model = TangramServices.getViewContextFactory().createModel(bean, request, response);
         Object[] keys = context.getKeys();
         for (Object key : keys) {
             String k = ""+key;

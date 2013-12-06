@@ -56,7 +56,7 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
-import org.tangram.spring.view.SpringViewIncluder;
+import org.tangram.spring.view.SpringViewUtilities;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
@@ -402,7 +402,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     if (log.isDebugEnabled()) {
                         log.debug("handleRequestInternal() view context "+viewContext);
                     } // if
-                    return SpringViewIncluder.createModelAndView(viewContext);
+                    return SpringViewUtilities.createModelAndView(viewContext);
                 } // if
             } // for
             for (String className : handlers.keySet()) {
@@ -422,7 +422,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                             log.info("handleRequestInternal() handing over to view "+descriptor.view);
                         } // if
                         ViewContext viewContext = viewContextFactory.createViewContext(model, descriptor.view);
-                        return SpringViewIncluder.createModelAndView(viewContext);
+                        return SpringViewUtilities.createModelAndView(viewContext);
                     } else {
                         if (log.isDebugEnabled()) {
                             log.debug("handleRequestInternal() trying to call action "+descriptor.action);
@@ -440,13 +440,13 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                             } // for
                         } // if
                         ViewContext viewContext = handleResultDescriptor(resultDescriptor, request, response);
-                        return SpringViewIncluder.createModelAndView(viewContext);
+                        return SpringViewUtilities.createModelAndView(viewContext);
                     } // if
                 } // if
             } // for
         } catch (Throwable ex) {
             ViewContext viewContext = viewContextFactory.createViewContext(ex, request, response);
-            return SpringViewIncluder.createModelAndView(viewContext);
+            return SpringViewUtilities.createModelAndView(viewContext);
         } // try/catch
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);

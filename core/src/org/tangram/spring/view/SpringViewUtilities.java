@@ -33,9 +33,11 @@ import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.components.TangramServices;
 import org.tangram.components.spring.TangramSpringServices;
+import org.tangram.spring.SpringRequestBlobWrapper;
+import org.tangram.view.RequestBlobWrapper;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
-import org.tangram.view.ViewIncluder;
+import org.tangram.view.ViewUtilities;
 
 
 /**
@@ -43,9 +45,21 @@ import org.tangram.view.ViewIncluder;
  *
  * It might be a good idea to plce this in the view package hierarchy
  */
-public class SpringViewIncluder implements ViewIncluder {
+public class SpringViewUtilities implements ViewUtilities {
 
-    private static final Log log = LogFactory.getLog(SpringViewIncluder.class);
+    private static final Log log = LogFactory.getLog(SpringViewUtilities.class);
+
+
+    /**
+     * Creates a spring request blob wrapper.
+     *
+     * @param request
+     * @return request blob wrapper for the given request
+     */
+    @Override
+    public RequestBlobWrapper createWrapper(HttpServletRequest request) {
+        return new SpringRequestBlobWrapper(request);
+    } // createWrapper()
 
 
     /**
@@ -57,13 +71,8 @@ public class SpringViewIncluder implements ViewIncluder {
      * @return spring model and view describing exactly the same
      */
     public static ModelAndView createModelAndView(ViewContext viewContext) {
-        return new ModelAndView(viewContext.getViewName(), viewContext.getModel());
+        return viewContext == null ? null : new ModelAndView(viewContext.getViewName(), viewContext.getModel());
     } // createModelAndView()
-
-
-    public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
-        return TangramServices.getViewContextFactory().createModel(bean, request, response);
-    } // createModel()
 
 
     public void render(Writer out, Map<String, Object> model, String view) throws IOException {
@@ -77,7 +86,7 @@ public class SpringViewIncluder implements ViewIncluder {
 
         ViewContextFactory vcf = TangramServices.getViewContextFactory();
         ViewContext vc = vcf.createViewContext(model, view);
-        ModelAndView mav = SpringViewIncluder.createModelAndView(vc);
+        ModelAndView mav = SpringViewUtilities.createModelAndView(vc);
         View effectiveView = mav.getView();
         if (log.isDebugEnabled()) {
             log.debug("render() effectiveView="+effectiveView);
@@ -111,7 +120,7 @@ public class SpringViewIncluder implements ViewIncluder {
 
     @Override
     public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
-        render(out, createModel(bean, request, response), view);
+        render(out, TangramServices.getViewContextFactory().createModel(bean, request, response), view);
     } // render()
 
-} // SpringViewIncluder
+} // SpringViewUtilities

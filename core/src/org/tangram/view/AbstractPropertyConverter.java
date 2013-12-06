@@ -45,7 +45,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
     private static final Log log = LogFactory.getLog(AbstractPropertyConverter.class);
 
-    private static final ViewIncluder includer = ServiceLocator.get(ViewIncluder.class);
+    private static final ViewUtilities includer = ServiceLocator.get(ViewUtilities.class);
 
     private DateFormat dateFormat = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
 

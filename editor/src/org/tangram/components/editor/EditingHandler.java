@@ -35,8 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.tangram.Constants;
 import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
@@ -53,9 +51,12 @@ import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 import org.tangram.util.JavaBean;
+import org.tangram.util.ServiceLocator;
 import org.tangram.view.PropertyConverter;
+import org.tangram.view.RequestBlobWrapper;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
+import org.tangram.view.ViewUtilities;
 
 
 /**
@@ -177,43 +178,21 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                     } // try/catch
                 } // if
             } // for
-            if (request instanceof DefaultMultipartHttpServletRequest) {
-                DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;
-                Map<String, MultipartFile> fileMap = r.getFileMap();
 
-                for (Entry<String, MultipartFile> entry : fileMap.entrySet()) {
-                    String key = entry.getKey();
-                    String filename = entry.getValue().getName();
-                    if (log.isInfoEnabled()) {
-                        log.info("store() size "+entry.getValue().getSize());
-                        log.info("store() name "+filename);
-                    } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("store() key "+key);
-                        log.debug("store() original filename "+entry.getValue().getOriginalFilename());
-                    } // if
-                    if (filename.length()>0) {
-                        if (!key.startsWith("cms.editor")) {
-                            try {
-                                if (log.isInfoEnabled()) {
-                                    log.info("multipart file "+key);
-                                } // if
-
-                                Class cls = wrapper.getType(key);
-                                if (propertyConverter.isBlobType(cls)) {
-                                    byte[] octets = entry.getValue().getBytes();
-                                    if (log.isDebugEnabled()) {
-                                        log.debug("store() number of bytes to store is "+octets.length);
-                                    } // if
-                                    newValues.put(key, propertyConverter.createBlob(octets));
-                                } // if
-                            } catch (Exception e) {
-                                throw new Exception("Cannot set value for "+key);
-                            } // try/catch
+            RequestBlobWrapper blobWrapper = ServiceLocator.get(ViewUtilities.class).createWrapper(request);
+            for (String key : blobWrapper.getNames()) {
+                try {
+                    if (!key.startsWith("cms.editor")) {
+                        Class cls = wrapper.getType(key);
+                        if (propertyConverter.isBlobType(cls)) {
+                            byte[] octets = blobWrapper.getData(key);
+                            newValues.put(key, propertyConverter.createBlob(octets));
                         } // if
                     } // if
-                } // for
-            } // if
+                } catch (Exception e) {
+                    throw new Exception("Cannot set value for "+key);
+                } // try/catch
+            } // for
 
             bean = getMutableBeanFactory().getBean(MutableContent.class, id);
             getMutableBeanFactory().beginTransaction();

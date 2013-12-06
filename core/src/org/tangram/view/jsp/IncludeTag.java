@@ -28,7 +28,7 @@ import javax.servlet.jsp.tagext.Tag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.util.ServiceLocator;
-import org.tangram.view.ViewIncluder;
+import org.tangram.view.ViewUtilities;
 
 
 public class IncludeTag implements Tag, Serializable {
@@ -37,7 +37,7 @@ public class IncludeTag implements Tag, Serializable {
 
     private static final long serialVersionUID = -5289460956117400994L;
 
-    private static final ViewIncluder includer = ServiceLocator.get(ViewIncluder.class);
+    private static final ViewUtilities includer = ServiceLocator.get(ViewUtilities.class);
 
     private PageContext pc = null;
 

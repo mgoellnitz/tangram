@@ -23,23 +23,34 @@ import java.io.Writer;
 import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
  * Instances implement the tangram view include mechanism for object oriented templating of generic models.
  */
-public interface ViewIncluder {
+public interface ViewUtilities {
+
 
     /**
-     * Create a model map containing a bean and request and response objects
-     * @param bean
+     * create a new request blob mapper instance for the given request.
+     *
      * @param request
-     * @param response
-     * @return
+     * @return request blob wrapper suitable for the request
      */
-    Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response);
+    RequestBlobWrapper createWrapper(HttpServletRequest request);
 
 
+
+    /**
+     * Render the given model with a named view to the given writer instaance.
+     * Instances to an object oriented view lookup for the Constants.THIS part of the model map.
+     *
+     * @param out
+     * @param model
+     * @param view
+     * @throws IOException
+     */
     void render(Writer out, Map<String, Object> model, String view) throws IOException;
 
 
@@ -55,4 +66,4 @@ public interface ViewIncluder {
      */
     void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException;
 
-} // ViewIncluder
+} // ViewUtilities
