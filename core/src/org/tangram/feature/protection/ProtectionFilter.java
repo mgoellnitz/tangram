@@ -100,6 +100,8 @@ public class ProtectionFilter implements Filter {
     } // doFilter()
 
 
+    @Override
+    @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
         final Enumeration initParameterNames = config.getInitParameterNames();
         while (initParameterNames.hasMoreElements()) {
