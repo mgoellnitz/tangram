@@ -141,6 +141,9 @@ public class TangramServices {
 
     @Inject
     public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
+        if (viewSettings.containsKey("viewSettings")) {
+            viewSettings = (Map<String, Object>)(viewSettings.get("viewSettings"));
+        } // if
         TangramServices.viewSettings = viewSettings;
     }
 

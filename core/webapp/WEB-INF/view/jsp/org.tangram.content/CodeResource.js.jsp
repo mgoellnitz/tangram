@@ -1,10 +1,9 @@
 <%@page isELIgnored="false" language="java" pageEncoding="UTF-8" session="false"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat"
-%><%@page import="java.io.PrintWriter,java.io.InputStream,java.io.InputStreamReader"
-%><%@page import="org.tangram.content.CodeResource"
-%><%@page import="org.tangram.Constants"
-%><%@page import="org.tangram.components.TangramServices"
+%><%@page import="java.io.PrintWriter,java.io.InputStream,java.io.InputStreamReader" 
+%><%@page import="org.tangram.Constants,org.tangram.content.CodeResource,org.tangram.components.TangramServices"
+%><%@page import="com.yahoo.platform.yui.compressor.JavaScriptCompressor"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard coded mimetype
 response.setContentType("text/javascript");
