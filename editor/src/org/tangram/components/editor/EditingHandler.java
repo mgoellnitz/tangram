@@ -18,7 +18,13 @@
  */
 package org.tangram.components.editor;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,6 +57,7 @@ import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
+import org.tangram.editor.AppEngineXStream;
 import org.tangram.util.JavaBean;
 import org.tangram.util.ServiceLocator;
 import org.tangram.view.PropertyConverter;
@@ -430,6 +437,95 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             return new TargetDescriptor(e, null, null);
         } // try/catch
     } // link()
+
+
+    @LinkAction("/export")
+    @SuppressWarnings("rawtypes")
+    public TargetDescriptor contentExport(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not execute action");
+        } // if
+        // The pure reflection provider is used because of Google App Engines API limitations
+        XStream xstream = new AppEngineXStream(new StaxDriver());
+        Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
+
+        // Dig out root class of all this evil to find out where id field is defined
+        Class<? extends Object> oneClass = classes.iterator().next();
+        while (oneClass.getSuperclass()!=Object.class) {
+            oneClass = oneClass.getSuperclass();
+        } // while
+        if (log.isInfoEnabled()) {
+            log.info("export() root class to ignore id in: "+oneClass.getName());
+        } // if
+        xstream.omitField(oneClass, "id");
+
+        for (Class<? extends MutableContent> c : classes) {
+            xstream.alias(c.getSimpleName(), c);
+            // xstream.omitField(c, "id");
+        } // for
+        Collection<MutableContent> allContent = new ArrayList<MutableContent>();
+        for (Class<? extends MutableContent> c : classes) {
+            try {
+                allContent.addAll(beanFactory.listBeansOfExactClass(c));
+            } catch (Exception e) {
+                log.error("export()/list", e);
+            } // try/catch
+        } // for
+        try {
+            xstream.toXML(allContent, response.getWriter());
+            response.getWriter().flush();
+        } catch (IOException e) {
+            log.error("export()/toxml", e);
+        } // try/catch
+        return TargetDescriptor.DONE;
+    } // contentExport()
+
+
+    @SuppressWarnings("unchecked")
+    private TargetDescriptor doImport(Reader input, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not execute action");
+        } // if
+
+        getMutableBeanFactory().beginTransaction();
+        XStream xstream = new AppEngineXStream(new StaxDriver());
+        Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
+        for (Class<? extends MutableContent> c : classes) {
+            xstream.alias(c.getSimpleName(), c);
+        } // for
+
+        Object contents = xstream.fromXML(input);
+        log.info("read() "+contents);
+        if (contents instanceof List) {
+            List<? extends MutableContent> list = (List<? extends MutableContent>) contents;
+            for (MutableContent o : list) {
+                log.info("read() "+o);
+                getMutableBeanFactory().persistUncommitted(o);
+            } // for
+        } // if
+        getMutableBeanFactory().commitTransaction();
+
+        return TargetDescriptor.DONE;
+    } // doImport()
+
+
+    @LinkAction("/import")
+    public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return doImport(new StringReader(xmltext), request, response);
+    } // contentImport()
+
+
+    @LinkAction("/import-file/(.*)")
+    public TargetDescriptor fileImport(@LinkPart(1) String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return doImport(new FileReader(filename+".xml"), request, response);
+    } // fileImport()
+
+
+    @LinkAction("/importer")
+    public TargetDescriptor importer(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request.setAttribute("classes", getMutableBeanFactory().getClasses());
+        return new TargetDescriptor(this, null, null);
+    } // importer()
 
 
     private String getUrl(Object bean, String action, String view) {
