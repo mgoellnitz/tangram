@@ -49,6 +49,24 @@ public class SpringViewUtilities implements ViewUtilities {
 
     private static final Log log = LogFactory.getLog(SpringViewUtilities.class);
 
+    /**
+     * Value to be used if there is not view in hash tables and the like where the use of null would not indicate
+     * if there is no view or if we didn't look it up up to now.
+     */
+    final static View NOT_FOUND_DUMMY = new View() {
+
+        @Override
+        public String getContentType() {
+            return null;
+        }
+
+
+        @Override
+        public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        }
+
+    };
+
 
     /**
      * Creates a spring request blob wrapper.
@@ -71,7 +89,7 @@ public class SpringViewUtilities implements ViewUtilities {
      * @return spring model and view describing exactly the same
      */
     public static ModelAndView createModelAndView(ViewContext viewContext) {
-        return viewContext == null ? null : new ModelAndView(viewContext.getViewName(), viewContext.getModel());
+        return viewContext==null ? null : new ModelAndView(viewContext.getViewName(), viewContext.getModel());
     } // createModelAndView()
 
 

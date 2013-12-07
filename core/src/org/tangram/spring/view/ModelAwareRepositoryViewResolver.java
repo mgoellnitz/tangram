@@ -18,35 +18,33 @@
  */
 package org.tangram.spring.view;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.Locale;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import java.util.Map;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityView;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
+import org.tangram.view.AbstractRepositoryTemplateResolver;
 
 
-public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewResolver implements BeanListener {
+public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplateResolver<View> implements BeanListener, ModelAwareViewResolver {
 
-    @Inject
-    private CodeResourceCache codeResourceCache;
+    private int order = Integer.MAX_VALUE;
 
-    private Collection<String> supportedContenTypes;
 
     private ViewResolver delegate;
 
 
-    public ModelAwareRepositoryViewResolver() {
-        super(false, ".");
-        supportedContenTypes = new HashSet<String>();
-        supportedContenTypes.add("text/html");
-        supportedContenTypes.add("text/xml");
-    } // ModelAwareRepositoryViewResolver()
+    public int getOrder() {
+        return order;
+    }
+
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
 
     public ViewResolver getDelegate() {
@@ -59,49 +57,33 @@ public class ModelAwareRepositoryViewResolver extends AbstractModelAwareViewReso
     }
 
 
-    @Override
-    protected View checkResourceExists(View view) {
-        return view;
-    }
+    protected View getNotFoundDummy() {
+        return SpringViewUtilities.NOT_FOUND_DUMMY;
+    } // getNotFoundDummy()
 
 
     @Override
     protected View resolveView(String path, Locale locale) throws Exception {
         View result = null;
-        CodeResource template = null;
-        for (String type : supportedContenTypes) {
-            if (template==null) {
-                template = codeResourceCache.get(type, path);
-            } // if
-        } // for
+        CodeResource template = resolveTemplate(path, locale);
         if (template!=null) {
-            String mimeType = template.getMimeType();
-            if (supportedContenTypes.contains(mimeType)) {
-                String viewId = template.getId();
-                result = delegate.resolveViewName(viewId, locale);
-                // Set default encoding to UTF-8 for any view
-                if (result!=null) {
-                    if (result instanceof VelocityView) {
-                        VelocityView v = (VelocityView) result;
-                        v.setContentType(mimeType+";charset=UTF-8");
-                        v.setEncoding("UTF-8");
-                    } // if
+            result = delegate.resolveViewName(template.getId(), locale);
+            // Set default encoding to UTF-8 for any view
+            if (result!=null) {
+                if (result instanceof VelocityView) {
+                    VelocityView v = (VelocityView) result;
+                    v.setContentType(template.getMimeType()+";charset=UTF-8");
+                    v.setEncoding("UTF-8");
                 } // if
             } // if
         } // if
         return result;
-    } // resolveViewName()
+    } // resolveView()
 
 
     @Override
-    public void reset() {
-        getCache().clear();
-    } // reset()
-
-
-    @PostConstruct
-    public void afterPropertiesSet() throws Exception {
-        codeResourceCache.addListener(this);
-    } // afterPropertiesSet()
+    public View resolveView(String viewName, Map<String, Object> model, Locale locale) throws IOException {
+        return resolveTemplate(viewName, model, locale);
+    } // resolveView()
 
 } // ModelAwareRepositoryViewResolver

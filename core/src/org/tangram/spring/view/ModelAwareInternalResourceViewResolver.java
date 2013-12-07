@@ -18,9 +18,9 @@
  */
 package org.tangram.spring.view;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
@@ -30,24 +30,33 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.tangram.view.AbstractInternalResourceTemplateResolver;
 
 
-public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareViewResolver implements ServletContextAware {
+/**
+ * This class represents the necessary adapter between generic template lookup and the spring view layer
+ * for internal resources - namely JSPs - used as templates.
+ *
+ * The spring order mechanism is used for the priority of ViewResolvers and a view resolver delegate later
+ * does the real work.
+ */
+public class ModelAwareInternalResourceViewResolver extends AbstractInternalResourceTemplateResolver<View> implements ServletContextAware, ModelAwareViewResolver {
 
     private static Log log = LogFactory.getLog(ModelAwareInternalResourceViewResolver.class);
 
+    private int order = Integer.MAX_VALUE;
+
     private UrlBasedViewResolver delegate;
 
-    private String filePathPrefix;
 
-    private String prefix;
+    public int getOrder() {
+        return order;
+    }
 
-    private String suffix;
 
-
-    public ModelAwareInternalResourceViewResolver() {
-        super(true, "/");
-    } // ModelAwareInternalResourceViewResolver
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
 
     public UrlBasedViewResolver getDelegate() {
@@ -62,79 +71,20 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
 
     @Override
     public void setServletContext(ServletContext context) {
-        filePathPrefix = context.getRealPath("");
+        setFilePathPrefix(context.getRealPath(""));
     } // setServletContext()
 
 
-    public String getPrefix() {
-        return prefix;
-    }
-
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
+    @Override
+    protected View getNotFoundDummy() {
+        return SpringViewUtilities.NOT_FOUND_DUMMY;
+    } // getNotFoundDummy()
 
 
     @Override
     protected View checkResourceExists(View result) {
         String url = ((AbstractUrlBasedView) result).getUrl();
-        int idx = url.indexOf('/');
-        if (log.isInfoEnabled()) {
-            log.info("checkResourceExists("+url+")");
-        } // if
-        if (idx!=0) {
-            // TODO: this code is unused for now - we'd like to have VTL or
-            // stuff like that on the classpath which comes with Servlet 3
-            idx++;
-            if (log.isDebugEnabled()) {
-                log.debug("checkResourceExists("+url+")");
-            } // if
-            InputStream is = getClass().getResourceAsStream(url);
-            if (log.isDebugEnabled()) {
-                log.debug("checkResourceExists("+url+") is="+is);
-            } // if
-            if (is!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("checkResourceExists("+url+") exists!");
-                } // if
-                try {
-                    is.close();
-                } catch (Exception e) {
-                    log.error("checkResourceExists() ", e);
-                } // try/catch
-            } else {
-                result = null;
-            } // if
-        } else {
-            if (idx==0) {
-                // TODO: This only works with exploded deployments
-                File f = new File(filePathPrefix+url);
-                if (log.isInfoEnabled()) {
-                    log.info("checkResourceExists() f="+f.getAbsolutePath());
-                } // if
-                if (!(f.exists())) {
-                    result = null;
-                } // if
-            } else {
-                // meaning idx < 0 - no slash in url
-                if (log.isWarnEnabled()) {
-                    log.warn("checkResourceExists() strange resource name "+url);
-                } // if
-                result = null;
-            } // if
-        } // if
-        return result;
+        return (checkJspExists(url)!=null) ? result : null;
     } // checkResourceExists()
 
 
@@ -144,12 +94,19 @@ public class ModelAwareInternalResourceViewResolver extends AbstractModelAwareVi
     } // resolverViewName()
 
 
+    @Override
+    public View resolveView(String viewName, Map<String, Object> model, Locale locale) throws IOException {
+        return resolveTemplate(viewName, model, locale);
+    } // resolveView()
+
+
     @PostConstruct
+    @Override
     public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
         Assert.notNull(delegate, "delegate is null");
-        Assert.notNull(filePathPrefix, "path to lookup templates may not be null");
-        delegate.setPrefix(prefix);
-        delegate.setSuffix(suffix);
+        delegate.setPrefix(getPrefix());
+        delegate.setSuffix(getSuffix());
     } // afterPropertiesSet()
 
 } // ModelAwareInternalResourceViewResolver
