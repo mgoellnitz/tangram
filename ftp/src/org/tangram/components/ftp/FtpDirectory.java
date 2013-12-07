@@ -21,6 +21,7 @@ package org.tangram.components.ftp;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
@@ -35,6 +36,7 @@ import org.tangram.mutable.MutableBeanFactory;
  *
  */
 @Named
+@Singleton
 public class FtpDirectory {
 
     private static final Logger log = LoggerFactory.getLogger(FtpDirectory.class);

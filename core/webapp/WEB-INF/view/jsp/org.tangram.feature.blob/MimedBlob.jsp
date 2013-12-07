@@ -1,7 +1,7 @@
 <%@page isELIgnored="false" language="java" pageEncoding="UTF-8" session="false"
 %><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat"
 %><%@page import="org.tangram.Constants"
-%><%@page import="org.tangram.components.spring.TangramSpringServices"
+%><%@page import="org.tangram.components.TangramServices"
 %><%@page import="org.tangram.feature.blob.MimedBlob"
 %><% MimedBlob imageData = (MimedBlob)(request.getAttribute(Constants.THIS));
 String type = imageData.getMimeType();
@@ -11,8 +11,8 @@ if ((type == null) || (type.length() == 0)) {
 response.setContentType(type);
 byte[] bytes = imageData.getBytes();
 if (bytes != null) {
-  DateFormat httpDateFormat = TangramSpringServices.getHttpHeaderDateFormat();
-  Map<String, Object> viewSettings = TangramSpringServices.getViewSettings();
+  DateFormat httpDateFormat = TangramServices.getHttpHeaderDateFormat();
+  Map<String, Object> viewSettings = TangramServices.getViewSettings();
   int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("imageCacheTime"));
   Calendar calendar = Calendar.getInstance();
   response.setHeader("Last-modified", httpDateFormat.format(calendar.getTime()));

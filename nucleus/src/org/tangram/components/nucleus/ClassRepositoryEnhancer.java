@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.jdo.annotations.PersistenceCapable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +36,7 @@ import org.tangram.mutable.MutableContent;
 
 
 @Named
+@Singleton
 public class ClassRepositoryEnhancer implements BeanListener {
 
     private static final Log log = LogFactory.getLog(ClassRepositoryEnhancer.class);

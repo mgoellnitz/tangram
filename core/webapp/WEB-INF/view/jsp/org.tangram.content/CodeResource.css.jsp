@@ -4,13 +4,13 @@
 %><%@page import="java.io.InputStreamReader"
 %><%@page import="org.tangram.content.CodeResource"
 %><%@page import="org.tangram.Constants"
-%><%@page import="org.tangram.components.spring.TangramSpringServices"
+%><%@page import="org.tangram.components.TangramServices"
 %><%@page import="com.yahoo.platform.yui.compressor.CssCompressor"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard code mimetype
 response.setContentType("text/css");
-DateFormat httpDateFormat = TangramSpringServices.getHttpHeaderDateFormat();
-Map<String, Object> viewSettings = TangramSpringServices.getViewSettings();
+DateFormat httpDateFormat = TangramServices.getHttpHeaderDateFormat();
+Map<String, Object> viewSettings = TangramServices.getViewSettings();
 int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("cssCacheTime"));
 Calendar calendar = Calendar.getInstance();
 response.setHeader("Last-modified", httpDateFormat.format(calendar.getTime()));

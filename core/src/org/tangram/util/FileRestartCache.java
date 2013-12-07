@@ -25,6 +25,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Singleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.PersistentRestartCache;
@@ -36,12 +37,13 @@ import org.tangram.PersistentRestartCache;
  * the interface for other flavours of tangram as google app engine as well
  *
  * The file cache adapter moved to the core package because it was not really rdbms or mongo dependent and can also be
- * used out of the jdo scope. This reasulted in the fact that using modules have to declare it in XML files and cannot
+ * used out of the jdo scope.
+ *
+ * This reasulted in the fact that using modules have to declare it in XML files and cannot
  * be auto-scanned anymore.
  *
- * @author Martin Goellnitz
- *
  */
+@Singleton
 public class FileRestartCache implements PersistentRestartCache {
 
     private static final String PERSISTENT_CACHE_FILENAME_DEFAULT = "tangram.persistent.cache.ser";

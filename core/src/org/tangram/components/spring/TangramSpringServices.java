@@ -18,9 +18,6 @@
  */
 package org.tangram.components.spring;
 
-import java.text.DateFormat;
-import java.util.Map;
-import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.logging.Log;
@@ -36,19 +33,11 @@ public class TangramSpringServices implements ApplicationContextAware {
 
     private static Log log = LogFactory.getLog(TangramSpringServices.class);
 
-    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
-
     private static ApplicationContext applicationContext;
 
     private static ViewHandler viewHandler = null;
 
     private static ConversionService conversionService = null;
-
-    // TOOD: Must be moved out of spring part of the framework
-    private static Map<String, Object> viewSettings = null;
-
-    // TOOD: Must be moved out of spring part of the framework
-    private static DateFormat httpHeaderDateFormat = null;
 
 
     public static ApplicationContext getApplicationContext() {
@@ -110,46 +99,28 @@ public class TangramSpringServices implements ApplicationContextAware {
     }
 
 
-    public static DateFormat getHttpHeaderDateFormat() {
-        if (httpHeaderDateFormat==null) {
-            httpHeaderDateFormat = getBeanFromContext(DateFormat.class, "httpHeaderDateFormat");
-            httpHeaderDateFormat.setTimeZone(GMT);
-        } // if
-        return httpHeaderDateFormat;
-    } // getHttpHeaderDateFormat()
-
-
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> getViewSettings() {
-        if (viewSettings==null) {
-            viewSettings = getBeanFromContext(Map.class, "viewSettings");
-        } // if
-        return viewSettings;
-    } // getHttpHeaderDateFormat()
-
-
     /**
      * create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
      *
      * @param bean
      * @param conversionService
      * @return
-    public static Bean Wrapper createWrapper(Object bean) {
-        Bean Wrapper wrapper;
-        wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
-        try {
-            ConversionService converter = TangramSpringServices.getConversionService();
-            if (converter!=null) {
-                wrapper.setConversionService(converter);
-            } // if
-            if (log.isInfoEnabled()) {
-                log.info("createWrapper() conversion service "+wrapper.getConversionService());
-            } // if
-        } catch (Exception e) {
-            // conversion services are still optional for some time
-        } // try/catch
-        return wrapper;
-    }
+     * public static Bean Wrapper createWrapper(Object bean) {
+     * Bean Wrapper wrapper;
+     * wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
+     * try {
+     * ConversionService converter = TangramSpringServices.getConversionService();
+     * if (converter!=null) {
+     * wrapper.setConversionService(converter);
+     * } // if
+     * if (log.isInfoEnabled()) {
+     * log.info("createWrapper() conversion service "+wrapper.getConversionService());
+     * } // if
+     * } catch (Exception e) {
+     * // conversion services are still optional for some time
+     * } // try/catch
+     * return wrapper;
+     * }
      */
 
 } // TangramSpringServices

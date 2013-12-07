@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -42,6 +43,7 @@ import org.tangram.logic.ClassRepository;
 
 
 @Named
+@Singleton
 public class GroovyClassRepository implements ClassRepository, BeanListener {
 
     private static final String BYTECODE_CACHE_KEY = "tangram.bytecode.cache";

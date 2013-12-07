@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +45,7 @@ import org.tangram.view.TargetDescriptor;
  * Export all codes in repository in one structured ZIP file.
  */
 @Named
+@Singleton
 @LinkHandler
 public class CodeExporter {
 

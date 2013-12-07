@@ -51,8 +51,8 @@ public class VelocityResourceLoader extends ResourceLoader {
         InputStream result = null; // new ByteArrayInputStream("Oops!".getBytes());
         if (!"VM_global_library.vm".equals(source)) {
             try {
-                if (log.isInfoEnabled()) {
-                    log.info("getResourceStream() "+source);
+                if (log.isDebugEnabled()) {
+                    log.debug("getResourceStream() "+source);
                 } // if
                 CodeResource t = codeResourceCache.get(source);
                 if (t!=null) {

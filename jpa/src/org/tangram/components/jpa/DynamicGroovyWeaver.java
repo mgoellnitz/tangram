@@ -19,9 +19,11 @@
 package org.tangram.components.jpa;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 
 @Named
+@Singleton
 public class DynamicGroovyWeaver {
 
     // TODO: We would love to have a similar solution as for datanucleus in JDO here

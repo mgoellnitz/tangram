@@ -30,6 +30,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -65,6 +66,7 @@ import org.tangram.view.ViewUtilities;
  * This class does all the magic not found in the templates of the editor including URL generation and handling.
  */
 @Named
+@Singleton
 @LinkHandler
 public class EditingHandler extends RenderingBase implements LinkFactory {
 

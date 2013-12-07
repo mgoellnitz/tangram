@@ -19,7 +19,7 @@
 package org.tangram.util;
 
 import java.lang.reflect.Type;
-
+import javax.inject.Singleton;
 import org.tangram.PersistentRestartCache;
 
 /**
@@ -31,9 +31,8 @@ import org.tangram.PersistentRestartCache;
  * used out of the jdo scope. This reasulted in the fact that using modules have to declare it in XML files and cannot
  * be auto-scanned anymore.
  *
- * @author Martin Goellnitz
- *
  */
+@Singleton
 public class DummyRestartCache implements PersistentRestartCache {
 
     public DummyRestartCache() {

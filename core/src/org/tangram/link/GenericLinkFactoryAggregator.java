@@ -21,6 +21,7 @@ package org.tangram.link;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -34,6 +35,7 @@ import org.tangram.monitor.Statistics;
  * So this is the generic not just default implementation of a link factory.
  *
  */
+@Singleton
 public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
     private static final Log log = LogFactory.getLog(GenericLinkFactoryAggregator.class);

@@ -4,12 +4,12 @@
 %><%@page import="java.io.PrintWriter,java.io.InputStream,java.io.InputStreamReader"
 %><%@page import="org.tangram.content.CodeResource"
 %><%@page import="org.tangram.Constants"
-%><%@page import="org.tangram.components.spring.TangramSpringServices"
+%><%@page import="org.tangram.components.TangramServices"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard coded mimetype
 response.setContentType("text/javascript");
-DateFormat httpDateFormat = TangramSpringServices.getHttpHeaderDateFormat();
-Map<String, Object> viewSettings = TangramSpringServices.getViewSettings();
+DateFormat httpDateFormat = TangramServices.getHttpHeaderDateFormat();
+Map<String, Object> viewSettings = TangramServices.getViewSettings();
 int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("jsCacheTime"));
 Calendar calendar = Calendar.getInstance();
 response.setHeader("Last-modified", httpDateFormat.format(calendar.getTime()));

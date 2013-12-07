@@ -204,9 +204,14 @@ public class BufferResponse implements HttpServletResponse {
 
 
     public String getContents() throws UnsupportedEncodingException, IOException {
+        return new String(getBytes());
+    } // getContents()
+
+
+    public byte[] getBytes() throws UnsupportedEncodingException, IOException {
         flushBuffer();
         out.close();
-        return new String(out.toByteArray(), getCharacterEncoding());
+        return out.toByteArray();
     } // getContents()
 
 

@@ -43,6 +43,8 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
     public AbstractInternalResourceTemplateResolver() {
         super(true, "/");
+        prefix = "/WEB-INF/view/jsp/";
+        suffix = ".jsp";
     } // AbstractInternalResourceTemplateResolver()
 
 
@@ -74,8 +76,8 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
     protected String checkJspExists(String result) {
         String url = result;
         int idx = url.indexOf('/');
-        if (log.isInfoEnabled()) {
-            log.info("checkJspExists("+url+")");
+        if (log.isDebugEnabled()) {
+            log.debug("checkJspExists("+url+") idx="+idx);
         } // if
         if (idx!=0) {
             // TODO: this code is unused for now - we'd like to have VTL or
@@ -104,8 +106,8 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
             if (idx==0) {
                 // TODO: This only works with exploded deployments
                 File f = new File(filePathPrefix+url);
-                if (log.isInfoEnabled()) {
-                    log.info("checkJspExists() f="+f.getAbsolutePath());
+                if (log.isDebugEnabled()) {
+                    log.debug("checkJspExists() f="+f.getAbsolutePath());
                 } // if
                 if (!(f.exists())) {
                     result = null;

@@ -19,13 +19,18 @@
 package org.tangram.components;
 
 import java.text.DateFormat;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.tangram.content.BeanFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.PropertyConverter;
+import org.tangram.view.TemplateResolver;
 import org.tangram.view.ViewContextFactory;
+
 
 /**
  * bean providing access to common services by means of static accessors.
@@ -36,6 +41,8 @@ import org.tangram.view.ViewContextFactory;
 @Named
 public class TangramServices {
 
+    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+
     private static BeanFactory beanFactory = null;
 
     private static LinkFactoryAggregator linkFactoryAggregator = null;
@@ -43,6 +50,9 @@ public class TangramServices {
     private static ViewContextFactory viewContextFactory = null;
 
     private static PropertyConverter propertyConverter = null;
+
+    @SuppressWarnings("rawtypes")
+    private static Set<TemplateResolver> resolvers = new HashSet<TemplateResolver>();
 
     private static DateFormat httpHeaderDateFormat = null;
 
@@ -90,6 +100,48 @@ public class TangramServices {
     @Inject
     public void setPropertyConverter(PropertyConverter propertyConverter) {
         TangramServices.propertyConverter = propertyConverter;
+    }
+
+
+    /**
+     * This is "rawtypes" because of google guice's weak injection mechanism.
+     */
+    @SuppressWarnings("rawtypes")
+    public static Set<TemplateResolver> getResolvers() {
+        return resolvers;
+    }
+
+
+    @Inject
+    @SuppressWarnings("rawtypes")
+    public void setResolvers(Set<TemplateResolver> resolvers) {
+        TangramServices.resolvers = resolvers;
+    }
+
+
+    public static DateFormat getHttpHeaderDateFormat() {
+        return httpHeaderDateFormat;
+    }
+
+
+    @Inject
+    public void setHttpHeaderDateFormat(@Named("httpHeaderDateFormat") DateFormat httpHeaderDateFormat) {
+        httpHeaderDateFormat.setTimeZone(GMT);
+        TangramServices.httpHeaderDateFormat = httpHeaderDateFormat;
+    }
+
+
+    /**
+     * This is "rawtypes" because of google guice's weak injection mechanism.
+     */
+    public static Map<String, Object> getViewSettings() {
+        return viewSettings;
+    }
+
+
+    @Inject
+    public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
+        TangramServices.viewSettings = viewSettings;
     }
 
 } // TangramServices

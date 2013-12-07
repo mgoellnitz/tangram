@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Map;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
@@ -32,6 +33,7 @@ import org.tangram.gae.GaeBeanFactory;
 
 
 @Named
+@Singleton
 public class GaeCacheAdapter implements PersistentRestartCache {
 
     private static final Log log = LogFactory.getLog(GaeBeanFactory.class);

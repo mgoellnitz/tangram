@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +40,7 @@ import org.tangram.content.TransientCode;
 
 
 @Named
+@Singleton
 public class CodeResourceCache implements BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";

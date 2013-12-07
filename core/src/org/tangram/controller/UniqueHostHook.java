@@ -20,6 +20,7 @@ package org.tangram.controller;
 
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -28,6 +29,7 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
+@Singleton
 public class UniqueHostHook implements ControllerHook {
 
     private static Log log = LogFactory.getLog(UniqueHostHook.class);

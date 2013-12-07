@@ -20,6 +20,7 @@ package org.tangram.view.velocity;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.tangram.components.CodeResourceCache;
 
 
@@ -30,6 +31,7 @@ import org.tangram.components.CodeResourceCache;
  * which depends on the order of bean definitions in the tangram-configurer.xml
  */
 @Named
+@Singleton
 public class VelocityPatchBean {
 
     @Inject

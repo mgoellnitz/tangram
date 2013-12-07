@@ -18,9 +18,9 @@
  */
 package org.tangram.controller;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,7 +56,7 @@ public abstract class RenderingBase implements LinkFactory {
     private LinkFactoryAggregator linkFactory;
 
     @Inject
-    private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
+    private Set<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
 
 
     public BeanFactory getBeanFactory() {

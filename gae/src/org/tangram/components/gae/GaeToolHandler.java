@@ -28,6 +28,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -41,6 +42,7 @@ import org.tangram.view.TargetDescriptor;
 
 
 @Named
+@Singleton
 @LinkHandler
 public class GaeToolHandler {
 

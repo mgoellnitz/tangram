@@ -21,16 +21,18 @@ package org.tangram.components;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.controller.ControllerHook;
-import org.tangram.view.TargetDescriptor;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
+import org.tangram.view.TargetDescriptor;
 
 @Named
+@Singleton
 public class UniqueUrlHook implements ControllerHook {
 
     private static Log log = LogFactory.getLog(UniqueUrlHook.class);

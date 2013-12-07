@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,7 @@ import org.tangram.view.TargetDescriptor;
 
 
 @Named
+@Singleton
 public class ProtectionHook implements ControllerHook {
 
     private static final Log log = LogFactory.getLog(ProtectionHook.class);
