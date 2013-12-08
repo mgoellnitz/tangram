@@ -26,4 +26,5 @@ dependencies {
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
   compile project(':tangram-core')
+  compile project(':tangram-spring')
 }

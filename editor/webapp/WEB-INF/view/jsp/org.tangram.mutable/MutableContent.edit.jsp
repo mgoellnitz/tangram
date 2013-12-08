@@ -5,7 +5,6 @@
 %><%@page import="java.util.Collection"
 %><%@page import="java.lang.reflect.Modifier"
 %><%@page import="java.beans.PropertyDescriptor"
-%><%@page import="org.springframework.beans.BeanUtils"
 %><%@page import="org.tangram.Constants"
 %><%@page import="org.tangram.util.JavaBean"
 %><%@page import="org.tangram.view.Utils"
@@ -70,7 +69,7 @@ request.setAttribute("errorStyle", (c == null) ? "color: #FF0000;" : "");%>
 <div class="cms_editor_howto" style="${errorStyle}"><%
 PropertyDescriptor[] ps = new PropertyDescriptor[0];
 if (c != null) {
-    ps = BeanUtils.getPropertyDescriptors(c);
+    ps = JavaBean.getPropertyDescriptors(c);
     String mimeType = ""+bw.get("mimeType");
 	if ("application/x-groovy".equals(mimeType)) {
     %>delegate kennt<br/><%

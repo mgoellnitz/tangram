@@ -28,6 +28,7 @@ dependencies {
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
   compile project (':tangram-jdo')
+  compile project (':tangram-spring')
   compile project (':tangram-editor')
 
   compile "com.google.appengine:appengine-api-1.0-sdk:$versions.appengine"

@@ -6,7 +6,7 @@
     xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     version="2.5">
-    <display-name>Tangram JDO based Web Application</display-name>
+    <display-name>Tangram Web Application for Spring Scenarios</display-name>
 
     <!-- location of the bootstrap logging configuration -->
     <context-param>

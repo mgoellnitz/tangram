@@ -30,15 +30,6 @@ dependencies {
   
   compile "javax.inject:javax.inject:1"
   
-  compile "org.springframework:spring-core:$versions.springframework"
-  compile "org.springframework:spring-asm:$versions.springframework"
-  compile "org.springframework:spring-beans:$versions.springframework"
-  compile "org.springframework:spring-context:$versions.springframework"
-  compile "org.springframework:spring-context-support:$versions.springframework"
-  compile "org.springframework:spring-expression:$versions.springframework"
-  compile "org.springframework:spring-web:$versions.springframework"
-  compile "org.springframework:spring-webmvc:$versions.springframework"
-  
   compile "org.apache.velocity:velocity:$versions.velocity"
   compile "org.codehaus.groovy:groovy:$versions.groovy"
   compile("com.yahoo.platform.yui:yuicompressor:$versions.yui") {

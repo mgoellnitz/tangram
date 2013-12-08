@@ -41,10 +41,15 @@ public class JavaBean {
     private Map<String, PropertyDescriptor> descriptors = new HashMap<String, PropertyDescriptor>();
 
 
+    public static PropertyDescriptor[] getPropertyDescriptors(Class<? extends Object> cls) throws IntrospectionException {
+        BeanInfo info = Introspector.getBeanInfo(cls);
+        return info.getPropertyDescriptors();
+    } // getPropertyDescriptors()
+
+
     public JavaBean(Object delegate) throws IntrospectionException {
         this.delegate = delegate;
-        BeanInfo info = Introspector.getBeanInfo(delegate.getClass());
-        final PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
+        PropertyDescriptor[] propertyDescriptors = JavaBean.getPropertyDescriptors(delegate.getClass());
         for (PropertyDescriptor descriptor : propertyDescriptors) {
             descriptors.put(descriptor.getName(), descriptor);
         } // for
@@ -140,7 +145,7 @@ public class JavaBean {
      */
     public Class<? extends Object> getCollectionType(String name) {
         ParameterizedType returnType = (ParameterizedType) (descriptors.get(name).getReadMethod().getGenericReturnType());
-        return (Class<? extends Object>)returnType.getActualTypeArguments()[0];
+        return (Class<? extends Object>) returnType.getActualTypeArguments()[0];
     } // getCollectionType()
 
 } // JavaBean
