@@ -18,11 +18,9 @@
  */
 package org.tangram.components;
 
-import java.text.DateFormat;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.tangram.content.BeanFactory;
@@ -41,8 +39,6 @@ import org.tangram.view.ViewContextFactory;
 @Named
 public class TangramServices {
 
-    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
-
     private static BeanFactory beanFactory = null;
 
     private static LinkFactoryAggregator linkFactoryAggregator = null;
@@ -53,8 +49,6 @@ public class TangramServices {
 
     @SuppressWarnings("rawtypes")
     private static Set<TemplateResolver> resolvers = new HashSet<TemplateResolver>();
-
-    private static DateFormat httpHeaderDateFormat = null;
 
     private static Map<String, Object> viewSettings = null;
 
@@ -119,18 +113,6 @@ public class TangramServices {
     }
 
 
-    public static DateFormat getHttpHeaderDateFormat() {
-        return httpHeaderDateFormat;
-    }
-
-
-    @Inject
-    public void setHttpHeaderDateFormat(@Named("httpHeaderDateFormat") DateFormat httpHeaderDateFormat) {
-        httpHeaderDateFormat.setTimeZone(GMT);
-        TangramServices.httpHeaderDateFormat = httpHeaderDateFormat;
-    }
-
-
     /**
      * This is "rawtypes" because of google guice's weak injection mechanism.
      */
@@ -142,7 +124,7 @@ public class TangramServices {
     @Inject
     public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
         if (viewSettings.containsKey("viewSettings")) {
-            viewSettings = (Map<String, Object>)(viewSettings.get("viewSettings"));
+            viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));
         } // if
         TangramServices.viewSettings = viewSettings;
     }

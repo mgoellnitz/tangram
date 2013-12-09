@@ -34,12 +34,6 @@
     <property name="dispatcherPath" value="${tangram.servlet.path}" />
   </bean>
 
-  <bean id="httpHeaderDateFormat" class="java.text.SimpleDateFormat">
-    <constructor-arg>
-      <value type="java.lang.String">EEE, dd MMM yyyy HH:mm:ss z</value>
-    </constructor-arg>
-  </bean>
-
   <bean id="viewSettings" class="java.util.HashMap">
     <constructor-arg>
       <map>

@@ -6,13 +6,12 @@
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard code mimetype
 response.setContentType("text/css");
-DateFormat httpDateFormat = TangramServices.getHttpHeaderDateFormat();
 Map<String, Object> viewSettings = TangramServices.getViewSettings();
 int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("cssCacheTime"));
 Calendar calendar = Calendar.getInstance();
-response.setHeader("Last-modified", httpDateFormat.format(calendar.getTime()));
+response.setHeader("Last-modified", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
 calendar.add(Calendar.MINUTE, cacheTimeMinutes);
-response.setHeader("Expires", httpDateFormat.format(calendar.getTime()));
+response.setHeader("Expires", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
 InputStreamReader isr = new InputStreamReader(code.getStream());
 CssCompressor csc = new CssCompressor(isr); 
 csc.compress(out, 0);

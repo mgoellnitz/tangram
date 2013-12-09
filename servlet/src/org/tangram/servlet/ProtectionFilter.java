@@ -1,4 +1,4 @@
-package org.tangram.feature.protection;
+package org.tangram.servlet;
 
 import java.io.IOException;
 import java.security.Principal;

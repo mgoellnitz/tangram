@@ -7,14 +7,12 @@
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard coded mimetype
 response.setContentType("text/javascript");
-DateFormat httpDateFormat = TangramServices.getHttpHeaderDateFormat();
 Map<String, Object> viewSettings = TangramServices.getViewSettings();
 int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("jsCacheTime"));
 Calendar calendar = Calendar.getInstance();
-response.setHeader("Last-modified", httpDateFormat.format(calendar.getTime()));
+response.setHeader("Last-modified", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
 calendar.add(Calendar.MINUTE, cacheTimeMinutes);
-response.setHeader("Expires", httpDateFormat.format(calendar.getTime()));
-
+response.setHeader("Expires", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
 InputStream is = code.getStream();
 if (is != null) {
   InputStreamReader isr = new InputStreamReader(is);

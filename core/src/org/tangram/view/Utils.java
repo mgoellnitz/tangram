@@ -20,6 +20,9 @@ package org.tangram.view;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -29,6 +32,15 @@ import org.apache.commons.logging.LogFactory;
 public final class Utils {
 
     private static final Log log = LogFactory.getLog(Utils.class);
+
+    public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+
+    public static final DateFormat HTTP_HEADER_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+
+
+    {
+        HTTP_HEADER_DATE_FORMAT.setTimeZone(GMT);
+    }
 
     private static String uriPrefix = null;
 
