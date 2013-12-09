@@ -30,6 +30,12 @@ import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
 
 
+/**
+ * All in one implementation of the statistics interface together with its own controller to trigger the view.
+ * This implementaton still is a simple spring framework @Controller so that we don't run into circular dependencies
+ * when collecting statistics for the lower parts of the system and later try to present them with the higher
+ * level object oriented templating presentd by those parts.s
+ */
 @Controller
 public class StatisticsController implements Statistics {
 

@@ -81,7 +81,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     private CustomViewProvider customViewProvider;
 
     @Inject
-    private LinkFactoryAggregator linkFactory;
+    private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
     protected ViewContextFactory viewContextFactory;
@@ -367,7 +367,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
             } // if
             if (resultDescriptor!=TargetDescriptor.DONE) {
                 if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
-                    Link link = linkFactory.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
+                    Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
                     response.sendRedirect(link.getUrl());
                 } else {
                     result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
@@ -380,7 +380,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String url = request.getRequestURI().substring(linkFactory.getPrefix(request).length());
+        String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
         if (log.isInfoEnabled()) {
             log.info("handleRequestInternal() "+url);
         } // if
@@ -470,7 +470,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        linkFactory.registerFactory(this);
+        linkFactoryAggregator.registerFactory(this);
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()

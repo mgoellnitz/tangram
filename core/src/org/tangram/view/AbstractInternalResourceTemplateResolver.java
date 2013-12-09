@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Generic superclass for all implementations using internal resources - namely JSP file - as templates.
  *
- * @param <>> Type for the view technology in use e.g. Strings for filenames
+ * @param <T> Type for the view technology in use e.g. Strings for filenames
  */
 public abstract class AbstractInternalResourceTemplateResolver<T extends Object> extends AbstractTemplateResolver<T> {
 

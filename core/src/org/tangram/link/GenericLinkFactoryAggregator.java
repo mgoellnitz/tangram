@@ -32,7 +32,8 @@ import org.tangram.monitor.Statistics;
  *
  * right at the moment we cannot think of a second necessary implementation of this.
  *
- * So this is the generic not just default implementation of a link factory.
+ * So this is the generic not just default implementation of a link factory aggregator to be used to create
+ * any link you might need.
  *
  */
 @Singleton
@@ -53,6 +54,13 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     }
 
 
+    /**
+     * Set the path of the dispatcher servlet.
+     *
+     * Needed as a prefix for every URL to generate subsequently.
+     *
+     * @param dispatcherPath path of the servlet including leading slash
+     */
     public void setDispatcherPath(String dispatcherPath) {
         this.dispatcherPath = dispatcherPath;
     }
