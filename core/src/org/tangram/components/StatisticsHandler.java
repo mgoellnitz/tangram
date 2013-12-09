@@ -16,18 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.spring;
+package org.tangram.components;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-import org.tangram.Constants;
+import org.tangram.annotate.LinkAction;
+import org.tangram.annotate.LinkHandler;
 import org.tangram.monitor.Statistics;
+import org.tangram.view.TargetDescriptor;
 
 
 /**
@@ -36,8 +37,10 @@ import org.tangram.monitor.Statistics;
  * when collecting statistics for the lower parts of the system and later try to present them with the higher
  * level object oriented templating presentd by those parts.s
  */
-@Controller
-public class StatisticsController implements Statistics {
+@LinkHandler
+@Named
+@Singleton
+public class StatisticsHandler implements Statistics {
 
     public static final String STATS_URI = "/stats";
 
@@ -46,9 +49,9 @@ public class StatisticsController implements Statistics {
     private Date startTime;
 
 
-    public StatisticsController() {
+    public StatisticsHandler() {
         startTime = new Date();
-    } // StatisticsController()
+    } // StatisticsHandler()
 
 
     public Map<String, Long> getCounter() {
@@ -78,14 +81,9 @@ public class StatisticsController implements Statistics {
     } // avg()
 
 
-    @RequestMapping(value = "/stats")
-    public ModelAndView statistics(HttpServletRequest request, HttpServletResponse response) {
-        // poor man's version of createModelAndView to be injection independent of ModelAndViewFactory which in turn might need statistics
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put(Constants.THIS, this);
-        model.put("request", request);
-        model.put("response", response);
-        return new ModelAndView(Constants.DEFAULT_VIEW, model);
+    @LinkAction("/stats")
+    public TargetDescriptor statistics(HttpServletRequest request, HttpServletResponse response) {
+        return new TargetDescriptor(this, null, null);
     } // statistics()
 
-} // StatisticsController
+} // StatisticsHandler
