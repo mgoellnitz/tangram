@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.spring;
+package org.tangram.spring.view;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,18 +26,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-import org.tangram.view.AbstractRequestBlobWrapper;
+import org.tangram.view.AbstractRequestParameterAccess;
 
 
 /**
  * Implements a request blob wrapper by means of spring's MultiPartRequest.
  */
-public class SpringRequestBlobWrapper extends AbstractRequestBlobWrapper {
+public class SpringRequestParameterAccess extends AbstractRequestParameterAccess {
 
-    private static final Log log = LogFactory.getLog(SpringRequestBlobWrapper.class);
+    private static final Log log = LogFactory.getLog(SpringRequestParameterAccess.class);
 
 
-    public SpringRequestBlobWrapper(HttpServletRequest request) {
+    /**
+     * Weak visibility to avoid direct instanciation.
+     */
+    SpringRequestParameterAccess(HttpServletRequest request) {
         if (request instanceof DefaultMultipartHttpServletRequest) {
             DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;
             Map<String, MultipartFile> fileMap = r.getFileMap();
@@ -65,6 +68,7 @@ public class SpringRequestBlobWrapper extends AbstractRequestBlobWrapper {
                 } // if
             } // for
         } // if
-    } // SpringRequestBlobWrapper()
+        parameterMap = request.getParameterMap();
+    } // SpringRequestParameterAccess()
 
-} // SpringRequestBlobWrapper
+} // SpringRequestParameterAccess

@@ -302,6 +302,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                 if (type.equals(HttpServletResponse.class)) {
                     parameters.add(response);
                 } // if
+                Map<String, String[]> parameterMap = null;
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof LinkPart) {
                         int partNumber = ((LinkPart) annotation).value();
@@ -316,6 +317,9 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         String parameterName = ((ActionParameter) annotation).value();
                         if ("--empty--".equals(parameterName)) {
                             parameterName = type.getSimpleName().toLowerCase();
+                        } // if
+                        if (parameterMap==null) {
+                            parameterMap = ServiceLocator.get(ViewUtilities.class).createParameterAccess(request).getParameterMap();
                         } // if
                         String valueString = request.getParameter(parameterName);
                         if (log.isDebugEnabled()) {

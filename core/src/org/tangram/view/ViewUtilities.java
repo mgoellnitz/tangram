@@ -38,7 +38,7 @@ public interface ViewUtilities {
      * @param request
      * @return request blob wrapper suitable for the request
      */
-    RequestBlobWrapper createWrapper(HttpServletRequest request);
+    RequestParameterAccess createParameterAccess(HttpServletRequest request);
 
 
 

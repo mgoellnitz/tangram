@@ -22,12 +22,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractRequestBlobWrapper implements RequestBlobWrapper  {
+
+public abstract class AbstractRequestParameterAccess implements RequestParameterAccess {
 
     protected Map<String, byte[]> blobs = new HashMap<String, byte[]>();
 
+    protected Map<String, String[]> parameterMap = new HashMap<>();
+
+
     @Override
-    public Collection<String> getNames() {
+    public Collection<String> getBlobNames() {
         return blobs.keySet();
     } // getNames()
 
@@ -37,4 +41,17 @@ public abstract class AbstractRequestBlobWrapper implements RequestBlobWrapper  
         return blobs.get(name);
     } // getData();
 
-} // AbstractRequestBlobWrapper
+
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        return parameterMap;
+    } // getParameterMap()
+
+
+    @Override
+    public String getParameter(String name) {
+        String[] values = getParameterMap().get(name);
+        return (values.length > 0) ? values[0] : null;
+    } // getParameter()
+
+} // AbstractRequestParameterAccess

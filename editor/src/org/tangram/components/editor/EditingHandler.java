@@ -61,7 +61,7 @@ import org.tangram.mutable.MutableContent;
 import org.tangram.util.JavaBean;
 import org.tangram.util.ServiceLocator;
 import org.tangram.view.PropertyConverter;
-import org.tangram.view.RequestBlobWrapper;
+import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewUtilities;
@@ -133,7 +133,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
 
     @LinkAction("/store/id_(.*)")
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public TargetDescriptor store(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
@@ -144,13 +143,13 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
 
-            Map parameterMap = request.getParameterMap();
+            RequestParameterAccess parameterAccess = ServiceLocator.get(ViewUtilities.class).createParameterAccess(request);
+            Map<String, String[]> parameterMap = parameterAccess.getParameterMap();
             if (log.isDebugEnabled()) {
-                log.debug("store() # parameters "+parameterMap.size());
-                log.debug("store() "+request.getClass().getName());
+                log.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());
             } // if
-            for (Object entry : parameterMap.entrySet()) {
-                Entry<String, String[]> parameter = (Entry<String, String[]>) entry;
+            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+                Entry<String, String[]> parameter = entry;
                 String key = parameter.getKey();
                 if (!key.startsWith("cms.editor")) {
                     try {
@@ -188,13 +187,12 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 } // if
             } // for
 
-            RequestBlobWrapper blobWrapper = ServiceLocator.get(ViewUtilities.class).createWrapper(request);
-            for (String key : blobWrapper.getNames()) {
+            for (String key : parameterAccess.getBlobNames()) {
                 try {
                     if (!key.startsWith("cms.editor")) {
                         Class cls = wrapper.getType(key);
                         if (propertyConverter.isBlobType(cls)) {
-                            byte[] octets = blobWrapper.getData(key);
+                            byte[] octets = parameterAccess.getData(key);
                             newValues.put(key, propertyConverter.createBlob(octets));
                         } // if
                     } // if

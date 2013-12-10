@@ -23,6 +23,7 @@ import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.inject.Named;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
 import org.tangram.components.TangramServices;
 import org.tangram.view.BufferResponse;
-import org.tangram.view.RequestBlobWrapper;
+import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -47,6 +48,8 @@ public class ServletViewUtilities implements ViewUtilities {
 
     private static final Log log = LogFactory.getLog(ServletViewUtilities.class);
 
+    private static final Pattern ID_PATTRN = Pattern.compile(Constants.ID_PATTERN);
+
 
     /**
      * Creates a plain servlet api based request blob wrapper.
@@ -55,9 +58,9 @@ public class ServletViewUtilities implements ViewUtilities {
      * @return request blob wrapper suitable for the given request
      */
     @Override
-    public RequestBlobWrapper createWrapper(HttpServletRequest request) {
-        return new ServletRequestBlobWrapper(request);
-    } // createWrapper()
+    public RequestParameterAccess createParameterAccess(HttpServletRequest request) {
+        return new ServletRequestParameterAccess(request);
+    } // createParameterAccess()
 
 
     @Override
@@ -86,18 +89,24 @@ public class ServletViewUtilities implements ViewUtilities {
         ViewContextFactory vcf = TangramServices.getViewContextFactory();
         ViewContext vc = vcf.createViewContext(model, view);
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher(template);
-        if (requestDispatcher!=null) {
-            try {
-                for (String key : model.keySet()) {
-                    request.setAttribute(key, model.get(key));
-                } // for
-                BufferResponse br = new BufferResponse();
-                requestDispatcher.include(request, br);
-                out.write(br.getContents());
-            } catch (ServletException ex) {
-                throw new IOException(ex.getCause());
-            } // try/catch
+        if (ID_PATTRN.matcher(template).matches()) {
+            // Velocity:
+            out.write("Velocity template: "+template);
+        } else {
+            // JSP:
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher(template);
+            if (requestDispatcher!=null) {
+                try {
+                    for (String key : model.keySet()) {
+                        request.setAttribute(key, model.get(key));
+                    } // for
+                    BufferResponse br = new BufferResponse();
+                    requestDispatcher.include(request, br);
+                    out.write(br.getContents());
+                } catch (ServletException ex) {
+                    throw new IOException(ex.getCause());
+                } // try/catch
+            } // if
         } // if
     } // render()
 

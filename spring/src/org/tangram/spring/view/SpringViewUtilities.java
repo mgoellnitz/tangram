@@ -33,8 +33,7 @@ import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.components.TangramServices;
 import org.tangram.components.spring.TangramSpringServices;
-import org.tangram.spring.SpringRequestBlobWrapper;
-import org.tangram.view.RequestBlobWrapper;
+import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
@@ -75,9 +74,9 @@ public class SpringViewUtilities implements ViewUtilities {
      * @return request blob wrapper for the given request
      */
     @Override
-    public RequestBlobWrapper createWrapper(HttpServletRequest request) {
-        return new SpringRequestBlobWrapper(request);
-    } // createWrapper()
+    public RequestParameterAccess createParameterAccess(HttpServletRequest request) {
+        return new SpringRequestParameterAccess(request);
+    } // createParameterAccess()
 
 
     /**
