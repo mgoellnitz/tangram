@@ -42,7 +42,6 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.util.ServiceLocator;
-import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -156,7 +155,10 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
                 } // try/catch
                 return;
             } // if
-            Map<String, Object> model = viewContextFactory.createModel(new TargetDescriptor(content, view, null), request, response);
+            Map<String, Object> model = viewContextFactory.createModel(content, request, response);
+            if (log.isDebugEnabled()) {
+                log.debug("render() model="+model);
+            } // if
             ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), model, view);
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
@@ -164,4 +166,4 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
         } // try/catch
     } // doGet()
 
-} // TangramDefaultServlet
+} // DefaultServlet

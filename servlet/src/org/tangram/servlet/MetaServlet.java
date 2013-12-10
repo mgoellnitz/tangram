@@ -284,7 +284,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                                         Object target) throws Throwable, IllegalAccessException {
         TargetDescriptor result = null;
         if (log.isDebugEnabled()) {
-            log.debug("callAction() method="+method);
+            log.debug("callAction() "+method+"@"+target);
         } // if
 
         if (method!=null) {
@@ -405,8 +405,10 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                     Object target = atHandlers.get(entry.getKey());
                     TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
                     TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
-                    final ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
-                    ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+                    if (resultDescriptor!=TargetDescriptor.DONE) {
+                        final ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
+                        ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+                    } // if
                     return;
                 } // if
             } // for
@@ -444,8 +446,10 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                                 } // if
                             } // for
                         } // if
-                        ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
-                        ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+                        if (resultDescriptor!=TargetDescriptor.DONE) {
+                            ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
+                            ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+                        } // if
                         return;
                     } // if
                 } // if
@@ -499,4 +503,4 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
         reset();
     } // afterPropertiesSet()
 
-} // TangramMetaServlet
+} // MetaServlet
