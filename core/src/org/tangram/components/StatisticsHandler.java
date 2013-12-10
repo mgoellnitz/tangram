@@ -21,12 +21,15 @@ package org.tangram.components;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
+import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.monitor.Statistics;
 import org.tangram.view.TargetDescriptor;
 
@@ -43,6 +46,9 @@ import org.tangram.view.TargetDescriptor;
 public class StatisticsHandler implements Statistics {
 
     public static final String STATS_URI = "/stats";
+
+    @Inject
+    private LinkHandlerRegistry registry;
 
     private Map<String, Long> counter = new HashMap<String, Long>();
 
@@ -85,5 +91,11 @@ public class StatisticsHandler implements Statistics {
     public TargetDescriptor statistics(HttpServletRequest request, HttpServletResponse response) {
         return new TargetDescriptor(this, null, null);
     } // statistics()
+
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        registry.registerLinkHandler(this);
+    } // afterPropertiesSet()
 
 } // StatisticsHandler
