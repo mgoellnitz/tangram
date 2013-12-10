@@ -29,12 +29,8 @@ import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.tangram.components.TangramServices;
-import org.tangram.util.ServiceLocator;
-import org.tangram.view.ViewUtilities;
 
 public class IncludeDirective extends Directive {
-
-    private static final ViewUtilities includer = ServiceLocator.get(ViewUtilities.class);
 
     @Override
     public String getName() {
@@ -78,7 +74,7 @@ public class IncludeDirective extends Directive {
         } // for
         model.remove("springMacroRequestContext");
 
-        includer.render(writer, model, view);
+        TangramServices.getViewUtilities().render(writer, model, view);
         return false;
     } // render()
 

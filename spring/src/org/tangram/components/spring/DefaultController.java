@@ -34,7 +34,6 @@ import org.tangram.content.Content;
 import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
-import org.tangram.spring.view.SpringViewUtilities;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.ViewContext;
 

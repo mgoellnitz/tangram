@@ -16,12 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.spring.view;
+package org.tangram.components.spring;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+import javax.inject.Named;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.components.TangramServices;
-import org.tangram.components.spring.TangramSpringServices;
+import org.tangram.spring.view.ViewHandler;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -44,6 +45,7 @@ import org.tangram.view.ViewUtilities;
  *
  * It might be a good idea to plce this in the view package hierarchy
  */
+@Named
 public class SpringViewUtilities implements ViewUtilities {
 
     private static final Log log = LogFactory.getLog(SpringViewUtilities.class);
@@ -52,7 +54,7 @@ public class SpringViewUtilities implements ViewUtilities {
      * Value to be used if there is not view in hash tables and the like where the use of null would not indicate
      * if there is no view or if we didn't look it up up to now.
      */
-    final static View NOT_FOUND_DUMMY = new View() {
+    public final static View NOT_FOUND_DUMMY = new View() {
 
         @Override
         public String getContentType() {

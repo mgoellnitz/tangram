@@ -45,6 +45,7 @@ import org.tangram.annotate.ActionForm;
 import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkPart;
+import org.tangram.components.TangramServices;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
@@ -57,12 +58,10 @@ import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.util.JavaBean;
-import org.tangram.util.ServiceLocator;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
-import org.tangram.view.ViewUtilities;
 
 
 /**
@@ -319,7 +318,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                             parameterName = type.getSimpleName().toLowerCase();
                         } // if
                         if (parameterMap==null) {
-                            parameterMap = ServiceLocator.get(ViewUtilities.class).createParameterAccess(request).getParameterMap();
+                            parameterMap = TangramServices.getViewUtilities().createParameterAccess(request).getParameterMap();
                         } // if
                         String valueString = request.getParameter(parameterName);
                         if (log.isDebugEnabled()) {
@@ -411,7 +410,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                     TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
                     if (resultDescriptor!=TargetDescriptor.DONE) {
                         final ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
-                        ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+                        TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
                     } // if
                     return;
                 } // if
@@ -432,7 +431,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         if (log.isInfoEnabled()) {
                             log.info("service() handing over to view "+descriptor.view);
                         } // if
-                        ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), model, descriptor.getView());
+                        TangramServices.getViewUtilities().render(response.getWriter(), model, descriptor.getView());
                         return;
                     } else {
                         if (log.isDebugEnabled()) {
@@ -452,7 +451,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         } // if
                         if (resultDescriptor!=TargetDescriptor.DONE) {
                             ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
-                            ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+                            TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
                         } // if
                         return;
                     } // if
@@ -463,7 +462,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
             if (log.isDebugEnabled()) {
                 log.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
             } // if
-            ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+            TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
             return;
         } // try/catch
 

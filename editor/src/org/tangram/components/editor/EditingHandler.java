@@ -59,7 +59,6 @@ import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 import org.tangram.util.JavaBean;
-import org.tangram.util.ServiceLocator;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TargetDescriptor;
@@ -114,6 +113,9 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @Inject
     private ClassRepository classRepository;
 
+    @Inject
+    private ViewUtilities viewUtilities;
+
 
     @Inject
     public void setCustomViewProvider(CustomViewProvider customViewProvider) {
@@ -143,7 +145,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
 
-            RequestParameterAccess parameterAccess = ServiceLocator.get(ViewUtilities.class).createParameterAccess(request);
+            RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
             Map<String, String[]> parameterMap = parameterAccess.getParameterMap();
             if (log.isDebugEnabled()) {
                 log.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());

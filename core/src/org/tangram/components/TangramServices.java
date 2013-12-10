@@ -28,6 +28,7 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TemplateResolver;
 import org.tangram.view.ViewContextFactory;
+import org.tangram.view.ViewUtilities;
 
 
 /**
@@ -46,6 +47,10 @@ public class TangramServices {
     private static ViewContextFactory viewContextFactory = null;
 
     private static PropertyConverter propertyConverter = null;
+
+    private static CodeResourceCache codeResourceCache = null;
+
+    private static ViewUtilities viewUtilities = null;
 
     @SuppressWarnings("rawtypes")
     private static Set<TemplateResolver> resolvers = new HashSet<TemplateResolver>();
@@ -94,6 +99,28 @@ public class TangramServices {
     @Inject
     public void setPropertyConverter(PropertyConverter propertyConverter) {
         TangramServices.propertyConverter = propertyConverter;
+    }
+
+
+    public static CodeResourceCache getCodeResourceCache() {
+        return codeResourceCache;
+    }
+
+
+    @Inject
+    public void setCodeResourceCache(CodeResourceCache codeResourceCache) {
+        TangramServices.codeResourceCache = codeResourceCache;
+    }
+
+
+    public static ViewUtilities getViewUtilities() {
+        return viewUtilities;
+    }
+
+
+    @Inject
+    public void setViewUtilities(ViewUtilities viewUtilities) {
+        TangramServices.viewUtilities = viewUtilities;
     }
 
 

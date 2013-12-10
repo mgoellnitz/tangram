@@ -16,12 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.servlet;
+package org.tangram.components.servlet;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 import javax.inject.Named;
@@ -33,7 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.tangram.Constants;
+import org.tangram.components.CodeResourceCache;
 import org.tangram.components.TangramServices;
 import org.tangram.view.BufferResponse;
 import org.tangram.view.RequestParameterAccess;
@@ -49,6 +55,25 @@ public class ServletViewUtilities implements ViewUtilities {
     private static final Log log = LogFactory.getLog(ServletViewUtilities.class);
 
     private static final Pattern ID_PATTRN = Pattern.compile(Constants.ID_PATTERN);
+
+    private static VelocityEngine velocityEngine;
+
+
+    public ServletViewUtilities() {
+        if (log.isDebugEnabled()) {
+            log.debug("()");
+        } // if
+        Properties velocityProperties = new Properties();
+        try {
+            velocityProperties.load(this.getClass().getClassLoader().getResourceAsStream("tangram/velocity/velocity.properties"));
+        } catch (IOException ex) {
+            log.error("()", ex);
+        } // try/catch
+        if (log.isDebugEnabled()) {
+            log.debug("() velocityProperties="+velocityProperties);
+        } // if
+        velocityEngine = new VelocityEngine(velocityProperties);
+    } // ServletViewUtilities()
 
 
     /**
@@ -91,7 +116,26 @@ public class ServletViewUtilities implements ViewUtilities {
 
         if (ID_PATTRN.matcher(template).matches()) {
             // Velocity:
-            out.write("Velocity template: "+template);
+            if (log.isDebugEnabled()) {
+                log.debug("render() Velocity template="+template);
+            } // if
+            VelocityContext context = new VelocityContext(model);
+            Writer writer = new StringWriter();
+            if (log.isDebugEnabled()) {
+                log.debug("render() resource.loader "+velocityEngine.getProperty("resource.loader"));
+            } // if
+            try {
+                CodeResourceCache c = TangramServices.getCodeResourceCache();
+                velocityEngine.evaluate(context, writer, "tangram", new InputStreamReader(c.get(template).getStream()));
+            } catch (Exception ex) {
+                throw new IOException(ex.getCause());
+            } // try/catch
+            writer.flush();
+            final String templateResult = writer.toString();
+            if (log.isDebugEnabled()) {
+                log.debug("render() result size "+templateResult.length());
+            } // if
+            out.write(templateResult);
         } else {
             // JSP:
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(template);

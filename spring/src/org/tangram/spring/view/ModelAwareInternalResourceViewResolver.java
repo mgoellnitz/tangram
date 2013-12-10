@@ -18,6 +18,7 @@
  */
 package org.tangram.spring.view;
 
+import org.tangram.components.spring.SpringViewUtilities;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;

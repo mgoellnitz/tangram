@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
-import org.tangram.util.ServiceLocator;
 
 
 /**
@@ -45,12 +44,13 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
     private static final Log log = LogFactory.getLog(AbstractPropertyConverter.class);
 
-    private static final ViewUtilities includer = ServiceLocator.get(ViewUtilities.class);
-
     private DateFormat dateFormat = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
 
     @Inject
     private BeanFactory beanFactory;
+
+    @Inject
+    private ViewUtilities viewUtilties;
 
 
     public void setDateFormat(String dateFormat) {
@@ -103,7 +103,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                         log.debug("getObjectsViaDescription() checking "+bean);
                     } // if
                     BufferResponse r = new BufferResponse();
-                    includer.render(r.getWriter(), bean, "description", request, r);
+                    viewUtilties.render(r.getWriter(), bean, "description", request, r);
                     String description = r.getContents();
                     if (log.isDebugEnabled()) {
                         log.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);

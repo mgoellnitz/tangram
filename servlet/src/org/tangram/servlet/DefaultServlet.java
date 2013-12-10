@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
+import org.tangram.components.TangramServices;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
@@ -41,11 +42,9 @@ import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
-import org.tangram.util.ServiceLocator;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
-import org.tangram.view.ViewUtilities;
 
 
 /**
@@ -159,10 +158,10 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             if (log.isDebugEnabled()) {
                 log.debug("render() model="+model);
             } // if
-            ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), model, view);
+            TangramServices.getViewUtilities().render(response.getWriter(), model, view);
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
-            ServiceLocator.get(ViewUtilities.class).render(response.getWriter(), context.getModel(), context.getViewName());
+            TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
         } // try/catch
     } // doGet()
 

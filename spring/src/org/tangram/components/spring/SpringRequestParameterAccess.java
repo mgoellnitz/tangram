@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.spring.view;
+package org.tangram.components.spring;
 
 import java.io.IOException;
 import java.util.Map;
