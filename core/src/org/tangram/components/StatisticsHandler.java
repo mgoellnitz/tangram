@@ -18,15 +18,14 @@
  */
 package org.tangram.components;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
@@ -35,61 +34,30 @@ import org.tangram.view.TargetDescriptor;
 
 
 /**
- * All in one implementation of the statistics interface together with its own controller to trigger the view.
- * This implementaton still is a simple spring framework @Controller so that we don't run into circular dependencies
- * when collecting statistics for the lower parts of the system and later try to present them with the higher
- * level object oriented templating presentd by those parts.s
+ * Handler implementation to view the contents of the statistics instance of event counters and calculated average.
  */
-@LinkHandler
 @Named
 @Singleton
-public class StatisticsHandler implements Statistics {
+@LinkHandler
+public class StatisticsHandler {
+
+    private static final Log log = LogFactory.getLog(StatisticsHandler.class);
 
     public static final String STATS_URI = "/stats";
 
     @Inject
     private LinkHandlerRegistry registry;
 
-    private Map<String, Long> counter = new HashMap<String, Long>();
-
-    private Date startTime;
-
-
-    public StatisticsHandler() {
-        startTime = new Date();
-    } // StatisticsHandler()
-
-
-    public Map<String, Long> getCounter() {
-        return counter;
-    } // getCounter()
-
-
-    public Date getStartTime() {
-        return startTime;
-    } // getStartTime()
-
-
-    @Override
-    public void increase(String eventIdentifier) {
-        long value = counter.containsKey(eventIdentifier) ? counter.get(eventIdentifier)+1 : 1;
-        counter.put(eventIdentifier, value);
-    } // increase(()
-
-
-    @Override
-    public void avg(String eventIdentifier, long value) {
-        String countKey = eventIdentifier+" count";
-        increase(countKey);
-        long median = (counter.containsKey(eventIdentifier) ? counter.get(eventIdentifier) : 0);
-        long count = counter.get(countKey);
-        counter.put(eventIdentifier, (median*(count-1)+value)/count);
-    } // avg()
+    @Inject
+    private Statistics statistics;
 
 
     @LinkAction("/stats")
     public TargetDescriptor statistics(HttpServletRequest request, HttpServletResponse response) {
-        return new TargetDescriptor(this, null, null);
+        if (log.isDebugEnabled()) {
+            log.debug("statistics()");
+        } // if
+        return new TargetDescriptor(statistics, null, null);
     } // statistics()
 
 
