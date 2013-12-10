@@ -51,13 +51,13 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
+import org.tangram.editor.AppEngineXStream;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
-import org.tangram.editor.AppEngineXStream;
 import org.tangram.util.JavaBean;
 import org.tangram.util.ServiceLocator;
 import org.tangram.view.PropertyConverter;
@@ -445,6 +445,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not execute action");
         } // if
+        response.setContentType("text/xml");
         // The pure reflection provider is used because of Google App Engines API limitations
         XStream xstream = new AppEngineXStream(new StaxDriver());
         Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
