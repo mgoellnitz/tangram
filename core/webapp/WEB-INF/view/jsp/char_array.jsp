@@ -1,19 +1,16 @@
-<%@page isELIgnored="false" language="java" session="false"
-    pageEncoding="UTF-8" %><%@page import="java.util.regex.Pattern"%><%@page
-    import="java.util.regex.Matcher"%><%@page import="java.util.List"%><%@page
-    import="java.util.ArrayList"%><%@page
-    import="org.tangram.view.Utils"%><%@page
-    import="org.tangram.content.BeanFactory"%><%@page
-    import="org.tangram.link.LinkFactoryAggregator"%><%@page
-    import="org.tangram.Constants"%><%
+<%@page isELIgnored="false" language="java" session="false" pageEncoding="UTF-8" 
+%><%@page import="java.util.regex.Pattern,java.util.regex.Matcher"
+%><%@page import="java.util.List,java.util.ArrayList"
+%><%@page import="org.tangram.Constants,org.tangram.view.Utils,org.tangram.components.TangramServices"
+%><%@page import="org.tangram.content.BeanFactory,org.tangram.link.LinkFactoryAggregator"
+%><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
         String view = (String)request.getAttribute("embedded.link.view");
         String action = (String)request.getAttribute("embedded.link.action");
-        BeanFactory beanFactory = Utils.getBeanFactory();
-        LinkFactoryAggregator linkFactory = Utils.getLinkFactory();
-        Pattern p = Utils.getIdPattern();
-
+        BeanFactory beanFactory = TangramServices.getBeanFactory();
+        LinkFactoryAggregator linkFactory = TangramServices.getLinkFactoryAggregator();
+        Pattern p = Constants.TEXT_ID_PATTERN;
         StringBuffer valueString = new StringBuffer(new String(t));
         Matcher m = p.matcher(valueString);
         List<Integer> starts = new ArrayList<Integer>();
