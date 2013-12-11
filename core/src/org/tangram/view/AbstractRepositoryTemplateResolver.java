@@ -91,4 +91,10 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
         codeResourceCache.addListener(this);
     } // afterPropertiesSet()
 
+
+    @Override
+    public int compareTo(T o) {
+        return -1;
+    } // compareTo()
+
 } // AbstractRepositoryTemplateResolver

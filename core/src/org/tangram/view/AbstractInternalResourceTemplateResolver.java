@@ -20,6 +20,7 @@ package org.tangram.view;
 
 import java.io.File;
 import java.io.InputStream;
+import javax.annotation.PostConstruct;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -124,10 +125,17 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
     } // checkJspExists()
 
 
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
         if (StringUtils.isBlank(filePathPrefix)) {
             throw new Exception("path to lookup templates may not be null");
         } // if
     } // afterPropertiesSet()
+
+
+    @Override
+    public int compareTo(T o) {
+        return 1;
+    } // compareTo()
 
 } // AbstractInternalResourceTemplateResolver

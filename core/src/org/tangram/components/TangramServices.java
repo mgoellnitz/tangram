@@ -18,7 +18,9 @@
  */
 package org.tangram.components;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
@@ -53,7 +55,7 @@ public class TangramServices {
     private static ViewUtilities viewUtilities = null;
 
     @SuppressWarnings("rawtypes")
-    private static Set<TemplateResolver> resolvers = new HashSet<TemplateResolver>();
+    private static List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
 
     private static Map<String, Object> viewSettings = null;
 
@@ -128,15 +130,16 @@ public class TangramServices {
      * This is "rawtypes" because of google guice's weak injection mechanism.
      */
     @SuppressWarnings("rawtypes")
-    public static Set<TemplateResolver> getResolvers() {
+    public static List<TemplateResolver> getResolvers() {
         return resolvers;
     }
 
 
     @Inject
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void setResolvers(Set<TemplateResolver> resolvers) {
-        TangramServices.resolvers = resolvers;
+        TangramServices.resolvers = new ArrayList<>(resolvers);
+        Collections.sort(TangramServices.resolvers);
     }
 
 
@@ -149,6 +152,7 @@ public class TangramServices {
 
 
     @Inject
+    @SuppressWarnings("unchecked")
     public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
         if (viewSettings.containsKey("viewSettings")) {
             viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));

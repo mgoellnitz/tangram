@@ -24,10 +24,18 @@ import java.util.Map;
 
 
 /**
- *
+ * Instances resolve templates according to a given view name and the type of one item from the model.
  */
-public interface TemplateResolver<T extends Object> {
+public interface TemplateResolver<T extends Object> extends Comparable<T> {
 
+    /**
+     *
+     * @param viewName name of the view ("view method" - since this is an object oriented lookup)
+     * @param model map to take one item from and use its type for the object oriented view method lookup
+     * @param locale current local - ignored by all known implementations
+     * @return view represented in a suitable type of the underlying implementation
+     * @throws IOException
+     */
     T resolveTemplate(String viewName, Map<String, Object> model, Locale locale) throws IOException;
 
 } // TemplateResolver
