@@ -44,6 +44,7 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
     /**
      * Weak visibility to avoid direct instanciation.
      */
+    @SuppressWarnings("unchecked")
     ServletRequestParameterAccess(HttpServletRequest request) {
         if (log.isDebugEnabled()) {
             log.debug("()");
@@ -74,9 +75,11 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                     } else {
                         try {
                             if (log.isDebugEnabled()) {
-                                log.debug("() iterator "+item.getName()+"/"+item.getContentType());
+                                log.debug("() item "+item.getName()+" :"+item.getContentType());
                             } // if
-                            blobs.put(item.getFieldName(), IOUtils.toByteArray(item.getInputStream()));
+                            if (item.getSize()>0) {
+                                blobs.put(item.getFieldName(), IOUtils.toByteArray(item.getInputStream()));
+                            } // if
                         } catch (IOException ex) {
                             log.error("()", ex);
                         } // try/catcg

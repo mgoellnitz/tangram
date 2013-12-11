@@ -40,6 +40,7 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
     /**
      * Weak visibility to avoid direct instanciation.
      */
+    @SuppressWarnings("unchecked")
     SpringRequestParameterAccess(HttpServletRequest request) {
         if (request instanceof DefaultMultipartHttpServletRequest) {
             DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;

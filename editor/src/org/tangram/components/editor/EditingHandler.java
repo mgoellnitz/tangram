@@ -167,7 +167,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                             log.info(msg.toString());
                         } // if
 
-                        Class cls = wrapper.getType(key);
+                        Class<? extends Object> cls = wrapper.getType(key);
                         String valueString = values.length==1 ? values[0] : "";
                         Object value = propertyConverter.getStorableObject(valueString, cls, request);
                         if (log.isInfoEnabled()) {
@@ -192,7 +192,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             for (String key : parameterAccess.getBlobNames()) {
                 try {
                     if (!key.startsWith("cms.editor")) {
-                        Class cls = wrapper.getType(key);
+                        Class<? extends Object> cls = wrapper.getType(key);
                         if (propertyConverter.isBlobType(cls)) {
                             byte[] octets = parameterAccess.getData(key);
                             newValues.put(key, propertyConverter.createBlob(octets));
