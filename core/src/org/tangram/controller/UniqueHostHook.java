@@ -29,6 +29,13 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
+/**
+ * Instances of this optional controller hook can be used to check if the content is delivered from a unique
+ * host name in the calling URLs.
+ *
+ * In many scenarios there are alternate names for the delivering components so it is possible to configure
+ * a hook of this class and select the unique host to be used un URL - accepted and generated.
+ */
 @Singleton
 public class UniqueHostHook implements ControllerHook {
 

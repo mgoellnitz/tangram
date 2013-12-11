@@ -31,6 +31,10 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 
+/**
+ * Controller hook to check on every request if it is delivered through a unique URL and it gets redirected
+ * if the content described by this URL should be delivered through another one.
+ */
 @Named
 @Singleton
 public class UniqueUrlHook implements ControllerHook {

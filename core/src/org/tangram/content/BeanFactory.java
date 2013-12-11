@@ -25,7 +25,6 @@ import java.util.List;
 public interface BeanFactory {
 
     /**
-     *
      * Get a bean of a given type with a given id.
      *
      * The resulting bean must adhere to both conditions: id and type.

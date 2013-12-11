@@ -27,7 +27,9 @@ import java.lang.annotation.Target;
  * Class marker indicating that the given class contains @LinkAction methods.
  * If implementing classes don't need any additional functions from the LinkHandler interface but just
  * contain @LinkAction methods with a path specified, they can be marked with this annotation to get
- * automatically recognized by the MetaController.
+ * automatically recognized by the MetaController or MetaServlet.
+ * Static implementations not taken from the code resource cache must manually register themselves
+ * with a link handler registry instance.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

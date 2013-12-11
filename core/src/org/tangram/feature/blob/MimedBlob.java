@@ -21,10 +21,11 @@ package org.tangram.feature.blob;
 /**
  *
  * Convenience interface to describe blobs with mimetypes to be output via HTTP in a common manner.
+ * 
  * Instances of classes implementing this interface will be able to use the generic blob output mechanism with
  * an expiry date in the future configured via the project's property file as image.cache.time in milliseconds
  * which defaults to seven days (10080ms).
- * 
+ *
  */
 public interface MimedBlob {
 

@@ -25,7 +25,7 @@ import org.tangram.view.TargetDescriptor;
 
 
 /**
- * Interception hook for controller implementations derived from RenderingController.
+ * Interception hook for controller implementations derived/inheriting from RenderingBase class.
  */
 public interface ControllerHook {
 

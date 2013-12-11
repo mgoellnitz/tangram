@@ -42,6 +42,11 @@ import org.tangram.content.CodeResource;
 import org.tangram.logic.ClassRepository;
 
 
+/**
+ * The groovy class repository is a repository generated from code resources by using the groovy compiler.
+ *
+ * The elements in the repository are classes.
+ */
 @Named
 @Singleton
 public class GroovyClassRepository implements ClassRepository, BeanListener {

@@ -22,6 +22,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 
+/**
+ * Not persistable implementation of the code resource interfaces.
+ *
+ * Instances of this class are used to be serialized to be persistently cached e.g. The code resource cache is
+ * therefor filled with transient copies of the code resources found in the repository.
+ */
 public class TransientCode implements CodeResource, Serializable {
 
     private static final long serialVersionUID = -4573161886986101943L;

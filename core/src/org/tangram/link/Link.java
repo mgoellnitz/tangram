@@ -21,6 +21,13 @@ package org.tangram.link;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Instances describe a link in more detail than just a url.
+ *
+ * Links are described by the URL and optionally a target window identifier for the client browser and a map
+ * of named handlers as attributes for e.g. an a tag like onclick.
+ *
+ */
 public class Link {
 
     private String url;

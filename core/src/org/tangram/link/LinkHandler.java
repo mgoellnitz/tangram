@@ -19,17 +19,15 @@
 package org.tangram.link;
 
 import java.util.Collection;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.tangram.view.TargetDescriptor;
 
 /**
  *
- * In the class the link hanlder gets extended by the URL parsing elements
+ * Implementing classes extend the link handler by the URL parsing elements.
  *
- * Implementing classes might need the bean factory and the default controller (to register which views are handled by
- * this implementation)
+ * Implementing classes might need the bean factory and the default controller
+ * (to register which views are handled by this implementation)
  *
  */
 public interface LinkHandler extends LinkFactory {

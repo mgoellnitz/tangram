@@ -39,6 +39,9 @@ import org.tangram.feature.protection.Protection;
 import org.tangram.view.TargetDescriptor;
 
 
+/**
+ * Controller hook checking if the protected content conditions are met.
+ */
 @Named
 @Singleton
 public class ProtectionHook implements ControllerHook {
@@ -50,13 +53,10 @@ public class ProtectionHook implements ControllerHook {
 
 
     /**
-     * * Protections **
+     * Return which protections (mapped by key) must be adhered when calling the given congent.
      */
-
-    @SuppressWarnings("unchecked")
     public Map<String, Protection> getRequiredProtections(ProtectedContent content) {
-        // This is the line "unchecked" is good for...
-        Map<String, Protection> result = Collections.EMPTY_MAP;
+        Map<String, Protection> result = Collections.emptyMap();
 
         if (content instanceof Protection) {
             result = new HashMap<String, Protection>();
@@ -95,6 +95,12 @@ public class ProtectionHook implements ControllerHook {
     } // getFailingProtectionKey
 
 
+    /**
+     * Returns if a given protected content is protected by a given protection instance.
+     * @param protectedContent
+     * @param p
+     * @return
+     */
     public boolean isProtectedBy(ProtectedContent protectedContent, Protection p) {
         boolean result = false;
 

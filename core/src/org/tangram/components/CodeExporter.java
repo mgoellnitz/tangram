@@ -82,7 +82,6 @@ public class CodeExporter {
         ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
         zos.setComment("Tangram Repository Codes");
         zos.setLevel(9);
-        // List<CodeResource> codes = beanFactory.listBeans(CodeResource.class);
         Collection<CodeResource> codes = codeResourceCache.getCodes();
         for (CodeResource code : codes) {
             if (StringUtils.isNotBlank(code.getAnnotation())) {

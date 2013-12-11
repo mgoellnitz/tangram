@@ -23,11 +23,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Method annotation to indicate that a method is callable via HTTP Requests.
+ *
+ * The URL can be specified as a regular expressions where the matching groups are passed over to the called
+ * method as parameters. If the value is left empty the name of the method is taken.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface LinkAction {
 
-    // uri path
+    /**
+     * URI part after the context name and the servlet part of the URL to trigger the annotated method.
+     */
     String value() default "";
 
 } // LinkAction

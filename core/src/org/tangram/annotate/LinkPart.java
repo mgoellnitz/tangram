@@ -23,6 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Method parameter annotation for methods marked as @LinkAction.
+ *
+ * The annotated parameter is mapped to a matching group of the regular expression in the URL.
+ * So the value of this annotation is an order number for the numbered groups counting from one.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface LinkPart {

@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.util;
 
@@ -25,6 +25,9 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
+/**
+ * JUL logging formatter for a nicer log output.
+ */
 public class LogFormatter extends Formatter {
 
     Date dat = new Date();
@@ -38,7 +41,7 @@ public class LogFormatter extends Formatter {
 
     /**
      * Format the given LogRecord.
-     * 
+     *
      * @param record
      *            the log record to be formatted.
      * @return a formatted log record

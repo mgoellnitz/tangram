@@ -39,6 +39,14 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.TransientCode;
 
 
+/**
+ * Cache for code resources taken from the repository represented by the bean factory.
+ *
+ * The cache is filled with transient implementations of the code resource interfaces resembling contents taken
+ * from the bean factory by query. The persistent restart cache is used to support much faster restart since
+ * the values in this cache are not supposed to change betweetn restarts.
+ *
+ */
 @Named
 @Singleton
 public class CodeResourceCache implements BeanListener {

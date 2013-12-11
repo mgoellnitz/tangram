@@ -33,14 +33,10 @@ import org.tangram.PersistentRestartCache;
 
 /**
  *
+ * Implementation of the persistent restart cache interface using a single file.
+ *
  * Since Google App Engine provides such a nice persistent cache and we want to generically use this we had to implement
  * the interface for other flavours of tangram as google app engine as well
- *
- * The file cache adapter moved to the core package because it was not really rdbms or mongo dependent and can also be
- * used out of the jdo scope.
- *
- * This reasulted in the fact that using modules have to declare it in XML files and cannot
- * be auto-scanned anymore.
  *
  */
 @Singleton

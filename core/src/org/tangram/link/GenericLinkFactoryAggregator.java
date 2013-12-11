@@ -29,12 +29,10 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.monitor.Statistics;
 
 /**
- *
- * right at the moment we cannot think of a second necessary implementation of this.
+ * Right at the moment we cannot think of a second necessary implementation of this.
  *
  * So this is the generic not just default implementation of a link factory aggregator to be used to create
  * any link you might need.
- *
  */
 @Singleton
 public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {

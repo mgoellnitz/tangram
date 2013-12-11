@@ -19,7 +19,7 @@
 package org.tangram.content;
 
 /**
- * Instance need a "setBeanFactory()" call.
+ * Instances need a "setBeanFactory()" call.
  *
  * This is used for codes in the code repository since those don't get automatic dependency injection.
  */

@@ -32,6 +32,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
+/**
+ * Access class for java bean patterned delegates for reading and writing properties.
+ */
 public class JavaBean {
 
     private static Log log = LogFactory.getLog(JavaBean.class);

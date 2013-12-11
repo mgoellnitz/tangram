@@ -20,6 +20,9 @@ package org.tangram.content;
 
 import java.io.InputStream;
 
+/**
+ * Implementing classes are used to store codes in the repository represented by the bean factory.
+ */
 public interface CodeResource extends Content {
 
     String getAnnotation();

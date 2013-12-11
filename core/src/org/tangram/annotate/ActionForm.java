@@ -24,10 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- *
- * Annotation indicating that the annotated method parameter points to a form where all the HTML form parameters should
- * be stored in a decent converted way.
- *
+ * Annotation indicating that the annotated method parameter points to a form where all the HTML form parameters
+ * should be stored in a decent converted way.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
