@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Pattern;
 import javax.inject.Named;
 import javax.servlet.RequestDispatcher;
@@ -41,7 +41,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.components.TangramServices;
-import org.tangram.view.BufferResponse;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
 import org.tangram.view.ViewContext;
@@ -95,7 +94,7 @@ public class ServletViewUtilities implements ViewUtilities {
         HttpServletRequest request = (HttpServletRequest) model.get("request");
         HttpServletResponse response = (HttpServletResponse) model.get("response");
         String template = null;
-        final Set<TemplateResolver> resolvers = TangramServices.getResolvers();
+        final List<TemplateResolver> resolvers = TangramServices.getResolvers();
         if (log.isDebugEnabled()) {
             log.debug("render() resolvers="+resolvers);
         } // if
@@ -135,7 +134,11 @@ public class ServletViewUtilities implements ViewUtilities {
             if (log.isDebugEnabled()) {
                 log.debug("render() result size "+templateResult.length());
             } // if
-            out.write(templateResult);
+            if (out!=null) {
+                response.getWriter().flush();
+                out.flush();
+            } // if
+            (out==null ? response.getWriter() : out).write(templateResult);
         } else {
             // JSP:
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(template);
@@ -144,11 +147,21 @@ public class ServletViewUtilities implements ViewUtilities {
                     for (String key : model.keySet()) {
                         request.setAttribute(key, model.get(key));
                     } // for
-                    BufferResponse br = new BufferResponse();
-                    requestDispatcher.include(request, br);
-                    out.write(br.getContents());
+                    if (log.isDebugEnabled()) {
+                        // log.debug("render() writer "+out+" "+response.getWriter());
+                        log.debug("render() writer "+out);
+                    } // if
+                    // BufferResponse br = new BufferResponse(response);
+                    if (out!=null) {
+                        response.getWriter().flush();
+                        out.flush();
+                    } // if
+                    requestDispatcher.include(request, response);
+                    // out.write(br.getContents());
+                    // response.getOutputStream().write(br.getBytes());
                 } catch (ServletException ex) {
-                    throw new IOException(ex.getCause());
+                    log.error("render()", ex);
+                    throw new IOException("Problem while including JSP", ex.getCause());
                 } // try/catch
             } // if
         } // if

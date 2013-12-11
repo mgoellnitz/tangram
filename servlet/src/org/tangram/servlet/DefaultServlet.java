@@ -105,10 +105,6 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO: mime type of the output?
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
-
         String uri = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         String view = null;
         String id = null;
@@ -158,10 +154,17 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             if (log.isDebugEnabled()) {
                 log.debug("render() model="+model);
             } // if
-            TangramServices.getViewUtilities().render(response.getWriter(), model, view);
+            TangramServices.getViewUtilities().render(null, model, view);
+            if (log.isDebugEnabled()) {
+                log.debug("render() done "+response.getContentType());
+            } // if
+            // TODO: mime type of the output?
+            response.setHeader("X-End", "true");
+            response.setContentType("text/html");
+            response.setCharacterEncoding("UTF-8");
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
-            TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+            TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
         } // try/catch
     } // doGet()
 

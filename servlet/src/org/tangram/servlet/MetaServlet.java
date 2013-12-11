@@ -387,9 +387,6 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // TODO: mime type of the output?
-        response.setContentType("text/html");
-        response.setCharacterEncoding("UTF-8");
         String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
         if (log.isInfoEnabled()) {
             log.info("service() "+url);
@@ -411,6 +408,8 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                     if (resultDescriptor!=TargetDescriptor.DONE) {
                         final ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
                         TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+                        response.setContentType("text/html");
+                        response.setCharacterEncoding("UTF-8");
                     } // if
                     return;
                 } // if
@@ -432,6 +431,8 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                             log.info("service() handing over to view "+descriptor.view);
                         } // if
                         TangramServices.getViewUtilities().render(response.getWriter(), model, descriptor.getView());
+                        response.setContentType("text/html");
+                        response.setCharacterEncoding("UTF-8");
                         return;
                     } else {
                         if (log.isDebugEnabled()) {
@@ -452,6 +453,8 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         if (resultDescriptor!=TargetDescriptor.DONE) {
                             ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
                             TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+                            response.setContentType("text/html");
+                            response.setCharacterEncoding("UTF-8");
                         } // if
                         return;
                     } // if
@@ -463,6 +466,8 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                 log.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
             } // if
             TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+            response.setContentType("text/html");
+            response.setCharacterEncoding("UTF-8");
             return;
         } // try/catch
 
