@@ -118,6 +118,11 @@ public class ServletViewUtilities implements ViewUtilities {
             if (log.isDebugEnabled()) {
                 log.debug("render() Velocity template="+template);
             } // if
+            if (out==null) {
+                response.getWriter().flush();
+            } else {
+                out.flush();
+            } // if
             VelocityContext context = new VelocityContext(model);
             Writer writer = new StringWriter();
             if (log.isDebugEnabled()) {
@@ -134,10 +139,6 @@ public class ServletViewUtilities implements ViewUtilities {
             if (log.isDebugEnabled()) {
                 log.debug("render() result size "+templateResult.length());
             } // if
-            if (out!=null) {
-                response.getWriter().flush();
-                out.flush();
-            } // if
             (out==null ? response.getWriter() : out).write(templateResult);
         } else {
             // JSP:
@@ -152,8 +153,8 @@ public class ServletViewUtilities implements ViewUtilities {
                         log.debug("render() writer "+out);
                     } // if
                     // BufferResponse br = new BufferResponse(response);
+                    response.getWriter().flush();
                     if (out!=null) {
-                        response.getWriter().flush();
                         out.flush();
                     } // if
                     requestDispatcher.include(request, response);
