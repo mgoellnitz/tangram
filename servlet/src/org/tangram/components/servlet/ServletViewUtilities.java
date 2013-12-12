@@ -20,7 +20,6 @@ package org.tangram.components.servlet;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +40,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.components.TangramServices;
+import org.tangram.content.CodeResource;
+import org.tangram.servlet.ResponseWrapper;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
 import org.tangram.view.ViewContext;
@@ -118,28 +119,25 @@ public class ServletViewUtilities implements ViewUtilities {
             if (log.isDebugEnabled()) {
                 log.debug("render() Velocity template="+template);
             } // if
-            if (out==null) {
-                response.getWriter().flush();
-            } else {
-                out.flush();
-            } // if
-            VelocityContext context = new VelocityContext(model);
-            Writer writer = new StringWriter();
-            if (log.isDebugEnabled()) {
-                log.debug("render() resource.loader "+velocityEngine.getProperty("resource.loader"));
-            } // if
             try {
                 CodeResourceCache c = TangramServices.getCodeResourceCache();
-                velocityEngine.evaluate(context, writer, "tangram", new InputStreamReader(c.get(template).getStream()));
+                CodeResource codeResource = c.get(template);
+                if (log.isDebugEnabled()) {
+                    log.debug("render() setting content type from "+response.getContentType()+" to "+codeResource.getMimeType()+" on "+response.getClass().getName());
+                } // if
+                response.setContentType(codeResource.getMimeType());
+                response.setCharacterEncoding("UTF-8");
+                if (out==null) {
+                    response.getWriter().flush();
+                } else {
+                    out.flush();
+                } // if
+                response.setHeader("X-Flushed", "test");
+                VelocityContext context = new VelocityContext(model);
+                velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new InputStreamReader(codeResource.getStream()));
             } catch (Exception ex) {
                 throw new IOException(ex.getCause());
             } // try/catch
-            writer.flush();
-            final String templateResult = writer.toString();
-            if (log.isDebugEnabled()) {
-                log.debug("render() result size "+templateResult.length());
-            } // if
-            (out==null ? response.getWriter() : out).write(templateResult);
         } else {
             // JSP:
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(template);
@@ -153,9 +151,12 @@ public class ServletViewUtilities implements ViewUtilities {
                         log.debug("render() writer "+out);
                     } // if
                     // BufferResponse br = new BufferResponse(response);
-                    response.getWriter().flush();
                     if (out!=null) {
+                        response.getWriter().flush();
                         out.flush();
+                        response = new ResponseWrapper(response);
+                    } else {
+                        response.getOutputStream().flush();
                     } // if
                     requestDispatcher.include(request, response);
                     // out.write(br.getContents());

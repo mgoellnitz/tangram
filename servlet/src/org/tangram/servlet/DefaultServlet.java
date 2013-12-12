@@ -109,7 +109,7 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
         String view = null;
         String id = null;
         if (log.isWarnEnabled()) {
-            log.warn("render() uri="+uri);
+            log.warn("doGet() uri="+uri);
         } // if
         if (uri.indexOf("view")>0) {
             Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+).view_(.+)");
@@ -126,13 +126,13 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             } // if
         } // if
         try {
-            if (log.isWarnEnabled()) {
-                log.warn("render() id="+id);
-                log.warn("render() view="+view);
+            if (log.isInfoEnabled()) {
+                log.info("doGet() id="+id);
+                log.info("doGet() view="+view);
             } // if
             Content content = beanFactory.getBean(id);
             if (log.isDebugEnabled()) {
-                log.debug("render() content="+content);
+                log.debug("doGet() content="+content);
             } // if
             if (content==null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository. (Tangram Default Servlet)");
@@ -145,23 +145,19 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
                     response.setHeader("Location", redirectLink.getUrl());
                     response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 } catch (Exception e) {
-                    log.error("render() cannot redirect", e);
+                    log.error("doGet() cannot redirect", e);
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "custom view required.");
                 } // try/catch
                 return;
             } // if
             Map<String, Object> model = viewContextFactory.createModel(content, request, response);
             if (log.isDebugEnabled()) {
-                log.debug("render() model="+model);
+                log.debug("doGet() model="+model);
             } // if
             TangramServices.getViewUtilities().render(null, model, view);
             if (log.isDebugEnabled()) {
-                log.debug("render() done "+response.getContentType());
+                log.debug("doGet() done "+response.getContentType()+" on "+response.getClass().getName());
             } // if
-            // TODO: mime type of the output?
-            response.setHeader("X-End", "true");
-            response.setContentType("text/html");
-            response.setCharacterEncoding("UTF-8");
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
             TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
