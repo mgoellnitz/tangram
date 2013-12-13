@@ -2,7 +2,7 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat,java.io.InputStreamReader"
 %><%@page import="org.tangram.Constants,org.tangram.content.CodeResource,org.tangram.components.TangramServices"
-%><%@page import="com.yahoo.platform.yui.compressor.CssCompressor"
+%><%@page import="org.tangram.view.Utils,com.yahoo.platform.yui.compressor.CssCompressor"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard code mimetype
 response.setContentType("text/css");

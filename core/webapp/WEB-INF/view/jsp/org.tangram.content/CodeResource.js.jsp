@@ -3,7 +3,7 @@
 %><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat"
 %><%@page import="java.io.PrintWriter,java.io.InputStream,java.io.InputStreamReader" 
 %><%@page import="org.tangram.Constants,org.tangram.content.CodeResource,org.tangram.components.TangramServices"
-%><%@page import="com.yahoo.platform.yui.compressor.JavaScriptCompressor"
+%><%@page import="org.tangram.view.Utils,com.yahoo.platform.yui.compressor.JavaScriptCompressor"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard coded mimetype
 response.setContentType("text/javascript");
