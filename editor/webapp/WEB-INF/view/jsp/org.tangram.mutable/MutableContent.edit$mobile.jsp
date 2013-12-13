@@ -36,11 +36,9 @@ Typ: </span>${designClassPackage.name}.<span class="cms_editor_title">${designCl
 <div class="cms_editor_table">
 <%
 JavaBean bw = new JavaBean(request.getAttribute(Constants.THIS));
-for (PropertyDescriptor desc : bw.getPropertyDescriptors()) {
-    String key = desc.getName();
-
+for (String key : bw.propertyNames()) {
     if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {          
-      if (desc.getWriteMethod() != null) {
+      if (bw.isWritable(key)) {
         Object value = bw.get(key); 
         @SuppressWarnings("rawtypes")
         Class type = bw.getType(key);
@@ -66,7 +64,7 @@ if (value instanceof Collection) {
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=TangramServices.getPropertyConverter().getEditString(value)%>" />
 <%
 if (value instanceof Collection) {
-  Class<? extends Object> elementClass = bw.getCollectionType(key)
+  Class<? extends Object> elementClass = bw.getCollectionType(key);
   boolean abstractClass = (elementClass.getModifiers() | Modifier.ABSTRACT) == Modifier.ABSTRACT;
   request.setAttribute("propertyValue", value);
   request.setAttribute("elementClass", elementClass); 

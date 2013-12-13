@@ -12,8 +12,9 @@
 v<%=com.google.appengine.api.utils.SystemProperty.applicationVersion.get()%>
 <br/>with <%=com.google.appengine.api.utils.SystemProperty.version.get()%> and<br/>tangram <%=Constants.VERSION %> 
 </p><c:set var="infoLineClass" value="tangram_edit_toobar"/>
-</c:if><p class="${infoLineClass}">
-(<%=System.currentTimeMillis()-(Long)(request.getAttribute("start.time"))%>ms rendering time for this page)<br/>
+</c:if><p class="${infoLineClass}"><%if (request.getAttribute("start.time") != null) { %>
+(<%=System.currentTimeMillis()-(Long)(request.getAttribute("start.time"))%>ms rendering time for this page)
+<% } /* if */ %><br/>
 <% User user = UserServiceFactory.getUserService().getCurrentUser();
 if (user != null) { %>
 <%=user.getEmail() %> / <%=user.getNickname() %>

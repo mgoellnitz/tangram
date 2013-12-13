@@ -13,9 +13,9 @@ v<%=com.google.appengine.api.utils.SystemProperty.applicationVersion.get()%>
 with <%=com.google.appengine.api.utils.SystemProperty.version.get()%> and tangram <%=Constants.VERSION %> 
 <%--<c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}">Abmelden</a></c:if>--%>
 </p><c:set var="infoLineClass" value="tangram_edit_toolbar"/>
-</c:if><p class="${infoLineClass}">
+</c:if><p class="${infoLineClass}"><%if (request.getAttribute("start.time") != null) { %>
 (<%=System.currentTimeMillis()-(Long)(request.getAttribute("start.time"))%>ms rendering time for this page)
-<% User user = UserServiceFactory.getUserService().getCurrentUser();
+<% } /* if */ %><% User user = UserServiceFactory.getUserService().getCurrentUser();
 if (user != null) { %>
 <%-- user.getUserId() --%> / <%=user.getEmail() %> / <%=user.getNickname() %><br/>
 as <%=user.getFederatedIdentity() %> from <%=user.getAuthDomain() %>

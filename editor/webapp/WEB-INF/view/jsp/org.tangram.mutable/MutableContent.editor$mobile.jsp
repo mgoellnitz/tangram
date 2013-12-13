@@ -8,6 +8,6 @@
 	><p class="tangram_edit_toolbar"><a <cms:link bean="${self}" action="edit" href="true" target="true" handlers="true"/> >Objekt Bearbeiten</a>
 <br/>tangram <%=Constants.VERSION %> 
 </p><c:set var="infoLineClass" value="tangram_edit_toobar"/>
-</c:if><p class="${infoLineClass}">
+</c:if><%if (request.getAttribute("start.time") != null) { %><p class="${infoLineClass}">
 (<%=System.currentTimeMillis()-(Long)(request.getAttribute("start.time"))%>ms rendering time for this page)
-</p>
+</p><% } /* if */ %>
