@@ -262,9 +262,9 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
 
     @SuppressWarnings("unchecked")
-    private <T extends MutableContent> Class<T> getKeyClass(String key) {
+    private Class<? extends MutableContent> getKeyClass(String key) {
         String className = key.split(":")[0];
-        return (Class<T>) getClassForName(className);
+        return getClassForName(className);
     } // getKeyClass()
 
 
