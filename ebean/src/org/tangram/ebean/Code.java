@@ -26,7 +26,7 @@ import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
 
 @Entity
-public class Code extends EContent implements MutableCode {
+public final class Code extends EContent implements MutableCode {
 
     private String annotation;
 

@@ -33,7 +33,7 @@ import org.tangram.mutable.MutableCode;
  * options.
  */
 @PersistenceCapable
-public class Code extends NucleusContent implements MutableCode {
+public final class Code extends NucleusContent implements MutableCode {
 
     private String annotation;
 

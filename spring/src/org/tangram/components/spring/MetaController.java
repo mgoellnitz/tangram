@@ -94,21 +94,21 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     @Inject
     private PropertyConverter propertyConverter;
 
-    private Map<String, Method> cache = new HashMap<String, Method>();
+    private final Map<String, Method> cache = new HashMap<String, Method>();
 
-    private Map<String, LinkHandler> staticLinkHandlers = new HashMap<String, LinkHandler>();
+    private final Map<String, LinkHandler> staticLinkHandlers = new HashMap<String, LinkHandler>();
 
     private Map<String, LinkHandler> handlers;
 
-    private Map<Pattern, Method> staticMethods = new HashMap<Pattern, Method>();
+    private final Map<Pattern, Method> staticMethods = new HashMap<Pattern, Method>();
 
     private Map<Pattern, Method> methods;
 
-    private Map<Pattern, Object> staticAtHandlers = new HashMap<Pattern, Object>();
+    private final Map<Pattern, Object> staticAtHandlers = new HashMap<Pattern, Object>();
 
     private Map<Pattern, Object> atHandlers;
 
-    private Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
+    private final Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
 
 
     @Override
@@ -251,8 +251,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
          return null;
          } // if
          */
-        Method[] methods = target.getClass().getMethods();
-        for (Method m : methods) {
+        Method[] targetMethods = target.getClass().getMethods();
+        for (Method m : targetMethods) {
             if (m.getName().equals(methodName)) {
                 LinkAction linkAction = m.getAnnotation(LinkAction.class);
                 if (log.isInfoEnabled()) {

@@ -30,7 +30,7 @@ import org.tangram.mutable.MutableCode;
 @Entity
 // Annotation needed for OpenJPA - at least
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Code extends JpaContent implements MutableCode {
+public final class Code extends JpaContent implements MutableCode {
 
     private String annotation;
 

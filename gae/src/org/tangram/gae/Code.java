@@ -30,7 +30,7 @@ import org.tangram.mutable.MutableCode;
 
 @PersistenceCapable
 @Inheritance(customStrategy = "complete-table")
-public class Code extends GaeContent implements MutableCode {
+public final class Code extends GaeContent implements MutableCode {
 
     private String annotation;
 
