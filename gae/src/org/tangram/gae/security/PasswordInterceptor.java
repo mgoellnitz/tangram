@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,41 +14,38 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.gae.security;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.Constants;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-
 /**
- * 
+ *
  * Interceptor to check if a user is logged in, if we are a live system, or if we should use generic password protection
- * with users preconfigured in an XML config file
- * 
+ * with users preconfigured in an XML config file.
+ *
  * liveSuffix should be the name suffix of your live installation as opposed to the development/testing appengine apps
- * 
+ *
  * statsUrl is a URL which should be available without log-in /s/statsa typically if you use statistics page for keep
  * alive cron job
- * 
+ *
  * allowedUsers if not empty only these users are allowed to log-in.
- * 
+ *
  * Can be emails of google accounts or IDs of OpenID accounts
- * 
+ *
  * adminUsers same as allowedUsers (should be a subset of it) but these users get the access to the editing links
- * 
+ *
  */
 public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
@@ -119,7 +116,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, Boolean.TRUE);
             liveSystem = true;
         } // if
-        
+
         if ( !getFreeUrls().contains(thisURL)) {
             Principal principal = request.getUserPrincipal();
 
