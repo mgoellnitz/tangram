@@ -59,6 +59,7 @@ import org.tangram.logic.ClassRepository;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
+import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
 
@@ -383,6 +384,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         if (log.isInfoEnabled()) {
             log.info("handleRequestInternal() "+url);
         } // if
+        Utils.setPrimaryBrowserLanguageForJstl(request);
         try {
             for (Entry<Pattern, Method> entry : methods.entrySet()) {
                 Pattern p = entry.getKey();

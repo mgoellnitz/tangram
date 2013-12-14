@@ -1,18 +1,13 @@
 <%@page isELIgnored="false" language="java" session="false"
 	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" 
 %><?xml version="1.0" encoding="UTF-8" ?><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
+%><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
-%><%@page import="java.util.Collection"
-%><%@page import="java.lang.reflect.Modifier"
-%><%@page import="java.beans.PropertyDescriptor"
-%><%@page import="org.tangram.Constants"
-%><%@page import="org.tangram.util.JavaBean"
-%><%@page import="org.tangram.view.Utils"
-%><%@page import="org.tangram.mutable.MutableContent"
-%><%@page import="org.tangram.components.TangramServices"
-%><%@page import="org.tangram.components.editor.EditingHandler"
+%><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
+%><%@page import="org.tangram.Constants,org.tangram.view.Utils,org.tangram.util.JavaBean"
+%><%@page import="org.tangram.components.TangramServices,org.tangram.components.editor.EditingHandler,org.tangram.mutable.MutableContent"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
 <title>Tangram - ${designClass.simpleName} (${self.id})</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -25,13 +20,13 @@
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
 <div class="cms_editor_row"><span class="cms_editor_label">
-Objekt Bearbeiten 
+<fmt:message key="label.edit" bundle="${msg}"/> 
 | <a href="#" onclick="window.close();">[ X ]</a> 
-&#160; &#160; <input type="submit" value="    Sichern    " class="cms_editor_button"/>
+&#160; &#160; <input type="submit" value="    <fmt:message key="button.save" bundle="${msg}"/>    " class="cms_editor_button"/>
 <br/>
-Typ: </span>${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span><br/>
+<fmt:message key="label.type" bundle="${msg}"/>: </span>${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span><br/>
 <span class="cms_editor_label">ID: </span>${self.id}
-<c:if test="${! empty normalView}"><br/><a <c:out value="${normalView}" escapeXml="false" />>Web Ansicht</a></c:if>
+<c:if test="${! empty normalView}"><br/><a <c:out value="${normalView}" escapeXml="false" />><fmt:message key="label.webview" bundle="${msg}"/></a></c:if>
 </div>
 <div class="cms_editor_table">
 <%

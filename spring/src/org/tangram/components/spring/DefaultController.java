@@ -35,6 +35,7 @@ import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.view.TargetDescriptor;
+import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 
 
@@ -63,6 +64,7 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
     public ModelAndView render(@PathVariable("id") String id, @PathVariable("view") String view, HttpServletRequest request,
                                HttpServletResponse response) {
         try {
+            Utils.setPrimaryBrowserLanguageForJstl(request);
             if (log.isDebugEnabled()) {
                 log.debug("render() id="+id);
                 log.debug("render() view="+view);

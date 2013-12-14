@@ -9,13 +9,13 @@ Groovy Code ${self.annotation}
 JavaScript Code ${self.annotation}
 </c:when>
 <c:when test="${self.mimeType == 'text/css'}">
-Stylesheet für Medium ${self.annotation}
+Stylesheet - Medium ${self.annotation}
 </c:when>
 <c:when test="${self.mimeType == 'text/html'}">
-Template für ${self.annotation}
+Template - ${self.annotation}
 </c:when>
 <c:when test="${self.mimeType == 'text/xml'}">
-XML Template für ${self.annotation}
+XML Template - ${self.annotation}
 </c:when>
 <c:otherwise>
 Code ${self.annotation}

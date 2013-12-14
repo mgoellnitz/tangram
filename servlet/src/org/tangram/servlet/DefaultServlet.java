@@ -108,9 +108,10 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
         String uri = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         String view = null;
         String id = null;
-        if (log.isWarnEnabled()) {
-            log.warn("doGet() uri="+uri);
+        if (log.isInfoEnabled()) {
+            log.info("doGet() uri="+uri);
         } // if
+        Utils.setPrimaryBrowserLanguageForJstl(request);
         if (uri.indexOf("view")>0) {
             Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+).view_(.+)");
             Matcher matcher = p.matcher(uri);

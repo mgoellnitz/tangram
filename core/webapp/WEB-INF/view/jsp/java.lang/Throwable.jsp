@@ -32,5 +32,15 @@ Throwable e = (Throwable)request.getAttribute(Constants.THIS);
 e.printStackTrace(writer);
 %><%=stringWriter.toString()%>
 </pre>
+<% if (e.getCause() != null) { %>
+<hr/>  
+<pre>
+<%
+stringWriter = new StringWriter();
+writer = new PrintWriter(stringWriter);
+e.getCause().printStackTrace(writer);
+%><%=stringWriter.toString()%>
+</pre>
+<% } /* if */ %>
 </body>
 </html>

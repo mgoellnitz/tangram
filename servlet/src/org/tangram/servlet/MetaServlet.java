@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,6 +59,7 @@ import org.tangram.logic.ClassRepository;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
+import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
 
@@ -391,6 +391,9 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
         if (log.isInfoEnabled()) {
             log.info("service() "+url);
         } // if
+
+        Utils.setPrimaryBrowserLanguageForJstl(request);
+
         try {
             for (Map.Entry<Pattern, Method> entry : methods.entrySet()) {
                 Pattern p = entry.getKey();
@@ -465,15 +468,6 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
     } // service()
-
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("doPost() "+req.getParameterMap().size());
-        } // if
-        super.doPost(req, resp);
-    } // doPost()
 
 
     @Override

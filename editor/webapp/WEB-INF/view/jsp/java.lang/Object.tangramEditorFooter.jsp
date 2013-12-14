@@ -1,7 +1,7 @@
-<%@page isELIgnored="false" language="java" session="false"
-	contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%@taglib
-	prefix="c" uri="http://java.sun.com/jsp/jstl/core"
-	%><hr />
-<div class="cms_editor_footer">
+<%@page isELIgnored="false" language="java" session="false" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
+%><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
+%><hr />
+<div class="cms_editor_footer"><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 Tangram Object Presenter <%=org.tangram.Constants.VERSION%> | &copy; 2010-2013 | Warranty void when reading this ;-) 
-<c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}">Abmelden</a></c:if></div>
+<c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}"><fmt:message key="label.logout" bundle="${msg}"/></a></c:if></div>

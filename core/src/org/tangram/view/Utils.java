@@ -22,8 +22,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.jstl.core.Config;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +45,32 @@ public final class Utils {
     }
 
     private static String uriPrefix = null;
+
+
+    /**
+     * Take the primary browser language from the request as input for JST fmt tag library.
+     *
+     * Only consideres the first language in the list taken from the clients reuqest.
+     *
+     * @param request request to read accept-language header from and set request attribute to.
+     */
+    public static void setPrimaryBrowserLanguageForJstl(HttpServletRequest request) {
+        String acceptLanguageHeader = request.getHeader("Accept-Language");
+        String[] acceptLanguages = acceptLanguageHeader.split(",");
+        if (acceptLanguages.length>0) {
+            String[] acceptLanguage = acceptLanguages[0].split(";");
+            if (acceptLanguage.length>0) {
+                String language[] = acceptLanguage[0].split("-");
+                if (language.length>0) {
+                    final String localeCode = language[0];
+                    if (log.isInfoEnabled()) {
+                        log.info("setPrimaryBrowserLanguageForJstl() setting request language "+localeCode);
+                    } // if
+                    Config.set(request, Config.FMT_LOCALE, new Locale(localeCode));
+                } // if
+            } // if
+        } // if
+    } // setPrimaryBrowserLanguageForJstl()
 
 
     /**
