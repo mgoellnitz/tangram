@@ -132,7 +132,6 @@ public class ServletViewUtilities implements ViewUtilities {
                 } else {
                     out.flush();
                 } // if
-                response.setHeader("X-Flushed", "test");
                 VelocityContext context = new VelocityContext(model);
                 velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new InputStreamReader(codeResource.getStream()));
             } catch (Exception ex) {
@@ -163,7 +162,7 @@ public class ServletViewUtilities implements ViewUtilities {
                     // response.getOutputStream().write(br.getBytes());
                 } catch (ServletException ex) {
                     log.error("render()", ex);
-                    throw new IOException("Problem while including JSP", ex.getCause());
+                    throw new IOException("Problem while including JSP", ex);
                 } // try/catch
             } // if
         } // if
