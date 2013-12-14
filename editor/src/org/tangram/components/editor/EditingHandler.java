@@ -446,6 +446,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             throw new Exception("User may not execute action");
         } // if
         response.setContentType("text/xml");
+        response.setCharacterEncoding("UTF-8");
         // The pure reflection provider is used because of Google App Engines API limitations
         XStream xstream = new AppEngineXStream(new StaxDriver());
         Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
