@@ -50,6 +50,54 @@
 
   <!-- really spring specific stuff -->
 
+  <!-- 
+       just a small set if URLs which don't need performance measurement and logins. 
+       Re-define this in your WEB-INF/tangram directory with values as needed
+  -->  
+  <bean id="freeUrls" class="java.util.HashSet">
+    <constructor-arg>
+      <set>
+        <value>${tangram.servlet.path}/stats</value>
+        <value>${tangram.servlet.path}/clear/caches</value>
+      </set>
+    </constructor-arg>
+  </bean>
+    
+  <!-- 
+       just an empty set of admin users as a default. 
+       Re-define this in your WEB-INF/tangram directory with values as needed
+  -->  
+  <bean id="adminUsers" class="java.util.HashSet" />
+    
+  <!-- 
+       just an empty set of allowed users as a default - to let everyone pass.
+       Re-define this in your WEB-INF/tangram directory with values as needed
+  -->  
+  <bean id="allowedUsers" class="java.util.HashSet" />
+  
+  <bean id="measureTimeInterceptor" class="org.tangram.spring.MeasureTimeInterceptor">
+    <property name="freeUrls" ref="freeUrls"/>
+  </bean>
+  
+  <bean id="passwordInterceptor" class="org.tangram.spring.PasswordInterceptor">
+    <property name="freeUrls" ref="freeUrls"/>
+    <property name="allowedUsers" ref="allowedUsers"/>
+    <property name="adminUsers" ref="adminUsers"/>
+  </bean>
+  
+  <!-- 
+       The common default list of interceptors for timemeasurement and login check.
+       Re-define this in your WEB-INF/tangram directory with values as needed.
+  -->  
+  <bean name="interceptors" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <ref bean="measureTimeInterceptor"/>
+        <ref bean="passwordInterceptor"/>
+      </list>
+    </constructor-arg>
+  </bean>
+  
   <!--
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
   -->

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,31 +9,40 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.gae.security;
+package org.tangram.servlet;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.Constants;
+import org.tangram.security.LoginSupport;
+
 
 /**
- *
- * Interceptor to check if a user is logged in, if we are a live system, or if we should use generic password protection
- * with users preconfigured in an XML config file.
+ * Filter implementation to check if a user is logged in in the google app engine webapp, if we are a live system,
+ * or if we should use generic password protection with users preconfigured in an XML config file.
  *
  * liveSuffix should be the name suffix of your live installation as opposed to the development/testing appengine apps
  *
@@ -45,19 +54,26 @@ import org.tangram.Constants;
  * Can be emails of google accounts or IDs of OpenID accounts
  *
  * adminUsers same as allowedUsers (should be a subset of it) but these users get the access to the editing links
- *
  */
-public class PasswordInterceptor extends HandlerInterceptorAdapter {
+@Named
+@Singleton
+public class PasswordFilter implements Filter {
 
-    private static final Log log = LogFactory.getLog(PasswordInterceptor.class);
+    private static final Log log = LogFactory.getLog(PasswordFilter.class);
+
+    private static LoginSupport loginSupport;
 
     private Set<String> freeUrls;
-
-    private String liveSuffix = "live";
 
     private Set<String> allowedUsers = new HashSet<String>();
 
     private Set<String> adminUsers = new HashSet<String>();
+
+
+    @Inject
+    public void setLoginSupport(LoginSupport loginSupport) {
+        PasswordFilter.loginSupport = loginSupport;
+    }
 
 
     public Set<String> getFreeUrls() {
@@ -67,16 +83,6 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
     public void setFreeUrls(Set<String> freeUrls) {
         this.freeUrls = freeUrls;
-    }
-
-
-    public String getLiveSuffix() {
-        return liveSuffix;
-    }
-
-
-    public void setLiveSuffix(String liveSuffix) {
-        this.liveSuffix = liveSuffix;
     }
 
 
@@ -101,8 +107,14 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        UserService userService = UserServiceFactory.getUserService();
+    public void destroy() {
+    } // destroy()
+
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
 
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
@@ -110,14 +122,12 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             log.debug("preHandle() detected URI "+thisURL);
         } // if
 
-        String id = com.google.appengine.api.utils.SystemProperty.applicationId.get();
-        boolean liveSystem = false;
-        if (id.endsWith(liveSuffix)) {
-            request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, Boolean.TRUE);
-            liveSystem = true;
-        } // if
+        if (!getFreeUrls().contains(thisURL)) {
+            boolean liveSystem = loginSupport.isLiveSystem();
+            if (liveSystem) {
+                request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, Boolean.TRUE);
+            } // if
 
-        if ( !getFreeUrls().contains(thisURL)) {
             Principal principal = request.getUserPrincipal();
 
             if (liveSystem) {
@@ -133,21 +143,18 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
                     if (log.isInfoEnabled()) {
                         log.info("preHandle() checking for user: "+userName);
                     } // if
-                    if ( !thisURL.startsWith("/WEB-INF")&& !thisURL.startsWith("_ah")) {
-                        request.setAttribute(Constants.ATTRIBUTE_LOGOUT_URL, userService.createLogoutURL(thisURL));
-                    } // if
+                    loginSupport.storeLogoutURL(request, thisURL);
                     if (adminUsers.contains(userName)) {
                         request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
-                    if ((allowedUsers.size()>0)&&( !allowedUsers.contains(userName))) {
+                    if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
                         if (log.isWarnEnabled()) {
                             log.warn("preHandle() user not allowed to access page: "+userName);
                         } // if
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                     } // if
                 } else {
-                    String loginURL = userService.createLoginURL(thisURL);
-
+                    String loginURL = loginSupport.createLoginURL(thisURL);
                     if (allowedUsers.size()>0) {
                         if (log.isInfoEnabled()) {
                             log.info("preHandle() no logged in user found");
@@ -163,7 +170,26 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             } // if
         } // if
 
-        return super.preHandle(request, response, handler);
-    } // preHandle()
+        chain.doFilter(request, response);
+    } // afterCompletion()
 
-} // PasswordInterceptor
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    public void init(FilterConfig config) throws ServletException {
+        final Enumeration initParameterNames = config.getInitParameterNames();
+        while (initParameterNames.hasMoreElements()) {
+            String parameterName = ""+(initParameterNames.nextElement());
+            if (parameterName.startsWith("free.url.")) {
+                freeUrls.add(config.getInitParameter(parameterName));
+            } // if
+            if (parameterName.startsWith("allowed.user.")) {
+                allowedUsers.add(config.getInitParameter(parameterName));
+            } // if
+            if (parameterName.startsWith("admin.user.")) {
+                adminUsers.add(config.getInitParameter(parameterName));
+            } // if
+        } // for
+    } // init()
+
+} // PasswordFilter

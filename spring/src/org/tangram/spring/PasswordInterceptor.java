@@ -21,37 +21,50 @@ package org.tangram.spring;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.Constants;
+import org.tangram.security.LoginSupport;
 
 
 /**
  *
- * Interceptor to check if a user is logged in, or if we should use generic password protection with users preconfigured
- * in an XML config file.
+ * Interceptor to check if a user is logged in, if we are a live system, or if we should use generic password protection
+ * with users preconfigured in an XML config file.
  *
- * This Code here is somewhere between dummy and glue code for simple spring security setups.
- * The login interception for such scenarios is done directly by spring securities filters and this implementation
- * maps the results to the admin and allowed user lists.
+ * liveSuffix should be the name suffix of your live installation as opposed to the development/testing appengine apps
  *
- * allowedUsers - if not empty only these users are allowed to log-in.
+ * statsUrl is a URL which should be available without log-in /s/statsa typically if you use statistics page for keep
+ * alive cron job
  *
- * adminUsers - same as allowedUsers (should be a subset of it) but these users get the access to the editing links
+ * allowedUsers if not empty only these users are allowed to log-in.
+ *
+ * Can be emails of google accounts or IDs of OpenID accounts
+ *
+ * adminUsers same as allowedUsers (should be a subset of it) but these users get the access to the editing links
  *
  */
 public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
     private static final Log log = LogFactory.getLog(PasswordInterceptor.class);
 
-    private Set<String> freeUrls = new HashSet<String>();
+    @Inject
+    private LoginSupport loginSupport;
+
+    private Set<String> freeUrls;
 
     private Set<String> allowedUsers = new HashSet<String>();
 
     private Set<String> adminUsers = new HashSet<String>();
+
+
+    public Set<String> getFreeUrls() {
+        return freeUrls;
+    }
 
 
     public void setFreeUrls(Set<String> freeUrls) {
@@ -59,8 +72,18 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
     }
 
 
+    public Set<String> getAllowedUsers() {
+        return allowedUsers;
+    }
+
+
     public void setAllowedUsers(Set<String> allowedUsers) {
         this.allowedUsers = allowedUsers;
+    }
+
+
+    public Set<String> getAdminUsers() {
+        return adminUsers;
     }
 
 
@@ -77,39 +100,49 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             log.debug("preHandle() detected URI "+thisURL);
         } // if
 
-        if (!freeUrls.contains(thisURL)) {
-            Principal principal = request.getUserPrincipal();
+        if (!getFreeUrls().contains(thisURL)) {
+            boolean liveSystem = loginSupport.isLiveSystem();
+            if (liveSystem) {
+                request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, Boolean.TRUE);
+            } // if
 
-            if (principal!=null) {
-                String userName = principal.getName();
-                if (log.isInfoEnabled()) {
-                    log.info("preHandle() checking for user: "+userName);
-                } // if
-                if (adminUsers.contains(userName)) {
-                    request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
-                } // if
-                if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
-                    if (log.isWarnEnabled()) {
-                        log.warn("preHandle() user not allowed to access page: "+userName);
+            Principal principal = request.getUserPrincipal();
+            if (liveSystem) {
+                if (principal!=null) {
+                    String userName = principal.getName();
+                    if (adminUsers.contains(userName)) {
+                        request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                 } // if
             } else {
-                // TODO: new generic Login URL stuff
-                String loginURL = "spring_security_login";
-                if (allowedUsers.size()>0) {
+                if (principal!=null) {
+                    String userName = principal.getName();
                     if (log.isInfoEnabled()) {
-                        log.info("preHandle() no logged in user found");
+                        log.info("preHandle() checking for user: "+userName);
                     } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("preHandle() redirecting to '"+loginURL+"'");
+                    loginSupport.storeLogoutURL(request, thisURL);
+                    if (adminUsers.contains(userName)) {
+                        request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
-                    response.sendRedirect(loginURL);
+                    if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
+                        if (log.isWarnEnabled()) {
+                            log.warn("preHandle() user not allowed to access page: "+userName);
+                        } // if
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
+                    } // if
                 } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("preHandle() system doesn't need login but perhaps application");
+                    String loginURL = loginSupport.createLoginURL(thisURL);
+                    if (allowedUsers.size()>0) {
+                        if (log.isInfoEnabled()) {
+                            log.info("preHandle() no logged in user found");
+                        } // if
+                        response.sendRedirect(loginURL);
+                    } else {
+                        if (log.isDebugEnabled()) {
+                            log.debug("preHandle() system doesn't need login but perhaps application");
+                        } // if
+                        request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
                     } // if
-                    request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
                 } // if
             } // if
         } // if
