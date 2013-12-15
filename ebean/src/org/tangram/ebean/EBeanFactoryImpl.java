@@ -181,23 +181,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     } // getBean()
 
 
-    /**
-     * Gets the class for a given type name.
-     * Be aware of different class loaders - like with groovy based classes.
-     *
-     * @param typeName fully qualified name of the class
-     */
-    protected Class<? extends MutableContent> getClassForName(String typeName) {
-        Class<? extends MutableContent> result = null;
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (c.getName().equals(typeName)) {
-                result = c;
-            } // if
-        } // for
-        return result;
-    } // getClassForName()
-
-
     @Override
     public EContent getBean(String id) {
         return getBean(EContent.class, id);
@@ -259,13 +242,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         statistics.increase("create bean");
         return bean;
     } // createBean()
-
-
-    @SuppressWarnings("unchecked")
-    private Class<? extends MutableContent> getKeyClass(String key) {
-        String className = key.split(":")[0];
-        return getClassForName(className);
-    } // getKeyClass()
 
 
     @Override
@@ -435,11 +411,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         } // if
         return result;
     } // listBeans()
-
-
-    protected String getClassNamesCacheKey() {
-        return "tangram-class-names";
-    } // getClassNamesCacheKey()
 
 
     @Override

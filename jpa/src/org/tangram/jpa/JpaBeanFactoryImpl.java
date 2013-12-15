@@ -201,23 +201,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // getBean()
 
 
-    /**
-     * Gets the class for a given type name.
-     * Be aware of different class loaders - like with groovy based classes.
-     *
-     * @param typeName fully qualified name of the class
-     */
-    protected Class<? extends MutableContent> getClassForName(String typeName) {
-        Class<? extends MutableContent> result = null;
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (c.getName().equals(typeName)) {
-                result = c;
-            } // if
-        } // for
-        return result;
-    } // getClassForName()
-
-
     @Override
     public JpaContent getBean(String id) {
         return getBean(JpaContent.class, id);
@@ -273,19 +256,12 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // createBean()
 
 
-    @SuppressWarnings("unchecked")
-    private <T extends MutableContent> Class<T> getKeyClass(String key) {
-        String className = key.split(":")[0];
-        return (Class<T>) getClassForName(className);
-    } // getKeyClass()
-
-
     @Override
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
         if (log.isInfoEnabled()) {
-            log.info("clearCacheFor() "+cls.getSimpleName());
+            log.info("clearCacheFor() "+cls.getName());
         } // if
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
@@ -293,6 +269,9 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             for (Object keyObject : queryCache.keySet()) {
                 String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor("+key+") key class"+c);
+                } // if
                 boolean assignableFrom = c.isAssignableFrom(cls);
                 if (log.isInfoEnabled()) {
                     log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
@@ -449,11 +428,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         } // if
         return result;
     } // listBeans()
-
-
-    protected String getClassNamesCacheKey() {
-        return "tangram-class-names";
-    } // getClassNamesCacheKey()
 
 
     @Override

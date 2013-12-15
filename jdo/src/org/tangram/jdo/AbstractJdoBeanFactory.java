@@ -71,7 +71,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     private boolean prefill = true;
 
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
-    
+
     protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
 
 
@@ -359,17 +359,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // listBeans()
 
 
-    @SuppressWarnings("unchecked")
-    private <T extends Content> Class<T> getKeyClass(String key) {
-        String className = key.split(":")[0];
-        try {
-            return (Class<T>) Class.forName(className);
-        } catch (ClassNotFoundException cnfe) {
-            return null;
-        } // try/catch
-    } // getClass()
-
-
     @Override
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
@@ -417,18 +406,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             log.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
-
-
-    /**
-     * Cache key for the persistent cache to store all class names.
-     * The stored values are taken from the class path package scan and
-     * asumed to be persistent over re-starts of the applicaion.
-     *
-     * @return String to be used as a cache key
-     */
-    protected String getClassNamesCacheKey() {
-        return "tangram-class-names";
-    } // getClassNamesCacheKey()
 
 
     /**

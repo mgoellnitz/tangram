@@ -66,6 +66,59 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     /**
+     * Cache key for the persistent cache to store all class names.
+     * The stored values are taken from the class path package scan and
+     * asumed to be persistent over re-starts of the applicaion.
+     *
+     * @return String to be used as a cache key
+     */
+    protected String getClassNamesCacheKey() {
+        return "tangram-class-names";
+    } // getClassNamesCacheKey()
+
+
+    /**
+     * Gets the class for a given type name.
+     * Be aware of different class loaders - like with groovy based classes.
+     *
+     * @param className fully qualified name of the class
+     */
+    protected Class<? extends MutableContent> getClassForName(String className) {
+        Class<? extends MutableContent> result = null;
+        for (Class<? extends MutableContent> c : getClasses()) {
+            if (c.getName().equals(className)) {
+                result = c;
+            } // if
+        } // for
+        if (result==null) {
+            try {
+                result = (Class<? extends MutableContent>) Class.forName(className);
+            } catch (ClassNotFoundException cnfe) {
+                //
+            } // try/catch
+        } // if
+        return result;
+    } // getClassForName()
+
+
+    /**
+     * Get class name from query cache key.
+     * Keys are supposed to be in the form of <classname>:<query>
+     * @param <T>
+     * @param key
+     * @return Class for the given key or null if the key does not map to any class
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends Content> Class<T> getKeyClass(String key) {
+        String className = key.split(":")[0];
+        if (log.isDebugEnabled()) {
+            log.debug("getKeyClass() "+className);
+        } // if
+        return (Class<T>) getClassForName(className);
+    } // getKeyClass()
+
+
+    /**
      * attach a listener for any changes dealing with classes of the given type.
      *
      * @param cls
