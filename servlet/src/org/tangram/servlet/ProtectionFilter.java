@@ -40,10 +40,6 @@ public class ProtectionFilter implements Filter {
 
 
 
-    public ProtectionFilter() {
-    } // ProtectionFilter()
-
-
     @Override
     public void destroy() {
     } // destroy()
