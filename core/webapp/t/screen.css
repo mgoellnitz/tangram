@@ -1,20 +1,20 @@
-a {
-	text-decoration: none;
-	color: #905000;
-	font-weight: bold;
-}
-
 body {
 	font-family: Sans-Serif, Helvetica, Arial;
 	font-size: 11pt;
-	background-color: #FFFFC0;
+	background-color: #F8F0FF;
 	margin: 10px 25px 10px 15px;
+}
+
+a {
+	text-decoration: none;
+	color: #700080;
+	font-weight: bold;
 }
 
 input {
 	font-weight: bold;
 	padding: 3px;
-	background-color: #DFD080;
+	background-color: #D0C8E0;
 }
 
 li {

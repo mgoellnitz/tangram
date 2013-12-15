@@ -1,22 +1,3 @@
-a {
-	text-decoration: none;
-	color: #905000;
-	font-weight: bold;
-}
-
-body {
-	font-family: Sans-Serif, Helvetica, Arial;
-	font-size: 11pt;
-	margin: 10px 25px 10px 15px;
-	visibility: hidden;
-}
-
-input {
-	font-weight: bold;
-	padding: 3px;
-	background-color: #DFD080;
-}
-
 .cms_editor_table {
 	margin-bottom: 15px;
 	width: 980px;

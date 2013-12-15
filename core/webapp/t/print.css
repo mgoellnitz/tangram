@@ -1,14 +1,14 @@
-a {
-	text-decoration: none;
-	color: #905000;
-	font-weight: bold;
-}
-
 body {
 	font-family: Sans-Serif, Helvetica, Arial;
 	font-size: 11pt;
 	margin: 10px 25px 10px 15px;
 	visibility: hidden;
+}
+
+a {
+	text-decoration: none;
+	color: #905000;
+	font-weight: bold;
 }
 
 input {

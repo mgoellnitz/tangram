@@ -1,24 +1,24 @@
-a {
-	text-decoration: none;
-	color: #905000;
-	font-weight: bold;
-}
-
 body {
 	font-family: Sans-Serif, Helvetica, Arial;
 	font-size: 11pt;
-	background-color: #FFFFC0;
+	background-color: #F8F0FF;
 	margin: 1px 2px 1px 2px;
 }
 
-body form {
-	width: 330px;
+a {
+	text-decoration: none;
+	color: #700080;
+	font-weight: bold;
 }
 
 input {
 	font-weight: bold;
 	padding: 3px;
-	background-color: #DFD080;
+	background-color: #D0C8E0;
+}
+
+body form {
+	width: 330px;
 }
 
 .cms_editor_table {
