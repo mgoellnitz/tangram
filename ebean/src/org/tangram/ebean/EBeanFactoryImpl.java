@@ -526,34 +526,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     } // setAdditionalClasses()
 
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
-        List<Class<T>> result = new ArrayList<Class<T>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add((Class<T>) c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClasses()
-
-
-    private List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
-        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add(c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClasses()
-
-
     /**
      * just to support JSP weak calling of methods with no parameters
      *

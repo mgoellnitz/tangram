@@ -561,34 +561,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // setAdditionalClasses()
 
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
-        List<Class<T>> result = new ArrayList<Class<T>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add((Class<T>) c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClasses()
-
-
-    private List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
-        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add(c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClassesForModelClass()
-
-
     /**
      * just to support JSP weak calling of methods with no parameters
      *

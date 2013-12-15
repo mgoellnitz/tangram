@@ -58,21 +58,21 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
 
-    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
-
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
     private Map<Object, Object> configOverrides = null;
 
-    private boolean activateCaching = false;
-
     private Set<String> basePackages;
+
+    private boolean activateCaching = false;
 
     private boolean activateQueryCaching = false;
 
     private boolean prefill = true;
 
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
+    
+    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
 
 
     @Override
@@ -431,6 +431,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // getClassNamesCacheKey()
 
 
+    /**
+     * Get a collection of model related classes.
+     *
+     * This method also returns the abstract classes or interfaces in the base packages.
+     *
+     * @return
+     */
     @Override
     @SuppressWarnings("unchecked")
     public Collection<Class<? extends MutableContent>> getAllClasses() {
@@ -526,39 +533,10 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // setAdditionalClasses()
 
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
-        List<Class<T>> result = new ArrayList<Class<T>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add((Class<T>) c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClasses()
-
-
-    private List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
-        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add(c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClassesForModelClass()
-
-
     /**
-     * just to support JSP's weak calling of methods with no parameters
+     * just to support JSP's weak calling of methods. It does not allow any parameters.
      *
-     * @param baseClass
-     * @return
+     * @return map to map abstract classes to all non-abstract classes implementing/extending them
      */
     @Override
     public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
