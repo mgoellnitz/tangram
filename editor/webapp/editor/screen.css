@@ -63,11 +63,6 @@
 	border-bottom: 1px dotted #000000;
 }
 
-.cms_editor_footer {
-	width: 100%;
-	text-align: right;
-}
-
 .CodeMirror-wrapping {
 	background-color: #FFFFFF;
 }
@@ -80,7 +75,7 @@
 	font-size: 12px;
 	height: 16px;
 	text-align: right;
-	color: #FFFFFF;
+	color: #606060;
 	padding-right: 2px;
-	background-color: #DFD080;
+	background-color: #D0C8E0;
 }

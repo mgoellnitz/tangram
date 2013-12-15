@@ -20,3 +20,8 @@ input {
 li {
 	margin-bottom: 4px;
 }
+
+.cms_editor_footer {
+	width: 100%;
+	text-align: right;
+}

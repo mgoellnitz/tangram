@@ -74,7 +74,7 @@ if (c != null) {
     %>$self kennt<br/><%
     } // if
 } else {
-    %><%=annotation == null ? "" : annotation%><fmt:message key="text.novalidclassname" bundle="${msg}"/><%
+    %><%=annotation == null ? "" : annotation%> <fmt:message key="text.novalidclassname" bundle="${msg}"/><%
 } // if
 for (PropertyDescriptor p : ps) {
     if ((p.getReadMethod() != null) && (!EditingHandler.SYSTEM_PROPERTIES.contains(p.getName()))) {
