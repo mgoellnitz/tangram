@@ -16,7 +16,6 @@ if (viewSettings.get("cssCacheTime") != null) {
 } // if
 InputStreamReader isr = new InputStreamReader(code.getStream());
 CssCompressor csc = new CssCompressor(isr);
-out.flush();
 csc.compress(out, 0);
 // Uggly hack: We had to use this new line to switch content type reliably
 %>

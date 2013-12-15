@@ -146,20 +146,36 @@ public class ServletViewUtilities implements ViewUtilities {
                         request.setAttribute(key, model.get(key));
                     } // for
                     if (log.isDebugEnabled()) {
-                        // log.debug("render() writer "+out+" "+response.getWriter());
                         log.debug("render() writer "+out);
                     } // if
-                    // BufferResponse br = new BufferResponse(response);
-                    if (out!=null) {
+                    ResponseWrapper responseWrapper = null;
+                    if (out==null) {
+                        responseWrapper = new ResponseWrapper(response);
+                        response = responseWrapper;
+                    } else {
                         response.getWriter().flush();
                         out.flush();
-                        response = new ResponseWrapper(response);
-                    } else {
-                        // response.getOutputStream().flush();
                     } // if
                     requestDispatcher.include(request, response);
-                    // out.write(br.getContents());
-                    // response.getOutputStream().write(br.getBytes());
+                    if (out==null) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("render() setting content type for "+responseWrapper.getContentType());
+                            log.debug("render() setting character encoding for "+responseWrapper.getCharacterEncoding());
+                        } // if
+                        final String contentType = responseWrapper.getContentType();
+                        String contentHeader = contentType.startsWith("text") ? contentType+"; charset="+responseWrapper.getCharacterEncoding() : contentType;
+                        /*
+                         response.setContentType(contentType);
+                         response.setCharacterEncoding(responseWrapper.getCharacterEncoding());
+                         */
+                        response.setHeader("Content-Type", contentHeader);
+                        for (Map.Entry<String, String> entry : responseWrapper.getHeaders().entrySet()) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("render() setting header "+entry.getKey()+": "+entry.getValue());
+                            } // if
+                            response.setHeader(entry.getKey(), entry.getValue());
+                        } // for
+                    } // if
                 } catch (ServletException ex) {
                     log.error("render()", ex);
                     throw new IOException("Problem while including JSP", ex);
