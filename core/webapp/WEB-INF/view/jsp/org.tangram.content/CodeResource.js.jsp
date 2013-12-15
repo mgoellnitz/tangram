@@ -18,6 +18,7 @@ if (viewSettings.get("jsCacheTime") != null) {
 InputStream is = code.getStream();
 if (is != null) {
   InputStreamReader isr = new InputStreamReader(is);
+  out.flush();
   try {
     JavaScriptCompressor jsc = new JavaScriptCompressor(isr, null); 
     jsc.compress(out, 80, false, false, false, false);

@@ -18,6 +18,7 @@ if (bytes != null) {
     calendar.add(Calendar.MINUTE, cacheTimeMinutes);
     response.setHeader("Expires", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));  
   } // if
+  response.getOutputStream().flush();
   response.getOutputStream().write(bytes);
 } // if
 %>

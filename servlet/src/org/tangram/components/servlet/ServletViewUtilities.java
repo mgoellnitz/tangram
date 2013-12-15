@@ -155,7 +155,7 @@ public class ServletViewUtilities implements ViewUtilities {
                         out.flush();
                         response = new ResponseWrapper(response);
                     } else {
-                        response.getOutputStream().flush();
+                        // response.getOutputStream().flush();
                     } // if
                     requestDispatcher.include(request, response);
                     // out.write(br.getContents());
