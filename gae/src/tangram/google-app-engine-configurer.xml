@@ -35,8 +35,6 @@
     <property name="useHdrDatastore" value="${use.hdr.datastore}" />
   </bean>
 
-  <bean id="loginSupport" class="org.tangram.gae.GaeLoginSupport"/>
-  
   <!--  edit scenarios only  -->
 
   <bean id="propertyConverter" class="org.tangram.gae.GaePropertyConverter">
