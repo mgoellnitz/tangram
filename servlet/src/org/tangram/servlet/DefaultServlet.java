@@ -161,6 +161,8 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             } // if
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
+            response.setContentType("text/html");
+            response.setCharacterEncoding("utf-8");
             TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
         } // try/catch
     } // doGet()

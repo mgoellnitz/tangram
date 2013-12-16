@@ -146,7 +146,7 @@ public class ServletViewUtilities implements ViewUtilities {
                         request.setAttribute(key, model.get(key));
                     } // for
                     if (log.isDebugEnabled()) {
-                        log.debug("render() writer "+out);
+                        log.debug("render("+template+") writer "+out);
                     } // if
                     ResponseWrapper responseWrapper = null;
                     if (out==null) {
@@ -159,16 +159,18 @@ public class ServletViewUtilities implements ViewUtilities {
                     requestDispatcher.include(request, response);
                     if (out==null) {
                         if (log.isDebugEnabled()) {
-                            log.debug("render() setting content type for "+responseWrapper.getContentType());
+                            log.debug("render("+template+") setting content type for "+responseWrapper.getContentType());
                             log.debug("render() setting character encoding for "+responseWrapper.getCharacterEncoding());
                         } // if
                         final String contentType = responseWrapper.getContentType();
-                        String contentHeader = contentType.startsWith("text") ? contentType+"; charset="+responseWrapper.getCharacterEncoding() : contentType;
+                        final String characterEncodingSuffix = "; charset="+responseWrapper.getCharacterEncoding();
+                        String contentHeader = (contentType.startsWith("text")&&(contentType.indexOf(';')<0)) ? contentType+characterEncodingSuffix : contentType;
                         /*
                          response.setContentType(contentType);
                          response.setCharacterEncoding(responseWrapper.getCharacterEncoding());
                          */
                         response.setHeader("Content-Type", contentHeader);
+                        responseWrapper.setHeader("Content-Type", contentHeader);
                         for (Map.Entry<String, String> entry : responseWrapper.getHeaders().entrySet()) {
                             if (log.isDebugEnabled()) {
                                 log.debug("render() setting header "+entry.getKey()+": "+entry.getValue());

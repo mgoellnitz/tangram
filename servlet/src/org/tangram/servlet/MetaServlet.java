@@ -410,7 +410,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                     TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
                     if (resultDescriptor!=TargetDescriptor.DONE) {
                         final ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
-                        TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+                        TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
                     } // if
                     return;
                 } // if
@@ -431,7 +431,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         if (log.isInfoEnabled()) {
                             log.info("service() handing over to view "+descriptor.view);
                         } // if
-                        TangramServices.getViewUtilities().render(response.getWriter(), model, descriptor.getView());
+                        TangramServices.getViewUtilities().render(null, model, descriptor.getView());
                         return;
                     } else {
                         if (log.isDebugEnabled()) {
@@ -451,7 +451,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         } // if
                         if (resultDescriptor!=TargetDescriptor.DONE) {
                             ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
-                            TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+                            TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
                         } // if
                         return;
                     } // if
@@ -462,7 +462,9 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
             if (log.isDebugEnabled()) {
                 log.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
             } // if
-            TangramServices.getViewUtilities().render(response.getWriter(), context.getModel(), context.getViewName());
+            response.setContentType("text/html");
+            response.setCharacterEncoding("utf-8");
+            TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
             return;
         } // try/catch
 

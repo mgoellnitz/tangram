@@ -21,6 +21,6 @@
 <div class="cms_editor_row">
 <span class="cms_editor_label">${item.key}</span>: ${item.value}
 </div></c:forEach>
-<cms:include bean="${self}" view="tangramEditorFooter" 
-/></body>
+<hr/>
+</body>
 </html>

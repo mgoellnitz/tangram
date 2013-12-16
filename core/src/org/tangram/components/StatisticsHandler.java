@@ -57,6 +57,8 @@ public class StatisticsHandler {
         if (log.isDebugEnabled()) {
             log.debug("statistics()");
         } // if
+        response.setContentType("text/html");
+        response.setCharacterEncoding("utf-8");
         return new TargetDescriptor(statistics, null, null);
     } // statistics()
 
