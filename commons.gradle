@@ -26,6 +26,8 @@ apply plugin: 'tangram'
 // apply plugin: 'code-quality'
 
 repositories {
+  // for dinistiq
+  maven { url "http://repository-tangram.forge.cloudbees.com/snapshot" }
   mavenCentral()
 }
 

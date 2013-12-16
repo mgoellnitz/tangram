@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     web.xml from dinistiq overlay.
+-->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
+  
+  <display-name>Tangram Web Application for dinistiq</display-name>
+
+  <!-- basic dinistiq web setup -->
+  <listener>
+    <listener-class>dinistiq.web.DinistiqContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>dinistiq.packages</param-name>
+    <param-value>
+      dinistiq,
+      org.tangram.components
+    </param-value>
+  </context-param>
+  
+  <servlet>
+    <servlet-name>dinistiq</servlet-name>
+    <servlet-class>dinistiq.web.DinistiqServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dinistiq</servlet-name>
+    <url-pattern>/s/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- TODO: Character Encoding Filter -->
+
+  <filter>
+    <filter-name>expiryFilter</filter-name>
+    <filter-class>org.tangram.util.ExpirationHeaderFilter</filter-class>
+    <init-param>
+      <param-name>expirations</param-name>
+      <param-value>css=604800,js=604800,gif=604800,ico=604800,html=0,DEFAULT=86400</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>expiryFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- Apache shiro example - shiro.ini config file and more tangram setup missing -->
+  <listener>
+    <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>ShiroFilter</filter-name>
+    <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>ShiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher> 
+    <dispatcher>FORWARD</dispatcher> 
+    <dispatcher>INCLUDE</dispatcher> 
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>  
+  
+  <!-- tangram password filter -->
+  <filter>
+    <filter-name>TangramProtections</filter-name>
+    <filter-class>org.tangram.components.servlet.PasswordFilter</filter-class>
+    <init-param>
+      <param-name>free.urls</param-name>
+      <param-value>
+        /tangram/s/stats
+      </param-value>
+    </init-param>
+    <!-- add this to generically protect the whole application
+    <init-param>
+      <param-name>allowed.users</param-name>
+      <param-value>
+        user, admin
+      </param-value>
+    </init-param>
+    -->
+    <init-param>
+      <param-name>admin.users</param-name>
+      <param-value>
+        admin
+      </param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>TangramProtections</filter-name>
+    <url-pattern>/s/*</url-pattern>
+  </filter-mapping>  
+  
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>
