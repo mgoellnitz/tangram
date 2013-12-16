@@ -16,11 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.servlet;
+package org.tangram.components.servlet;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -41,19 +40,17 @@ import org.tangram.security.LoginSupport;
 
 
 /**
- * Filter implementation to check if a user is logged in in the google app engine webapp, if we are a live system,
- * or if we should use generic password protection with users preconfigured in an XML config file.
+ * Filter implementation to check if a user is logged, if we are a live system, or if we should use generic
+ * password protection with users preconfigured in the application configuration.
  *
- * liveSuffix should be the name suffix of your live installation as opposed to the development/testing appengine apps
+ * loginSupport helper instance to handle non-generic login stuff
  *
- * statsUrl is a URL which should be available without log-in /s/statsa typically if you use statistics page for keep
- * alive cron job
+ * freeUrls any URL in this set will not be consired protected
  *
- * allowedUsers if not empty only these users are allowed to log-in.
+ * allowedUsers if not empty only these users are allowed to log in and view contents
  *
- * Can be emails of google accounts or IDs of OpenID accounts
- *
- * adminUsers same as allowedUsers (should be a subset of it) but these users get the access to the editing links
+ * adminUsers same as allowedUsers (should be a subset of it if allowed users is not empty) but these users get
+ * access to the administrational parts of tangram
  */
 @Named
 @Singleton
@@ -63,7 +60,7 @@ public class PasswordFilter implements Filter {
 
     private static LoginSupport loginSupport;
 
-    private Set<String> freeUrls;
+    private Set<String> freeUrls = new HashSet<String>();
 
     private Set<String> allowedUsers = new HashSet<String>();
 
@@ -119,7 +116,7 @@ public class PasswordFilter implements Filter {
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
         if (log.isDebugEnabled()) {
-            log.debug("preHandle() detected URI "+thisURL);
+            log.debug("doFilter() detected URI "+thisURL);
         } // if
 
         if (!getFreeUrls().contains(thisURL)) {
@@ -141,7 +138,7 @@ public class PasswordFilter implements Filter {
                 if (principal!=null) {
                     String userName = principal.getName();
                     if (log.isInfoEnabled()) {
-                        log.info("preHandle() checking for user: "+userName);
+                        log.info("doFilter() checking for user: "+userName);
                     } // if
                     loginSupport.storeLogoutURL(request, thisURL);
                     if (adminUsers.contains(userName)) {
@@ -157,12 +154,12 @@ public class PasswordFilter implements Filter {
                     String loginURL = loginSupport.createLoginURL(thisURL);
                     if (allowedUsers.size()>0) {
                         if (log.isInfoEnabled()) {
-                            log.info("preHandle() no logged in user found");
+                            log.info("doFilter() no logged in user found");
                         } // if
                         response.sendRedirect(loginURL);
                     } else {
                         if (log.isDebugEnabled()) {
-                            log.debug("preHandle() system doesn't need login but perhaps application");
+                            log.debug("doFilter() system doesn't need login but perhaps application");
                         } // if
                         request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
                     } // if
@@ -174,22 +171,43 @@ public class PasswordFilter implements Filter {
     } // afterCompletion()
 
 
+    /**
+     * Split a parameter - say servlet init parameter - at each ',' and trim the result.
+     *
+     * Actually very generic utility fuction. Trimming is used so that line breaks and spaces can be used
+     * to format the input in config files.
+     *
+     *
+     * @param parameter
+     * @return set of string taken from the input parameter
+     */
+    // TODO: make the a system wide utility function
+    private Set<String> stringSetFromParameterString(String parameter) {
+        Set<String> result = new HashSet<String>();
+        String[] parts = parameter.split(",");
+        for (String part : parts) {
+            part = part.trim();
+            result.add(part);
+        } // for
+        return result;
+    } // stringSetFromParameterString()
+
+
     @Override
     @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
-        final Enumeration initParameterNames = config.getInitParameterNames();
-        while (initParameterNames.hasMoreElements()) {
-            String parameterName = ""+(initParameterNames.nextElement());
-            if (parameterName.startsWith("free.url.")) {
-                freeUrls.add(config.getInitParameter(parameterName));
-            } // if
-            if (parameterName.startsWith("allowed.user.")) {
-                allowedUsers.add(config.getInitParameter(parameterName));
-            } // if
-            if (parameterName.startsWith("admin.user.")) {
-                adminUsers.add(config.getInitParameter(parameterName));
-            } // if
-        } // for
+        freeUrls.addAll(stringSetFromParameterString(config.getInitParameter("free.urls")));
+        if (log.isInfoEnabled()) {
+            log.info("init() free urls "+freeUrls);
+        } // if
+        allowedUsers.addAll(stringSetFromParameterString(config.getInitParameter("allowed.users")));
+        if (log.isInfoEnabled()) {
+            log.info("init() allowed users "+allowedUsers);
+        } // if
+        adminUsers.addAll(stringSetFromParameterString(config.getInitParameter("admin.users")));
+        if (log.isInfoEnabled()) {
+            log.info("init() admin users "+adminUsers);
+        } // if
     } // init()
 
 } // PasswordFilter

@@ -111,9 +111,10 @@ public class ExpirationHeaderFilter implements Filter {
             } // if
             String[] expirations = expiry.split(",");
             for (String exp : expirations) {
-                if (log.isInfoEnabled()) {
-                    log.info("init() exp: "+exp);
+                if (log.isDebugEnabled()) {
+                    log.debug("init() exp: "+exp);
                 } // if
+                exp = exp.trim();
                 String[] kvp = exp.split("=");
                 String mimeType = kvp[0];
                 String timeString = kvp[1];
