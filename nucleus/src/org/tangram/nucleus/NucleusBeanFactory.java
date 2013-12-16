@@ -9,26 +9,24 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.nucleus;
 
-import org.datanucleus.identity.OID;
-import org.datanucleus.identity.OIDImpl;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
+
 
 public class NucleusBeanFactory extends AbstractJdoBeanFactory {
 
     @Override
     protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
-        OID oid = new OIDImpl(kindClass.getName(), internalId);
-        return oid;
+         return internalId+"[OID]"+kindClass.getName();
     } // getObjectId()
 
 } // NucleusBeanFactory
