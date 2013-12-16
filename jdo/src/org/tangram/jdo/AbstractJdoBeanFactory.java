@@ -176,7 +176,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             if (log.isInfoEnabled()) {
                 log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
             } // if
-            result = (T) manager.getObjectById(oid);
+            result = (T) manager.getObjectById(kindClass, oid);
 
             if (activateCaching) {
                 cache.put(id, result);
