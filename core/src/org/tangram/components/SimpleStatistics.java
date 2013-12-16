@@ -29,7 +29,7 @@ import org.tangram.monitor.Statistics;
 /**
  * Simple event counter and average caculation implementation.
  */
-@Named
+@Named("statistics")
 @Singleton
 public class SimpleStatistics implements Statistics {
 

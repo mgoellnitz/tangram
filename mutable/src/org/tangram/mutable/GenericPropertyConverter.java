@@ -18,6 +18,7 @@
  */
 package org.tangram.mutable;
 
+import javax.inject.Singleton;
 import javax.servlet.ServletRequest;
 import org.tangram.view.AbstractPropertyConverter;
 
@@ -27,6 +28,7 @@ import org.tangram.view.AbstractPropertyConverter;
  *
  * Generic in the sense that we can use it for JDO, JPA and EBean alike.
  */
+@Singleton
 public class GenericPropertyConverter extends AbstractPropertyConverter {
 
     @Override

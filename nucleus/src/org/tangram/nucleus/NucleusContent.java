@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2013 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.nucleus;
 
@@ -24,7 +24,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datanucleus.identity.OID;
@@ -41,8 +40,8 @@ public abstract class NucleusContent extends JdoContent {
 
     @Override
     public String postprocessPlainId(Object id) {
-        if (log.isInfoEnabled()) {
-            log.info("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
+        if (log.isDebugEnabled()) {
+            log.debug("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
         } // if
         if (id instanceof OID) {
             OID oid = (OID)id;
