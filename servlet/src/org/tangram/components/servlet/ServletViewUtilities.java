@@ -111,6 +111,9 @@ public class ServletViewUtilities implements ViewUtilities {
         if (log.isDebugEnabled()) {
             log.debug("render() template="+template);
         } // if
+        if (template == null) {
+            throw new IOException("no view found for model "+model);
+        } // if
         ViewContextFactory vcf = TangramServices.getViewContextFactory();
         ViewContext vc = vcf.createViewContext(model, view);
 
