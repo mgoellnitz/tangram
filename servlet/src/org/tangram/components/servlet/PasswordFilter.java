@@ -33,6 +33,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
@@ -184,11 +185,13 @@ public class PasswordFilter implements Filter {
     // TODO: make the a system wide utility function
     private Set<String> stringSetFromParameterString(String parameter) {
         Set<String> result = new HashSet<String>();
-        String[] parts = parameter.split(",");
-        for (String part : parts) {
-            part = part.trim();
-            result.add(part);
-        } // for
+        if (StringUtils.isNotBlank(parameter)) {
+            String[] parts = parameter.split(",");
+            for (String part : parts) {
+                part = part.trim();
+                result.add(part);
+            } // for
+        } // if
         return result;
     } // stringSetFromParameterString()
 
