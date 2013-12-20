@@ -35,17 +35,20 @@ dependencies {
   compile gradleApi()
   compile localGroovy()
   compile "com.yahoo.platform.yui:yuicompressor:$versions.yui"
+  // persistence APIs
+  compile "$versions.jdo_api"
+  compile "$versions.persistence_api"
   // for the direct datanucleus enhancer
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
+  compile "org.datanucleus:datanucleus-api-jpa:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
-  compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
+  // for the direct ecliselink enhancer
+  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:$versions.eclipselink"  
   // For the direct ebean enhancer
   compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
   compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
   compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
-  // compile "log4j:log4j:$versions.log4j"
-  compile "$versions.jdo_api"
 }
 
 publishing {

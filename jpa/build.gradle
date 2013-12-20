@@ -26,28 +26,63 @@ dependencies {
   */
   compile ("org.apache.openjpa:openjpa:2.2.2") {
     exclude group: 'asm'
+    transitive = false
   }
   
   // Eclipselink
   /*
-  compile "org.eclipse.persistence:javax.persistence:2.1.0"
   compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"  
   */
-  
-  providedCompile "javax.servlet:servlet-api:$versions.servlet"
-  providedCompile "javax.servlet:jsp-api:$versions.jsp"
+  compile "$versions.persistence_api"
 }
 
-/* For EcliseLink
-compileJava.doLast {
+// For EcliseLink
+/*
+*/
+task eclipselinkJar(type: Jar, dependsOn: jar) {
+  classifier = 'eclipselink'
+  from "$buildDir/classes/eclipselink"
+  from "$buildDir/resources/main"
+}
+
+eclipselinkJar.doFirst {
   // uses persistence.xml in weave/
-  internalJpaWeave()
+  eclipselinkWeave("$buildDir/classes/eclipselink")
 }
-*/
 
-/* For OpenJPA
+// For Datanucleus
+task nucleusJar(type: Jar, dependsOn: eclipselinkJar) {
+  classifier = 'nucleus'
+  from "$buildDir/classes/nucleus"
+  from "$buildDir/resources/main"
+}
+
+nucleusJar.doFirst {
+  nucleusJpaEnhance("$buildDir/classes/nucleus")
+}
+
+/*
 */
-jar.doFirst {
+// For OpenJPA
+task openjpaJar(type: Jar, dependsOn: nucleusJar) {
+  classifier = 'openjpa'
+  from "$buildDir/classes/openjpa"
+  from "$buildDir/resources/main"
+}
+
+openjpaJar.doFirst {
   // uses persistence.xml in enhance/
-  openjpaEnhance()
+  // openjpaEnhance("$buildDir/classes/openjpa")
+}
+
+sourcesJar.dependsOn openjpaJar
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact eclipselinkJar
+      artifact nucleusJar
+      artifact openjpaJar
+    }
+  }
 }

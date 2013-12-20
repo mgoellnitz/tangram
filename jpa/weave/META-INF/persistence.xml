@@ -3,11 +3,10 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
     
-  <!-- This persistent.xml ist just intended for the weaving phase -->
+  <!-- This persistent.xml ist just intended for the weaving phase of EclipseLink -->
   <persistence-unit name="tangram" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <!--
-    -->
+    <!-- We didn't find a way to let eclipselink autodetect this -->
     <class>org.tangram.jpa.JpaContent</class>
     <class>org.tangram.jpa.Code</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>

@@ -16,8 +16,6 @@
  */
 package org.tangram.jpa;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -66,37 +64,6 @@ public abstract class JpaContent implements MutableContent {
     public boolean equals(Object obj) {
         return (obj instanceof JpaContent) ? getId().equals(((Content) obj).getId()) : super.equals(obj);
     } // equals()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer.
-     * This is might still be a useful pattern in google app engine scenarios
-     *
-     * @param c Content instance - may be null
-     * @return id of content or null
-     */
-    protected String getId(Content c) {
-        return c==null ? null : c.getId();
-    } // getId()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer.
-     * This is might still be a useful pattern in google app engine scenarios
-     *
-     * @param contents list of contents - should not be null
-     * @return list of ids for the given list of contents
-     */
-    @Deprecated
-    protected List<String> getIds(List<? extends Content> contents) {
-        List<String> result = new ArrayList<String>();
-        if (contents!=null) {
-            for (Object o : contents) {
-                result.add(((Content) o).getId());
-            } // for
-        } // if
-        return result;
-    } // getIds()
 
 
     @Override

@@ -24,6 +24,7 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.bundling.War
 import com.avaje.ebean.enhance.agent.Transformer
 import com.avaje.ebean.enhance.ant.OfflineFileTransform
+import org.eclipse.persistence.tools.weaving.jpa.StaticWeaveProcessor;
 
 
 class TangramPlugin implements Plugin<Project> {
@@ -161,28 +162,12 @@ class TangramUtilities {
 
   
   /**
-   *  Do JDO enhancement with datanucleus enhancer of classes from the
-   *  callers javaCompile output set.
-   */
-  public nucleusJdoEnhance() {
-    nucleusEnhance("JDO")
-  } // nucleusJdoEnhance()
-  
-  
-  /**
-   *  Do JPA enhancement with datanucleus enhancer of classes from the
-   *  callers javaCompile output set.
-   */
-  public nucleusJpaEnhance() {
-    nucleusEnhance("JPA")
-  } // nucleusJpaEnhance()
-  
-  
-  /**
    *  Do enhancement with datanucleus enhancer of classes from the
-   *  callers javaCompile output set.
+   *  callers javaCompile output set. An optional output directory can
+   *  be given to let the enhancer put the enhanced classes there instead
+   *  of overriding the original class files.
    */
-  private nucleusEnhance(String api) {
+  private nucleusEnhance(String api, String dir) {
     try {
       // Collect output paths and files
       List<String> fileList = new ArrayList<String>()
@@ -208,6 +193,9 @@ class TangramUtilities {
       
       // Instanciate enhancer and pass filename list
       DataNucleusEnhancer enhancer = new DataNucleusEnhancer(api)
+      if (dir != null) {
+        enhancer.setOutputDirectory(dir)
+      } // if
       enhancer.setVerbose(true)
       enhancer.setSystemOut(true)
       enhancer.addFiles(filenames)
@@ -224,95 +212,69 @@ class TangramUtilities {
   
   
   /**
-   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
-   * from the callers runtime classpath.
+   *  Do JDO enhancement with datanucleus enhancer of classes from the
+   *  callers javaCompile output set.
    */
-  public openjpaEnhance() {
+  public nucleusJdoEnhance() {
+    nucleusEnhance("JDO", null)
+  } // nucleusJdoEnhance()
+  
+  
+  /**
+   *  Do JPA enhancement with datanucleus enhancer of classes from the
+   *  callers javaCompile output set.
+   */
+  public nucleusJpaEnhance() {
+    nucleusEnhance("JPA", null)
+  } // nucleusJpaEnhance()
+  
+  public nucleusJpaEnhance(String dir) {
+    nucleusEnhance("JPA", dir)
+  } // nucleusJpaEnhance()
+  
+  
+  /**
+   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
+   * from the callers runtime classpath, which is the case for any project
+   * using OpenJPA.
+   * 
+   * The target directory parameter dir is optional. If present the enhanced
+   * classes will be placed in the given directory otherwise the original
+   * classes get overridden.
+   * 
+   * An optional persistence.xml can be placed in the subfolder META-INF folder 
+   * of an 'enhance/' folder in the project's root directory which then is only
+   * used during the enhancement process. This helps when having multiple jars
+   * with enhanced classes while only one of them may later contain the
+   * persistence.xml in effect for the deployed system.
+   */
+  public openjpaEnhance(String dir) {
     String cp = project.runtimeClasspath.asPath+File.pathSeparator+"${project.projectDir}/enhance"
     project.ant.taskdef(
       name : 'enhance',
       classpath : cp,
       classname : 'org.apache.openjpa.ant.PCEnhancerTask'
     )
-    project.ant.enhance(classpath : cp) {
-      fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
-    }
+    if (dir != null) {
+      project.ant.enhance(classpath : cp, directory : dir) {
+        fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
+      }
+    } else {
+      project.ant.enhance(classpath : cp) {
+        fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
+      }
+    } // if
   } // openjpaEnhance()
-
-
-  /**
-   * Call the EclipseLink Weaver for the callers jars as an ant tasks. 
-   * EclipseLink must be available from the callers runtime classpath.
-   */
-  public eclipselinkWeave() {
-    try {
-      String jarPath = project.jar.outputs.files.asPath
-      String tempPath = jarPath.replace('.jar', '-unwoven.jar')
-      File o = new File(jarPath)
-      o.renameTo(new File(tempPath))
-      project.ant.taskdef(name: 'weave', 
-        classpath: project.configurations.compile.asPath, 
-        classname: 'org.eclipse.persistence.tools.weaving.jpa.StaticWeaveAntTask')
-      project.ant.weave(source: tempPath, target: jarPath) {
-        classpath {
-          // this is the real class path for the tool (s.a.)
-          pathelement(path: project.configurations.compile.asPath)
-          // With mere jar libs this is still not complete and enough:
-          pathelement(path: project.sourceSets['main'].compileClasspath.asPath)
-        }
-      }            
-    } catch(Exception e) {
-      println ''
-      e.printStackTrace(System.out);
-      throw new GradleException('An error occurred weaving entity classes.', e)
-    } // try/catch
-  } // eclipselinkWeave()
-
+  
   
   /**
-   * Call the EclipseLink Weaver for the callers classes before packaging a jar.
-   * This is quite similar to the generic EclipseLink case except that a 
-   * specific persistence.xml is used which must reside in the weave/ subdirectory 
-   * of the caller project.
+   * Create a classloader from the projects compile dependencies and output path
    */
-  public internalJpaWeave() {
-    try {
-      String persistenceXml = "${project.projectDir}/weave"
-      println "persistence.xml: $persistenceXml"
-      project.ant.taskdef(name: 'weave', 
-        classpath: project.configurations.compile.asPath, 
-        classname: 'org.eclipse.persistence.tools.weaving.jpa.StaticWeaveAntTask')
-      project.ant.weave(source: project.sourceSets['main'].output.classesDir.canonicalPath, 
-        target: project.sourceSets['main'].output.classesDir.canonicalPath,
-        persistenceinfo: persistenceXml) {
-        classpath {
-          // this is the real class path for the tool (s.a.)
-          pathelement(path: project.configurations.compile.asPath)
-          // With mere jar libs this is still not complete and enough:
-          pathelement(path: project.sourceSets['main'].compileClasspath.asPath)
-        }
-      }            
-    } catch(Exception e) {
-      println ''
-      e.printStackTrace(System.out);
-      throw new GradleException('An error occurred weaving entity classes.', e)
-    } // try/catch
-  } // internalJpaWeave()
-    
-  
-  /**
-   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
-   * from the callers runtime classpath.
-   */
-  public ebeanEnhance() {
+  private ClassLoader getClassLoader() {
     // collect compile output paths as URLs
     List<URL> urlList = new ArrayList<URL>()
-    String classSource = null
     project.sourceSets['main'].output.files.each {
       String urlstring = it.toURI().toURL()
-      if (classSource == null) {
-        classSource = it.absolutePath
-      } // if
       println "url: $urlstring"
       urlList.add(new URL(urlstring))
     }
@@ -322,16 +284,65 @@ class TangramUtilities {
       urlList.add(new URL(urlstring))
     }
     URL[] urls = urlList.toArray()
-    URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
+    return new URLClassLoader(urls, this.class.classLoader)
+  } // getClassLoader()
+
+
+  /**
+   * Call the EclipseLink Weaver for the callers classes before packaging a jar.
+   * You may provide an output directory for the woven classes. If this parameter
+   * is missing or null the original classes will be overridden.
+   */
+  public eclipselinkWeave(String dir) {
+    try {
+      println "eclipselink"
+      URLClassLoader cl = getClassLoader()
+      
+      if (dir == null) {
+        dir = project.sourceSets['main'].output.classesDir.canonicalPath
+      } // if
+      StaticWeaveProcessor p = new StaticWeaveProcessor(project.sourceSets['main'].output.classesDir.canonicalPath, dir)
+      String persistenceXml = "${project.projectDir}/weave"
+      // println "persistence.xml: $persistenceXml"
+      File pxml = new File("$persistenceXml/META-INF/persistence.xml")
+      if (pxml.exists()) {
+        p.setPersistenceInfo(persistenceXml)
+      } else {
+        p.setPersistenceInfo(project.sourceSets['main'].output.resourcesDir.canonicalPath)
+      } // if
+      p.setClassLoader(cl)
+      p.performWeaving()
+    } catch(Exception e) {
+      println ''
+      e.printStackTrace(System.out)
+      throw new GradleException('An error occurred weaving entity classes.', e)
+    } // try/catch
+  } // eclipselinkWeave()
+  
+  
+  /**
+   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
+   * from the callers runtime classpath.
+   */
+  public ebeanEnhance() {
+    URLClassLoader cl = getClassLoader()
     
     String transformArgs = "debug=1"      
     Transformer t = new Transformer(project.configurations.compile.asPath, transformArgs)
-    // Class destination has no function
+    // Class destination has no effect
     // String classDestination = "$project.buildDir"
     // println classDestination
     // OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, classDestination)
+    
+    String classSource = null
+    project.sourceSets['main'].output.files.each {
+      if (classSource == null) {
+        classSource = it.absolutePath
+      } // if
+    }
+    
     OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
-    ft.process(null);
+    ft.process(null)
   } // ebeanEnhance()
 
 } // TangramUtilities
