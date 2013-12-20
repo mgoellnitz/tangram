@@ -27,10 +27,17 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
 
+/**
+ * Implementation of CodeResource interface for use with JPA.
+ *
+ * This should be final since the system will not be able to deal with classes derived from code,
+ * but we want to allow JPA systems to use subclasses to implement persistency ant thus this class
+ * can tecnnically speaking not be final.
+ */
 @Entity
 // Annotation needed for OpenJPA - at least
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public final class Code extends JpaContent implements MutableCode {
+public class Code extends JpaContent implements MutableCode {
 
     private String annotation;
 
