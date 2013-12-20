@@ -24,6 +24,8 @@ dependencies {
   webapp project(':tangram-core')
   compile project(':tangram-mutable')
   
+  compile "com.thoughtworks.xstream:xstream:$versions.xstream"
+
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }

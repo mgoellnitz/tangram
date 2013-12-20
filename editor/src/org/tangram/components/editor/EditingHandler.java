@@ -451,7 +451,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         XStream xstream = new AppEngineXStream(new StaxDriver());
         Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
 
-        // Dig out root class of all this evil to find out where id field is defined
+        // Dig out root class of all this evil to find out where the id field is defined
         Class<? extends Object> oneClass = classes.iterator().next();
         while (oneClass.getSuperclass()!=Object.class) {
             oneClass = oneClass.getSuperclass();
@@ -466,6 +466,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             // xstream.omitField(c, "id");
         } // for
         Collection<MutableContent> allContent = new ArrayList<MutableContent>();
+        // TODO: We need to use eager loading in this special case for all ORM solutions
         for (Class<? extends MutableContent> c : classes) {
             try {
                 allContent.addAll(beanFactory.listBeansOfExactClass(c));

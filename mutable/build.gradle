@@ -16,12 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-apply from: '../webapp.gradle'
-
-war.dependsOn ':tangram-core:war'
+apply from: '../lib.gradle'
 
 dependencies {
-  webapp project(':tangram-core')
   compile project(':tangram-core')
   
   compile "com.thoughtworks.xstream:xstream:$versions.xstream"

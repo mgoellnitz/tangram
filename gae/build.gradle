@@ -18,11 +18,11 @@
  */
 apply from: '../webapp.gradle'
 
-war.dependsOn ':tangram-mutable:war'
+war.dependsOn ':tangram-core:war'
 
 // Google App Engine always includes the editor
 dependencies {
-  webapp project (':tangram-mutable')
+  webapp project (':tangram-core')
   webapp project (':tangram-editor')
 
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
@@ -34,7 +34,6 @@ dependencies {
   compile "com.google.appengine:appengine-api-labs:$versions.appengine"
   compile "com.google.appengine:appengine-jsr107cache:$versions.appengine"
 
-  compile "$versions.jdo_api"
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "com.google.appengine.orm:datanucleus-appengine:$versions.datanucleus_appengine"

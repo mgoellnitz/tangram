@@ -83,6 +83,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      *
      * @param className fully qualified name of the class
      */
+    @SuppressWarnings("unchecked")
     protected Class<? extends MutableContent> getClassForName(String className) {
         Class<? extends MutableContent> result = null;
         for (Class<? extends MutableContent> c : getClasses()) {
