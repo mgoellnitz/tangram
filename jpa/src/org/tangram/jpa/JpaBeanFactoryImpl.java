@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -126,6 +128,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
      *
      * @param configOverrides
      */
+    @Inject
+    @Named("jpaConfigOverrides")
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
     }

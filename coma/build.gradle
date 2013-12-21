@@ -23,8 +23,9 @@ war.dependsOn ':tangram-core:war'
 dependencies {
   webapp project(path: ':tangram-core')
 
-  providedCompile "javax.servlet:servlet-api:$versions.servlet"
-  providedCompile "javax.servlet:jsp-api:$versions.jsp"
   compile project(':tangram-core')
   compile project(':tangram-spring')
+
+  providedCompile "javax.servlet:servlet-api:$versions.servlet"
+  providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }

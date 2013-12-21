@@ -49,16 +49,15 @@
     </property>
     <property name="activateCaching" value="${bean.factory.activate.caching}" />
     <property name="activateQueryCaching" value="${bean.factory.activate.query.caching}" />
-    <!--
-    <property name="configOverrides" ref="ebeanConfigOverrides" />
-    -->
     <property name="serverConfig" ref="serverConfig"/>
   </bean>
 
   <!-- this one moved out of components and is not auto-scanned anymore -->
 
-  <bean id="persistentRestartCache" class="org.tangram.util.DummyRestartCache" />
-    
+  <bean id="persistentRestartCache" class="org.tangram.util.FileRestartCache">
+    <property name="filename" value="${tangram.restart.cache.file}"/>
+  </bean>
+            
   <!--  edit scenarios only  -->
 
   <bean id="propertyConverter" class="org.tangram.mutable.GenericPropertyConverter">
