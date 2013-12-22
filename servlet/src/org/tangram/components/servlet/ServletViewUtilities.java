@@ -168,10 +168,6 @@ public class ServletViewUtilities implements ViewUtilities {
                         final String contentType = responseWrapper.getContentType();
                         final String characterEncodingSuffix = "; charset="+responseWrapper.getCharacterEncoding();
                         String contentHeader = (contentType.startsWith("text")&&(contentType.indexOf(';')<0)) ? contentType+characterEncodingSuffix : contentType;
-                        /*
-                         response.setContentType(contentType);
-                         response.setCharacterEncoding(responseWrapper.getCharacterEncoding());
-                         */
                         response.setHeader("Content-Type", contentHeader);
                         responseWrapper.setHeader("Content-Type", contentHeader);
                         for (Map.Entry<String, String> entry : responseWrapper.getHeaders().entrySet()) {

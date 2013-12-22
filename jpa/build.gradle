@@ -21,24 +21,19 @@ apply from: '../lib.gradle'
 dependencies {
   compile project(':tangram-mutable')
   
-  // OpenJPA
-  /*
-  */
-  compile ("org.apache.openjpa:openjpa:2.2.2") {
+  // OpenJPA - just as the implementation during module creation
+  // this is necessary since we use this dependency for the OpenJPA
+  // enhancer
+  compile ("org.apache.openjpa:openjpa:$versions.openjpa") {
     exclude group: 'asm'
-    transitive = false
   }
   
-  // Eclipselink
-  /*
-  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:2.5.1"  
-  */
+  // This is the API as packages with EclipseLink - which should not make
+  // that much of a difference
   compile "$versions.persistence_api"
 }
 
 // For EcliseLink
-/*
-*/
 task eclipselinkJar(type: Jar, dependsOn: jar) {
   classifier = 'eclipselink'
   from "$buildDir/classes/eclipselink"
@@ -46,7 +41,7 @@ task eclipselinkJar(type: Jar, dependsOn: jar) {
 }
 
 eclipselinkJar.doFirst {
-  // uses persistence.xml in weave/
+  // uses persistence.xml in weave/ and copies all non Entity classes unchanged
   eclipselinkWeave("$buildDir/classes/eclipselink")
 }
 
@@ -58,11 +53,14 @@ task nucleusJar(type: Jar, dependsOn: eclipselinkJar) {
 }
 
 nucleusJar.doFirst {
+  copy {
+    from "$buildDir/classes/main"
+    into "$buildDir/classes/nucleus"
+    include '**/**'
+  }
   nucleusJpaEnhance("$buildDir/classes/nucleus")
 }
 
-/*
-*/
 // For OpenJPA
 task openjpaJar(type: Jar, dependsOn: nucleusJar) {
   classifier = 'openjpa'
@@ -71,8 +69,13 @@ task openjpaJar(type: Jar, dependsOn: nucleusJar) {
 }
 
 openjpaJar.doFirst {
-  // uses persistence.xml in enhance/
-  // openjpaEnhance("$buildDir/classes/openjpa")
+  copy {
+    from "$buildDir/classes/main"
+    into "$buildDir/classes/openjpa"
+    include '**/**'
+  }
+  // uses persistence.xml in enhance/ and copies all non Entity classes except interfaces unchanged
+  openjpaEnhance("$buildDir/classes/openjpa")
 }
 
 sourcesJar.dependsOn openjpaJar
@@ -80,6 +83,15 @@ sourcesJar.dependsOn openjpaJar
 publishing {
   publications {
     mavenJava(MavenPublication) {
+      // remove any dependency for the JPA implementations
+      Object oneDependency = pom.runtimeDependencies.iterator().next()
+      ext.theCopy = pom.runtimeDependencies.clone()
+      ext.theCopy.each {
+        if (it != oneDependency) {
+          pom.runtimeDependencies.remove(it)
+        }
+      }
+
       artifact eclipselinkJar
       artifact nucleusJar
       artifact openjpaJar

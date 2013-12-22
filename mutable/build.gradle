@@ -21,8 +21,6 @@ apply from: '../lib.gradle'
 dependencies {
   compile project(':tangram-core')
   
-  compile "com.thoughtworks.xstream:xstream:$versions.xstream"
-
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }
