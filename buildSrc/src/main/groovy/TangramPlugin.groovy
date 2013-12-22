@@ -275,7 +275,7 @@ class TangramUtilities {
     List<URL> urlList = new ArrayList<URL>()
     project.sourceSets['main'].output.files.each {
       String urlstring = it.toURI().toURL()
-      println "url: $urlstring"
+      // println "url: $urlstring"
       urlList.add(new URL(urlstring))
     }
     // Add compile class path elements as urls
@@ -295,7 +295,6 @@ class TangramUtilities {
    */
   public eclipselinkWeave(String dir) {
     try {
-      println "eclipselink"
       URLClassLoader cl = getClassLoader()
       
       if (dir == null) {
