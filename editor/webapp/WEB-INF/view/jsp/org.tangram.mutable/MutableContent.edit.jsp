@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/t/print.css" type="text/css" media="print"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
-<link rel="shortcut icon" href="${prefix}/t/e/favicon.ico" />
+<link rel="shortcut icon" href="${prefix}/t/favicon.ico" />
 <script type="text/javascript" src="${prefix}/editor/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="${prefix}/editor/codemirror/js/codemirror.js"></script>
 <script type="text/javascript" src="${prefix}/editor/script.js"></script>
