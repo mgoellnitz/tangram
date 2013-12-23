@@ -19,12 +19,13 @@
 package org.tangram.components.servlet;
 
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,24 +53,21 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
         if (request.getMethod().equals("GET")) {
             parameterMap = request.getParameterMap();
         } else {
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            // TODO: Take from configuration
-            factory.setSizeThreshold(500000);
-            ServletFileUpload upload = new ServletFileUpload(factory);
+            ServletFileUpload upload = new ServletFileUpload();
             // TODO: Take from configuration
             upload.setFileSizeMax(500000);
             try {
-                final List<FileItem> fileItems = upload.parseRequest(request);
-                if (log.isDebugEnabled()) {
-                    log.debug("() items "+fileItems);
-                } // if
-                for (FileItem item : fileItems) {
+                final FileItemIterator fileItemIterator = upload.getItemIterator(request);
+                while (fileItemIterator.hasNext()) {
+                    FileItemStream item = fileItemIterator.next();
+                    String fieldName = item.getFieldName();
+                    InputStream stream = item.openStream();
                     if (item.isFormField()) {
                         // TODO: Just one value per parameter name for now - which is sufficient for tangram itself
                         String[] value = new String[1];
-                        value[0] = item.getString();
+                        value[0] = Streams.asString(stream, "UTF-8");
                         if (log.isDebugEnabled()) {
-                            log.debug("() request parameter "+item.getFieldName()+"='"+value[0]+"'");
+                            log.debug("() request parameter "+fieldName+"='"+value[0]+"'");
                         } // if
                         parameterMap.put(item.getFieldName(), value);
                     } else {
@@ -77,15 +75,16 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                             if (log.isDebugEnabled()) {
                                 log.debug("() item "+item.getName()+" :"+item.getContentType());
                             } // if
-                            if (item.getSize()>0) {
-                                blobs.put(item.getFieldName(), IOUtils.toByteArray(item.getInputStream()));
+                            final byte[] bytes = IOUtils.toByteArray(stream);
+                            if (bytes.length>0) {
+                                blobs.put(fieldName, bytes);
                             } // if
                         } catch (IOException ex) {
                             log.error("()", ex);
                         } // try/catcg
                     } // if
                 } // for
-            } catch (FileUploadException ex) {
+            } catch (FileUploadException|IOException ex) {
                 log.error("()", ex);
             } // try/catcg
         } // if

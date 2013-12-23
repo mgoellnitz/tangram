@@ -287,7 +287,6 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
         } // if
 
         if (method!=null) {
-            // TODO: Do type conversion or binding with spring or its conversion service
             descriptor.action = null;
             List<Object> parameters = new ArrayList<Object>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
@@ -374,8 +373,13 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
             } // if
             if (resultDescriptor!=TargetDescriptor.DONE) {
                 if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
-                    Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
-                    response.sendRedirect(link.getUrl());
+                    try {
+                        Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
+                        response.sendRedirect(link.getUrl());
+                    } catch (Exception e) {
+                        log.error("handleResultDescriptor()", e);
+                        result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
+                    } // try/catch
                 } else {
                     result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
                 } // if

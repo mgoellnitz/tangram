@@ -284,7 +284,6 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         } // if
 
         if (method!=null) {
-            // TODO: Do type conversion or binding with spring or its conversion service
             descriptor.action = null;
             List<Object> parameters = new ArrayList<Object>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();

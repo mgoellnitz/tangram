@@ -24,6 +24,9 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
 
+/**
+ * All BeanFactories dealing with Java Data Objects implement this interface.
+ */
 public interface JdoBeanFactory extends MutableBeanFactory {
 
     /**

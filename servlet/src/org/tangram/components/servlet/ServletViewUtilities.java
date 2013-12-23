@@ -19,7 +19,7 @@
 package org.tangram.components.servlet;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.Writer;
 import java.util.List;
 import java.util.Locale;
@@ -136,7 +136,9 @@ public class ServletViewUtilities implements ViewUtilities {
                     out.flush();
                 } // if
                 VelocityContext context = new VelocityContext(model);
-                velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new InputStreamReader(codeResource.getStream()));
+                // Doesn't work and fails with wrong encoding - but would have used the caching of velocity
+                // velocityEngine.getTemplate(template).merge(context, response.getWriter());
+                velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new StringReader(codeResource.getCodeText()));
             } catch (Exception ex) {
                 throw new IOException(ex.getCause());
             } // try/catch
