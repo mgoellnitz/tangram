@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -68,13 +67,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractInternalReso
     public void setDelegate(UrlBasedViewResolver delegate) {
         this.delegate = delegate;
     }
-
-
-    @Override
-    public void setServletContext(ServletContext context) {
-        setFilePathPrefix(context.getRealPath(""));
-    } // setServletContext()
-
+    
 
     @Override
     protected View getNotFoundDummy() {

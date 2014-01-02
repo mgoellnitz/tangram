@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,8 @@ package org.tangram.view;
 import java.io.File;
 import java.io.InputStream;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,9 +71,10 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
     }
 
 
-    public void setFilePathPrefix(String filePathPrefix) {
-        this.filePathPrefix = filePathPrefix;
-    }
+    @Inject
+    public void setServletContext(ServletContext servletContext) {
+        filePathPrefix = servletContext.getRealPath("");
+    } // setServletContext()
 
 
     protected String checkJspExists(String result) {
