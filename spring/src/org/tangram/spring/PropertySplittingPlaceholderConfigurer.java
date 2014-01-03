@@ -129,7 +129,7 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
                     props.setProperty(propertyName+".port", port);
                 } // if
             } catch (Exception e) {
-                log.error("convertProperties() error reading "+propertyValue+" as a url", e);
+                log.error("storeUrlParts() error reading "+propertyValue+" as a url", e);
             } // try/catch
         } // if
     } // storeUrlParts()
