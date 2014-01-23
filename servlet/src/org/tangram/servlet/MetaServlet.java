@@ -372,7 +372,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                 log.info("handleResultDescriptor() received link "+resultDescriptor);
             } // if
             if (resultDescriptor!=TargetDescriptor.DONE) {
-                if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
+                if (resultDescriptor.action!=null) {
                     try {
                         Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
                         response.sendRedirect(link.getUrl());

@@ -365,7 +365,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                 log.info("handleResultDescriptor() received link "+resultDescriptor);
             } // if
             if (resultDescriptor!=TargetDescriptor.DONE) {
-                if ((resultDescriptor.action!=null)||!"GET".equals(request.getMethod())) {
+                if (resultDescriptor.action!=null) {
                     Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
                     response.sendRedirect(link.getUrl());
                 } else {
@@ -458,8 +458,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
         Link result = null;
-        for (LinkHandler linkScheme : handlers.values()) {
-            result = linkScheme.createLink(request, response, bean, action, view);
+        for (LinkHandler handler : handlers.values()) {
+            result = handler.createLink(request, response, bean, action, view);
             if (result!=null) {
                 break;
             } // if
