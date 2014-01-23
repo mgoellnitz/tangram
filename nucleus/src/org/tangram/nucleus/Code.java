@@ -20,6 +20,7 @@ package org.tangram.nucleus;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
@@ -39,6 +40,7 @@ public final class Code extends NucleusContent implements MutableCode {
 
     private String mimeType;
 
+    @Column(length = 32000)
     private String code;
 
 
