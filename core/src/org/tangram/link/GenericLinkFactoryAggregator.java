@@ -71,9 +71,9 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
 
     @Override
-    public void unregisterHandler(LinkFactory handler) {
-        handlers.remove(handler);
-    } // unregisterHandler()
+    public void unregisterFactory(LinkFactory factory) {
+        handlers.remove(factory);
+    } // unregisterFactory()
 
     String prefix = null;
 

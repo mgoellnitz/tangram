@@ -38,7 +38,10 @@ import org.tangram.content.Content;
 
 
 /**
- * Used to manually convert human readable values from forms to objects and vice versa.
+ * Used to convert human readable values from forms to objects and vice versa.
+ *
+ * We had the idea of replacing this with spring conversion service but didn't succeed.
+ * Now this turned out to be more portable since we don't use spring in all scenarios anymore.
  */
 public abstract class AbstractPropertyConverter implements PropertyConverter {
 

@@ -36,7 +36,7 @@ public interface LinkFactoryAggregator {
     void registerFactory(LinkFactory handler);
 
 
-    void unregisterHandler(LinkFactory handler);
+    void unregisterFactory(LinkFactory handler);
 
 
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
