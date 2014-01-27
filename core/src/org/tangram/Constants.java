@@ -45,7 +45,7 @@ public final class Constants {
     /**
      * Default date format string for http headers and the like
      */
-    public static final String DEFAULT_DATE_FORMAT = "hh:mm:ss dd.MM.yyyy zzz";
+    public static final String DEFAULT_DATE_FORMAT = "kk:mm:ss dd.MM.yyyy zzz";
 
     /**
      * Pattern string to find IDs in Strings
@@ -57,7 +57,7 @@ public final class Constants {
      * Pattern to find IDs in (rich/long) text
      */
     public final static Pattern TEXT_ID_PATTERN = Pattern.compile("http://[a-zA-Z0-9:]*\"");
-    
+
     /**
      * name of the default view if value null cannot be used
      */

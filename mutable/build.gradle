@@ -21,6 +21,8 @@ apply from: '../lib.gradle'
 dependencies {
   compile project(':tangram-core')
   
+  testCompile "junit:junit:$versions.junit"  
+  
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
 }

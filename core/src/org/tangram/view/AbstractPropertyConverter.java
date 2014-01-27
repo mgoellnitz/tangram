@@ -78,6 +78,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                     } // if
                 } // for
                 return result;
+            } else if (o instanceof Boolean) {
+                return ""+o;
             } else if (o instanceof Content) {
                 return ((Content) o).getId();
             } else if (o instanceof Date) {
@@ -143,7 +145,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
      * Create an ID matcher from ID_PATTERN to get ids from input strings
      *
      * @param idString string which might contain a valid content id
-     * @return  Matcher instance from given string and ID_PATTERN
+     * @return Matcher instance from given string and ID_PATTERN
      */
     private Matcher createIdMatcher(String idString) {
         Pattern p = Pattern.compile(Constants.ID_PATTERN);
