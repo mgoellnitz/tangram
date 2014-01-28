@@ -38,12 +38,21 @@ public interface RequestParameterAccess {
 
 
     /**
-     * Return data as byte[] for a blob (type file) parameter in the inderlying request.
+     * Return data as byte[] for a blob (type file) parameter in the underlying request.
      *
      * @param name of the blob parameter
      * @return contents of the transfered file as byte[]
      */
     byte[] getData(String name);
+
+
+    /**
+     * Return original file name for a blob (type file) parameter in the underlying request.
+     *
+     * @param name of the blob parameter
+     * @return original file name for the blob
+     */
+    String getOriginalName(String name);
 
 
     /**

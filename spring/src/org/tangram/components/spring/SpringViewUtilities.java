@@ -76,7 +76,7 @@ public class SpringViewUtilities implements ViewUtilities {
      * @return request blob wrapper for the given request
      */
     @Override
-    public RequestParameterAccess createParameterAccess(HttpServletRequest request) {
+    public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
         return new SpringRequestParameterAccess(request);
     } // createParameterAccess()
 

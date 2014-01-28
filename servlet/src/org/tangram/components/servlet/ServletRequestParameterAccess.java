@@ -56,6 +56,7 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
             ServletFileUpload upload = new ServletFileUpload();
             // TODO: Take from configuration
             upload.setFileSizeMax(500000);
+            // TODO: Throw Exception when upload is too large
             try {
                 final FileItemIterator fileItemIterator = upload.getItemIterator(request);
                 while (fileItemIterator.hasNext()) {
@@ -77,6 +78,8 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                             } // if
                             final byte[] bytes = IOUtils.toByteArray(stream);
                             if (bytes.length>0) {
+                                // TODO: Is this the original file name?
+                                originalNames.put(fieldName, item.getName());
                                 blobs.put(fieldName, bytes);
                             } // if
                         } catch (IOException ex) {

@@ -36,9 +36,10 @@ public interface ViewUtilities {
      * create a new request blob mapper instance for the given request.
      *
      * @param request
+     * @throws Exception when trouble with the parameters occured like to large blobs
      * @return request blob wrapper suitable for the request
      */
-    RequestParameterAccess createParameterAccess(HttpServletRequest request);
+    RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception;
 
 
 

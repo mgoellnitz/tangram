@@ -9,15 +9,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.spring;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -37,7 +40,12 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
+
 public class StreamingMultipartResolver implements MultipartResolver {
+
+    private static final Log log = LogFactory.getLog(StreamingMultipartResolver.class);
+
+    public static final String ERROR = "errorcode";
 
     private long maxUploadSize = 50000L;
 
@@ -79,19 +87,76 @@ public class StreamingMultipartResolver implements MultipartResolver {
                     String[] curParam = multipartParameters.get(name);
                     if (curParam==null) {
                         // simple form field
-                        multipartParameters.put(name, new String[] { value });
+                        multipartParameters.put(name, new String[]{value});
                     } else {
                         // array of simple form fields
                         String[] newParam = StringUtils.addStringToArray(curParam, value);
                         multipartParameters.put(name, newParam);
                     }
                 } else {
-                    MultipartFile file = new StreamingMultipartFile(item);
-                    multipartFiles.add(name, file);
-                    multipartFileContentTypes.put(name, file.getContentType());
+                    try {
+                        MultipartFile file = new StreamingMultipartFile(item);
+                        multipartFiles.add(name, file);
+                        multipartFileContentTypes.put(name, file.getContentType());
+                    } catch (final IOException e) {
+                        if (log.isWarnEnabled()) {
+                            log.warn("("+e.getCause().getMessage()+")", e);
+                        } // if
+                        MultipartFile file = new MultipartFile() {
+
+                            @Override
+                            public String getName() {
+                                return "";
+                            }
+
+
+                            @Override
+                            public String getOriginalFilename() {
+                                return e.getCause().getMessage();
+                            }
+
+
+                            @Override
+                            public String getContentType() {
+                                return ERROR;
+                            }
+
+
+                            @Override
+                            public boolean isEmpty() {
+                                return true;
+                            }
+
+
+                            @Override
+                            public long getSize() {
+                                return 0L;
+                            }
+
+
+                            @Override
+                            public byte[] getBytes() throws IOException {
+                                return new byte[0];
+                            }
+
+
+                            @Override
+                            public InputStream getInputStream() throws IOException {
+                                return null;
+                            }
+
+
+                            @Override
+                            public void transferTo(File file) throws IOException, IllegalStateException {
+                                throw new UnsupportedOperationException("NYI");
+                            }
+                        };
+                        multipartFiles.add(name, file);
+                        multipartFileContentTypes.put(name, file.getContentType());
+                    } // try/catch
                 } // if
             } // while
-        } catch (IOException | FileUploadException e) {
+        } catch (IOException|FileUploadException e) {
             throw new MultipartException("Error uploading a file", e);
         } // try/catch
 
@@ -111,7 +176,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
      * resolver.
      *
      * @param request
-     *            current HTTP request
+     * current HTTP request
      * @return the encoding for the request (never <code>null</code>)
      * @see javax.servlet.ServletRequest#getCharacterEncoding
      */

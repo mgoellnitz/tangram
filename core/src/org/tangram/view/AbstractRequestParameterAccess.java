@@ -27,6 +27,8 @@ public abstract class AbstractRequestParameterAccess implements RequestParameter
 
     protected Map<String, byte[]> blobs = new HashMap<String, byte[]>();
 
+    protected Map<String, String> originalNames = new HashMap<String, String>();
+
     protected Map<String, String[]> parameterMap = new HashMap<>();
 
 
@@ -40,6 +42,12 @@ public abstract class AbstractRequestParameterAccess implements RequestParameter
     public byte[] getData(String name) {
         return blobs.get(name);
     } // getData();
+
+
+    @Override
+    public String getOriginalName(String name) {
+        return originalNames.get(name);
+    } // getOriginalName();
 
 
     @Override

@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.tangram.spring.StreamingMultipartResolver;
 import org.tangram.view.AbstractRequestParameterAccess;
 
 
@@ -41,27 +42,32 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
      * Weak visibility to avoid direct instanciation.
      */
     @SuppressWarnings("unchecked")
-    SpringRequestParameterAccess(HttpServletRequest request) {
+    SpringRequestParameterAccess(HttpServletRequest request) throws Exception {
         if (request instanceof DefaultMultipartHttpServletRequest) {
             DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;
             Map<String, MultipartFile> fileMap = r.getFileMap();
 
             for (Entry<String, MultipartFile> entry : fileMap.entrySet()) {
+                if (entry.getValue().getContentType().equals(StreamingMultipartResolver.ERROR)) {
+                    throw new Exception(entry.getValue().getOriginalFilename());
+                } // if
                 String key = entry.getKey();
                 String filename = entry.getValue().getName();
                 if (log.isInfoEnabled()) {
                     log.info("() size "+entry.getValue().getSize());
                     log.info("() name "+filename);
                 } // if
+                final String originalFilename = entry.getValue().getOriginalFilename();
                 if (log.isDebugEnabled()) {
                     log.debug("() key "+key);
-                    log.debug("() original filename "+entry.getValue().getOriginalFilename());
+                    log.debug("() original filename "+originalFilename);
                 } // if
                 if (filename.length()>0) {
                     if (log.isInfoEnabled()) {
                         log.info("multipart file "+key);
                     } // if
                     try {
+                        originalNames.put(key, originalFilename);
                         blobs.put(key, entry.getValue().getBytes());
                     } catch (IOException ex) {
                         log.error("()", ex);
