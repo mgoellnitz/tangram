@@ -185,6 +185,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     customViewProvider.getCustomLinkViews().addAll(schemeCustomViews);
                     if (log.isInfoEnabled()) {
                         log.info("reset() adding custom views "+schemeCustomViews);
+                    } // if
+                    if (log.isDebugEnabled()) {
                         log.debug("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
                     } // if
                     handlers.put(annotation, linkHandler);

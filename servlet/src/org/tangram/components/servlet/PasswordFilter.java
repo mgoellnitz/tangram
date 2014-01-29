@@ -178,11 +178,10 @@ public class PasswordFilter implements Filter {
      * Actually very generic utility fuction. Trimming is used so that line breaks and spaces can be used
      * to format the input in config files.
      *
-     *
      * @param parameter
      * @return set of string taken from the input parameter
      */
-    // TODO: make the a system wide utility function
+    // TODO: make this a system wide utility function
     private Set<String> stringSetFromParameterString(String parameter) {
         Set<String> result = new HashSet<String>();
         if (StringUtils.isNotBlank(parameter)) {
