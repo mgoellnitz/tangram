@@ -20,7 +20,6 @@ package org.tangram.components.editor;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -512,21 +511,25 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     } // doImport()
 
 
-    @LinkAction("/import")
+    @LinkAction("/import-text")
     public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return doImport(new StringReader(xmltext), request, response);
     } // contentImport()
 
 
-    @LinkAction("/import-file/(.*)")
-    public TargetDescriptor fileImport(@LinkPart(1) String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return doImport(new FileReader(filename+".xml"), request, response);
-    } // fileImport()
+    @LinkAction("/import")
+    public TargetDescriptor contentImport(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
+        byte[] data = parameterAccess.getData("xmlfile");
+        return doImport(new StringReader(new String(data, "UTF-8")), request, response);
+    } // contentImport()
 
 
     @LinkAction("/importer")
     public TargetDescriptor importer(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
         return new TargetDescriptor(this, null, null);
     } // importer()
 
