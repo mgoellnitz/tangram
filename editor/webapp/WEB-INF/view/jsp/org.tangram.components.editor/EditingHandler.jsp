@@ -22,7 +22,7 @@
     <fmt:message key="text.codes.prefix" bundle="${msg}"/> <a href="codes.zip"><fmt:message key="button.export" bundle="${msg}"/></a> <fmt:message key="text.codes.suffix" bundle="${msg}"/>
     <br/>
     <br/>
-    <form action="import" method="post">
+    <form action="import" method="post" enctype="multipart/form-data">
       <fmt:message key="text.upload.prefix" bundle="${msg}"/>
       <input name="xmlfile" type="file"/>
       <input name="submit" type="submit" value="  <fmt:message key="button.upload" bundle="${msg}"/>  "/>.
