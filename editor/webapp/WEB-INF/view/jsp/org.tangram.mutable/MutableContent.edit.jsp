@@ -100,7 +100,7 @@ if (TangramServices.getPropertyConverter().isBlobType(type)) {
 <textarea id="ke<%=key%>" class="cms_editor_textfield ckeditor" cols="60" rows="5" name="<%=key%>"><%=TangramServices.getPropertyConverter().getEditString(value)%></textarea>
 <script type="text/javascript">
 //<![CDATA[
-CKEDITOR.replace( 'ke<%=key%>',	{ skin : 'v2' });
+CKEDITOR.replace( 'ke<%=key%>');
 //]]>
 </script>
 <%
