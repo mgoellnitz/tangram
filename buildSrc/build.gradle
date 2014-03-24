@@ -54,10 +54,9 @@ dependencies {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      // TODO: Not available on Gradle 1.6
-      // groupId 'tangram'
-      // artifactId 'gradle-plugin'
-      // version '0.9-SNAPSHOT'
+      groupId 'tangram'
+      artifactId 'gradle-plugin'
+      version '0.9-SNAPSHOT'
       from components.java
       artifact sourcesJar 
     }
