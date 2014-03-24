@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,13 +25,13 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String junit = '4.11'
-  String xstream = '1.4.4'
+  String xstream = '1.4.7'
   
   String guice = '3.0'
   String mycila = '3.2.ga'
   
   String dinistiq = '0.1-SNAPSHOT'
-  String shiro = '1.2.2'
+  String shiro = '1.2.3'
 
   String springframework = '3.1.4.RELEASE'
   String springsecurity = '3.1.4.RELEASE'
@@ -46,12 +46,15 @@ public class TangramVersions {
   String datanucleus = '3.1.3'
   // The byte code enhancer is not included in every version for some reason
   String datanucleus_enhancer = '3.1.1'
+  // Latest version presented by google is 2.1.2 - this version her is provided
+  // by datanucleus for plattform version 3.3
+  // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
   
   String ebean = '3.2.4'
   String ebean_api = '3.1.1'
   String ebean_agent = '3.2.2'
 
-  String appengine = '1.8.8'
+  String appengine = '1.9.1'
   
 } // TangramVersions
