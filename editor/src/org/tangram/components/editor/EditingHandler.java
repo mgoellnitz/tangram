@@ -456,28 +456,26 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             oneClass = oneClass.getSuperclass();
         } // while
         if (log.isInfoEnabled()) {
-            log.info("export() root class to ignore id in: "+oneClass.getName());
+            log.info("contentExport() root class to ignore id in: "+oneClass.getName());
         } // if
         xstream.omitField(oneClass, "id");
 
         for (Class<? extends MutableContent> c : classes) {
             xstream.alias(c.getSimpleName(), c);
-            // xstream.omitField(c, "id");
         } // for
         Collection<MutableContent> allContent = new ArrayList<MutableContent>();
-        // TODO: We need to use eager loading in this special case for all ORM solutions
         for (Class<? extends MutableContent> c : classes) {
             try {
                 allContent.addAll(beanFactory.listBeansOfExactClass(c));
             } catch (Exception e) {
-                log.error("export()/list", e);
+                log.error("contentExport()/list", e);
             } // try/catch
         } // for
         try {
             xstream.toXML(allContent, response.getWriter());
             response.getWriter().flush();
         } catch (IOException e) {
-            log.error("export()/toxml", e);
+            log.error("contentExport()/toxml", e);
         } // try/catch
         return TargetDescriptor.DONE;
     } // contentExport()
