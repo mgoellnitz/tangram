@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -49,7 +50,12 @@ import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 
 
+/**
+ * View utility implementation for plain servlet environments.
+ * Deals with request parameters and rendering of included views.
+ */
 @Named
+@Singleton
 public class ServletViewUtilities implements ViewUtilities {
 
     private static final Log log = LogFactory.getLog(ServletViewUtilities.class);
@@ -57,6 +63,13 @@ public class ServletViewUtilities implements ViewUtilities {
     private static final Pattern ID_PATTRN = Pattern.compile(Constants.ID_PATTERN);
 
     private static VelocityEngine velocityEngine;
+
+    private long uploadFileMaxSize = 500000;
+
+
+    public void setUploadFileMaxSize(long uploadFileMaxSize) {
+        this.uploadFileMaxSize = uploadFileMaxSize;
+    }
 
 
     public ServletViewUtilities() {
@@ -84,7 +97,8 @@ public class ServletViewUtilities implements ViewUtilities {
      */
     @Override
     public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
-        return new ServletRequestParameterAccess(request);
+        ServletRequestParameterAccess result = new ServletRequestParameterAccess(request, uploadFileMaxSize);
+        return result;
     } // createParameterAccess()
 
 

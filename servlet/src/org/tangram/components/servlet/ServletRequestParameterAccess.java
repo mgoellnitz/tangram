@@ -46,16 +46,15 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
      * Weak visibility to avoid direct instanciation.
      */
     @SuppressWarnings("unchecked")
-    ServletRequestParameterAccess(HttpServletRequest request) {
+    ServletRequestParameterAccess(HttpServletRequest request, long uploadFileMaxSize) {
         if (log.isDebugEnabled()) {
-            log.debug("()");
+            log.debug("() uploadFileMaxSize="+uploadFileMaxSize);
         } // if
         if (request.getMethod().equals("GET")) {
             parameterMap = request.getParameterMap();
         } else {
             ServletFileUpload upload = new ServletFileUpload();
-            // TODO: Take from configuration
-            upload.setFileSizeMax(500000);
+            upload.setFileSizeMax(uploadFileMaxSize);
             // TODO: Throw Exception when upload is too large
             try {
                 final FileItemIterator fileItemIterator = upload.getItemIterator(request);
