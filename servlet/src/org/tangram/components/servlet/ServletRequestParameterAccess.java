@@ -77,7 +77,6 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                             } // if
                             final byte[] bytes = IOUtils.toByteArray(stream);
                             if (bytes.length>0) {
-                                // TODO: Is this the original file name?
                                 originalNames.put(fieldName, item.getName());
                                 blobs.put(fieldName, bytes);
                             } // if
