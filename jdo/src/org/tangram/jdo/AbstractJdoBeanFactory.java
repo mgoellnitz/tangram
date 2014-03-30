@@ -431,14 +431,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                                 log.info("getAllClasses() * "+cls.getName());
                             } // if
                             classNames.add(cls.getName());
-                            // Moved to getClasses()
-                            // tableNameMapping.put(cls.getSimpleName(), cls);
+                            // table name mapping moved to getClasses()
                             allClasses.add(cls);
                         } // for
                         if (log.isInfoEnabled()) {
                             log.info("getAllClasses() # class names "+classNames.size());
                         } // if
-                        classNames = new ArrayList<String>();
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
