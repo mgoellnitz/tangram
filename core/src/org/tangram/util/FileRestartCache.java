@@ -90,13 +90,16 @@ public class FileRestartCache implements PersistentRestartCache {
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
+        if (log.isInfoEnabled()) {
+            log.info("afterPropertiesSet("+filename+")");
+        } //
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
             cache = (Map<String, Object>) (ois.readObject());
             ois.close();
         } catch (Exception e) {
             if (log.isWarnEnabled()) {
-                log.warn("() could not load cache '"+filename+"' starting with an empty set of values");
+                log.warn("afterPropertiesSet() could not load cache '"+filename+"' starting with an empty set of values");
             } //
             cache = new HashMap<String, Object>();
         } // try/catch
