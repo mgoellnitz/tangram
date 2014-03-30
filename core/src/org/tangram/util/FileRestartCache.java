@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,11 +20,13 @@ package org.tangram.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,21 +58,6 @@ public class FileRestartCache implements PersistentRestartCache {
     }
 
 
-    @SuppressWarnings("unchecked")
-    public FileRestartCache() {
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
-            cache = (Map<String, Object>) (ois.readObject());
-            ois.close();
-        } catch (Exception e) {
-            if (log.isWarnEnabled()) {
-                log.warn("() could not load cache starting with an empty set of values");
-            } //
-            cache = new HashMap<String, Object>();
-        } // try/catch
-    } // DummyCacheAdapter()
-
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
@@ -93,10 +80,26 @@ public class FileRestartCache implements PersistentRestartCache {
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
                 oos.writeObject(cache);
                 oos.close();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 log.error("put()", e);
             } // try/catch
         } // if
     } // put()
+
+
+    @PostConstruct
+    @SuppressWarnings("unchecked")
+    public void afterPropertiesSet() {
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
+            cache = (Map<String, Object>) (ois.readObject());
+            ois.close();
+        } catch (Exception e) {
+            if (log.isWarnEnabled()) {
+                log.warn("() could not load cache '"+filename+"' starting with an empty set of values");
+            } //
+            cache = new HashMap<String, Object>();
+        } // try/catch
+    } // afterPropertiesSet()
 
 } // FileRestartCache
