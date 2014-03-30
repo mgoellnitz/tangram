@@ -23,6 +23,7 @@ import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
@@ -55,7 +56,6 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
         } else {
             ServletFileUpload upload = new ServletFileUpload();
             upload.setFileSizeMax(uploadFileMaxSize);
-            // TODO: Throw Exception when upload is too large
             try {
                 final FileItemIterator fileItemIterator = upload.getItemIterator(request);
                 while (fileItemIterator.hasNext()) {
@@ -82,12 +82,15 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                             } // if
                         } catch (IOException ex) {
                             log.error("()", ex);
+                            if (ex.getCause() instanceof FileUploadBase.FileSizeLimitExceededException) {
+                                throw new RuntimeException(ex.getCause().getMessage());
+                            } // if
                         } // try/catcg
                     } // if
                 } // for
             } catch (FileUploadException|IOException ex) {
                 log.error("()", ex);
-            } // try/catcg
+            } // try/catch
         } // if
     } // ServletRequestParameterAccess()
 
