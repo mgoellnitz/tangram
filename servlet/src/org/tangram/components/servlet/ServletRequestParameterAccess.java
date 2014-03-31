@@ -28,6 +28,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.view.AbstractRequestParameterAccess;
@@ -48,12 +49,12 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
      */
     @SuppressWarnings("unchecked")
     ServletRequestParameterAccess(HttpServletRequest request, long uploadFileMaxSize) {
+        final String reqContentType = request.getContentType();
         if (log.isDebugEnabled()) {
             log.debug("() uploadFileMaxSize="+uploadFileMaxSize);
+            log.debug("() request.contentType="+reqContentType);
         } // if
-        if (request.getMethod().equals("GET")) {
-            parameterMap = request.getParameterMap();
-        } else {
+        if (StringUtils.isNotBlank(reqContentType)&&reqContentType.startsWith("multipart/form-data")) {
             ServletFileUpload upload = new ServletFileUpload();
             upload.setFileSizeMax(uploadFileMaxSize);
             try {
@@ -91,6 +92,8 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
             } catch (FileUploadException|IOException ex) {
                 log.error("()", ex);
             } // try/catch
+        } else {
+            parameterMap = request.getParameterMap();
         } // if
     } // ServletRequestParameterAccess()
 
