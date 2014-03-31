@@ -20,6 +20,7 @@ package org.tangram.ebean;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
@@ -32,6 +33,7 @@ public final class Code extends EContent implements MutableCode {
 
     private String mimeType;
 
+    @Column(length = 32000)
     private char[] code;
 
 
