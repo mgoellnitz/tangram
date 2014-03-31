@@ -4,8 +4,8 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="org.tangram.view.Utils"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-<head><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
+<html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
+<head>
 <title>Tangram - <fmt:message key="label.list" bundle="${msg}"/></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width = 320, initial-scale = 0.95" />

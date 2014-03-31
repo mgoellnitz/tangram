@@ -1,30 +1,30 @@
 body {
-	font-family: Sans-Serif, Helvetica, Arial;
-	font-size: 11pt;
-	background-color: #F8F0FF;
-	margin: 10px 25px 10px 15px;
+  font-family: Sans-Serif, Helvetica, Arial;
+  font-size: 11pt;
+  background-color: #F8F0FF;
+  margin: 10px 25px 10px 15px;
 }
 
 a {
-	text-decoration: none;
-	color: #700080;
-	font-weight: bold;
+  text-decoration: none;
+  color: #700080;
+  font-weight: bold;
 }
 
 input {
-	font-weight: bold;
-	padding: 3px;
-	background-color: #D0C8E0;
+  font-weight: bold;
+  padding: 3px;
+  background-color: #D0C8E0;
 }
 
 li {
-	margin-bottom: 4px;
+  margin-bottom: 4px;
 }
 
 .cms_editor_row {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .cms_editor_label {
-	font-weight: bold;
+  font-weight: bold;
 }
