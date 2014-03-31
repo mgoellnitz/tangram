@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -459,6 +459,9 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             log.info("contentExport() root class to ignore id in: "+oneClass.getName());
         } // if
         xstream.omitField(oneClass, "id");
+        xstream.omitField(oneClass, "ebeanInternalId");
+        // TODO: Get rid of this in the output somehow
+        // xstream.omitField(oneClass, "__ebean__intercept");
 
         for (Class<? extends MutableContent> c : classes) {
             xstream.alias(c.getSimpleName(), c);
