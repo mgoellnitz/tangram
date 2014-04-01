@@ -1,3 +1,21 @@
+/**
+ *
+ * Copyright 2013-2014 Martin Goellnitz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package org.tangram.editor;
 
 import com.thoughtworks.xstream.XStream;
@@ -41,8 +59,11 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
+import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -50,6 +71,9 @@ import com.thoughtworks.xstream.mapper.Mapper;
  * class white list.
  */
 public class AppEngineXStream extends XStream {
+
+    private static final Log log = LogFactory.getLog(AppEngineXStream.class);
+
 
     public AppEngineXStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
         super(new PureJavaReflectionProvider(), hierarchicalStreamDriver);
@@ -61,12 +85,13 @@ public class AppEngineXStream extends XStream {
         Mapper mapper = getMapper();
         ReflectionProvider reflectionProvider = getReflectionProvider();
         ClassLoader classLoader = getClassLoader();
+        ClassLoaderReference reference = new ClassLoaderReference(classLoader);
 
         final ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
-        registerConverter(new SerializableConverter(mapper, reflectionProvider, classLoader), PRIORITY_LOW);
-        registerConverter(new ExternalizableConverter(mapper, classLoader), PRIORITY_LOW);
+        registerConverter(new SerializableConverter(mapper, reflectionProvider, reference), PRIORITY_LOW);
+        registerConverter(new ExternalizableConverter(mapper, reference), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
         registerConverter(new IntConverter(), PRIORITY_NORMAL);
@@ -86,7 +111,6 @@ public class AppEngineXStream extends XStream {
         registerConverter(new URLConverter(), PRIORITY_NORMAL);
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
-
         registerConverter(new ArrayConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
         registerConverter(new CollectionConverter(mapper), PRIORITY_NORMAL);
@@ -99,9 +123,9 @@ public class AppEngineXStream extends XStream {
         registerConverter((Converter) new EncodedByteArrayConverter(), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
-        registerConverter(new JavaClassConverter(classLoader), PRIORITY_NORMAL);
-        registerConverter(new JavaMethodConverter(classLoader), PRIORITY_NORMAL);
-        registerConverter(new JavaFieldConverter(classLoader), PRIORITY_NORMAL);
+        registerConverter(new JavaClassConverter(reference), PRIORITY_NORMAL);
+        registerConverter(new JavaMethodConverter(reference), PRIORITY_NORMAL);
+        registerConverter(new JavaFieldConverter(reference), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
 
