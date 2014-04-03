@@ -4,7 +4,7 @@
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         
   <!-- This persistence.xml is just intended for the enhancement phase of OpenJPA -->
-  <persistence-unit name="openjpa" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="tangram" transaction-type="RESOURCE_LOCAL">
     <provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
   </persistence-unit>

@@ -11,9 +11,6 @@
     <class>org.tangram.jpa.Code</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <!--
-      <property name="eclipselink.weaving" value="false"/>
-      -->
       <property name="eclipselink.weaving" value="static"/>
     </properties>
   </persistence-unit>
