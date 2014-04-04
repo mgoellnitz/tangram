@@ -597,7 +597,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             if (metamodel!=null) {
                 Set<EntityType<?>> entities = metamodel.getEntities();
                 for (EntityType<?> entity : entities) {
-                    log.info("afterPropertiesSet() manager factory: "+entity.getName()+"/"+entity.getJavaType().getName());
+                    log.info("afterPropertiesSet() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
                 } // for
             } else {
                 log.info("afterPropertiesSet() not meta model");
