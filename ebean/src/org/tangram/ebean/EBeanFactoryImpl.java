@@ -437,7 +437,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                         if (log.isInfoEnabled()) {
                             log.info("getAllClasses() # class names "+classNames.size());
                         } // if
-                        classNames = new ArrayList<String>();
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         // re-fill runtimes caches from persistence startup cache
