@@ -324,7 +324,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                 String asc = (ascending==Boolean.TRUE) ? " asc" : " desc";
                 query = query.orderBy(orderProperty+asc);
             } // if
-            // TODO: use query string
+            // TODO: How to use query string
             // Default is no ordering - not even via IDs
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looking up instances of "+shortTypeName

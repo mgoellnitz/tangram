@@ -33,11 +33,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
 import org.tangram.security.LoginSupport;
+import org.tangram.util.StringUtil;
 
 
 /**
@@ -172,41 +172,18 @@ public class PasswordFilter implements Filter {
     } // afterCompletion()
 
 
-    /**
-     * Split a parameter - say servlet init parameter - at each ',' and trim the result.
-     *
-     * Actually very generic utility fuction. Trimming is used so that line breaks and spaces can be used
-     * to format the input in config files.
-     *
-     * @param parameter
-     * @return set of string taken from the input parameter
-     */
-    // TODO: make this a system wide utility function
-    private Set<String> stringSetFromParameterString(String parameter) {
-        Set<String> result = new HashSet<String>();
-        if (StringUtils.isNotBlank(parameter)) {
-            String[] parts = parameter.split(",");
-            for (String part : parts) {
-                part = part.trim();
-                result.add(part);
-            } // for
-        } // if
-        return result;
-    } // stringSetFromParameterString()
-
-
     @Override
     @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
-        freeUrls.addAll(stringSetFromParameterString(config.getInitParameter("free.urls")));
+        freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
         if (log.isInfoEnabled()) {
             log.info("init() free urls "+freeUrls);
         } // if
-        allowedUsers.addAll(stringSetFromParameterString(config.getInitParameter("allowed.users")));
+        allowedUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("allowed.users")));
         if (log.isInfoEnabled()) {
             log.info("init() allowed users "+allowedUsers);
         } // if
-        adminUsers.addAll(stringSetFromParameterString(config.getInitParameter("admin.users")));
+        adminUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("admin.users")));
         if (log.isInfoEnabled()) {
             log.info("init() admin users "+adminUsers);
         } // if

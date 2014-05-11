@@ -503,12 +503,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 for (Class<? extends MutableContent> mc : modelClasses) {
                     log.info("getClasses() setting table mapping for "+mc);
                     tableNameMapping.put(mc.getSimpleName(), mc);
-                    // TODO: doesn't help much
-                    /*
-                     log.info("getClasses() adding meta data for "+mc);
-                     OpenJPAConfiguration configuration = ((OpenJPAEntityManagerFactory)getManager().getEntityManagerFactory()).getConfiguration();
-                     configuration.getMetaDataRepositoryInstance().addMetaData(mc);
-                     */
                 } // for
             } // if
         } // if
