@@ -30,7 +30,7 @@ public class TangramVersions {
   String guice = '3.0'
   String mycila = '3.2.ga'
   
-  String dinistiq = '0.1-SNAPSHOT'
+  String dinistiq = '0.1'
   String shiro = '1.2.3'
 
   String springframework = '3.1.4.RELEASE'
