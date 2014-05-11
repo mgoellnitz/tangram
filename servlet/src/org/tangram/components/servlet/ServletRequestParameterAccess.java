@@ -64,9 +64,17 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                     String fieldName = item.getFieldName();
                     InputStream stream = item.openStream();
                     if (item.isFormField()) {
-                        // TODO: Just one value per parameter name for now - which is sufficient for tangram itself
-                        String[] value = new String[1];
-                        value[0] = Streams.asString(stream, "UTF-8");
+                        String[] value = parameterMap.get(item.getFieldName());
+                        int i = 0;
+                        if (value==null) {
+                            value = new String[1];
+                        } else {
+                            String[] newValue = new String[value.length+1];
+                            System.arraycopy(value, 0, newValue, 0, value.length);
+                            i = value.length;
+                            value = newValue;
+                        } // if
+                        value[i] = Streams.asString(stream, "UTF-8");
                         if (log.isDebugEnabled()) {
                             log.debug("() request parameter "+fieldName+"='"+value[0]+"'");
                         } // if
