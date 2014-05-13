@@ -19,7 +19,7 @@
 package org.tangram.view;
 
 import java.io.File;
-import java.io.InputStream;
+import java.net.URL;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -79,48 +79,17 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
     protected String checkJspExists(String result) {
         String url = result;
-        int idx = url.indexOf('/');
         if (log.isDebugEnabled()) {
-            log.debug("checkJspExists("+url+") idx="+idx);
+            log.debug("checkJspExists("+url+")");
         } // if
-        if (idx!=0) {
-            // TODO: this code is unused for now - we'd like to have VTL or
-            // stuff like that on the classpath which comes with Servlet 3
-            idx++;
+        String resourcePrefix = "/META-INF/resources";
+        final URL resource = getClass().getResource(resourcePrefix+url);
+        if (resource==null) {
+            File f = new File(filePathPrefix+url);
             if (log.isDebugEnabled()) {
-                log.debug("checkJspExists("+url+")");
+                log.debug("checkJspExists() f="+f.getAbsolutePath());
             } // if
-            InputStream is = getClass().getResourceAsStream(url);
-            if (log.isDebugEnabled()) {
-                log.debug("checkJspExists("+url+") is="+is);
-            } // if
-            if (is!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("checkJspExists("+url+") exists!");
-                } // if
-                try {
-                    is.close();
-                } catch (Exception e) {
-                    log.error("checkJspExists() ", e);
-                } // try/catch
-            } else {
-                result = null;
-            } // if
-        } else {
-            if (idx==0) {
-                // TODO: This only works with exploded deployments
-                File f = new File(filePathPrefix+url);
-                if (log.isDebugEnabled()) {
-                    log.debug("checkJspExists() f="+f.getAbsolutePath());
-                } // if
-                if (!(f.exists())) {
-                    result = null;
-                } // if
-            } else {
-                // meaning idx < 0 - no slash in url
-                if (log.isWarnEnabled()) {
-                    log.warn("checkJspExists() strange resource name "+url);
-                } // if
+            if (!(f.exists())) {
                 result = null;
             } // if
         } // if
