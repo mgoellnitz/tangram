@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -222,6 +222,24 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // rollbackTransaction()
 
 
+    @Override
+    protected boolean hasManager() {
+        return manager!=null;
+    } // hasManager()
+
+
+    @Override
+    protected <T extends MutableContent> void apiPersist(T bean) {
+        manager.makePersistent(bean);
+    } // apiPersist()
+
+
+    @Override
+    protected <T extends MutableContent> void apiDelete(T bean) {
+        manager.deletePersistent(bean);
+    } // apiDelete()
+
+
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
      *
@@ -242,24 +260,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         statistics.increase("create bean");
         return bean;
     } // createBean()
-
-
-    @Override
-    public <T extends MutableContent> boolean persistUncommitted(T bean) {
-        boolean result = false;
-        try {
-            manager.makePersistent(bean);
-            clearCacheFor(bean.getClass());
-            result = true;
-        } catch (Exception e) {
-            log.error("persistUncommitted()", e);
-            if (manager!=null) {
-                // yes we saw situations where this was not the case thus hiding other errors!
-                rollbackTransaction();
-            } // if
-        } // try/catch/finally
-        return result;
-    } // persistUncommitted()
 
 
     @Override

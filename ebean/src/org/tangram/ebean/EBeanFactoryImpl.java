@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -219,6 +219,24 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     } // rollbackTransaction()
 
 
+    @Override
+    protected boolean hasManager() {
+        return true;
+    } // hasManager()
+
+
+    @Override
+    protected <T extends MutableContent> void apiPersist(T bean) {
+        server.save(bean);
+    } // apiPersist()
+
+
+    @Override
+    protected <T extends MutableContent> void apiDelete(T bean) {
+        server.delete(bean);
+    } // apiDelete()
+
+
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
      *
@@ -291,26 +309,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
             log.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
-
-
-    @Override
-    public <T extends MutableContent> boolean persistUncommitted(T bean) {
-        boolean result = false;
-        boolean rollback = false;
-        try {
-            rollback = true;
-            server.save(bean);
-            rollback = false;
-            clearCacheFor(bean.getClass());
-            result = true;
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (rollback) {
-                rollbackTransaction();
-            } // if
-        } // try/catch/finally
-        return result;
-    } // persistUncommitted()
 
 
     @Override

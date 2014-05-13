@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -235,6 +235,24 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // rollbackTransaction()
 
 
+    @Override
+    protected boolean hasManager() {
+        return manager!=null;
+    } // hasManager()
+
+
+    @Override
+    protected <T extends MutableContent> void apiPersist(T bean) {
+        manager.persist(bean);
+    } // apiPersist()
+
+
+    @Override
+    protected <T extends MutableContent> void apiDelete(T bean) {
+        manager.remove(bean);
+    } // apiDelete()
+
+
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
      *
@@ -273,12 +291,9 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             for (Object keyObject : queryCache.keySet()) {
                 String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") key class"+c);
-                } // if
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                if (log.isDebugEnabled()) {
+                    log.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     removeKeys.add(key);
@@ -310,24 +325,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             log.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
-
-
-    @Override
-    public <T extends MutableContent> boolean persistUncommitted(T bean) {
-        boolean result = false;
-        try {
-            manager.persist(bean);
-            clearCacheFor(bean.getClass());
-            result = true;
-        } catch (Exception e) {
-            log.error("persist()", e);
-            if (manager!=null) {
-                // yes we saw situations where this was not the case thus hiding other errors!
-                rollbackTransaction();
-            } // if
-        } // try/catch/finally
-        return result;
-    } // persist()
 
 
     @Override

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,33 +27,33 @@ import org.tangram.content.Content;
 
 public interface MutableBeanFactory extends BeanFactory {
 
+    /**
+     * Starts a transaction which must subsequently be committed or rolled back.
+     */
     public void beginTransaction();
 
 
+    /**
+     * Commits a transaction previously opened with beginTransaction()
+     */
     public void commitTransaction();
 
 
+    /**
+     * Undo the changes initiated by all the commands issued after the last beginTransaction call.
+     */
     public void rollbackTransaction();
 
 
     /**
-     * Create a new bean of a given type. The beans hast to be persisted in a subsequent step! The call of persist() ist
-     * mandatory after using this call.
+     * Create a new bean of a given type.
+     *
+     * The beans hast to be persisted in a subsequent step! The call of persist() is mandatory after using this call.
      *
      * @param cls class to reate a persistable instance for
      * @return newly created instance
      */
     <T extends MutableContent> T createBean(Class<T> cls) throws Exception;
-
-
-    /**
-     * Persist a given bean.
-     *
-     * @param <T>
-     * @param bean
-     * @return true if persisting could be completed successfully
-     */
-    <T extends MutableContent> boolean persist(T bean);
 
 
     /**
@@ -67,10 +67,31 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
-     * return a collection of all content classes available for mutable contents.
-     * No abstract classes will be in the list.
+     * Persist a given bean.
      *
-     * @return list of classes
+     * @param <T>
+     * @param bean
+     * @return true if persisting could be completed successfully
+     */
+    <T extends MutableContent> boolean persist(T bean);
+
+
+    /**
+     * Delete a given bean from persistence storage.
+     * This method uses a transaction and closes it or does a roll back.
+     *
+     * @param <T>
+     * @param bean
+     * @return true if deleting could be completed successfully
+     */
+    <T extends MutableContent> boolean delete(T bean);
+
+
+    /**
+     * return a collection of all content classes available for mutable contents.
+     * No abstract classes will be in the returned collection.
+     *
+     * @return collection of content classes
      */
     public Collection<Class<? extends MutableContent>> getClasses();
 
@@ -80,6 +101,8 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * This map is used in the editor to map abstract classes to inheriting non-abstract classes when it
      * comes to ask the user which non-abstract class to instanciate.
+     *
+     * @return mappping from class specifier to non-abstract implementing classes available
      */
     Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
 

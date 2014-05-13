@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,14 +55,31 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     } // getListeners() {
 
 
-    @Override
-    public <T extends MutableContent> boolean persist(T bean) {
-        final boolean result = persistUncommitted(bean);
-        if (result) {
-            commitTransaction();
-        } // if
-        return result;
-    } // persistUncommitted()
+    /**
+     * Check if the underlying API implementation of the bean factory really has the needed managing instance
+     * of some sort at hand.
+     *
+     * common case to check for persisting and deleting instanced though highly API specific in detail.
+     */
+    protected abstract boolean hasManager();
+
+
+    /**
+     * Wrap API specific persistence call.
+     * Higher level methods in this class in turn deal with exception and cachce handling.
+     * @param <T>
+     * @param bean
+     */
+    protected abstract <T extends MutableContent> void apiPersist(T bean);
+
+
+    /**
+     * Wrap API specific deletion call.
+     * Higher level methods in this class in turn deal with exception and cachce handling.
+     * @param <T>
+     * @param bean
+     */
+    protected abstract <T extends MutableContent> void apiDelete(T bean);
 
 
     /**
@@ -75,6 +92,57 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     protected String getClassNamesCacheKey() {
         return "tangram-class-names";
     } // getClassNamesCacheKey()
+
+
+    @Override
+    public <T extends MutableContent> boolean persistUncommitted(T bean) {
+        boolean result = false;
+        boolean rollback = true;
+        try {
+            apiPersist(bean);
+            rollback = false;
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("persistUncommitted()", e);
+            if (rollback && hasManager()) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                rollbackTransaction();
+            } // if
+        } // try/catch/finally
+        return result;
+    } // persistUncommitted()
+
+
+    @Override
+    public <T extends MutableContent> boolean delete(T bean) {
+        boolean result = false;
+        boolean rollback = true;
+        try {
+            apiDelete(bean);
+            commitTransaction();
+            rollback = false;
+            clearCacheFor(bean.getClass());
+            result = true;
+        } catch (Exception e) {
+            log.error("delete()", e);
+            if (rollback && hasManager()) {
+                // yes we saw situations where this was not the case thus hiding other errors!
+                rollbackTransaction();
+            } // if
+        } // try/catch/finally
+        return result;
+    } // delete()
+
+
+    @Override
+    public <T extends MutableContent> boolean persist(T bean) {
+        final boolean result = persistUncommitted(bean);
+        if (result) {
+            commitTransaction();
+        } // if
+        return result;
+    } // persist()
 
 
     /**
