@@ -115,12 +115,19 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @Inject
     private ViewUtilities viewUtilities;
 
+    private boolean deleteMethodEnabled;
+
 
     @Inject
     public void setCustomViewProvider(CustomViewProvider customViewProvider) {
         // Automagically set edit view
         customViewProvider.getCustomLinkViews().add("edit");
     } // setCustomViewProvider()
+
+
+    public void setDeleteMethodEnabled(boolean deleteMethodEnabled) {
+        this.deleteMethodEnabled = deleteMethodEnabled;
+    } // setDeleteMethodEnabled()
 
 
     private MutableBeanFactory getMutableBeanFactory() {
@@ -352,6 +359,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             request.setAttribute("request", request);
             request.setAttribute("response", response);
             request.setAttribute("classes", classes);
+            request.setAttribute("canDelete", deleteMethodEnabled);
             request.setAttribute("prefix", Utils.getUriPrefix(request));
             if (cls!=null) {
                 Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
@@ -436,6 +444,32 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             return new TargetDescriptor(e, null, null);
         } // try/catch
     } // link()
+
+
+    @LinkAction("/delete/id_(.*)")
+    public TargetDescriptor delete(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (log.isInfoEnabled()) {
+                log.info("delete() trying to delete instance "+id);
+            } // if
+            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+                throw new Exception("User may not edit");
+            } // if
+            if (!deleteMethodEnabled) {
+                throw new Exception("Object deletion not activated");
+            } // if
+            MutableContent bean = getMutableBeanFactory().getBean(MutableContent.class, id);
+            if (bean == null) {
+                throw new Exception("No object to delete found for id "+id);
+            } // if
+            String typeName = bean.getClass().getName();
+            getMutableBeanFactory().beginTransaction();
+            getMutableBeanFactory().delete(bean);
+            return list(typeName, request, response);
+        } catch (Exception e) {
+            return new TargetDescriptor(e, null, null);
+        } // try/catch
+    } // delete()
 
 
     @LinkAction("/export")
@@ -548,7 +582,11 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                     if ("link".equals(action)) {
                         return "/link";
                     } else {
-                        return null;
+                        if ("delete".equals(action)) {
+                            return "/delete/id_"+((Content) bean).getId();
+                        } else {
+                            return null;
+                        } // if
                     } // if
                 } // if
             } // if
