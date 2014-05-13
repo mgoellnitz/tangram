@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -54,9 +54,10 @@ dependencies {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      groupId 'tangram'
-      artifactId 'gradle-plugin'
-      version '0.9-SNAPSHOT'
+      // TODO: Not available on Gradle 1.6 - which is again effective on buildhive
+      // groupId 'tangram'
+      // artifactId 'gradle-plugin'
+      // version '0.9-SNAPSHOT'
       from components.java
       artifact sourcesJar 
     }
