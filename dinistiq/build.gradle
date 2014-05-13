@@ -20,7 +20,7 @@ apply from: '../lib.gradle'
 
 dependencies {
   compile project (':tangram-servlet')
-  compile "dinistiq:dinistiq:$versions.velocity"
+  compile "dinistiq:dinistiq:$versions.dinistiq"
   
   testCompile "junit:junit:$versions.junit"
 }
