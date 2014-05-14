@@ -94,6 +94,16 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
      */
     public static Set<String> SYSTEM_PROPERTIES;
 
+    /**
+     * editing actions triggered by URLs containing the obect's ID.
+     */
+    public static Collection<String> ID_URL_ACTIONS = new ArrayList<String>();
+
+    /**
+     * editing actions triggered only by parameters passed in http post requests.
+     */
+    public static Collection<String> PARAMETER_ACTIONS = new ArrayList<String>();
+
 
     static {
         SYSTEM_PROPERTIES = new HashSet<String>();
@@ -101,6 +111,14 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         SYSTEM_PROPERTIES.add("metaClass");
         SYSTEM_PROPERTIES.add("manager");
         SYSTEM_PROPERTIES.add("beanFactory");
+
+        ID_URL_ACTIONS.add("delete");
+        ID_URL_ACTIONS.add("edit");
+        ID_URL_ACTIONS.add("store");
+
+        PARAMETER_ACTIONS.add("create");
+        PARAMETER_ACTIONS.add("link");
+        PARAMETER_ACTIONS.add("list");
     } // static
 
     @Inject
@@ -459,7 +477,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 throw new Exception("Object deletion not activated");
             } // if
             MutableContent bean = getMutableBeanFactory().getBean(MutableContent.class, id);
-            if (bean == null) {
+            if (bean==null) {
                 throw new Exception("No object to delete found for id "+id);
             } // if
             String typeName = bean.getClass().getName();
@@ -570,26 +588,10 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
 
     private String getUrl(Object bean, String action, String view) {
-        if ("store".equals(action)) {
-            return "/store/id_"+((Content) bean).getId();
+        if (ID_URL_ACTIONS.contains(action)) {
+            return "/"+action+"/id_"+((Content) bean).getId();
         } else {
-            if ("create".equals(action)) {
-                return "/create";
-            } else {
-                if ("list".equals(action)) {
-                    return "/list";
-                } else {
-                    if ("link".equals(action)) {
-                        return "/link";
-                    } else {
-                        if ("delete".equals(action)) {
-                            return "/delete/id_"+((Content) bean).getId();
-                        } else {
-                            return null;
-                        } // if
-                    } // if
-                } // if
-            } // if
+            return PARAMETER_ACTIONS.contains(action) ? "/"+action : null;
         } // if
     } // getUrl()
 
@@ -597,19 +599,15 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         Link result = null;
-        if ("edit".equals(action)) {
-            String url = "/edit/id_"+((Content) bean).getId();
+        String url = getUrl(bean, action, view);
+        if (url!=null) {
             result = new Link();
             result.setUrl(url);
-            result.setTarget(EDIT_TARGET);
-            String jsOpenWindow = "window.open('"+result.getUrl()+"', '"+EDIT_TARGET
-                    +"', 'menubar=no,status=no,toolbar=no,resizable=yes, scrollbars=yes');";
-            result.addHandler("onclick", jsOpenWindow);
-        } else {
-            String url = getUrl(bean, action, view);
-            if (url!=null) {
-                result = new Link();
-                result.setUrl(url);
+            if ("edit".equals(action)) {
+                result.setTarget(EDIT_TARGET);
+                String jsOpenWindow = "window.open('"+result.getUrl()+"', '"+EDIT_TARGET
+                        +"', 'menubar=no,status=no,toolbar=no,resizable=yes, scrollbars=yes');";
+                result.addHandler("onclick", jsOpenWindow);
             } // if
         } // if
         return result;

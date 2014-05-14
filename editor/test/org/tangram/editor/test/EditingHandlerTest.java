@@ -49,15 +49,13 @@ public class EditingHandlerTest {
 
         EditingHandler editingHandler = new EditingHandler();
 
-        String[] anonymousAction = {"list", "link", "create"};
-        for (String action : anonymousAction) {
+        for (String action : EditingHandler.PARAMETER_ACTIONS) {
             Link link = editingHandler.createLink(null, null, c, action, null);
             Assert.assertNotNull("generation of "+action+" action link failed", link);
             Assert.assertEquals("generation of "+action+" action link with strange result", "/"+action, link.getUrl());
         } // for
 
-        String[] idBasedActions = {"edit", "delete"};
-        for (String action : idBasedActions) {
+        for (String action : EditingHandler.ID_URL_ACTIONS) {
             Link link = editingHandler.createLink(null, null, c, action, null);
             Assert.assertNotNull("generation of "+action+" action link failed", link);
             Assert.assertEquals("generation of "+action+" action link with strange result", "/"+action+"/id_"+DUMMY_ID, link.getUrl());
