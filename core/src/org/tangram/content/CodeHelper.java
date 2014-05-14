@@ -40,7 +40,7 @@ public class CodeHelper {
 
 
     /**
-     * Avoid ambigouities with mimetypes for javascript and xml.
+     * Avoid ambiguities with mimetypes for javascript and xml.
      * Just for internal use.
      */
     public static String getNormalizedMimeType(String mimeType) {
