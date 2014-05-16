@@ -1,7 +1,7 @@
 /**
- * 
- * Copyright 2009
- * 
+ *
+ * Copyright 2009-2014
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,23 +9,23 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.spring;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+
 
 public class StreamingMultipartFile implements MultipartFile {
 
@@ -43,31 +43,31 @@ public class StreamingMultipartFile implements MultipartFile {
 
 
     @Override
-	public String getName() {
+    public String getName() {
         return item.getName();
     }
 
 
     @Override
-	public String getOriginalFilename() {
+    public String getOriginalFilename() {
         return item.getFieldName();
     }
 
 
     @Override
-	public String getContentType() {
+    public String getContentType() {
         return item.getContentType();
     }
 
 
     @Override
-	public boolean isEmpty() {
+    public boolean isEmpty() {
         return false;
     }
 
 
     @Override
-	public long getSize() {
+    public long getSize() {
         if (size>0) {
             try {
                 return getBytes().length;
@@ -80,7 +80,7 @@ public class StreamingMultipartFile implements MultipartFile {
 
 
     @Override
-	public byte[] getBytes() throws IOException {
+    public byte[] getBytes() throws IOException {
         if (bytes==null) {
             bytes = IOUtils.toByteArray(item.openStream());
         } // if
@@ -89,14 +89,14 @@ public class StreamingMultipartFile implements MultipartFile {
 
 
     @Override
-	public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException {
         return item.openStream();
     } // getInputStream()
 
 
     @Override
-	public void transferTo(File dest) throws IOException, IllegalStateException {
+    public void transferTo(File dest) throws IOException, IllegalStateException {
         throw new UnsupportedOperationException("transfer to file not implemented");
-    }
-    
+    } // transferTo()
+
 } // StreamingMultipartFile

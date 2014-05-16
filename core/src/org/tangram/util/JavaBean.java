@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,6 +34,8 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Access class for java bean patterned delegates for reading and writing properties.
+ *
+ * These few lines avoid dependencies to large library packages and are quite simple and readable.
  */
 public class JavaBean {
 

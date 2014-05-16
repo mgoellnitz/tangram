@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -91,11 +91,9 @@ public class IncludeTag implements Tag, Serializable {
         Object oldSelf = request.getAttribute(org.tangram.Constants.THIS);
         try {
             request.setAttribute(org.tangram.Constants.THIS, bean);
-
             if (log.isDebugEnabled()) {
                 log.debug("render() bean="+bean.getClass().getName()+" #"+view);
             } // if
-
             TangramServices.getViewUtilities().render(out, bean, view, request, resp);
         } catch (Exception e) {
             log.error("render() bean="+bean.getClass().getName()+" #"+view, e);
@@ -115,17 +113,6 @@ public class IncludeTag implements Tag, Serializable {
         if (log.isDebugEnabled()) {
             log.debug("doEndTag("+Thread.currentThread().getId()+") view "+view);
         } // if
-        /*
-         @SuppressWarnings("unchecked")
-         Enumeration<String> names = pc.getAttributeNamesInScope(PageContext.REQUEST_SCOPE);
-         while (names.hasMoreElements()) {
-         String name = names.nextElement();
-         if (log.isDebugEnabled()) {
-         log.debug("doEndTag("+Thread.currentThread().getId()+") request ******************* "+name);
-         } // if
-         } // while
-         */
-
         render(pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
         return EVAL_PAGE;
     } // doEndTag()
@@ -139,4 +126,4 @@ public class IncludeTag implements Tag, Serializable {
         view = null;
     } // release()
 
-} // Include
+} // IncludeTag
