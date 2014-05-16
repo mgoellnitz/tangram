@@ -34,6 +34,11 @@ dependencies {
 
   compile "org.apache.velocity:velocity:$versions.velocity"
   compile "org.codehaus.groovy:groovy:$versions.groovy"
+  // Lates groovy version doesn't include this dependency which is in fact necessary
+  compile "org.ow2.asm:asm-analysis:4.0"
+  compile "org.ow2.asm:asm-commons:4.0"
+  compile "org.ow2.asm:asm-tree:4.0"
+  compile "org.ow2.asm:asm-util:4.0"
   compile("com.yahoo.platform.yui:yuicompressor:$versions.yui") {
     exclude module: 'js'
   }

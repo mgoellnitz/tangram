@@ -1,4 +1,4 @@
-/**
+/*
  * 
  * Copyright 2013-2014 Martin Goellnitz
  * 
@@ -16,11 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+
+/**
+ *  Version constants for the components used to consistent reference through
+ *  build files.
+ */
 public class TangramVersions {
 
   String servlet = '2.5'
   String jsp = '2.0'
-  String groovy = '2.1.9'
+  String groovy = '2.3.0'
   String velocity = '1.7'
   String log4j = '1.2.17'
   String yui = '2.4.7'
@@ -55,6 +60,6 @@ public class TangramVersions {
   String ebean_api = '3.1.1'
   String ebean_agent = '3.2.2'
 
-  String appengine = '1.9.1'
+  String appengine = '1.9.4'
   
 } // TangramVersions
