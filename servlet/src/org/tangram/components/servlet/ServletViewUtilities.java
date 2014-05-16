@@ -97,8 +97,7 @@ public class ServletViewUtilities implements ViewUtilities {
      */
     @Override
     public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
-        ServletRequestParameterAccess result = new ServletRequestParameterAccess(request, uploadFileMaxSize);
-        return result;
+        return new ServletRequestParameterAccess(request, uploadFileMaxSize);
     } // createParameterAccess()
 
 

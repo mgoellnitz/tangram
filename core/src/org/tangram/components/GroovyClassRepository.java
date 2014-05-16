@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -89,12 +89,11 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
             for (CodeResource resource : typeCache.values()) {
                 String annotation = resource.getAnnotation();
                 // Check for class name - must be with capital letter for last element
-                int idx = annotation.lastIndexOf('.');
+                int idx = annotation.lastIndexOf('.')+1;
                 if (log.isInfoEnabled()) {
                     log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
                 } // if
-                if (idx>=0) {
-                    idx++;
+                if (idx>0) {
                     String suffix = annotation.substring(idx);
                     if (!Character.isLowerCase(suffix.charAt(0))) {
                         try {
@@ -239,7 +238,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     /**
      * Obtain compilation errors for all codes in this repository.
      *
-     * @see ClassRepository#getCompilationErrors() 
+     * @see ClassRepository#getCompilationErrors()
      * @return map mapping code resource annotation to the error messages for the corresponding code.
      */
     public Map<String, String> getCompilationErrors() {

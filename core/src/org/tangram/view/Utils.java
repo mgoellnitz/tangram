@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -101,10 +101,7 @@ public final class Utils {
     public static String getUriPrefix(HttpServletRequest request) {
         if (uriPrefix==null) {
             String contextPath = request.getContextPath();
-            if (contextPath.length()==1) {
-                contextPath = "";
-            } // if
-            uriPrefix = contextPath;
+            uriPrefix = (contextPath.length()==1) ? "" : contextPath;
         } // if
         return uriPrefix;
     } // getUriPrefix()

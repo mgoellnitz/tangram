@@ -22,6 +22,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.ConversionService;
@@ -63,11 +65,8 @@ public class TangramSpringServices implements ApplicationContextAware {
 
 
     public static <T extends Object> T getBeanFromContext(Class<? extends T> cls) {
-        T result = null;
         ApplicationContext appContext = getApplicationContext();
-        if (appContext!=null) {
-            result = appContext.getBean(cls);
-        } // if
+        T result = (appContext!=null) ? appContext.getBean(cls) : null;
         if (result==null) {
             throw new RuntimeException("getBeanFromContext() no item of type "+cls.getName()+" available.");
         } // if
@@ -76,11 +75,8 @@ public class TangramSpringServices implements ApplicationContextAware {
 
 
     public static <T extends Object> T getBeanFromContext(Class<? extends T> cls, String name) {
-        T result = null;
         ApplicationContext appContext = getApplicationContext();
-        if (appContext!=null) {
-            result = appContext.getBean(name, cls);
-        } // if
+        T result = (appContext!=null) ? appContext.getBean(name, cls) : null;
         if (result==null) {
             throw new RuntimeException("getBeanFromContext() no item of type "+cls.getName()+" and Name "+name+" available.");
         } // if
@@ -96,7 +92,7 @@ public class TangramSpringServices implements ApplicationContextAware {
             conversionService = getBeanFromContext(ConversionService.class);
         } // if
         return conversionService;
-    }
+    } // getConversionService()
 
 
     /**
@@ -105,22 +101,21 @@ public class TangramSpringServices implements ApplicationContextAware {
      * @param bean
      * @param conversionService
      * @return
-     * public static Bean Wrapper createWrapper(Object bean) {
-     * Bean Wrapper wrapper;
-     * wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
-     * try {
-     * ConversionService converter = TangramSpringServices.getConversionService();
-     * if (converter!=null) {
-     * wrapper.setConversionService(converter);
-     * } // if
-     * if (log.isInfoEnabled()) {
-     * log.info("createWrapper() conversion service "+wrapper.getConversionService());
-     * } // if
-     * } catch (Exception e) {
-     * // conversion services are still optional for some time
-     * } // try/catch
-     * return wrapper;
-     * }
      */
+    public static BeanWrapper createWrapper(Object bean) {
+        BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
+        try {
+            ConversionService converter = TangramSpringServices.getConversionService();
+            if (converter!=null) {
+                wrapper.setConversionService(converter);
+            } // if
+            if (log.isInfoEnabled()) {
+                log.info("createWrapper() conversion service "+wrapper.getConversionService());
+            } // if
+        } catch (Exception e) {
+            // conversion services are still optional for some time
+        } // try/catch
+        return wrapper;
+    } // createWrapper()
 
 } // TangramSpringServices

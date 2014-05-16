@@ -77,8 +77,7 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
     } // setServletContext()
 
 
-    protected String checkJspExists(String result) {
-        String url = result;
+    protected String checkJspExists(String url) {
         if (log.isDebugEnabled()) {
             log.debug("checkJspExists("+url+")");
         } // if
@@ -90,10 +89,10 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
                 log.debug("checkJspExists() f="+f.getAbsolutePath());
             } // if
             if (!(f.exists())) {
-                result = null;
+                url = null;
             } // if
         } // if
-        return result;
+        return url;
     } // checkJspExists()
 
 

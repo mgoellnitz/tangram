@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -90,8 +90,7 @@ public class CodeResourceCache implements BeanListener {
             // Only use transient resources and cache them since we can't put persistable stuff in the startup cache
             resources = new ArrayList<CodeResource>();
             for (CodeResource resource : datastoreResources) {
-                CodeResource transientResource = new TransientCode(resource);
-                resources.add(transientResource);
+                resources.add(new TransientCode(resource));
             } // for
             startupCache.put(CODE_RESOURCE_CACHE_KEY, resources);
         } // if
@@ -101,7 +100,7 @@ public class CodeResourceCache implements BeanListener {
             cache.put(resource.getId(), resource);
             String mimeType = resource.getMimeType();
 
-            if (StringUtils.isNotEmpty(mimeType)) {
+            if (StringUtils.isNotBlank(mimeType)) {
                 Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
                 if (typeCache==null) {
                     typeCache = new HashMap<String, CodeResource>();

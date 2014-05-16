@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -249,11 +249,6 @@ public class MetaController extends AbstractController implements LinkHandlerReg
         if (method!=null) {
             return method==NULL_METHOD ? null : method;
         } // if
-        /*
-         if (targetClass.getAnnotation(org.tangram.annotate.LinkHandler.class)==null) {
-         return null;
-         } // if
-         */
         Method[] targetMethods = target.getClass().getMethods();
         for (Method m : targetMethods) {
             if (m.getName().equals(methodName)) {
@@ -306,8 +301,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         if (log.isDebugEnabled()) {
                             log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
                         } // if
-                        Object value = propertyConverter.getStorableObject(valueString, type, request);
-                        parameters.add(value);
+                        parameters.add(propertyConverter.getStorableObject(valueString, type, request));
                     } // if
                     if (annotation instanceof ActionParameter) {
                         String parameterName = ((ActionParameter) annotation).value();
@@ -318,8 +312,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         if (log.isDebugEnabled()) {
                             log.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
                         } // if
-                        Object value = propertyConverter.getStorableObject(valueString, type, request);
-                        parameters.add(value);
+                        parameters.add(propertyConverter.getStorableObject(valueString, type, request));
                     } // if
                     if (annotation instanceof ActionForm) {
                         try {

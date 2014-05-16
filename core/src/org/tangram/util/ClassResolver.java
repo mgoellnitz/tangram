@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -94,22 +94,18 @@ public class ClassResolver {
         for (String packageName : packageNames) {
             addUrlsForPackage(urls, packageName);
         } // if
-        // log.info("getClassNames() url # "+urls.size());
         for (URL u : urls) {
             try {
                 JarInputStream is = new JarInputStream(u.openStream());
-                JarEntry entry;
-                while ((entry = is.getNextJarEntry())!=null) {
+                for (JarEntry entry = is.getNextJarEntry() ; entry != null ;) {
                     final String name = entry.getName().replace('/', '.');
                     if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
                         String className = name.substring(0, name.length()-6);
-                        // log.info("getClassNames() class name "+className);
                         boolean add = false;
                         for (String packageName : packageNames) {
                             add = add||(className.startsWith(packageName));
                         } // if
                         if (add) {
-                            // log.info("getClassNames(): "+className);
                             classNames.add(className);
                         } // if
                     } // if

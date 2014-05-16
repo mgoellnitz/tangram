@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -103,15 +103,13 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
                     if (log.isInfoEnabled()) {
                         log.info("reset() defining view shim "+className+" for "+beanClass.getName());
                     } // if
-                    Constructor<Shim> ct = c.getConstructor(HttpServletRequest.class, beanClass);
-                    defineViewShim(beanClass, ct);
+                    defineViewShim(beanClass, c.getConstructor(HttpServletRequest.class, beanClass));
                 } else {
                     if (Shim.class.isAssignableFrom(c)) {
                         if (log.isInfoEnabled()) {
                             log.info("reset() defining bean shim "+className+" for "+beanClass.getName());
                         } // if
-                        Constructor<Shim> ct = c.getConstructor(beanClass);
-                        defineBeanShim(beanClass, ct);
+                        defineBeanShim(beanClass, c.getConstructor(beanClass));
                     } // if
                 } // if
             } catch (Throwable e) {

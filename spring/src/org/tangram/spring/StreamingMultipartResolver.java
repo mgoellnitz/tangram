@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2009
+ * Copyright 2009-2014
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -166,7 +166,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
 
     @Override
     public void cleanupMultipart(MultipartHttpServletRequest request) {
-    }
+    } // cleanupMultipart()
 
 
     /**
@@ -182,10 +182,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
      */
     protected String determineEncoding(HttpServletRequest request) {
         String encoding = request.getCharacterEncoding();
-        if (encoding==null) {
-            encoding = "UTF-8";
-        } // if
-        return encoding;
+        return (encoding==null) ? "UTF-8" : encoding;
     } // determineEncoding()
 
 } // StreamingMultipartResolver

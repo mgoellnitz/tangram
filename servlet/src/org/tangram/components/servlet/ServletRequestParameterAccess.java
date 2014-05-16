@@ -58,9 +58,8 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
             ServletFileUpload upload = new ServletFileUpload();
             upload.setFileSizeMax(uploadFileMaxSize);
             try {
-                final FileItemIterator fileItemIterator = upload.getItemIterator(request);
-                while (fileItemIterator.hasNext()) {
-                    FileItemStream item = fileItemIterator.next();
+                for (FileItemIterator itemIterator = upload.getItemIterator(request) ; itemIterator.hasNext() ;) {
+                    FileItemStream item = itemIterator.next();
                     String fieldName = item.getFieldName();
                     InputStream stream = item.openStream();
                     if (item.isFormField()) {

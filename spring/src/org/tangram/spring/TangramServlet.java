@@ -1,7 +1,7 @@
 /**
- * 
- * Copyright 2011 Martin Goellnitz
- * 
+ *
+ * Copyright 2011-2014 Martin Goellnitz
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,15 +14,13 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.spring;
 
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.View;
@@ -39,7 +37,7 @@ public class TangramServlet extends DispatcherServlet {
 
 
     public TangramServlet() {
-        // Just for performance testing
+        // Just for performance testing:
         // this.setContextClass(org.tangram.WebApplicationContext.class);
     } // TangramServlet()
 
@@ -62,10 +60,7 @@ public class TangramServlet extends DispatcherServlet {
 
         if (result == null) {
             Object self = model.get(Constants.THIS);
-            if (self == null) {
-                self = model;
-            } // if
-            throw new Exception("Cannot find view "+viewName+" for "+self);
+            throw new Exception("Cannot find view "+viewName+" for "+(self == null ? model : self));
         } // if
 
         return result;

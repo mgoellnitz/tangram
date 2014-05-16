@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -89,8 +89,7 @@ public class TransientCode implements CodeResource, Serializable {
 
     @Override
     public InputStream getStream() throws Exception {
-        byte[] bytes = getCodeText().getBytes("UTF-8");
-        return new ByteArrayInputStream(bytes);
+        return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     } // getStream()
 
 

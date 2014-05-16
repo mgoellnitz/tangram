@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -104,16 +104,15 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             } // if
 
             Principal principal = request.getUserPrincipal();
+            String userName = principal.getName();
             if (liveSystem) {
                 if (principal!=null) {
-                    String userName = principal.getName();
                     if (adminUsers.contains(userName)) {
                         request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
                 } // if
             } else {
                 if (principal!=null) {
-                    String userName = principal.getName();
                     if (log.isInfoEnabled()) {
                         log.info("preHandle() checking for user: "+userName);
                     } // if

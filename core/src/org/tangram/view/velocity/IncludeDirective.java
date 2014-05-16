@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -58,10 +58,7 @@ public class IncludeDirective extends Directive {
 
         /* getting direct parameters */
         Object bean = node.jjtGetChild(0).value(context);
-        String view = null;
-        if (node.jjtGetNumChildren()>1) {
-            view = (String)node.jjtGetChild(1).value(context);
-        } // if
+        String view = (node.jjtGetNumChildren()>1) ? (String)node.jjtGetChild(1).value(context) : null;
 
         // copy model from original context
         Map<String, Object> model = TangramServices.getViewContextFactory().createModel(bean, request, response);

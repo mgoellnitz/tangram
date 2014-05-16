@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,12 +41,8 @@ public class RepositoryTemplateResolver extends AbstractRepositoryTemplateResolv
 
     @Override
     protected String resolveView(String path, Locale locale) throws Exception {
-        String result = null;
         CodeResource template = resolveTemplate(path, locale);
-        if (template!=null) {
-            result = template.getId();
-        } // if
-        return result;
+        return (template != null) ? template.getId() : null;
     } // resolveViewName()
 
 } // RepositoryTemplateResolver

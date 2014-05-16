@@ -41,12 +41,10 @@ public class StringUtil {
         if (StringUtils.isNotBlank(parameter)) {
             String[] parts = parameter.split(",");
             for (String part : parts) {
-                part = part.trim();
-                result.add(part);
+                result.add(part.trim());
             } // for
         } // if
         return result;
     } // stringSetFromParameterString()
-
 
 } // StringUtil

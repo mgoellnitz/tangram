@@ -238,15 +238,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                     e = new Exception("Cannot set value for "+propertyName, ex);
                 } // try/catch
             } // for
-            /*
-             for (String propertyName : deleteValues) {
-             try {
-             wrapper.setPropertyValue(propertyName, null);
-             } catch (Exception ex) {
-             e = new Exception("Cannot delete value for "+propertyName, ex);
-             } // try/catch
-             } // for
-             */
 
             if (!getMutableBeanFactory().persist(bean)) {
                 throw new Exception("Could not persist bean "+bean.getId());
@@ -550,11 +541,15 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         } // for
 
         Object contents = xstream.fromXML(input);
-        log.info("read() "+contents);
+        if (log.isInfoEnabled()) {
+            log.info("read() "+contents);
+        } // if
         if (contents instanceof List) {
             List<? extends MutableContent> list = (List<? extends MutableContent>) contents;
             for (MutableContent o : list) {
-                log.info("read() "+o);
+                if (log.isInfoEnabled()) {
+                    log.info("read() "+o);
+                } // if
                 getMutableBeanFactory().persistUncommitted(o);
             } // for
         } // if
@@ -573,8 +568,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @LinkAction("/import")
     public TargetDescriptor contentImport(HttpServletRequest request, HttpServletResponse response) throws Exception {
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
-        byte[] data = parameterAccess.getData("xmlfile");
-        return doImport(new StringReader(new String(data, "UTF-8")), request, response);
+        return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request, response);
     } // contentImport()
 
 

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -68,6 +68,16 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
 
     private HashSet<String> customLinkViews = new HashSet<String>();
 
+    /**
+     * URL part pattern to match ID and VIEW based calls
+     */
+    private static final Pattern PATTERN_ID_VIEW = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+).view_(.+)");
+
+    /**
+     * URL part pattern to match onyl ID based calls
+     */
+    private static final Pattern PATTERN_ID = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
+
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
@@ -113,14 +123,14 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
         } // if
         Utils.setPrimaryBrowserLanguageForJstl(request);
         if (uri.indexOf("view")>0) {
-            Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+).view_(.+)");
+            Pattern p = PATTERN_ID_VIEW;
             Matcher matcher = p.matcher(uri);
             if (matcher.find()) {
                 id = matcher.group(1);
                 view = matcher.group(2);
             } // if
         } else {
-            Pattern p = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
+            Pattern p = PATTERN_ID;
             Matcher matcher = p.matcher(uri);
             if (matcher.find()) {
                 id = matcher.group();
