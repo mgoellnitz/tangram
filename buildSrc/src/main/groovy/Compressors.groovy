@@ -1,4 +1,4 @@
-/**
+/*
  * 
  * Copyright 2011-2013 Martin Goellnitz
  * 
@@ -16,7 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-// Minification filter classes for JavaScript and CSS
+
+/**
+ *  Minification filter classes for JavaScript and CSS
+ */
 class JavaScriptMinify extends FilterReader {
 
     Reader inputReader

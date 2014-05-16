@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,10 +49,9 @@ class TangramUtilities {
   } 
     
   
-  /*
+  /**
    *  extract base webarchive which must be the first webapp dependency of this project.
    *  Then copy JavaScript and CSS Codes and try to minify them.
-   *  
    */
   public overlayWebapp(War w) {
     Project p = w.project
@@ -134,7 +133,7 @@ class TangramUtilities {
 
   
   /**
-   * customize war dependencies for non-clean build intended for system build
+   * customize war dependencies for non-clean build intended for system build.
    */
   public customizeWar(War w) {
     Project p = w.project
@@ -228,6 +227,11 @@ class TangramUtilities {
     nucleusEnhance("JPA", null)
   } // nucleusJpaEnhance()
   
+  
+  /**
+   *  Do JPA enhancement with datanucleus enhancer of classes from the
+   *  callers javaCompile output set to the given target directory.
+   */
   public nucleusJpaEnhance(String dir) {
     nucleusEnhance("JPA", dir)
   } // nucleusJpaEnhance()
@@ -328,10 +332,6 @@ class TangramUtilities {
     
     String transformArgs = "debug=1"      
     Transformer t = new Transformer(project.configurations.compile.asPath, transformArgs)
-    // Class destination has no effect
-    // String classDestination = "$project.buildDir"
-    // println classDestination
-    // OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, classDestination)
     
     String classSource = null
     project.sourceSets['main'].output.files.each {
