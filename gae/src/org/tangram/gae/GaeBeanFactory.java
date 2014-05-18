@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
+import org.tangram.mutable.MutableContent;
 
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
@@ -43,6 +44,12 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     public void setUseHdrDatastore(boolean useHdrDatastore) {
         this.useHdrDatastore = useHdrDatastore;
     }
+
+
+    @Override
+    public Class<? extends MutableContent> getBaseClass() {
+        return GaeContent.class;
+    } // getBaseClass()
 
 
     /**

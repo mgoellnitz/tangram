@@ -59,8 +59,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
 
-    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
-
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
     private boolean activateCaching = false;
@@ -188,6 +186,12 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
 
     @Override
+    public Class<? extends MutableContent> getBaseClass() {
+        return EContent.class;
+    } // getBaseClass()
+
+
+    @Override
     public void beginTransaction() {
         synchronized (server) {
             if (currentTransaction==null) {
@@ -260,55 +264,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         statistics.increase("create bean");
         return bean;
     } // createBean()
-
-
-    @Override
-    public void clearCacheFor(Class<? extends Content> cls) {
-        statistics.increase("bean cache clear");
-        cache.clear();
-        if (log.isInfoEnabled()) {
-            log.info("clearCacheFor() "+cls.getSimpleName());
-        } // if
-        try {
-            // clear query cache first since listeners might want to use query to obtain fresh data
-            Collection<String> removeKeys = new HashSet<String>();
-            for (Object keyObject : queryCache.keySet()) {
-                String key = (String) keyObject;
-                Class<? extends Content> c = getKeyClass(key);
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    removeKeys.add(key);
-                } // if
-            } // for
-            for (String key : removeKeys) {
-                queryCache.remove(key);
-            } // for
-            startupCache.put(QUERY_CACHE_KEY, queryCache);
-
-            for (Class<? extends Content> c : getListeners().keySet()) {
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    List<BeanListener> listeners = getListeners().get(c);
-                    if (log.isInfoEnabled()) {
-                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
-                    } // if
-                    if (listeners!=null) {
-                        for (BeanListener listener : listeners) {
-                            listener.reset();
-                        } // for
-                    } // if
-                } // if
-            } // for
-        } catch (Exception e) {
-            log.error("clearCacheFor() "+cls.getSimpleName(), e);
-        } // try/catch
-    } // clearCacheFor()
 
 
     @Override
@@ -450,11 +405,10 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                 } catch (Exception e) {
                     log.error("getAllClasses() outer", e);
                 } // try/catch
-                allClasses.addAll(additionalClasses);
             } // if
         } // synchronized
         return allClasses;
-    }// getAllClasses()
+    } // getAllClasses()
 
 
     @Override
@@ -482,43 +436,58 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     } // getClasses()
 
 
-    private Collection<Class<? extends MutableContent>> additionalClasses = Collections.emptySet();
-
-
-    @Override
-    public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
-        additionalClasses = (classes==null) ? new HashSet<Class<? extends MutableContent>>() : classes;
-        allClasses = null;
-        modelClasses = null;
-        afterPropertiesSet();
-    } // setAdditionalClasses()
-
-
-    /**
-     * just to support JSP weak calling of methods with no parameters
-     *
-     * @param baseClass
-     * @return
-     */
-    @Override
-    public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
-        if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
-
-            // Add the very basic root classes directly here - they won't get auto detected otherwise
-            implementingClassesMap.put(EContent.class, getImplementingClassesForModelClass(EContent.class));
-            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
-            for (Class<? extends Content> c : getAllClasses()) {
-                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
-            } // for
-        } // if
-        return implementingClassesMap;
-    } // getImplementingClassMap()
-
-
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
         return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
     } // getFactoryConfigOverrides()
+
+
+    @Override
+    public void clearCacheFor(Class<? extends Content> cls) {
+        statistics.increase("bean cache clear");
+        cache.clear();
+        if (log.isInfoEnabled()) {
+            log.info("clearCacheFor() "+cls.getSimpleName());
+        } // if
+        try {
+            // clear query cache first since listeners might want to use query to obtain fresh data
+            Collection<String> removeKeys = new HashSet<String>();
+            for (Object keyObject : queryCache.keySet()) {
+                String key = (String) keyObject;
+                Class<? extends Content> c = getKeyClass(key);
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    removeKeys.add(key);
+                } // if
+            } // for
+            for (String key : removeKeys) {
+                queryCache.remove(key);
+            } // for
+            startupCache.put(QUERY_CACHE_KEY, queryCache);
+
+            for (Class<? extends Content> c : getListeners().keySet()) {
+                boolean assignableFrom = c.isAssignableFrom(cls);
+                if (log.isInfoEnabled()) {
+                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
+                } // if
+                if (assignableFrom) {
+                    List<BeanListener> listeners = getListeners().get(c);
+                    if (log.isInfoEnabled()) {
+                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                    } // if
+                    if (listeners!=null) {
+                        for (BeanListener listener : listeners) {
+                            listener.reset();
+                        } // for
+                    } // if
+                } // if
+            } // for
+        } catch (Exception e) {
+            log.error("clearCacheFor() "+cls.getSimpleName(), e);
+        } // try/catch
+    } // clearCacheFor()
 
 
     @PostConstruct

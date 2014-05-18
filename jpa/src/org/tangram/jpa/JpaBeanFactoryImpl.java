@@ -70,8 +70,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
 
-    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
-
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
     private boolean activateCaching = false;
@@ -85,26 +83,16 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
 
 
-    public String getPersistenceUnitName() {
-        return persistenceUnitName;
-    }
-
-
-    public void setPersistenceUnitName(String persistenceUnitName) {
-        this.persistenceUnitName = persistenceUnitName;
-    }
-
-
-    @Override
-    public EntityManager getManager() {
-        return manager;
-    }
-
-
     public JpaBeanFactoryImpl() {
         basePackages = new HashSet<String>();
         basePackages.add("org.tangram.jpa");
     } // JpaBeanFactoryImpl()
+
+
+    @Override
+    public Class<? extends MutableContent> getBaseClass() {
+        return JpaContent.class;
+    } // getBaseClass()
 
 
     public Set<String> getBasePackages() {
@@ -132,6 +120,22 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @Named("jpaConfigOverrides")
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
+    }
+
+
+    public String getPersistenceUnitName() {
+        return persistenceUnitName;
+    }
+
+
+    public void setPersistenceUnitName(String persistenceUnitName) {
+        this.persistenceUnitName = persistenceUnitName;
+    }
+
+
+    @Override
+    public EntityManager getManager() {
+        return manager;
     }
 
 
@@ -527,28 +531,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         additionalClasses = classSet;
         modelClasses = null;
     } // setAdditionalClasses()
-
-
-    /**
-     * just to support JSP weak calling of methods with no parameters
-     *
-     * @param baseClass
-     * @return
-     */
-    @Override
-    public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
-        if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
-
-            // Add the very basic root classes directly here - they won't get auto detected otherwise
-            implementingClassesMap.put(JpaContent.class, getImplementingClassesForModelClass(JpaContent.class));
-            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
-            for (Class<? extends Content> c : getAllClasses()) {
-                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
-            } // for
-        } // if
-        return implementingClassesMap;
-    } // getImplementingClassMap()
 
 
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {

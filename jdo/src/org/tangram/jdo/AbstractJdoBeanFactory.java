@@ -52,9 +52,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected PersistenceManager manager = null;
 
-    protected List<Class<? extends MutableContent>> modelClasses = null;
-
     protected List<Class<? extends MutableContent>> allClasses = null;
+
+
+    /**
+     * non abstract classes for storaable mutable data models
+     */
+    protected List<Class<? extends MutableContent>> modelClasses = null;
 
     protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
 
@@ -71,8 +75,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     private boolean prefill = true;
 
     private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
-
-    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
 
 
     @Override
@@ -506,27 +508,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         additionalClasses = classSet;
         modelClasses = null;
     } // setAdditionalClasses()
-
-
-    /**
-     * just to support JSP's weak calling of methods. It does not allow any parameters.
-     *
-     * @return map to map abstract classes to all non-abstract classes implementing/extending them
-     */
-    @Override
-    public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
-        if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
-
-            // Add the very basic root classes directly here - they won't get auto detected otherwise
-            implementingClassesMap.put(JdoContent.class, getImplementingClassesForModelClass(JdoContent.class));
-            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
-            for (Class<? extends Content> c : getAllClasses()) {
-                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
-            } // for
-        } // if
-        return implementingClassesMap;
-    } // getImplementingClassMap()
 
 
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {

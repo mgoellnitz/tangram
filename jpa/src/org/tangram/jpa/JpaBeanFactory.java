@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,31 +20,15 @@ package org.tangram.jpa;
 
 import java.util.Collection;
 import javax.persistence.EntityManager;
-import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableContent;
 
 public interface JpaBeanFactory extends MutableBeanFactory {
 
     /**
-     * Get all classes related with models - also the abstract ones
-     *
-     * @return
+     * Return the underlying entity manager implementation of the JPA implementation in use.
+     * @return EntityManager instance used by the implementing bean factory
      */
-    Collection<Class<? extends MutableContent>> getAllClasses();
-
-
-    /**
-     * clears caches only for entries of the given type.
-     *
-     * Never dare to issue changes for abstract classes or interfaces!
-     * only relevant for the attached listeners
-     *
-     * @param cls
-     */
-    void clearCacheFor(Class<? extends Content> cls);
-
-
     EntityManager getManager();
 
 

@@ -20,6 +20,7 @@ package org.tangram.nucleus;
 
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
+import org.tangram.mutable.MutableContent;
 
 
 public class NucleusBeanFactory extends AbstractJdoBeanFactory {
@@ -28,5 +29,11 @@ public class NucleusBeanFactory extends AbstractJdoBeanFactory {
     protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
          return internalId+"[OID]"+kindClass.getName();
     } // getObjectId()
+
+
+    @Override
+    public Class<? extends MutableContent> getBaseClass() {
+        return NucleusContent.class;
+    } // getBaseClass()
 
 } // NucleusBeanFactory

@@ -28,6 +28,12 @@ import org.tangram.content.Content;
 public interface MutableBeanFactory extends BeanFactory {
 
     /**
+     *  Returns the root class of all content classes handled by the implementing instance - may be null;
+     */
+    public Class<? extends MutableContent> getBaseClass();
+
+
+    /**
      * Starts a transaction which must subsequently be committed or rolled back.
      */
     public void beginTransaction();
@@ -97,6 +103,15 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
+     * return a collection of all classes available related with content for mutable bean instances.
+     * Also abstract classes will be in the returned collection.
+     *
+     * @return collection of content classes
+     */
+    public Collection<Class<? extends MutableContent>> getAllClasses();
+
+
+    /**
      * Return a map mapping abstract classes to inheriting non-abstract classes.
      *
      * This map is used in the editor to map abstract classes to inheriting non-abstract classes when it
@@ -108,20 +123,21 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
-     * Return a list of assignable non-bastract classes.
+     * Return a list of assignable non-abstract classes for a given type.
      *
      * @param <T> abstract class or interfaces
      * @param c class instance for this type
      * @return list of non abstract classes assignable to the given type
      */
-    <T extends Content> List<Class<T>> getImplementingClasses(Class<T> c);
+    <T extends MutableContent> List<Class<T>> getImplementingClasses(Class<T> c);
 
 
     /**
-     * clears caches only for entries of the given type.
+     * clear caches for instances depending on the given type.
      *
      * Never dare to issue changes for abstract classes or interfaces!
-     * only relevant for the attached listeners
+     * (You cannot have instances of those types anyway)
+     * The calll is only relevant for the attached listeners.
      *
      * @param cls
      */

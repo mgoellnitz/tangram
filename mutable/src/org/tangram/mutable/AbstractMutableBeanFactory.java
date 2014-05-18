@@ -49,6 +49,11 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();
 
+    /**
+     *  mapping from classes or interfaces to non abstract classes implementing them
+     */
+    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
+
 
     protected Map<Class<? extends Content>, List<BeanListener>> getListeners() {
         return attachedListeners;
@@ -67,6 +72,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      * Wrap API specific persistence call.
      * Higher level methods in this class in turn deal with exception and cachce handling.
+     *
      * @param <T>
      * @param bean
      */
@@ -76,6 +82,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      * Wrap API specific deletion call.
      * Higher level methods in this class in turn deal with exception and cachce handling.
+     *
      * @param <T>
      * @param bean
      */
@@ -105,7 +112,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             result = true;
         } catch (Exception e) {
             log.error("persistUncommitted()", e);
-            if (rollback && hasManager()) {
+            if (rollback&&hasManager()) {
                 // yes we saw situations where this was not the case thus hiding other errors!
                 rollbackTransaction();
             } // if
@@ -126,7 +133,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             result = true;
         } catch (Exception e) {
             log.error("delete()", e);
-            if (rollback && hasManager()) {
+            if (rollback&&hasManager()) {
                 // yes we saw situations where this was not the case thus hiding other errors!
                 rollbackTransaction();
             } // if
@@ -173,6 +180,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      * Get class name from query cache key.
      * Keys are supposed to be in the form of <classname>:<query>
+     *
      * @param <T>
      * @param key
      * @return Class for the given key or null if the key does not map to any class
@@ -209,28 +217,6 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     } // addListener()
 
 
-    /**
-     * Get the classes implementing a given baseClass.
-     *
-     * @param <T>
-     * @param baseClass
-     * @return list of non-abstract classes that can be assigned to the given base class
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
-        List<Class<T>> result = new ArrayList<Class<T>>();
-
-        for (Class<? extends MutableContent> c : getClasses()) {
-            if (baseClass.isAssignableFrom(c)) {
-                result.add((Class<T>) c);
-            } // if
-        } // for
-
-        return result;
-    } // getImplementingClasses()
-
-
     protected List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
         List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
 
@@ -242,5 +228,44 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
         return result;
     } // getImplementingClassesForModelClass()
+
+
+    /**
+     * just to support JSP's weak calling of methods. It does not allow any parameters.
+     *
+     * @return map to map abstract classes to all non-abstract classes implementing/extending them
+     */
+    @Override
+    public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
+        if (implementingClassesMap==null) {
+            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
+
+            // Add the very basic root classes directly here - they won't get auto detected otherwise
+            implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
+            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
+            for (Class<? extends Content> c : getAllClasses()) {
+                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
+            } // for
+        } // if
+        return implementingClassesMap;
+    } // getImplementingClassMap()
+
+
+    /**
+     * Get the classes implementing a given baseClass.
+     *
+     * @param <T>
+     * @param baseClass
+     * @return list of non-abstract classes that can be assigned to the given base class
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends MutableContent> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
+        List<Class<T>> result = new ArrayList<Class<T>>();
+        for (Class<? extends MutableContent> c : getImplementingClassesMap().get(baseClass)) {
+            result.add((Class<T>) c);
+        } // for
+        return result;
+    } // getImplementingClasses()
 
 } // AbstractMutableBeanFactory
