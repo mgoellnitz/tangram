@@ -74,25 +74,23 @@ public class ListFtpCommandHandler extends ListCommandHandler {
         int day = cal.get(Calendar.DATE);
         if (day<10) {
             sb.append(' ');
-        }
+        } // if
         sb.append(day);
         sb.append(' ');
 
         long sixMonth = 15811200000L; // 183L * 24L * 60L * 60L * 1000L;
         long nowTime = System.currentTimeMillis();
         if (Math.abs(nowTime-millis)>sixMonth) {
-
             // year
             int year = cal.get(Calendar.YEAR);
             sb.append(' ');
             sb.append(year);
         } else {
-
             // hour
             int hh = cal.get(Calendar.HOUR_OF_DAY);
             if (hh<10) {
                 sb.append('0');
-            }
+            } // if
             sb.append(hh);
             sb.append(':');
 
@@ -102,7 +100,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
                 sb.append('0');
             }
             sb.append(mm);
-        }
+        } // if
         return sb.toString();
     } // getUnixDate()
 

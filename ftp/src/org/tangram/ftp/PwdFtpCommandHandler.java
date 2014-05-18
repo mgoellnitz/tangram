@@ -27,6 +27,9 @@ import org.mockftpserver.stub.command.PwdCommandHandler;
 
 
 /**
+ *
+ * Print working directory ftp command.
+ *
  */
 public class PwdFtpCommandHandler extends PwdCommandHandler {
 

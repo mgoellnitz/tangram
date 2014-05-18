@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
+
 
 @Entity
 public final class Code extends EContent implements MutableCode {
@@ -71,7 +72,7 @@ public final class Code extends EContent implements MutableCode {
 
     @Override
     public String getCodeText() {
-        return code == null ? null : new String(code);
+        return code==null ? null : new String(code);
     }
 
 
@@ -85,6 +86,7 @@ public final class Code extends EContent implements MutableCode {
     public InputStream getStream() throws Exception {
         return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     }
+
 
     @Override
     public int compareTo(Content o) {

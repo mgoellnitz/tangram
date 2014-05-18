@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,11 +39,7 @@ public class GenericPropertyConverter extends AbstractPropertyConverter {
 
     @Override
     public long getBlobLength(Object o) {
-        long result = 0;
-        if (o instanceof byte[]) {
-            result = ((byte[]) o).length;
-        } // if
-        return result;
+        return (o instanceof byte[]) ? ((byte[]) o).length : 0;
     } // getBlobLength()
 
 
@@ -61,21 +57,13 @@ public class GenericPropertyConverter extends AbstractPropertyConverter {
 
     @Override
     public String getEditString(Object o) {
-        if (o instanceof char[]) {
-            return new String((char[]) o);
-        } else {
-            return super.getEditString(o);
-        } // if
+        return (o instanceof char[]) ? new String((char[]) o) : super.getEditString(o);
     } // getEditString()
 
 
     @Override
     public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
-        if (cls==char[].class) {
-            return valueString.toCharArray();
-        } else {
-            return super.getStorableObject(valueString, cls, request);
-        } // if
+        return (cls==char[].class) ? valueString.toCharArray() : super.getStorableObject(valueString, cls, request);
     } // getStorableObject()
 
 } // GenericPropertyConverter

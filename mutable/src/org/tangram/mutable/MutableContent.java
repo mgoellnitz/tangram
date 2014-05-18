@@ -19,6 +19,12 @@ package org.tangram.mutable;
 import org.tangram.content.Content;
 
 
+/**
+ * Content managed by a Bean Factory dealing with mutable content instances.
+ * 
+ * Right now this is a marker interface describing that the content can be modified by some means inside the
+ * tangram system.
+ */
 public interface MutableContent extends Content {
 
 } // MutableContent

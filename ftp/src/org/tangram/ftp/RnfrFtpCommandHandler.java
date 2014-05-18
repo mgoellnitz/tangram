@@ -32,7 +32,7 @@ import org.tangram.content.CodeResource;
 
 /**
  *
- * Renmame from command.
+ * Rename from command.
  *
  * Stores the the tangram id of the object to be renamed.
  *

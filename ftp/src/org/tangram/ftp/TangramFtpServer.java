@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -129,11 +129,9 @@ public class TangramFtpServer extends AbstractFtpServer {
     @Override
     public void finalize() throws Throwable {
         super.finalize();
-
         for (String key : commands.keySet()) {
             log.info(key+": "+commands.get(key).numberOfInvocations());
         } // for
-
     } // finalize()
 
 } // TangramFtpServer
