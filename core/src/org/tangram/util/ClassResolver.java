@@ -76,7 +76,9 @@ public class ClassResolver {
                     url = url.substring(4);
                 } // if
                 u = new URL(url);
-                log.info("addUrlsForPackage() "+url);
+                if (log.isInfoEnabled()) {
+                    log.info("addUrlsForPackage() "+url);
+                } // if
 
                 if (url.endsWith(".jar")) {
                     urls.add(u);
@@ -96,8 +98,11 @@ public class ClassResolver {
         } // if
         for (URL u : urls) {
             try {
+                if (log.isDebugEnabled()) {
+                    log.debug("getClassNames() u="+u);
+                } // if
                 JarInputStream is = new JarInputStream(u.openStream());
-                for (JarEntry entry = is.getNextJarEntry() ; entry != null ;) {
+                for (JarEntry entry = is.getNextJarEntry(); entry!=null;entry = is.getNextJarEntry()) {
                     final String name = entry.getName().replace('/', '.');
                     if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
                         String className = name.substring(0, name.length()-6);
@@ -109,7 +114,7 @@ public class ClassResolver {
                             classNames.add(className);
                         } // if
                     } // if
-                } // while
+                } // for
             } catch (IOException e) {
                 log.error("getClassNames()", e);
             } // try/catch
@@ -128,7 +133,7 @@ public class ClassResolver {
             try {
                 @SuppressWarnings("unchecked")
                 Class<T> cls = (Class<T>) Class.forName(className);
-                if ((!cls.isInterface()) && c.isAssignableFrom(cls) && ((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
+                if ((!cls.isInterface())&&c.isAssignableFrom(cls)&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {
