@@ -56,7 +56,6 @@ import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
-import org.tangram.mutable.MutableContent;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
@@ -164,7 +163,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
             } // if
-            MutableContent bean = beanFactory.getBean(MutableContent.class, id);
+            Content bean = beanFactory.getBean(Content.class, id);
             JavaBean wrapper = new JavaBean(bean);
             Map<String, Object> newValues = new HashMap<String, Object>();
             // List<String> deleteValues = new ArrayList<String>();
@@ -227,7 +226,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 } // try/catch
             } // for
 
-            bean = getMutableBeanFactory().getBean(MutableContent.class, id);
+            bean = getMutableBeanFactory().getBean(Content.class, id);
             getMutableBeanFactory().beginTransaction();
             wrapper = new JavaBean(bean);
             Exception e = null;
@@ -289,9 +288,9 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
      * @param typeName
      * @return Class for the given type name or null
      */
-    private Class<? extends MutableContent> loadClass(String typeName) {
-        Class<? extends MutableContent> cls = null;
-        for (Class<? extends MutableContent> c : getMutableBeanFactory().getClasses()) {
+    private Class<? extends Content> loadClass(String typeName) {
+        Class<? extends Content> cls = null;
+        for (Class<? extends Content> c : getMutableBeanFactory().getClasses()) {
             if (c.getName().equals(typeName)) {
                 cls = c;
             } // if
@@ -311,8 +310,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            Class<? extends MutableContent> cls = loadClass(typeName);
-            MutableContent content = getMutableBeanFactory().createBean(cls);
+            Class<? extends Content> cls = loadClass(typeName);
+            Content content = getMutableBeanFactory().createBean(cls);
             if (getMutableBeanFactory().persist(content)) {
                 if (log.isDebugEnabled()) {
                     log.debug("create() content="+content);
@@ -339,7 +338,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
             } // if
-            Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
+            Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
             Class<? extends Content> cls = null;
             // take first one of classes available
             if (!classes.isEmpty()) {
@@ -347,7 +346,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             } // if
             // try to take class from provided classes
             if (StringUtils.isNotBlank(typeName)) {
-                for (Class<? extends MutableContent> c : classes) {
+                for (Class<? extends Content> c : classes) {
                     if (c.getName().equals(typeName)) {
                         cls = c;
                     } // if
@@ -425,8 +424,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 throw new Exception("User may not edit");
             } // if
             @SuppressWarnings("unchecked")
-            Class<? extends MutableContent> cls = loadClass(typeName);
-            MutableContent content = getMutableBeanFactory().createBean(cls);
+            Class<? extends Content> cls = loadClass(typeName);
+            Content content = getMutableBeanFactory().createBean(cls);
             if (getMutableBeanFactory().persist(content)) {
                 if (log.isDebugEnabled()) {
                     log.debug("link() content="+content);
@@ -434,7 +433,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 } // if
 
                 // re-get for update to avoid xg transactions where ever possible
-                MutableContent bean = getMutableBeanFactory().getBean(MutableContent.class, id);
+                Content bean = getMutableBeanFactory().getBean(Content.class, id);
                 getMutableBeanFactory().beginTransaction();
                 JavaBean wrapper = new JavaBean(bean);
 
@@ -467,7 +466,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             if (!deleteMethodEnabled) {
                 throw new Exception("Object deletion not activated");
             } // if
-            MutableContent bean = getMutableBeanFactory().getBean(MutableContent.class, id);
+            Content bean = getMutableBeanFactory().getBean(Content.class, id);
             if (bean==null) {
                 throw new Exception("No object to delete found for id "+id);
             } // if
@@ -491,7 +490,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         response.setCharacterEncoding("UTF-8");
         // The pure reflection provider is used because of Google App Engines API limitations
         XStream xstream = new AppEngineXStream(new StaxDriver());
-        Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
+        Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
 
         // Dig out root class of all this evil to find out where the id field is defined
         Class<? extends Object> oneClass = classes.iterator().next();
@@ -506,11 +505,11 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         // TODO: Get rid of this in the output somehow
         // xstream.omitField(oneClass, "__ebean__intercept");
 
-        for (Class<? extends MutableContent> c : classes) {
+        for (Class<? extends Content> c : classes) {
             xstream.alias(c.getSimpleName(), c);
         } // for
-        Collection<MutableContent> allContent = new ArrayList<MutableContent>();
-        for (Class<? extends MutableContent> c : classes) {
+        Collection<Content> allContent = new ArrayList<Content>();
+        for (Class<? extends Content> c : classes) {
             try {
                 allContent.addAll(beanFactory.listBeansOfExactClass(c));
             } catch (Exception e) {
@@ -535,8 +534,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
         getMutableBeanFactory().beginTransaction();
         XStream xstream = new AppEngineXStream(new StaxDriver());
-        Collection<Class<? extends MutableContent>> classes = getMutableBeanFactory().getClasses();
-        for (Class<? extends MutableContent> c : classes) {
+        Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
+        for (Class<? extends Content> c : classes) {
             xstream.alias(c.getSimpleName(), c);
         } // for
 
@@ -545,8 +544,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             log.info("read() "+contents);
         } // if
         if (contents instanceof List) {
-            List<? extends MutableContent> list = (List<? extends MutableContent>) contents;
-            for (MutableContent o : list) {
+            List<? extends Content> list = (List<? extends Content>) contents;
+            for (Content o : list) {
                 if (log.isInfoEnabled()) {
                     log.info("read() "+o);
                 } // if

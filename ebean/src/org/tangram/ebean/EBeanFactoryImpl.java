@@ -39,7 +39,6 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
-import org.tangram.mutable.MutableContent;
 import org.tangram.util.ClassResolver;
 
 
@@ -53,11 +52,11 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     private Transaction currentTransaction = null;
 
-    protected List<Class<? extends MutableContent>> modelClasses = null;
+    protected List<Class<? extends Content>> modelClasses = null;
 
-    protected List<Class<? extends MutableContent>> allClasses = null;
+    protected List<Class<? extends Content>> allClasses = null;
 
-    protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
+    protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
@@ -186,7 +185,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
 
     @Override
-    public Class<? extends MutableContent> getBaseClass() {
+    public Class<? extends Content> getBaseClass() {
         return EContent.class;
     } // getBaseClass()
 
@@ -230,13 +229,13 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
 
     @Override
-    protected <T extends MutableContent> void apiPersist(T bean) {
+    protected <T extends Content> void apiPersist(T bean) {
         server.save(bean);
     } // apiPersist()
 
 
     @Override
-    protected <T extends MutableContent> void apiDelete(T bean) {
+    protected <T extends Content> void apiDelete(T bean) {
         server.delete(bean);
     } // apiDelete()
 
@@ -250,7 +249,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
      * @throws InstantiationException
      */
     @Override
-    public <T extends MutableContent> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
+    public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
         if (log.isDebugEnabled()) {
             log.debug("createBean() beginning transaction");
         } // if
@@ -368,18 +367,18 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Class<? extends MutableContent>> getAllClasses() {
+    public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends MutableContent>>();
-                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
+                allClasses = new ArrayList<Class<? extends Content>>();
+                tableNameMapping = new HashMap<String, Class<? extends Content>>();
 
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(basePackages);
                         classNames = new ArrayList<String>();
-                        for (Class<? extends MutableContent> cls : resolver.getAnnotatedSubclasses(EContent.class, Entity.class)) {
+                        for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(EContent.class, Entity.class)) {
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() * "+cls.getName());
                             } // if
@@ -394,7 +393,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
-                            Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
+                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -412,11 +411,11 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
 
     @Override
-    public Collection<Class<? extends MutableContent>> getClasses() {
+    public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends MutableContent>>();
-                for (Class<? extends MutableContent> cls : getAllClasses()) {
+                modelClasses = new ArrayList<Class<? extends Content>>();
+                for (Class<? extends Content> cls : getAllClasses()) {
                     if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                         modelClasses.add(cls);
                     } // if
@@ -493,9 +492,9 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        final Collection<Class<? extends MutableContent>> classes = getAllClasses();
+        final Collection<Class<? extends Content>> classes = getAllClasses();
 
-        for (Class<? extends MutableContent> c : classes) {
+        for (Class<? extends Content> c : classes) {
             if (log.isInfoEnabled()) {
                 log.info("afterPropertiesSet() class "+c.getName());
             } // if

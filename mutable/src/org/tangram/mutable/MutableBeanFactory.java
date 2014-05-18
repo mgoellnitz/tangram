@@ -30,7 +30,7 @@ public interface MutableBeanFactory extends BeanFactory {
     /**
      *  Returns the root class of all content classes handled by the implementing instance - may be null;
      */
-    public Class<? extends MutableContent> getBaseClass();
+    public Class<? extends Content> getBaseClass();
 
 
     /**
@@ -59,7 +59,7 @@ public interface MutableBeanFactory extends BeanFactory {
      * @param cls class to reate a persistable instance for
      * @return newly created instance
      */
-    <T extends MutableContent> T createBean(Class<T> cls) throws Exception;
+    <T extends Content> T createBean(Class<T> cls) throws Exception;
 
 
     /**
@@ -69,7 +69,7 @@ public interface MutableBeanFactory extends BeanFactory {
      * @param bean
      * @return true if persisting could be completed successfully
      */
-    <T extends MutableContent> boolean persistUncommitted(T bean);
+    <T extends Content> boolean persistUncommitted(T bean);
 
 
     /**
@@ -79,7 +79,7 @@ public interface MutableBeanFactory extends BeanFactory {
      * @param bean
      * @return true if persisting could be completed successfully
      */
-    <T extends MutableContent> boolean persist(T bean);
+    <T extends Content> boolean persist(T bean);
 
 
     /**
@@ -90,7 +90,7 @@ public interface MutableBeanFactory extends BeanFactory {
      * @param bean
      * @return true if deleting could be completed successfully
      */
-    <T extends MutableContent> boolean delete(T bean);
+    <T extends Content> boolean delete(T bean);
 
 
     /**
@@ -99,7 +99,7 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * @return collection of content classes
      */
-    public Collection<Class<? extends MutableContent>> getClasses();
+    public Collection<Class<? extends Content>> getClasses();
 
 
     /**
@@ -108,7 +108,7 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * @return collection of content classes
      */
-    public Collection<Class<? extends MutableContent>> getAllClasses();
+    public Collection<Class<? extends Content>> getAllClasses();
 
 
     /**
@@ -119,7 +119,7 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * @return mappping from class specifier to non-abstract implementing classes available
      */
-    Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap();
+    Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap();
 
 
     /**
@@ -129,7 +129,7 @@ public interface MutableBeanFactory extends BeanFactory {
      * @param c class instance for this type
      * @return list of non abstract classes assignable to the given type
      */
-    <T extends MutableContent> List<Class<T>> getImplementingClasses(Class<T> c);
+    <T extends Content> List<Class<T>> getImplementingClasses(Class<T> c);
 
 
     /**

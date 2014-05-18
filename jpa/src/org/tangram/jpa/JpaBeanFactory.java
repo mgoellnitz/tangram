@@ -20,8 +20,8 @@ package org.tangram.jpa;
 
 import java.util.Collection;
 import javax.persistence.EntityManager;
+import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
-import org.tangram.mutable.MutableContent;
 
 public interface JpaBeanFactory extends MutableBeanFactory {
 
@@ -37,6 +37,6 @@ public interface JpaBeanFactory extends MutableBeanFactory {
      *
      * @param classes list of available classes
      */
-    void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes);
+    void setAdditionalClasses(Collection<Class<? extends Content>> classes);
 
 } // JpaBeanFactory

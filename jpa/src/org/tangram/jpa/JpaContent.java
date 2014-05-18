@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
@@ -24,12 +24,11 @@ import javax.persistence.InheritanceType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.Content;
-import org.tangram.mutable.MutableContent;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class JpaContent implements MutableContent {
+public abstract class JpaContent implements Content {
 
     private static final Log log = LogFactory.getLog(JpaContent.class);
 

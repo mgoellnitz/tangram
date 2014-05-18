@@ -40,7 +40,6 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
-import org.tangram.mutable.MutableContent;
 import org.tangram.util.ClassResolver;
 
 
@@ -52,15 +51,15 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected PersistenceManager manager = null;
 
-    protected List<Class<? extends MutableContent>> allClasses = null;
+    protected List<Class<? extends Content>> allClasses = null;
 
 
     /**
      * non abstract classes for storaable mutable data models
      */
-    protected List<Class<? extends MutableContent>> modelClasses = null;
+    protected List<Class<? extends Content>> modelClasses = null;
 
-    protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
+    protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
@@ -231,13 +230,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
-    protected <T extends MutableContent> void apiPersist(T bean) {
+    protected <T extends Content> void apiPersist(T bean) {
         manager.makePersistent(bean);
     } // apiPersist()
 
 
     @Override
-    protected <T extends MutableContent> void apiDelete(T bean) {
+    protected <T extends Content> void apiDelete(T bean) {
         manager.deletePersistent(bean);
     } // apiDelete()
 
@@ -248,7 +247,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      * @see JdoBeanFactory
      */
     @Override
-    public <T extends MutableContent> T createBean(Class<T> cls) {
+    public <T extends Content> T createBean(Class<T> cls) {
         if (log.isDebugEnabled()) {
             log.debug("createBean() beginning transaction");
         } // if
@@ -419,16 +418,16 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      */
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Class<? extends MutableContent>> getAllClasses() {
+    public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends MutableContent>>();
+                allClasses = new ArrayList<Class<? extends Content>>();
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(basePackages);
                         classNames = new ArrayList<String>();
-                        for (Class<? extends MutableContent> cls : resolver.getAnnotatedSubclasses(JdoContent.class, PersistenceCapable.class)) {
+                        for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JdoContent.class, PersistenceCapable.class)) {
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() * "+cls.getName());
                             } // if
@@ -442,7 +441,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
-                            Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
+                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -459,11 +458,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
-    public Collection<Class<? extends MutableContent>> getClasses() {
+    public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends MutableContent>>();
-                for (Class<? extends MutableContent> cls : getAllClasses()) {
+                modelClasses = new ArrayList<Class<? extends Content>>();
+                for (Class<? extends Content> cls : getAllClasses()) {
                     if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                         modelClasses.add(cls);
                     } // if
@@ -478,8 +477,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 };
                 modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
-                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
-                for (Class<? extends MutableContent> mc : modelClasses) {
+                tableNameMapping = new HashMap<String, Class<? extends Content>>();
+                for (Class<? extends Content> mc : modelClasses) {
                     tableNameMapping.put(mc.getSimpleName(), mc);
                 } // for
             } // if
@@ -488,14 +487,14 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // getClasses()
 
 
-    private Collection<Class<? extends MutableContent>> additionalClasses = Collections.emptySet();
+    private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
 
     @Override
-    public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
-        Set<Class<? extends MutableContent>> classSet = new HashSet<Class<? extends MutableContent>>();
+    public void setAdditionalClasses(Collection<Class<? extends Content>> classes) {
+        Set<Class<? extends Content>> classSet = new HashSet<Class<? extends Content>>();
         if (classes!=null) {
-            for (Class<? extends MutableContent> cls : classes) {
+            for (Class<? extends Content> cls : classes) {
                 if (JdoContent.class.isAssignableFrom(cls)) {
                     if (cls.getAnnotation(PersistenceCapable.class)!=null) {
                         if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {

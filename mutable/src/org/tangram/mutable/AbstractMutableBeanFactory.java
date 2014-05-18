@@ -52,7 +52,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      *  mapping from classes or interfaces to non abstract classes implementing them
      */
-    protected Map<Class<? extends Content>, List<Class<? extends MutableContent>>> implementingClassesMap = null;
+    protected Map<Class<? extends Content>, List<Class<? extends Content>>> implementingClassesMap = null;
 
 
     protected Map<Class<? extends Content>, List<BeanListener>> getListeners() {
@@ -76,7 +76,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @param <T>
      * @param bean
      */
-    protected abstract <T extends MutableContent> void apiPersist(T bean);
+    protected abstract <T extends Content> void apiPersist(T bean);
 
 
     /**
@@ -86,7 +86,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @param <T>
      * @param bean
      */
-    protected abstract <T extends MutableContent> void apiDelete(T bean);
+    protected abstract <T extends Content> void apiDelete(T bean);
 
 
     /**
@@ -102,7 +102,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     @Override
-    public <T extends MutableContent> boolean persistUncommitted(T bean) {
+    public <T extends Content> boolean persistUncommitted(T bean) {
         boolean result = false;
         boolean rollback = true;
         try {
@@ -122,7 +122,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     @Override
-    public <T extends MutableContent> boolean delete(T bean) {
+    public <T extends Content> boolean delete(T bean) {
         boolean result = false;
         boolean rollback = true;
         try {
@@ -143,7 +143,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     @Override
-    public <T extends MutableContent> boolean persist(T bean) {
+    public <T extends Content> boolean persist(T bean) {
         final boolean result = persistUncommitted(bean);
         if (result) {
             commitTransaction();
@@ -159,16 +159,16 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @param className fully qualified name of the class
      */
     @SuppressWarnings("unchecked")
-    protected Class<? extends MutableContent> getClassForName(String className) {
-        Class<? extends MutableContent> result = null;
-        for (Class<? extends MutableContent> c : getClasses()) {
+    protected Class<? extends Content> getClassForName(String className) {
+        Class<? extends Content> result = null;
+        for (Class<? extends Content> c : getClasses()) {
             if (c.getName().equals(className)) {
                 result = c;
             } // if
         } // for
         if (result==null) {
             try {
-                result = (Class<? extends MutableContent>) Class.forName(className);
+                result = (Class<? extends Content>) Class.forName(className);
             } catch (ClassNotFoundException cnfe) {
                 //
             } // try/catch
@@ -217,10 +217,10 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     } // addListener()
 
 
-    protected List<Class<? extends MutableContent>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
-        List<Class<? extends MutableContent>> result = new ArrayList<Class<? extends MutableContent>>();
+    protected List<Class<? extends Content>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
+        List<Class<? extends Content>> result = new ArrayList<Class<? extends Content>>();
 
-        for (Class<? extends MutableContent> c : getClasses()) {
+        for (Class<? extends Content> c : getClasses()) {
             if (baseClass.isAssignableFrom(c)) {
                 result.add(c);
             } // if
@@ -236,9 +236,9 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @return map to map abstract classes to all non-abstract classes implementing/extending them
      */
     @Override
-    public Map<Class<? extends Content>, List<Class<? extends MutableContent>>> getImplementingClassesMap() {
+    public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
         if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends MutableContent>>>();
+            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends Content>>>();
 
             // Add the very basic root classes directly here - they won't get auto detected otherwise
             implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
@@ -260,9 +260,9 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends MutableContent> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
+    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
         List<Class<T>> result = new ArrayList<Class<T>>();
-        for (Class<? extends MutableContent> c : getImplementingClassesMap().get(baseClass)) {
+        for (Class<? extends Content> c : getImplementingClassesMap().get(baseClass)) {
             result.add((Class<T>) c);
         } // for
         return result;

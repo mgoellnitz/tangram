@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,8 @@ package org.tangram.jdo;
 
 import java.util.Collection;
 import javax.jdo.PersistenceManager;
+import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
-import org.tangram.mutable.MutableContent;
 
 
 /**
@@ -34,7 +34,7 @@ public interface JdoBeanFactory extends MutableBeanFactory {
      *
      * @return
      */
-    Collection<Class<? extends MutableContent>> getAllClasses();
+    Collection<Class<? extends Content>> getAllClasses();
 
 
     /**
@@ -50,6 +50,6 @@ public interface JdoBeanFactory extends MutableBeanFactory {
      *
      * @param classes list of available classes
      */
-    void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes);
+    void setAdditionalClasses(Collection<Class<? extends Content>> classes);
 
 } // JdoBeanFactory

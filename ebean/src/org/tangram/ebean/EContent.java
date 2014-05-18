@@ -22,7 +22,6 @@ import javax.persistence.Id;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.Content;
-import org.tangram.mutable.MutableContent;
 
 
 /**
@@ -31,7 +30,7 @@ import org.tangram.mutable.MutableContent;
  * Sad enough ebean only seems to support single table inhertance strategy.
  */
 @Entity
-public abstract class EContent implements MutableContent {
+public abstract class EContent implements Content {
 
     private static final Log log = LogFactory.getLog(EContent.class);
 

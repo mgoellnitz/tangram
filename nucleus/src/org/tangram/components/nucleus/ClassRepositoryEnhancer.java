@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,9 +30,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.datanucleus.enhancer.DataNucleusEnhancer;
 import org.tangram.content.BeanListener;
+import org.tangram.content.Content;
 import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.logic.ClassRepository;
-import org.tangram.mutable.MutableContent;
 
 
 @Named
@@ -51,12 +51,12 @@ public class ClassRepositoryEnhancer implements BeanListener {
     @Override
     @SuppressWarnings("unchecked")
     public void reset() {
-        Map<String, Class<MutableContent>> classes = classRepository.get(MutableContent.class);
+        Map<String, Class<Content>> classes = classRepository.get(Content.class);
         if (log.isInfoEnabled()) {
             log.info("reset() number of classes "+classes.size());
         } // if
-        Collection<Class<? extends MutableContent>> modelClasses = new HashSet<Class<? extends MutableContent>>();
-        for (Class<MutableContent> c : classes.values()) {
+        Collection<Class<? extends Content>> modelClasses = new HashSet<Class<? extends Content>>();
+        for (Class<Content> c : classes.values()) {
             if (c.getAnnotation(PersistenceCapable.class)!=null) {
                 // if (c.getAnnotation(Entity.class)!=null) {
                 if (log.isInfoEnabled()) {
@@ -77,7 +77,7 @@ public class ClassRepositoryEnhancer implements BeanListener {
                         classRepository.overrideClass(classname, enhancedBytes);
                         final Class<? extends Object> enhancedClass = classRepository.get(classname);
                         // System.out.println("enhanced "+enhancedClass);
-                        modelClasses.add((Class<? extends MutableContent>) enhancedClass);
+                        modelClasses.add((Class<? extends Content>) enhancedClass);
                     } // if
                 } catch (Throwable e) {
                     log.error("reset()", e);

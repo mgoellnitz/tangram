@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@
 package org.tangram.mutable;
 
 import org.tangram.content.CodeResource;
+import org.tangram.content.Content;
 
 
 /**
@@ -26,7 +27,7 @@ import org.tangram.content.CodeResource;
  * Extension of the code resource interface to let attributes be written.
  *
  */
-public interface MutableCode extends CodeResource, MutableContent {
+public interface MutableCode extends CodeResource, Content {
 
 
     void setAnnotation(String annotation);

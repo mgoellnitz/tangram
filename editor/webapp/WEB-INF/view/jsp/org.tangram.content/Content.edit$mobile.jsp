@@ -5,7 +5,7 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
 %><%@page import="org.tangram.Constants,org.tangram.view.Utils,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.components.TangramServices,org.tangram.components.editor.EditingHandler,org.tangram.mutable.MutableContent"
+%><%@page import="org.tangram.components.TangramServices,org.tangram.components.editor.EditingHandler,org.tangram.content.Content"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
@@ -70,7 +70,7 @@ if (value instanceof Collection) {
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
 </c:forEach></c:if><%  
 } // if 
-if (value instanceof MutableContent) {
+if (value instanceof Content) {
     request.setAttribute("item", value); 
 %><br/>
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 

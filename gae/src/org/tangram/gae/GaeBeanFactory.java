@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
-import org.tangram.mutable.MutableContent;
 
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
@@ -47,7 +46,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
 
     @Override
-    public Class<? extends MutableContent> getBaseClass() {
+    public Class<? extends Content> getBaseClass() {
         return GaeContent.class;
     } // getBaseClass()
 

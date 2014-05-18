@@ -44,7 +44,6 @@ import org.apache.commons.logging.LogFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
-import org.tangram.mutable.MutableContent;
 import org.tangram.util.ClassResolver;
 
 
@@ -64,11 +63,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     protected EntityManager manager = null;
 
-    protected List<Class<? extends MutableContent>> modelClasses = null;
+    protected List<Class<? extends Content>> modelClasses = null;
 
-    protected List<Class<? extends MutableContent>> allClasses = null;
+    protected List<Class<? extends Content>> allClasses = null;
 
-    protected Map<String, Class<? extends MutableContent>> tableNameMapping = null;
+    protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
@@ -90,7 +89,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
 
     @Override
-    public Class<? extends MutableContent> getBaseClass() {
+    public Class<? extends Content> getBaseClass() {
         return JpaContent.class;
     } // getBaseClass()
 
@@ -246,13 +245,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
 
     @Override
-    protected <T extends MutableContent> void apiPersist(T bean) {
+    protected <T extends Content> void apiPersist(T bean) {
         manager.persist(bean);
     } // apiPersist()
 
 
     @Override
-    protected <T extends MutableContent> void apiDelete(T bean) {
+    protected <T extends Content> void apiDelete(T bean) {
         manager.remove(bean);
     } // apiDelete()
 
@@ -266,7 +265,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
      * @throws InstantiationException
      */
     @Override
-    public <T extends MutableContent> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
+    public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
         if (log.isDebugEnabled()) {
             log.debug("createBean() beginning transaction");
         } // if
@@ -437,18 +436,18 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     @Override
     @SuppressWarnings("unchecked")
-    public Collection<Class<? extends MutableContent>> getAllClasses() {
+    public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends MutableContent>>();
-                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
+                allClasses = new ArrayList<Class<? extends Content>>();
+                tableNameMapping = new HashMap<String, Class<? extends Content>>();
 
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(basePackages);
                         classNames = new ArrayList<String>();
-                        for (Class<? extends MutableContent> cls : resolver.getAnnotatedSubclasses(JpaContent.class, Entity.class)) {
+                        for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JpaContent.class, Entity.class)) {
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() * "+cls.getName());
                             } // if
@@ -463,7 +462,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
-                            Class<? extends MutableContent> cls = (Class<? extends MutableContent>) Class.forName(beanClassName);
+                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                             if (log.isInfoEnabled()) {
                                 log.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -481,11 +480,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
 
     @Override
-    public Collection<Class<? extends MutableContent>> getClasses() {
+    public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends MutableContent>>();
-                for (Class<? extends MutableContent> cls : getAllClasses()) {
+                modelClasses = new ArrayList<Class<? extends Content>>();
+                for (Class<? extends Content> cls : getAllClasses()) {
                     if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                         modelClasses.add(cls);
                     } // if
@@ -500,8 +499,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 };
                 modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
-                tableNameMapping = new HashMap<String, Class<? extends MutableContent>>();
-                for (Class<? extends MutableContent> mc : modelClasses) {
+                tableNameMapping = new HashMap<String, Class<? extends Content>>();
+                for (Class<? extends Content> mc : modelClasses) {
                     log.info("getClasses() setting table mapping for "+mc);
                     tableNameMapping.put(mc.getSimpleName(), mc);
                 } // for
@@ -511,14 +510,14 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // getClasses()
 
 
-    private Collection<Class<? extends MutableContent>> additionalClasses = Collections.emptySet();
+    private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
 
     @Override
-    public void setAdditionalClasses(Collection<Class<? extends MutableContent>> classes) {
-        Set<Class<? extends MutableContent>> classSet = new HashSet<Class<? extends MutableContent>>();
+    public void setAdditionalClasses(Collection<Class<? extends Content>> classes) {
+        Set<Class<? extends Content>> classSet = new HashSet<Class<? extends Content>>();
         if (classes!=null) {
-            for (Class<? extends MutableContent> cls : classes) {
+            for (Class<? extends Content> cls : classes) {
                 if (JpaContent.class.isAssignableFrom(cls)) {
                     if (cls.getAnnotation(Entity.class)!=null) {
                         if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
@@ -546,10 +545,10 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             log.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
         } // if
         // this was the prefill - right at the moment allways necessary
-        final Collection<Class<? extends MutableContent>> classes = getAllClasses();
+        final Collection<Class<? extends Content>> classes = getAllClasses();
         // OpenJPA specific class handling to be able to handle classes from the class repository
         StringBuilder classList = new StringBuilder("org.tangram.jpa.JpaContent");
-        for (Class<? extends MutableContent> c : classes) {
+        for (Class<? extends Content> c : classes) {
             classList.append(";");
             classList.append(c.getName());
         } // for
