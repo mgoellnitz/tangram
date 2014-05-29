@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
@@ -20,7 +20,9 @@ import org.mockftpserver.core.session.Session;
 
 
 /**
- * Constant string to be used as keys for the session store of an ftp session.
+ *
+ * Constants to be used as keys for the session store of an ftp session and some static helper methods.
+ *
  */
 public class SessionHelper {
 
@@ -44,12 +46,8 @@ public class SessionHelper {
 
     public static String getDirectoy(Session session) {
         String dir = getCwd(session);
-        dir = dir.substring(1);
-        int idx = dir.indexOf('/');
-        if (idx>0) {
-            dir = dir.substring(0, idx);
-        } // if
-        return dir;
+        int idx = dir.indexOf('/', 1);
+        return (idx > 0) ? dir.substring(1, idx) : dir.substring(1);
     } // getDirectoy()
 
 } // SessionHelper
