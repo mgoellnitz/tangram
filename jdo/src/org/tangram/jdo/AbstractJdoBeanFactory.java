@@ -53,7 +53,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected List<Class<? extends Content>> allClasses = null;
 
-
     /**
      * non abstract classes for storaable mutable data models
      */
@@ -61,13 +60,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
-    protected Map<String, Content> cache = new HashMap<String, Content>();
-
     private Map<Object, Object> configOverrides = null;
 
     private Set<String> basePackages;
-
-    private boolean activateCaching = false;
 
     private boolean activateQueryCaching = false;
 
@@ -114,16 +109,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     }
 
 
-    public boolean isActivateCaching() {
-        return activateCaching;
-    }
-
-
-    public void setActivateCaching(boolean activateCaching) {
-        this.activateCaching = activateCaching;
-    }
-
-
     public boolean isActivateQueryCaching() {
         return activateQueryCaching;
     }
@@ -149,47 +134,22 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Content> T getBean(Class<T> cls, String id) {
-        if (activateCaching&&(cache.containsKey(id))) {
-            statistics.increase("get bean cached");
-            return (T) cache.get(id);
+    protected <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
+        if (modelClasses==null) {
+            getClasses();
         } // if
-        T result = null;
-        try {
-            if (modelClasses==null) {
-                getClasses();
-            } // if
-            String kind = null;
-            String internalId = null;
-            int idx = id.indexOf(':');
-            if (idx>0) {
-                kind = id.substring(0, idx);
-                internalId = id.substring(idx+1);
-            } // if
-            Class<? extends Content> kindClass = tableNameMapping.get(kind);
-            if (kindClass==null) {
-                throw new Exception("Passed over kind "+kind+" not valid");
-            } // if
-            if (!(cls.isAssignableFrom(kindClass))) {
-                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
-            } // if
-            Object oid = getObjectId(internalId, kindClass);
-            if (log.isInfoEnabled()) {
-                log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
-            } // if
-            result = (T) manager.getObjectById(kindClass, oid);
-
-            if (activateCaching) {
-                cache.put(id, result);
-            } // if
-        } catch (Exception e) {
-            if (log.isWarnEnabled()) {
-                String simpleName = e.getClass().getSimpleName();
-                log.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
-            } // if
-        } // try/catch/finally
-        statistics.increase("get bean uncached");
-        return result;
+        Class<? extends Content> kindClass = tableNameMapping.get(kind);
+        if (kindClass==null) {
+            throw new Exception("Passed over kind "+kind+" not valid");
+        } // if
+        if (!(cls.isAssignableFrom(kindClass))) {
+            throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
+        } // if
+        Object oid = getObjectId(internalId, kindClass);
+        if (log.isInfoEnabled()) {
+            log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
+        } // if
+        return (T) manager.getObjectById(kindClass, oid);
     } // getBean()
 
 
@@ -284,15 +244,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
-            List<Object> results = (List<Object>) query.execute();
+            List<T> results = (List<T>) query.execute();
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
-            for (Object o : results) {
-                if (o instanceof Content) {
-                    Content c = (Content) o;
-                    result.add((T) c);
-                } // if
+            for (T o : results) {
+                result.add(o);
             } // for
             statistics.increase("list beans");
         } catch (Exception e) {
@@ -529,13 +486,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
         // Just to prefill
         if (prefill) {
+            final Collection<Class<? extends Content>> theClasses = getClasses();
             if (log.isInfoEnabled()) {
-                log.info("afterPropertiesSet() prefilling");
+                log.info("afterPropertiesSet() prefilling done for "+basePackages+": "+theClasses);
             } // if
-            getClasses();
         } // if
-        Map<String, List<String>> c = null;
-        c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;
         } // if

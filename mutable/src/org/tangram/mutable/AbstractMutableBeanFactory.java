@@ -37,9 +37,9 @@ import org.tangram.monitor.Statistics;
  */
 public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory implements MutableBeanFactory {
 
-    protected static final String QUERY_CACHE_KEY = "tangram.query.cache";
-
     private static final Log log = LogFactory.getLog(AbstractMutableBeanFactory.class);
+
+    protected static final String QUERY_CACHE_KEY = "tangram.query.cache";
 
     @Inject
     protected Statistics statistics;
@@ -50,9 +50,13 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();
 
     /**
-     *  mapping from classes or interfaces to non abstract classes implementing them
+     * mapping from classes or interfaces to non abstract classes implementing them
      */
     protected Map<Class<? extends Content>, List<Class<? extends Content>>> implementingClassesMap = null;
+
+    protected Map<String, Content> cache = new HashMap<String, Content>();
+
+    private boolean activateCaching = false;
 
 
     protected Map<Class<? extends Content>, List<BeanListener>> getListeners() {
@@ -67,6 +71,16 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * common case to check for persisting and deleting instanced though highly API specific in detail.
      */
     protected abstract boolean hasManager();
+
+
+    protected boolean isActivateCaching() {
+        return activateCaching;
+    }
+
+
+    protected void setActivateCaching(boolean activateCaching) {
+        this.activateCaching = activateCaching;
+    }
 
 
     /**
@@ -215,6 +229,72 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             log.info("addListener() "+cls.getSimpleName()+": "+attachedListeners.get(cls).size());
         } // if
     } // addListener()
+
+
+    /**
+     * Filter a list of objects for instances of a given class.
+     *
+     * No instances of subclasses are inserted into the filtered result.
+     *
+     * @param <T>
+     * @param cls          type to filter for
+     * @param rawList
+     * @param filteredList
+     */
+    @SuppressWarnings("unchecked")
+    protected <T extends Content> void filterExactClass(Class<T> cls, List<? extends Object> rawList, List<T> filteredList) {
+        for (Object o : rawList) {
+            Class<? extends Object> instanceClass = o.getClass();
+            // eliminate problems with JPA sublcassing at runtime
+            if (instanceClass.getName().startsWith("org.apache.openjpa.enhance")) {
+                instanceClass = instanceClass.getSuperclass();
+            } // if
+            if (o instanceof Content) {
+                Content c = (Content) o;
+                if (instanceClass.isAssignableFrom(cls)) {
+                    filteredList.add((T) c);
+                } else {
+                    if (log.isWarnEnabled()) {
+                        log.warn("listBeansOfExactClass() class name of instance "+c.getClass().getName());
+                    } // if
+                } // if
+            } // if
+        } // for
+    } // filterExactClass()
+
+
+    protected abstract <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception;
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Content> T getBean(Class<T> cls, String id) {
+        if (activateCaching&&(cache.containsKey(id))) {
+            statistics.increase("get bean cached");
+            return (T) cache.get(id);
+        } // if
+        T result = null;
+        try {
+            String kind = null;
+            String internalId = null;
+            int idx = id.indexOf(':');
+            if (idx>0) {
+                kind = id.substring(0, idx);
+                internalId = id.substring(idx+1);
+            } // if
+            result = getBean(cls, kind, internalId);
+            if (activateCaching) {
+                cache.put(id, result);
+            } // if
+        } catch (Exception e) {
+            if (log.isWarnEnabled()) {
+                String simpleName = e.getClass().getSimpleName();
+                log.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
+            } // if
+        } // try/catch/finally
+        statistics.increase("get bean uncached");
+        return result;
+    } // getBean()
 
 
     protected List<Class<? extends Content>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {

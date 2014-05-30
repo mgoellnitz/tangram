@@ -69,10 +69,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
-    protected Map<String, Content> cache = new HashMap<String, Content>();
-
-    private boolean activateCaching = false;
-
     private Map<Object, Object> configOverrides = null;
 
     private boolean activateQueryCaching = false;
@@ -138,16 +134,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     }
 
 
-    public boolean isActivateCaching() {
-        return activateCaching;
-    }
-
-
-    public void setActivateCaching(boolean activateCaching) {
-        this.activateCaching = activateCaching;
-    }
-
-
     public boolean isActivateQueryCaching() {
         return activateQueryCaching;
     }
@@ -165,46 +151,21 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Content> T getBean(Class<T> cls, String id) {
-        if (activateCaching&&(cache.containsKey(id))) {
-            statistics.increase("get bean cached");
-            return (T) cache.get(id);
+    public <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
+        if (modelClasses==null) {
+            getClasses();
         } // if
-        T result = null;
-        try {
-            if (modelClasses==null) {
-                getClasses();
-            } // if
-            String kind = null;
-            String internalId = null;
-            int idx = id.indexOf(':');
-            if (idx>0) {
-                kind = id.substring(0, idx);
-                internalId = id.substring(idx+1);
-            } // if
-            Class<? extends Content> kindClass = tableNameMapping.get(kind);
-            if (kindClass==null) {
-                throw new Exception("Passed over kind "+kind+" not valid");
-            } // if
-            if (!(cls.isAssignableFrom(kindClass))) {
-                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
-            } // if
-            if (log.isInfoEnabled()) {
-                log.info("getBean() "+kindClass.getName()+":"+internalId);
-            } // if
-            result = (T) manager.find(kindClass, getPrimaryKey(internalId, kindClass));
-
-            if (activateCaching) {
-                cache.put(id, result);
-            } // if
-        } catch (Exception e) {
-            if (log.isWarnEnabled()) {
-                String simpleName = e.getClass().getSimpleName();
-                log.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
-            } // if
-        } // try/catch/finally
-        statistics.increase("get bean uncached");
-        return result;
+        Class<? extends Content> kindClass = tableNameMapping.get(kind);
+        if (kindClass==null) {
+            throw new Exception("Passed over kind "+kind+" not valid");
+        } // if
+        if (!(cls.isAssignableFrom(kindClass))) {
+            throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
+        } // if
+        if (log.isInfoEnabled()) {
+            log.info("getBean() "+kindClass.getName()+":"+internalId);
+        } // if
+        return (T) manager.find(kindClass, getPrimaryKey(internalId, kindClass));
     } // getBean()
 
 
@@ -351,23 +312,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             if (log.isInfoEnabled()) {
                 log.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
-            for (Object o : results) {
-                Class<? extends Object> instanceClass = o.getClass();
-                // eliminate problems with JPA sublcassing at runtime
-                if (instanceClass.getName().startsWith("org.apache.openjpa.enhance")) {
-                    instanceClass = instanceClass.getSuperclass();
-                } // if
-                if (o instanceof Content) {
-                    Content c = (Content) o;
-                    if (instanceClass.isAssignableFrom(cls)) {
-                        result.add((T) c);
-                    } else {
-                        if (log.isWarnEnabled()) {
-                            log.warn("listBeansOfExactClass() class name of instance "+c.getClass().getName());
-                        } // if
-                    } // if
-                } // if
-            } // for
+            filterExactClass(cls, results, result);
             statistics.increase("list beans");
         } catch (Exception e) {
             log.error("listBeansOfExactClass() query ", e);
