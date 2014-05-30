@@ -9,7 +9,7 @@
  * California, 94041, USA.
  *
  */
-package org.tangram.ebean.solution.test;
+package org.tangram.ebean.test;
 
 import java.lang.reflect.Method;
 import org.junit.Assert;
