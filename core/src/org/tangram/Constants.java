@@ -127,29 +127,30 @@ public final class Constants {
     private static final int SUFFIX_LENGTH = SUFFIX.length();
 
 
-
-    private static String[] getResourceListing(URL pathUrl, String prefix, String suffix) throws URISyntaxException,
+    private static Set<String> getResourceListing(URL pathUrl, String prefix, String suffix) throws URISyntaxException,
             IOException {
+        Set<String> result = new HashSet<String>();
         if ("file".equals(pathUrl.getProtocol())) {
-            return new File(pathUrl.toURI()).list();
+            for (String name : new File(pathUrl.toURI()).list()) {
+                if (name.endsWith(suffix)) {
+                    result.add(prefix+"/"+name);
+                } // if
+            } // for
         } // if
 
         if ("jar".equals(pathUrl.getProtocol())) {
             String jarPath = pathUrl.getPath().substring(5, pathUrl.getPath().indexOf("!")); // only the JAR file
             JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-            Enumeration<JarEntry> entries = jar.entries();
-            Set<String> result = new HashSet<String>();
-            while (entries.hasMoreElements()) {
+            for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements();) {
                 String name = entries.nextElement().getName();
                 if (name.startsWith(prefix)&&name.endsWith(suffix)) {
                     result.add(name);
                 } // if
-            } // while
+            } // for
             jar.close();
-            return result.toArray(new String[result.size()]);
         } // if
 
-        return new String[0];
+        return result;
     } // getResourceListing()
 
 
@@ -158,8 +159,7 @@ public final class Constants {
             Enumeration<URL> en = Constants.class.getClassLoader().getResources(PREFIX);
             while (en.hasMoreElements()) {
                 URL metaInf = en.nextElement();
-                String[] filenames = getResourceListing(metaInf, PREFIX, SUFFIX);
-                for (String s : filenames) {
+                for (String s : getResourceListing(metaInf, PREFIX, SUFFIX)) {
                     Properties p = new Properties();
                     p.load(Constants.class.getClassLoader().getResourceAsStream(s));
                     VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH),
