@@ -18,6 +18,8 @@
  */
 package org.tangram.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
@@ -60,14 +62,12 @@ public class ClassResolver {
     } // addPackageName()
 
 
-    private void addUrlsForPackage(Set<URL> urls, String packageName) {
+    private void addPathsForPackage(Set<String> urls, String packageName) {
         String packagePath = packageName.replace('.', '/');
         try {
             Enumeration<URL> urlEnumeration = this.getClass().getClassLoader().getResources(packagePath);
             while (urlEnumeration.hasMoreElements()) {
-                URL u = urlEnumeration.nextElement();
-                String url = u.toString();
-                // log.info("addUrlsForPackage() "+url);
+                String url = urlEnumeration.nextElement().toString();
                 int idx = url.indexOf('!');
                 if (idx>0) {
                     url = url.substring(0, idx);
@@ -75,46 +75,89 @@ public class ClassResolver {
                 if (url.startsWith("jar:")) {
                     url = url.substring(4);
                 } // if
-                u = new URL(url);
+                if (url.startsWith("file:")) {
+                    url = url.substring(5);
+                } // if
+                if (!url.endsWith(".jar")) {
+                    url = url.substring(0, url.length()-packagePath.length());
+                } //
                 if (log.isInfoEnabled()) {
-                    log.info("addUrlsForPackage() "+url);
+                    log.info("addPathsForPackage() "+url);
                 } // if
-
-                if (url.endsWith(".jar")) {
-                    urls.add(u);
-                } // if
+                urls.add(url);
             } // while
         } catch (IOException e) {
-            log.error("addUrlsForPackage()", e);
+            log.error("addPathsForPackage()", e);
         } // try/catch
-    } // addUrlsForPackage()
+    } // addPathsForPackage()
+
+
+    /**
+     * Checks a set of class or properties names and adds them to the classNames collection.
+     * Check is performed against package name and file extension.
+     *
+     * @param classNames
+     * @param name
+     */
+    private final void checkClassAndAdd(Set<String> classNames, String name) {
+        if (log.isDebugEnabled()) {
+            log.debug("checkClassAndAdd() name="+name);
+        } // if
+        if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
+            name = name.replace(File.separatorChar, '/').replace('/', '.');
+            String className = name.substring(0, name.length()-6);
+            boolean add = false;
+            for (String packageName : packageNames) {
+                add = add||(className.startsWith(packageName));
+            } // if
+            if (add) {
+                classNames.add(className);
+            } // if
+        } // if
+    } // checkClassAndAdd()
+
+
+    private final void recurseSubDir(Set<String> classNames, File dir, int basePathLength) {
+        if (log.isDebugEnabled()) {
+            log.debug("recurseSubDir() scanning "+dir.getAbsolutePath());
+        } // if
+        for (File f : (dir.isDirectory() ? dir.listFiles() : new File[0])) {
+            String fileName = f.getAbsolutePath().substring(basePathLength);
+            if (log.isDebugEnabled()) {
+                log.debug("recurseSubDir() fileName="+fileName);
+            } // if
+            if ((fileName.endsWith(".class"))||(fileName.endsWith(".properties"))) {
+                checkClassAndAdd(classNames, fileName);
+            } else {
+                recurseSubDir(classNames, f, basePathLength);
+            } // if
+        } // for
+    } // recurseSubDir()
 
 
     private Set<String> getClassNames() {
-        Set<String> classNames = new HashSet<String>();
-        Set<URL> urls = new HashSet<URL>();
+        Set<String> classNames = new HashSet<>();
+        Set<String> paths = new HashSet<>();
         for (String packageName : packageNames) {
-            addUrlsForPackage(urls, packageName);
-        } // if
-        for (URL u : urls) {
+            addPathsForPackage(paths, packageName);
+        } // for
+        for (String path : paths) {
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug("getClassNames() u="+u);
+                    log.debug("getClassNames() path="+path);
                 } // if
-                JarInputStream is = new JarInputStream(u.openStream());
-                for (JarEntry entry = is.getNextJarEntry(); entry!=null;entry = is.getNextJarEntry()) {
-                    final String name = entry.getName().replace('/', '.');
-                    if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
-                        String className = name.substring(0, name.length()-6);
-                        boolean add = false;
-                        for (String packageName : packageNames) {
-                            add = add||(className.startsWith(packageName));
-                        } // if
-                        if (add) {
-                            classNames.add(className);
-                        } // if
-                    } // if
-                } // for
+                if (path.endsWith(".jar")) {
+                    JarInputStream is = new JarInputStream(new FileInputStream(path));
+                    for (JarEntry entry = is.getNextJarEntry(); entry!=null; entry = is.getNextJarEntry()) {
+                        final String name = entry.getName().replace('/', '.');
+                        checkClassAndAdd(classNames, name);
+                    } // for
+                    is.close();
+                } else {
+                    File dir = new File(path);
+                    int basePathLength = dir.getAbsolutePath().length()+1;
+                    recurseSubDir(classNames, dir, basePathLength);
+                } // if
             } catch (IOException e) {
                 log.error("getClassNames()", e);
             } // try/catch
