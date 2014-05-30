@@ -180,8 +180,21 @@ class TangramUtilities {
           } 
         }
       }
+      project.sourceSets['test'].output.files.each {
+        String urlstring = it.toURI().toURL()
+        urlList.add(new URL(urlstring))
+        project.fileTree(dir: it).each {
+          if (it.name.endsWith(".class")) {
+            fileList.add(it.canonicalPath)
+          } 
+        }
+      }
       // Add compile classpath
       project.configurations.compile.files.each {
+        String urlstring = it.toURI().toURL()
+        urlList.add(new URL(urlstring))
+      }
+      project.configurations.testCompile.files.each {
         String urlstring = it.toURI().toURL()
         urlList.add(new URL(urlstring))
       }
