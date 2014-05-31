@@ -73,12 +73,12 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     protected abstract boolean hasManager();
 
 
-    protected boolean isActivateCaching() {
+    public boolean isActivateCaching() {
         return activateCaching;
     }
 
 
-    protected void setActivateCaching(boolean activateCaching) {
+    public void setActivateCaching(boolean activateCaching) {
         this.activateCaching = activateCaching;
     }
 
