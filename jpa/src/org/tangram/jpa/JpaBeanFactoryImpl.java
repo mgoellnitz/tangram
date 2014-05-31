@@ -30,8 +30,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -111,8 +109,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
      *
      * @param configOverrides
      */
-    @Inject
-    @Named("jpaConfigOverrides")
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
     }
@@ -492,10 +488,12 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         // this was the prefill - right at the moment allways necessary
         final Collection<Class<? extends Content>> classes = getAllClasses();
         // OpenJPA specific class handling to be able to handle classes from the class repository
-        StringBuilder classList = new StringBuilder("org.tangram.jpa.JpaContent");
+        StringBuilder classList = new StringBuilder(JpaContent.class.getName());
         for (Class<? extends Content> c : classes) {
-            classList.append(";");
-            classList.append(c.getName());
+            if (!c.getName().equals(JpaContent.class.getName())) {
+                classList.append(";");
+                classList.append(c.getName());
+            } // if
         } // for
         Properties properties = new Properties();
         properties.putAll(configOverrides);
