@@ -245,18 +245,15 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     protected <T extends Content> void filterExactClass(Class<T> cls, List<? extends Object> rawList, List<T> filteredList) {
         for (Object o : rawList) {
             Class<? extends Object> instanceClass = o.getClass();
-            // eliminate problems with JPA sublcassing at runtime
+            // eliminate problems with JPA subclassing at runtime
             if (instanceClass.getName().startsWith("org.apache.openjpa.enhance")) {
                 instanceClass = instanceClass.getSuperclass();
             } // if
-            if (o instanceof Content) {
-                Content c = (Content) o;
-                if (instanceClass.isAssignableFrom(cls)) {
-                    filteredList.add((T) c);
-                } else {
-                    if (log.isWarnEnabled()) {
-                        log.warn("listBeansOfExactClass() class name of instance "+c.getClass().getName());
-                    } // if
+            if (instanceClass.isAssignableFrom(cls)) {
+                filteredList.add((T) o);
+            } else {
+                if (log.isWarnEnabled()) {
+                    log.warn("filterExactClass() class name of instance "+o.getClass().getName());
                 } // if
             } // if
         } // for
