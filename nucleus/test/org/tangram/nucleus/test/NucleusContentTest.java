@@ -1,23 +1,58 @@
 package org.tangram.nucleus.test;
 
-import java.lang.reflect.Method;
-import org.junit.Assert;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.mutable.test.BaseContentTest;
+import org.tangram.mutable.test.content.BaseInterface;
+import org.tangram.mutable.test.content.SubInterface;
 import org.tangram.nucleus.NucleusContent;
+import org.tangram.nucleus.test.content.BaseClass;
+import org.tangram.nucleus.test.content.SubClass;
 
-public class NucleusContentTest {
+
+/**
+ * Test various content related methods.
+ *
+ * We need a test order to have enhanced classes first, then create some content, and the test this content in
+ * a separate test "session".
+ */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class NucleusContentTest extends BaseContentTest {
+
+    @Override
+    protected BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception {
+        return beanFactory.createBean(BaseClass.class);
+    }
+
+
+    @Override
+    protected SubInterface createSubBean(MutableBeanFactory beanFactory) throws Exception {
+        return beanFactory.createBean(SubClass.class);
+    }
+
+
+    @Override
+    protected Class<? extends BaseInterface> getBaseClass() {
+        return BaseClass.class;
+    }
+
+
+    @Override
+    protected void setPeers(BaseInterface base, SubInterface peer) {
+        List<BaseClass> peers = new ArrayList<>();
+        peers.add((BaseClass) peer);
+        ((BaseClass) base).setPeers(peers);
+    } // setPeers()
+
 
     @Test
-    public void testIsEnhanced() {
-        Method[] methods = NucleusContent.class.getMethods();
-        boolean flag = false;
-        for (Method method : methods) {
-            System.out.println(""+method.getName());
-            if (method.getName().startsWith("jdo")) {
-                flag = true;
-            } // if
-        } // for
-        Assert.assertTrue("Classes not enhanced - output unusable", flag);
-    } // testIsEnhanced()
+    public void test0IsEnhanced() {
+        System.out.println("test0IsEnhanced()");
+        testIsCodeRewrite(NucleusContent.class.getMethods(), "jdo");
+    } // test1IsEnhanced()
 
 } // NucleusContentTest

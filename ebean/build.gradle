@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,18 +18,33 @@
  */
 apply from: '../lib.gradle'
 
+// This is needed to let the testCompile time dependency work
+evaluationDependsOn(':tangram-mutable')
+
 dependencies {
   compile project (':tangram-mutable')
   
-  compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
+  // compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
   compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
 
   compile "org.slf4j:slf4j-api:1.6.6"
   compile "org.slf4j:slf4j-log4j12:1.6.6"
   
   testCompile "junit:junit:$versions.junit"
+  // bean wire up for test cases is done via dinistiq
+  testCompile "dinistiq:dinistiq:$versions.dinistiq"
+  // dinistiq logging at debug level through special log4j.properties
+  testCompile "log4j:log4j:$versions.log4j"
+  // more or less a dummy for the various autoscanned and auto injected beans
+  testCompile project (':tangram-dinistiq')
+  testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile "com.h2database:h2:1.3.174"
 }
 
 compileJava.doLast {
   ebeanEnhance()
+}
+
+compileTestJava.doLast {
+  ebeanEnhanceTest()
 }

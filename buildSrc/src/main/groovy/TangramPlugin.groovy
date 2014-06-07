@@ -61,15 +61,12 @@ class TangramUtilities {
     int i = 0;
     while (iter.hasNext()) {
       Object webappDependency = iter.next()
-      // println "$project.name: dependency: $webappDependency"
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFileName = webappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
         println "$project.name: project: $webappDependency.dependencyProject.war.outputs.files.singleFile.name"
         p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
       } else {
-        // println "checking for path based extraction"
         if (p.configurations.webapp.dependencies.size() > 0) {
-          // println "path is $p.configurations.webapp.asPath"
           String[] archiveFileNames = p.configurations.webapp.asPath.split(File.pathSeparator)
           String archiveFileName = archiveFileNames[i];
           println "$project.name: path: $archiveFileName"
@@ -160,6 +157,37 @@ class TangramUtilities {
   } // customizeWar()
 
   
+  /**
+   * Create a classloader from the projects compile dependencies and output path
+   */
+  private ClassLoader getClassLoader() {
+    // collect compile output paths as URLs
+    List<URL> urlList = new ArrayList<URL>()
+    project.sourceSets['main'].output.files.each {
+      String urlstring = it.toURI().toURL()
+      // println "url: $urlstring"
+      urlList.add(new URL(urlstring))
+    }
+    project.sourceSets['test'].output.files.each {
+      String urlstring = it.toURI().toURL()
+      // println "url: $urlstring"
+      urlList.add(new URL(urlstring))
+    }
+    // Add compile class path elements as urls
+    project.configurations.compile.files.each {
+      String urlstring = it.toURI().toURL()
+      urlList.add(new URL(urlstring))
+    }
+    // Add test class path elements as urls
+    project.configurations.testCompile.files.each {
+      String urlstring = it.toURI().toURL()
+      urlList.add(new URL(urlstring))
+    }
+    URL[] urls = urlList.toArray()
+    return new URLClassLoader(urls, this.class.classLoader)
+  } // getClassLoader()
+
+
   /**
    *  Do enhancement with datanucleus enhancer of classes from the
    *  callers javaCompile output set. An optional output directory can
@@ -285,27 +313,6 @@ class TangramUtilities {
   
   
   /**
-   * Create a classloader from the projects compile dependencies and output path
-   */
-  private ClassLoader getClassLoader() {
-    // collect compile output paths as URLs
-    List<URL> urlList = new ArrayList<URL>()
-    project.sourceSets['main'].output.files.each {
-      String urlstring = it.toURI().toURL()
-      // println "url: $urlstring"
-      urlList.add(new URL(urlstring))
-    }
-    // Add compile class path elements as urls
-    project.configurations.compile.files.each {
-      String urlstring = it.toURI().toURL()
-      urlList.add(new URL(urlstring))
-    }
-    URL[] urls = urlList.toArray()
-    return new URLClassLoader(urls, this.class.classLoader)
-  } // getClassLoader()
-
-
-  /**
    * Call the EclipseLink Weaver for the callers classes before packaging a jar.
    * You may provide an output directory for the woven classes. If this parameter
    * is missing or null the original classes will be overridden.
@@ -337,7 +344,7 @@ class TangramUtilities {
   
   
   /**
-   * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
+   * Call the Ebean Enhancer as an ant task. Ebean must be available
    * from the callers runtime classpath.
    */
   public ebeanEnhance() {
@@ -351,10 +358,30 @@ class TangramUtilities {
       if (classSource == null) {
         classSource = it.absolutePath
       } // if
-    }
-    
+    }    
     OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
     ft.process(null)
   } // ebeanEnhance()
+  
+  
+  /**
+   * Call the Ebean Enhancer for the test classes of the caller as an ant task. 
+   * Ebean must be available from the callers runtime classpath.
+   */
+  public ebeanEnhanceTest() {
+    URLClassLoader cl = getClassLoader()
+    
+    String transformArgs = "debug=1"
+    Transformer t = new Transformer(project.configurations.testCompile.asPath, transformArgs)
+    
+    String classSource = null
+    project.sourceSets['test'].output.files.each {
+      if (classSource == null) {
+        classSource = it.absolutePath
+      } // if
+    }    
+    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
+    ft.process(null)
+  } // ebeanEnhanceTest()
 
 } // TangramUtilities

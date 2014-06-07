@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,9 @@
  */
 apply from: '../lib.gradle'
 
+// This is needed to let the testCompile time dependency work reliably
+evaluationDependsOn(':tangram-mutable')
+
 dependencies {
   compile project(':tangram-mutable')
   
@@ -30,8 +33,21 @@ dependencies {
   
   // This is the API as packages with EclipseLink - which should not make
   // that much of a difference
-  compile "$versions.persistence_api"
+  // compile "$versions.persistence_api"
+
+  testCompile "junit:junit:$versions.junit"
+  // bean wire up for test cases is done via dinistiq
+  testCompile "dinistiq:dinistiq:$versions.dinistiq"
+  // dinistiq logging at debug level through special log4j.properties
+  testCompile "log4j:log4j:$versions.log4j"
+  // more or less a dummy for the various autoscanned and auto injected beans
+  testCompile project (':tangram-dinistiq')
+  
+  testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile "hsqldb:hsqldb:1.8.0.10"
 }
+
+compileTestJava.dependsOn ':tangram-mutable:test'
 
 // For EcliseLink
 task eclipselinkJar(type: Jar, dependsOn: jar) {

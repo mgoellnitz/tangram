@@ -21,8 +21,10 @@ apply from: '../lib.gradle'
 dependencies {
   compile project(':tangram-core')
   
-  testCompile "junit:junit:$versions.junit"  
-  
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
+  
+  testCompile "junit:junit:$versions.junit"  
+  // more or less a dummy for the various autoscanned and auto injected beans
+  testCompile project(':tangram-dinistiq')
 }
