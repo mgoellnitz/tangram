@@ -30,8 +30,10 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+
 @Named("servletContext")
 @Singleton
+@SuppressWarnings("deprecation")
 public class MockServletContext implements ServletContext {
 
 
