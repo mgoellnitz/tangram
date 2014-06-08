@@ -9,24 +9,31 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.link;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tangram.annotate.LinkAction;
 import org.tangram.monitor.Statistics;
+import org.tangram.view.TargetDescriptor;
+
 
 /**
  * Right at the moment we cannot think of a second necessary implementation of this.
@@ -39,12 +46,22 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
     private static final Log log = LogFactory.getLog(GenericLinkFactoryAggregator.class);
 
+    /**
+     * Dummy instance to be placed in Maps and the like.
+     */
+    private static final Method NULL_METHOD = GenericLinkFactoryAggregator.class.getMethods()[0];
+
     @Inject
     private Statistics statistics;
 
     private String dispatcherPath = "";
 
     private List<LinkFactory> handlers = new ArrayList<LinkFactory>();
+
+    /**
+     * method classname#methodname to method cache
+     */
+    private Map<String, Method> cache = new HashMap<String, Method>();
 
 
     public String getDispatcherPath() {
@@ -126,5 +143,51 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         } // for
         throw new RuntimeException("Cannot create link for "+bean+" in action "+action+" for view "+view);
     } // createLink()
+
+
+    @Override
+    public Link createLink(Collection<? extends LinkFactory> handlers, HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
+        for (LinkFactory factory : handlers) {
+            Link result = factory.createLink(request, response, bean, action, view);
+            if (result!=null) {
+                return result;
+            } // if
+        } // for
+        return null;
+    } // createLink()
+
+    @Override
+    public Method findMethod(Object target, String methodName) {
+        if (log.isInfoEnabled()) {
+            log.info("findMethod() trying to find "+methodName+" in "+target.getClass().getName());
+        } // if
+        Class<? extends Object> targetClass = target.getClass();
+        String key = targetClass.getName()+"#"+methodName;
+        Method method = cache.get(key);
+        if (method!=null) {
+            return method==NULL_METHOD ? null : method;
+        } // if
+        Method[] methods = target.getClass().getMethods();
+        for (Method m : methods) {
+            if (m.getName().equals(methodName)) {
+                LinkAction linkAction = m.getAnnotation(LinkAction.class);
+                if (log.isInfoEnabled()) {
+                    log.info("findMethod() linkAction="+linkAction);
+                    log.info("findMethod() method.getReturnType()="+m.getReturnType());
+                } // if
+                if (!TargetDescriptor.class.equals(m.getReturnType())) {
+                    linkAction = null;
+                } // if
+                if (log.isDebugEnabled()) {
+                    log.debug("findMethod() linkAction="+linkAction);
+                } // if
+                if (linkAction!=null) {
+                    method = m;
+                } // if
+            } // if
+        } // for
+        cache.put(key, method==null ? NULL_METHOD : method);
+        return method;
+    } // findMethod()
 
 } // GenericLinkBuilder

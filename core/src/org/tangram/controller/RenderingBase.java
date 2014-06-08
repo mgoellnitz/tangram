@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,14 +18,13 @@
  */
 package org.tangram.controller;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.tangram.components.ControllerServices;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.link.Link;
@@ -56,8 +55,7 @@ public abstract class RenderingBase implements LinkFactory {
     private LinkFactoryAggregator linkFactory;
 
     @Inject
-    private Set<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
-
+    private ControllerServices controllerServices;
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
@@ -88,18 +86,7 @@ public abstract class RenderingBase implements LinkFactory {
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
-        try {
-            for (ControllerHook controllerHook : controllerHooks) {
-                controllerHook.intercept(descriptor, model, request, response);
-            } // for
-        } catch (Exception e) {
-            if (log.isInfoEnabled()) {
-                log.info("createModel() returning null", e);
-            } // if
-            return null;
-        } // try/catch
-        return model;
+        return controllerServices.createModel(descriptor, request, response);
     } // createModel()
 
 

@@ -19,16 +19,10 @@
 package org.tangram.servlet;
 
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
@@ -40,15 +34,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tangram.annotate.ActionForm;
-import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
-import org.tangram.annotate.LinkPart;
+import org.tangram.components.ControllerServices;
 import org.tangram.components.TangramServices;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
-import org.tangram.controller.ControllerHook;
 import org.tangram.controller.CustomViewProvider;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
@@ -56,8 +47,6 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
-import org.tangram.util.JavaBean;
-import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
@@ -81,24 +70,19 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
     private BeanFactory beanFactory;
 
     @Inject
-    private CustomViewProvider customViewProvider;
+    private ClassRepository classRepository;
 
     @Inject
-    private LinkFactoryAggregator linkFactoryAggregator;
+    private CustomViewProvider customViewProvider;
 
     @Inject
     protected ViewContextFactory viewContextFactory;
 
     @Inject
-    private ClassRepository classRepository;
+    private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Set<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
-
-    @Inject
-    private PropertyConverter propertyConverter;
-
-    private Map<String, Method> cache = new HashMap<String, Method>();
+    private ControllerServices controllerServices;
 
     private Map<String, LinkHandler> staticLinkHandlers = new HashMap<String, LinkHandler>();
 
@@ -127,8 +111,8 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                 for (Method m : handlerClass.getMethods()) {
                     LinkAction linkAction = m.getAnnotation(LinkAction.class);
                     if (log.isDebugEnabled()) {
-                        log.debug("registerLinkHandler() linkAction="+linkAction);
-                        log.debug("registerLinkHandler() method.getReturnType()="+m.getReturnType());
+                        log.debug("registerLinkHandler("+handlerClass.getName()+") linkAction="+linkAction);
+                        log.debug("registerLinkHandler() "+m.getName()+" :"+m.getReturnType());
                     } // if
                     if (!TargetDescriptor.class.equals(m.getReturnType())) {
                         linkAction = null;
@@ -159,14 +143,15 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
         atHandlers.putAll(staticAtHandlers);
         handlers = new HashMap<String, LinkHandler>();
         handlers.putAll(staticLinkHandlers);
-        // remove current custom views from default controller
+        // remove current custom views from view provider
         for (Object key : customViews.keySet()) {
             for (String view : customViews.get(key)) {
                 customViewProvider.getCustomLinkViews().remove(view);
             } // for
         } // for
         if (log.isInfoEnabled()) {
-            log.info("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
+            log.info("reset() view provider "+customViewProvider);
+            log.info("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
         } // if
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
@@ -188,7 +173,9 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                     customViewProvider.getCustomLinkViews().addAll(schemeCustomViews);
                     if (log.isInfoEnabled()) {
                         log.info("reset() adding custom views "+schemeCustomViews);
-                        log.debug("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
+                    } // if
+                    if (log.isDebugEnabled()) {
+                        log.debug("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
                     } // if
                     handlers.put(annotation, linkHandler);
                 } else {
@@ -209,191 +196,11 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
     } // reset()
 
 
-    /**
-     * also calls any registered hooks
-     *
-     * copied from rendering controller
-     *
-     * @param request
-     * @param response
-     * @param bean
-     * @return
-     * @throws Exception
-     */
-    protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-        Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
-        try {
-            for (ControllerHook controllerHook : controllerHooks) {
-                if (log.isDebugEnabled()) {
-                    log.debug("createModel() "+controllerHook.getClass().getName());
-                } // if
-                boolean result = controllerHook.intercept(descriptor, model, request, response);
-                if (result) {
-                    return null;
-                } // if
-            } // for
-        } catch (Exception e) {
-            return viewContextFactory.createModel(e, request, response);
-        } // try/catch
-        return model;
-    } // createModel()
-
-
-    private Method findMethod(Object target, String methodName) {
-        if (log.isInfoEnabled()) {
-            log.info("findMethod() trying to find "+methodName+" in "+target.getClass().getName());
-        } // if
-        Class<? extends Object> targetClass = target.getClass();
-        String key = targetClass.getName()+"#"+methodName;
-        Method method = cache.get(key);
-        if (method!=null) {
-            return method==NULL_METHOD ? null : method;
-        } // if
-        /*
-         if (targetClass.getAnnotation(org.tangram.annotate.LinkHandler.class)==null) {
-         return null;
-         } // if
-         */
-        Method[] methods = target.getClass().getMethods();
-        for (Method m : methods) {
-            if (m.getName().equals(methodName)) {
-                LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                if (log.isInfoEnabled()) {
-                    log.info("findMethod() linkAction="+linkAction);
-                    log.info("findMethod() method.getReturnType()="+m.getReturnType());
-                } // if
-                if (!TargetDescriptor.class.equals(m.getReturnType())) {
-                    linkAction = null;
-                } // if
-                if (log.isDebugEnabled()) {
-                    log.debug("findMethod() linkAction="+linkAction);
-                } // if
-                if (linkAction!=null) {
-                    method = m;
-                } // if
-            } // if
-        } // for
-        cache.put(key, method==null ? NULL_METHOD : method);
-        return method;
-    } // findMethod()
-
-
-    private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Matcher matcher, Method method, TargetDescriptor descriptor,
-                                        Object target) throws Throwable, IllegalAccessException {
-        TargetDescriptor result = null;
-        if (log.isDebugEnabled()) {
-            log.debug("callAction() "+method+"@"+target);
-        } // if
-
-        if (method!=null) {
-            descriptor.action = null;
-            List<Object> parameters = new ArrayList<Object>();
-            Annotation[][] allAnnotations = method.getParameterAnnotations();
-            Class<? extends Object>[] parameterTypes = method.getParameterTypes();
-            for (int typeIndex = 0; typeIndex<parameterTypes.length; typeIndex++) {
-                Annotation[] annotations = allAnnotations[typeIndex];
-                Class<? extends Object> type = parameterTypes[typeIndex];
-                if (type.equals(HttpServletRequest.class)) {
-                    parameters.add(request);
-                } // if
-                if (type.equals(HttpServletResponse.class)) {
-                    parameters.add(response);
-                } // if
-                Map<String, String[]> parameterMap = null;
-                for (Annotation annotation : annotations) {
-                    if (annotation instanceof LinkPart) {
-                        int partNumber = ((LinkPart) annotation).value();
-                        String valueString = matcher.group(partNumber);
-                        if (log.isDebugEnabled()) {
-                            log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
-                        } // if
-                        Object value = propertyConverter.getStorableObject(valueString, type, request);
-                        parameters.add(value);
-                    } // if
-                    if (annotation instanceof ActionParameter) {
-                        String parameterName = ((ActionParameter) annotation).value();
-                        if ("--empty--".equals(parameterName)) {
-                            parameterName = type.getSimpleName().toLowerCase();
-                        } // if
-                        if (parameterMap==null) {
-                            parameterMap = TangramServices.getViewUtilities().createParameterAccess(request).getParameterMap();
-                        } // if
-                        String valueString = request.getParameter(parameterName);
-                        if (log.isDebugEnabled()) {
-                            log.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
-                        } // if
-                        Object value = propertyConverter.getStorableObject(valueString, type, request);
-                        parameters.add(value);
-                    } // if
-                    if (annotation instanceof ActionForm) {
-                        try {
-                            Object form = type.newInstance();
-                            JavaBean wrapper = new JavaBean(form);
-                            for (String propertyName : wrapper.propertyNames()) {
-                                String valueString = request.getParameter(propertyName);
-                                Object value = propertyConverter.getStorableObject(valueString, wrapper.getType(propertyName), request);
-                                wrapper.set(propertyName, value);
-                            } // for
-                            parameters.add(form);
-                        } catch (Exception e) {
-                            log.error("callAction() cannot create and fill form "+type.getName());
-                        } // try/catch
-                    } // if
-                } // for
-            } // for
-
-            if (log.isInfoEnabled()) {
-                log.info("callAction() calling method "+method.getName()+" with "+parameters.size()+" parameters");
-            } // if
-            try {
-                descriptor = (TargetDescriptor) method.invoke(target, parameters.toArray());
-            } catch (InvocationTargetException ite) {
-                throw ite.getTargetException();
-            } // try/catch
-            if (log.isInfoEnabled()) {
-                log.info("callAction() result is "+descriptor);
-            } // if
-            result = descriptor;
-        } // if
-        if (log.isInfoEnabled()) {
-            log.info("callAction() link="+result);
-        } // if
-        return result;
-    } // callAction()
-
-
-    private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ViewContext result = null;
-        if (resultDescriptor==null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        } else {
-            if (log.isInfoEnabled()) {
-                log.info("handleResultDescriptor() received link "+resultDescriptor);
-            } // if
-            if (resultDescriptor!=TargetDescriptor.DONE) {
-                if (resultDescriptor.action!=null) {
-                    try {
-                        Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
-                        response.sendRedirect(link.getUrl());
-                    } catch (Exception e) {
-                        log.error("handleResultDescriptor()", e);
-                        result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
-                    } // try/catch
-                } else {
-                    result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
-                } // if
-            } // if
-        } // if
-        return result;
-    } // handleResultDescriptor()
-
-
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
         if (log.isInfoEnabled()) {
-            log.info("service() "+url);
+            log.info("service() url="+url);
         } // if
 
         Utils.setPrimaryBrowserLanguageForJstl(request);
@@ -411,9 +218,9 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                     } // if
                     Object target = atHandlers.get(entry.getKey());
                     TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
-                    TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
+                    TargetDescriptor resultDescriptor = controllerServices.callAction(request, response, matcher, entry.getValue(), descriptor, target);
                     if (resultDescriptor!=TargetDescriptor.DONE) {
-                        final ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
+                        final ViewContext context = controllerServices.handleResultDescriptor(resultDescriptor, request, response);
                         TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
                     } // if
                     return;
@@ -430,7 +237,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         log.debug("service() found bean "+descriptor.bean);
                     } // if
 
-                    Map<String, Object> model = createModel(descriptor, request, response);
+                    Map<String, Object> model = controllerServices.createModel(descriptor, request, response);
                     if (descriptor.action==null) {
                         if (log.isInfoEnabled()) {
                             log.info("service() handing over to view "+descriptor.view);
@@ -441,20 +248,20 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
                         if (log.isDebugEnabled()) {
                             log.debug("service() trying to call action "+descriptor.action);
                         } // if
-                        Method method = findMethod(linkHandler, descriptor.action);
-                        TargetDescriptor resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);
+                        Method method = linkFactoryAggregator.findMethod(linkHandler, descriptor.action);
+                        TargetDescriptor resultDescriptor = controllerServices.callAction(request, response, null, method, descriptor, linkHandler);
                         if (resultDescriptor==null) {
                             for (Object value : model.values()) {
                                 // This has to be checked because of special null values in context like $null
                                 // if the link is already set don't try to call other methods
                                 if ((value!=null)&&(resultDescriptor==null)) {
-                                    method = findMethod(value, descriptor.action);
-                                    resultDescriptor = callAction(request, response, null, method, descriptor, value);
+                                    method = linkFactoryAggregator.findMethod(value, descriptor.action);
+                                    resultDescriptor = controllerServices.callAction(request, response, null, method, descriptor, value);
                                 } // if
                             } // for
                         } // if
                         if (resultDescriptor!=TargetDescriptor.DONE) {
-                            ViewContext context = handleResultDescriptor(resultDescriptor, request, response);
+                            ViewContext context = controllerServices.handleResultDescriptor(resultDescriptor, request, response);
                             TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
                         } // if
                         return;
@@ -478,14 +285,7 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
 
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
-        Link result = null;
-        for (LinkHandler linkScheme : handlers.values()) {
-            result = linkScheme.createLink(request, response, bean, action, view);
-            if (result!=null) {
-                break;
-            } // if
-        } // for
-        return result;
+        return linkFactoryAggregator.createLink(handlers.values(), request, response, bean, action, view);
     } // createLink()
 
 
@@ -493,10 +293,8 @@ public class MetaServlet extends HttpServlet implements LinkHandlerRegistry, Lin
     public void afterPropertiesSet() throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("afterPropertiesSet() beanFactory "+this.beanFactory);
-            log.debug("afterPropertiesSet() controllerHooks "+this.controllerHooks);
             log.debug("afterPropertiesSet() customViewProvider "+this.customViewProvider);
             log.debug("afterPropertiesSet() modelAndViewFactory "+this.viewContextFactory);
-            log.debug("afterPropertiesSet() propertyConverter "+this.propertyConverter);
         } // if
         linkFactoryAggregator.registerFactory(this);
         classRepository.addListener(this);

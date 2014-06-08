@@ -18,15 +18,9 @@
  */
 package org.tangram.components.spring;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -41,14 +35,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.tangram.annotate.ActionForm;
-import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
-import org.tangram.annotate.LinkPart;
+import org.tangram.components.ControllerServices;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
-import org.tangram.controller.ControllerHook;
 import org.tangram.controller.CustomViewProvider;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
@@ -56,8 +47,6 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
-import org.tangram.util.JavaBean;
-import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
@@ -78,24 +67,19 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     private BeanFactory beanFactory;
 
     @Inject
-    private CustomViewProvider customViewProvider;
+    private ClassRepository classRepository;
 
     @Inject
-    private LinkFactoryAggregator linkFactoryAggregator;
+    private CustomViewProvider customViewProvider;
 
     @Inject
     protected ViewContextFactory viewContextFactory;
 
     @Inject
-    private ClassRepository classRepository;
+    private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
-
-    @Inject
-    private PropertyConverter propertyConverter;
-
-    private final Map<String, Method> cache = new HashMap<String, Method>();
+    private ControllerServices controllerServices;
 
     private final Map<String, LinkHandler> staticLinkHandlers = new HashMap<String, LinkHandler>();
 
@@ -208,170 +192,6 @@ public class MetaController extends AbstractController implements LinkHandlerReg
     } // reset()
 
 
-    /**
-     * also calls any registered hooks
-     *
-     * copied from rendering controller
-     *
-     * @param request
-     * @param response
-     * @param bean
-     * @return
-     * @throws Exception
-     */
-    protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-        Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
-        try {
-            for (ControllerHook controllerHook : controllerHooks) {
-                if (log.isDebugEnabled()) {
-                    log.debug("createModel() "+controllerHook.getClass().getName());
-                } // if
-                boolean result = controllerHook.intercept(descriptor, model, request, response);
-                if (result) {
-                    return null;
-                } // if
-            } // for
-        } catch (Exception e) {
-            return viewContextFactory.createModel(e, request, response);
-        } // try/catch
-        return model;
-    } // createModel()
-
-
-    private Method findMethod(Object target, String methodName) {
-        if (log.isInfoEnabled()) {
-            log.info("findMethod() trying to find "+methodName+" in "+target.getClass().getName());
-        } // if
-        Class<? extends Object> targetClass = target.getClass();
-        String key = targetClass.getName()+"#"+methodName;
-        Method method = cache.get(key);
-        if (method!=null) {
-            return method==NULL_METHOD ? null : method;
-        } // if
-        Method[] targetMethods = target.getClass().getMethods();
-        for (Method m : targetMethods) {
-            if (m.getName().equals(methodName)) {
-                LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                if (log.isInfoEnabled()) {
-                    log.info("findMethod() linkAction="+linkAction);
-                    log.info("findMethod() method.getReturnType()="+m.getReturnType());
-                } // if
-                if (!TargetDescriptor.class.equals(m.getReturnType())) {
-                    linkAction = null;
-                } // if
-                if (log.isDebugEnabled()) {
-                    log.debug("findMethod() linkAction="+linkAction);
-                } // if
-                if (linkAction!=null) {
-                    method = m;
-                } // if
-            } // if
-        } // for
-        cache.put(key, method==null ? NULL_METHOD : method);
-        return method;
-    } // findMethod()
-
-
-    private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Matcher matcher, Method method, TargetDescriptor descriptor,
-                                        Object target) throws Throwable, IllegalAccessException {
-        TargetDescriptor result = null;
-        if (log.isDebugEnabled()) {
-            log.debug("callAction() method="+method);
-        } // if
-
-        if (method!=null) {
-            descriptor.action = null;
-            List<Object> parameters = new ArrayList<Object>();
-            Annotation[][] allAnnotations = method.getParameterAnnotations();
-            Class<? extends Object>[] parameterTypes = method.getParameterTypes();
-            for (int typeIndex = 0; typeIndex<parameterTypes.length; typeIndex++) {
-                Annotation[] annotations = allAnnotations[typeIndex];
-                Class<? extends Object> type = parameterTypes[typeIndex];
-                if (type.equals(HttpServletRequest.class)) {
-                    parameters.add(request);
-                } // if
-                if (type.equals(HttpServletResponse.class)) {
-                    parameters.add(response);
-                } // if
-                for (Annotation annotation : annotations) {
-                    if (annotation instanceof LinkPart) {
-                        int partNumber = ((LinkPart) annotation).value();
-                        String valueString = matcher.group(partNumber);
-                        if (log.isDebugEnabled()) {
-                            log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
-                        } // if
-                        parameters.add(propertyConverter.getStorableObject(valueString, type, request));
-                    } // if
-                    if (annotation instanceof ActionParameter) {
-                        String parameterName = ((ActionParameter) annotation).value();
-                        if ("--empty--".equals(parameterName)) {
-                            parameterName = type.getSimpleName().toLowerCase();
-                        } // if
-                        String valueString = request.getParameter(parameterName);
-                        if (log.isDebugEnabled()) {
-                            log.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
-                        } // if
-                        parameters.add(propertyConverter.getStorableObject(valueString, type, request));
-                    } // if
-                    if (annotation instanceof ActionForm) {
-                        try {
-                            Object form = type.newInstance();
-                            JavaBean wrapper = new JavaBean(form);
-                            for (String propertyName : wrapper.propertyNames()) {
-                                String valueString = request.getParameter(propertyName);
-                                Object value = propertyConverter.getStorableObject(valueString, wrapper.getType(propertyName), request);
-                                wrapper.set(propertyName, value);
-                            } // for
-                            parameters.add(form);
-                        } catch (Exception e) {
-                            log.error("callAction() cannot create and fill form "+type.getName());
-                        } // try/catch
-                    } // if
-                } // for
-            } // for
-
-            if (log.isInfoEnabled()) {
-                log.info("callAction() calling method "+method.getName()+" with "+parameters.size()+" parameters");
-            } // if
-            try {
-                descriptor = (TargetDescriptor) method.invoke(target, parameters.toArray());
-            } catch (InvocationTargetException ite) {
-                throw ite.getTargetException();
-            } // try/catch
-            if (log.isInfoEnabled()) {
-                log.info("callAction() result is "+descriptor);
-            } // if
-            result = descriptor;
-        } // if
-        if (log.isInfoEnabled()) {
-            log.info("callAction() link="+result);
-        } // if
-        return result;
-    } // callAction()
-
-
-    private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ViewContext result = null;
-        if (resultDescriptor==null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        } else {
-            if (log.isInfoEnabled()) {
-                log.info("handleResultDescriptor() received link "+resultDescriptor);
-            } // if
-            if (resultDescriptor!=TargetDescriptor.DONE) {
-                if (resultDescriptor.action!=null) {
-                    Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
-                    response.sendRedirect(link.getUrl());
-                } else {
-                    result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
-                } // if
-            } // if
-        } // if
-        return result;
-    } // handleResultDescriptor()
-
-
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
@@ -392,8 +212,8 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                     } // if
                     Object target = atHandlers.get(entry.getKey());
                     TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
-                    TargetDescriptor resultDescriptor = callAction(request, response, matcher, entry.getValue(), descriptor, target);
-                    ViewContext viewContext = handleResultDescriptor(resultDescriptor, request, response);
+                    TargetDescriptor resultDescriptor = controllerServices.callAction(request, response, matcher, entry.getValue(), descriptor, target);
+                    ViewContext viewContext = controllerServices.handleResultDescriptor(resultDescriptor, request, response);
                     if (log.isDebugEnabled()) {
                         log.debug("handleRequestInternal() view context "+viewContext);
                     } // if
@@ -411,7 +231,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         log.debug("handleRequestInternal() found bean "+descriptor.bean);
                     } // if
 
-                    Map<String, Object> model = createModel(descriptor, request, response);
+                    Map<String, Object> model = controllerServices.createModel(descriptor, request, response);
                     if (descriptor.action==null) {
                         if (log.isInfoEnabled()) {
                             log.info("handleRequestInternal() handing over to view "+descriptor.view);
@@ -422,19 +242,19 @@ public class MetaController extends AbstractController implements LinkHandlerReg
                         if (log.isDebugEnabled()) {
                             log.debug("handleRequestInternal() trying to call action "+descriptor.action);
                         } // if
-                        Method method = findMethod(linkHandler, descriptor.action);
-                        TargetDescriptor resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);
+                        Method method = linkFactoryAggregator.findMethod(linkHandler, descriptor.action);
+                        TargetDescriptor resultDescriptor = controllerServices.callAction(request, response, null, method, descriptor, linkHandler);
                         if (resultDescriptor==null) {
                             for (Object value : model.values()) {
                                 // This has to be checked because of special null values in context like $null
                                 // if the link is already set don't try to call other methods
                                 if ((value!=null)&&(resultDescriptor==null)) {
-                                    method = findMethod(value, descriptor.action);
-                                    resultDescriptor = callAction(request, response, null, method, descriptor, value);
+                                    method = linkFactoryAggregator.findMethod(value, descriptor.action);
+                                    resultDescriptor = controllerServices.callAction(request, response, null, method, descriptor, value);
                                 } // if
                             } // for
                         } // if
-                        ViewContext viewContext = handleResultDescriptor(resultDescriptor, request, response);
+                        ViewContext viewContext = controllerServices.handleResultDescriptor(resultDescriptor, request, response);
                         return SpringViewUtilities.createModelAndView(viewContext);
                     } // if
                 } // if
@@ -452,14 +272,7 @@ public class MetaController extends AbstractController implements LinkHandlerReg
 
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
-        Link result = null;
-        for (LinkHandler handler : handlers.values()) {
-            result = handler.createLink(request, response, bean, action, view);
-            if (result!=null) {
-                break;
-            } // if
-        } // for
-        return result;
+        return linkFactoryAggregator.createLink(handlers.values(), request, response, bean, action, view);
     } // createLink()
 
 
