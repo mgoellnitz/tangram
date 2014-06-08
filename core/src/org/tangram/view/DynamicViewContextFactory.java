@@ -132,7 +132,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
             if (log.isDebugEnabled()) {
                 log.debug("getShimsFor() defining shims for "+shimFor.getName());
             } // if
-            while ((shimFor!=null)&&(!"JdoContent".equals(shimFor.getSimpleName()))) {
+            while (shimFor!=null) {
                 List<Constructor<Shim>> shims = definedShims.get(shimFor.getName());
                 if (shims!=null) {
                     result.addAll(shims);

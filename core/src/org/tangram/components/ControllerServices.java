@@ -46,6 +46,7 @@ import org.tangram.view.PropertyConverter;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
+import org.tangram.view.ViewUtilities;
 
 
 @Named
@@ -55,7 +56,10 @@ public class ControllerServices {
     private static final Log log = LogFactory.getLog(ControllerServices.class);
 
     @Inject
-    protected ViewContextFactory viewContextFactory;
+    private ViewUtilities viewUtilities;
+
+    @Inject
+    private ViewContextFactory viewContextFactory;
 
     @Inject
     private LinkFactoryAggregator linkFactoryAggregator;
@@ -120,13 +124,11 @@ public class ControllerServices {
                 Map<String, String[]> parameterMap = null;
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof LinkPart) {
-                        int partNumber = ((LinkPart) annotation).value();
-                        String valueString = matcher.group(partNumber);
+                        String valueString = matcher.group(((LinkPart) annotation).value());
                         if (log.isDebugEnabled()) {
                             log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
                         } // if
-                        Object value = propertyConverter.getStorableObject(valueString, type, request);
-                        parameters.add(value);
+                        parameters.add(propertyConverter.getStorableObject(valueString, type, request));
                     } // if
                     if (annotation instanceof ActionParameter) {
                         String parameterName = ((ActionParameter) annotation).value();
@@ -134,13 +136,12 @@ public class ControllerServices {
                             parameterName = type.getSimpleName().toLowerCase();
                         } // if
                         if (parameterMap==null) {
-                            parameterMap = TangramServices.getViewUtilities().createParameterAccess(request).getParameterMap();
+                            parameterMap = viewUtilities.createParameterAccess(request).getParameterMap();
                         } // if
-                        String valueString = request.getParameter(parameterName);
                         if (log.isDebugEnabled()) {
                             log.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
                         } // if
-                        Object value = propertyConverter.getStorableObject(valueString, type, request);
+                        Object value = propertyConverter.getStorableObject(request.getParameter(parameterName), type, request);
                         parameters.add(value);
                     } // if
                     if (annotation instanceof ActionForm) {

@@ -97,13 +97,9 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                     String suffix = annotation.substring(idx);
                     if (!Character.isLowerCase(suffix.charAt(0))) {
                         try {
-                            String codeText = resource.getCodeText();
-                            codes.put(annotation, codeText);
+                            codes.put(annotation, resource.getCodeText());
                         } catch (Throwable e) {
-                            // who cares
-                            if (log.isErrorEnabled()) {
-                                log.error("fillClasses()", e);
-                            } // if
+                            log.error("fillClasses()", e);
                         } // try/catch
                     } // if
                 } // if

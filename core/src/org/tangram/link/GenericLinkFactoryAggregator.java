@@ -99,10 +99,7 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public String getPrefix(HttpServletRequest request) {
         if (prefix==null) {
             String contextPath = request.getContextPath();
-            if (contextPath.length()==1) {
-                contextPath = "";
-            } // if
-            prefix = contextPath+dispatcherPath;
+            prefix = (contextPath.length() == 1 ? "" : contextPath)+dispatcherPath;
         } // if
         return prefix;
     } // getPrefix()
@@ -156,24 +153,23 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         return null;
     } // createLink()
 
+
     @Override
     public Method findMethod(Object target, String methodName) {
-        if (log.isInfoEnabled()) {
-            log.info("findMethod() trying to find "+methodName+" in "+target.getClass().getName());
-        } // if
         Class<? extends Object> targetClass = target.getClass();
         String key = targetClass.getName()+"#"+methodName;
+        if (log.isInfoEnabled()) {
+            log.info("findMethod() trying to find "+key);
+        } // if
         Method method = cache.get(key);
         if (method!=null) {
             return method==NULL_METHOD ? null : method;
         } // if
-        Method[] methods = target.getClass().getMethods();
-        for (Method m : methods) {
+        for (Method m : targetClass.getMethods()) {
             if (m.getName().equals(methodName)) {
                 LinkAction linkAction = m.getAnnotation(LinkAction.class);
                 if (log.isInfoEnabled()) {
-                    log.info("findMethod() linkAction="+linkAction);
-                    log.info("findMethod() method.getReturnType()="+m.getReturnType());
+                    log.info("findMethod() linkAction="+linkAction+"  method.getReturnType()="+m.getReturnType());
                 } // if
                 if (!TargetDescriptor.class.equals(m.getReturnType())) {
                     linkAction = null;

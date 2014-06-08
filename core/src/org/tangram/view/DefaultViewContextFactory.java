@@ -54,8 +54,7 @@ public class DefaultViewContextFactory implements ViewContextFactory {
 
     @Override
     public ViewContext createViewContext(Object bean, String view, ServletRequest request, ServletResponse response) {
-        Map<String, Object> model = createModel(bean, request, response);
-        return createViewContext(model, view);
+        return createViewContext(createModel(bean, request, response), view);
     } // createModelAndView()
 
 
