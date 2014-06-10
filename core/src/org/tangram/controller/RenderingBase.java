@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tangram.components.ControllerServices;
+import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.link.Link;
@@ -55,7 +55,7 @@ public abstract class RenderingBase implements LinkFactory {
     private LinkFactoryAggregator linkFactory;
 
     @Inject
-    private ControllerServices controllerServices;
+    private MetaLinkHandler metaLinkHandler;
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
@@ -86,7 +86,7 @@ public abstract class RenderingBase implements LinkFactory {
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        return controllerServices.createModel(descriptor, request, response);
+        return metaLinkHandler.createModel(descriptor, request, response);
     } // createModel()
 
 
