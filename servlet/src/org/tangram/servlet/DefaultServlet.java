@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.tangram.Constants;
-import org.tangram.components.TangramServices;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
@@ -45,10 +44,11 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
+import org.tangram.view.ViewUtilities;
 
 
 /**
- * Servlet and component implementation of the same as the default controller.
+ * Servlet and component implementation of the same url mapping as the spring default controller.
  */
 @Named
 public class DefaultServlet extends HttpServlet implements CustomViewProvider, LinkFactory {
@@ -60,6 +60,9 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
 
     @Inject
     protected ViewContextFactory viewContextFactory;
+
+    @Inject
+    protected ViewUtilities viewUtilities;
 
     @Inject
     private Set<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
@@ -165,7 +168,7 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             if (log.isDebugEnabled()) {
                 log.debug("doGet() model="+model);
             } // if
-            TangramServices.getViewUtilities().render(null, model, view);
+            viewUtilities.render(null, model, view);
             if (log.isDebugEnabled()) {
                 log.debug("doGet() done "+response.getContentType()+" on "+response.getClass().getName());
             } // if
@@ -173,7 +176,7 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
             response.setContentType("text/html");
             response.setCharacterEncoding("utf-8");
-            TangramServices.getViewUtilities().render(null, context.getModel(), context.getViewName());
+            viewUtilities.render(null, context.getModel(), context.getViewName());
         } // try/catch
     } // doGet()
 
