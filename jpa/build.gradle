@@ -66,6 +66,8 @@ task nucleusJar(type: Jar, dependsOn: eclipselinkJar) {
   classifier = 'nucleus'
   from "$buildDir/classes/nucleus"
   from "$buildDir/resources/main"
+  // Otherwise in this step these classes get included
+  exclude "org/tangram/jpa/test/**"
 }
 
 nucleusJar.doFirst {
