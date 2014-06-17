@@ -56,7 +56,6 @@ public class MetaServlet extends HttpServlet {
             ViewContext context = handler.handleRequest(request, response);
             if (context!=null) {
                 viewUtilities.render(null, context.getModel(), context.getViewName());
-                return;
             } // if
         } catch (Throwable ex) {
             ViewContext context = viewContextFactory.createViewContext(ex, request, response);
@@ -66,10 +65,7 @@ public class MetaServlet extends HttpServlet {
             response.setContentType("text/html");
             response.setCharacterEncoding("utf-8");
             viewUtilities.render(null, context.getModel(), context.getViewName());
-            return;
         } // try/catch
-
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     } // service()
 
 } // MetaServlet

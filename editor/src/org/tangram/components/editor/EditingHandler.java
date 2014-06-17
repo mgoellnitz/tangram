@@ -392,7 +392,10 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             } // if
             response.setContentType("text/html; charset=UTF-8");
             Content content = beanFactory.getBean(id);
-
+            if (content==null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
+                return null;
+            } // if
             if (content instanceof CodeResource) {
                 CodeResource code = (CodeResource) content;
                 request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
@@ -468,7 +471,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             } // if
             Content bean = getMutableBeanFactory().getBean(Content.class, id);
             if (bean==null) {
-                throw new Exception("No object to delete found for id "+id);
+                throw new Exception("No object found for deletion of id "+id);
             } // if
             String typeName = bean.getClass().getName();
             getMutableBeanFactory().beginTransaction();

@@ -220,9 +220,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
         ViewContext result = null;
-        if (resultDescriptor==null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        } else {
+        if (resultDescriptor!=null) {
             if (log.isInfoEnabled()) {
                 log.info("handleResultDescriptor() received link "+resultDescriptor);
             } // if
@@ -400,7 +398,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                 } // if
             } // if
         } // for
-
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
         return null;
     } // handleRequest()
 
