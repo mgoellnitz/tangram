@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="cms_editor_row"><span class="cms_editor_label"><fmt:message key="label.listobjects" bundle="${msg}"/> | 
-<fmt:message key="label.edit" bundle="${msg}"/>: </span> ${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
+<fmt:message key="label.type" bundle="${msg}"/>: </span> ${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
 | <a href="#" onclick="window.close();">[ X ]</a></div>
 <div class="cms_editor_row">
 <ul><c:forEach items="${self}" var="item">

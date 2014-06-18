@@ -87,11 +87,5 @@ if (value instanceof Content) {
 </form>
 <cms:include bean="${self}" view="tangramEditorClasses$mobile" />
 <cms:include bean="${self}" view="tangramEditorFooter$mobile" />
-<script type="text/javascript">
-// alert(""+window.name);
-window.focus();
-window.onkeydown=keydown;
-window.onkeypress=keypress;
-</script>
 </body>
 </html>

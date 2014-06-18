@@ -7,8 +7,8 @@
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
 <title>Tangram - <fmt:message key="label.list" bundle="${msg}"/></title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<meta name="viewport" content="width = 320, initial-scale = 0.95" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width = 320, initial-scale = 0.95" />
+<link rel="stylesheet" href="${prefix}/t/screen.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="${prefix}/editor/mobile.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="${prefix}/t/print.css" type="text/css" media="print" />
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print" />
