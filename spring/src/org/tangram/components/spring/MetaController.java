@@ -46,16 +46,12 @@ public class MetaController extends AbstractController {
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            final ViewContext viewContext = handler.handleRequest(request, response);
-            if (viewContext!=null) {
-                return SpringViewUtilities.createModelAndView(viewContext);
-            } // if
+            ViewContext viewContext = handler.handleRequest(request, response);
+            return SpringViewUtilities.createModelAndView(viewContext);
         } catch (Throwable ex) {
             ViewContext viewContext = viewContextFactory.createViewContext(ex, request, response);
             return SpringViewUtilities.createModelAndView(viewContext);
         } // try/catch
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        return null;
     } // handleRequestInternal()
 
 } // MetaController
