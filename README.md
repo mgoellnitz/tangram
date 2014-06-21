@@ -46,8 +46,8 @@ HOW-TO
 
 To make all this work you need
 
-- Java 7
-- Gradle 1.8 or later (tested up to 1.12)
+- Java 7 (Java 8 is untested)
+- Gradle 1.8 or later (Including 2.0-rc1)
 
 To make things easier for applications using this framework we provide a gradle plugin now. 
 This means that you now have to prepare that first:
