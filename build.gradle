@@ -21,26 +21,24 @@ allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
 }
 
-/*
- *
+/**
  *  Helper method to increment a build counter in each subproject to have build numbers
  *  built into the packages to be able to track any change
- *
  */
 public incrementBuildCounter(Project prj) {
-    println "Updating compile counter property file ${prj.projectDir.name}-build.properties"
-    String filename = "${prj.projectDir.canonicalPath}/src/${prj.parent.name}/${prj.projectDir.name}-build.properties"
-    Properties p = new Properties()
-    try {
-        FileInputStream fis = new FileInputStream(filename);
-        p.load(fis)
-        fis.close()
-    } catch (Exception e) {
-        // 
-    } // try/catch
-    p.setProperty('version.date', ""+(new Date()))
-    p.setProperty('version.build', ""+(Integer.parseInt(p.getProperty('version.build', '0'))+1))
-    FileOutputStream fos = new FileOutputStream(filename)
-    p.save(fos, " Tangram Build and System Information")
-    fos.close()
+  println "Updating compile counter property file ${prj.projectDir.name}-build.properties"
+  String filename = "${prj.projectDir.canonicalPath}/src/${prj.parent.name}/${prj.projectDir.name}-build.properties"
+  Properties p = new Properties()
+  try {
+    FileInputStream fis = new FileInputStream(filename);
+    p.load(fis)
+    fis.close()
+  } catch (Exception e) {
+    // 
+  } // try/catch
+  p.setProperty('version.date', ""+(new Date()))
+  p.setProperty('version.build', ""+(Integer.parseInt(p.getProperty('version.build', '0'))+1))
+  FileOutputStream fos = new FileOutputStream(filename)
+  p.save(fos, " Tangram Build and System Information")
+  fos.close()
 } // incrementBuildCounter()

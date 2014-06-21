@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,6 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'tangram'
-// apply plugin: 'code-quality'
 
 repositories {
   // for dinistiq
@@ -40,12 +39,26 @@ eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/cla
 // our custom directory layout
 sourceSets {
   main {
-    java { srcDir 'src' }
-    resources { srcDir 'src' }
+    java { 
+      srcDir 'src' 
+      exclude '**/*.properties'
+      exclude '**/*.xml'
+    }
+    resources { 
+      srcDir 'src' 
+      exclude '**/*.java'
+    }
   }
   test {
-    java { srcDir 'test' }
-    resources { srcDir 'test' }
+    java { 
+      srcDir 'test' 
+      exclude '**/*.properties'
+      exclude '**/*.xml'
+    }
+    resources { 
+      srcDir 'test' 
+      exclude '**/*.java'
+    }
   }
 }
 
