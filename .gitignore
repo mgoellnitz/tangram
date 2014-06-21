@@ -4,8 +4,6 @@
 /*/.classpath
 /*/.project
 /*/.settings
-/*/private/cache
 /*/src/tangram/*-build.properties
 *.nb-gradl*
-/local
 /ebean/tangram-*.sql
