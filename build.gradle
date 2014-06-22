@@ -27,7 +27,12 @@ allprojects {
  */
 public incrementBuildCounter(Project prj) {
   println "Updating compile counter property file ${prj.projectDir.name}-build.properties"
-  String filename = "${prj.projectDir.canonicalPath}/src/${prj.parent.name}/${prj.projectDir.name}-build.properties"
+  String dirname = "${prj.projectDir.canonicalPath}/src/${prj.parent.name}"
+  File dir = new File(dirname)
+  if (!dir.exists()) {
+    dir.mkdir()
+  } // if
+  String filename = "${dirname}/${prj.projectDir.name}-build.properties"
   Properties p = new Properties()
   try {
     FileInputStream fis = new FileInputStream(filename);
