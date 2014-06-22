@@ -38,8 +38,8 @@ public class TangramVersions {
   String dinistiq = '0.2-SNAPSHOT'
   String shiro = '1.2.3'
 
-  String springframework = '3.1.4.RELEASE'
-  String springsecurity = '3.1.4.RELEASE'
+  String springframework = '4.0.5.RELEASE'
+  String springsecurity = '3.2.4.RELEASE'
   
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
