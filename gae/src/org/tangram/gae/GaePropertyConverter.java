@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.gae;
@@ -22,8 +22,8 @@ import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Text;
 import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.view.AbstractPropertyConverter;
 
 /**
@@ -31,7 +31,7 @@ import org.tangram.view.AbstractPropertyConverter;
  */
 public class GaePropertyConverter extends AbstractPropertyConverter {
 
-    private static final Log log = LogFactory.getLog(AbstractPropertyConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GaePropertyConverter.class);
 
 
     @Override
@@ -86,8 +86,8 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
         Object result = super.getStorableObject(valueString, cls, request);
         if (result==null) {
             if (cls==Blob.class) {
-                if (log.isDebugEnabled()) {
-                    log.debug("getStorableObject() valueString="+valueString);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("getStorableObject() valueString="+valueString);
                 } // if
             } else if (cls==Text.class) {
                 result = new Text(valueString);

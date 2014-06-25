@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
  */
 package org.tangram.ftp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.CwdCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,14 +35,14 @@ import org.mockftpserver.stub.command.CwdCommandHandler;
  */
 public class CwdFtpCommandHandler extends CwdCommandHandler {
 
-    private static final Log log = LogFactory.getLog(CwdFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CwdFtpCommandHandler.class);
 
 
     @Override
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         String newWd = command.getParameter(0);
-        if (log.isInfoEnabled()) {
-            log.info("handleCommand() changing working dir to "+newWd);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("handleCommand() changing working dir to "+newWd);
         } // if
         session.setAttribute(SessionHelper.CURRENT_DIR, newWd);
         super.handleCommand(command, session, invocationRecord);

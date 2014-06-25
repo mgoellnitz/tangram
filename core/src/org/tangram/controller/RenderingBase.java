@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.controller;
@@ -22,8 +22,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
@@ -44,7 +44,7 @@ import org.tangram.view.ViewContextFactory;
  */
 public abstract class RenderingBase implements LinkFactory {
 
-    private static final Log log = LogFactory.getLog(RenderingBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RenderingBase.class);
 
     @Inject
     protected BeanFactory beanFactory;

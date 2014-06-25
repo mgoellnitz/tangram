@@ -26,9 +26,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.jdo.annotations.PersistenceCapable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.datanucleus.enhancer.DataNucleusEnhancer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.jdo.JdoBeanFactory;
@@ -39,7 +39,7 @@ import org.tangram.logic.ClassRepository;
 @Singleton
 public class ClassRepositoryEnhancer implements BeanListener {
 
-    private static final Log log = LogFactory.getLog(ClassRepositoryEnhancer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClassRepositoryEnhancer.class);
 
     @Inject
     private ClassRepository classRepository;
@@ -52,15 +52,15 @@ public class ClassRepositoryEnhancer implements BeanListener {
     @SuppressWarnings("unchecked")
     public void reset() {
         Map<String, Class<Content>> classes = classRepository.get(Content.class);
-        if (log.isInfoEnabled()) {
-            log.info("reset() number of classes "+classes.size());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("reset() number of classes "+classes.size());
         } // if
         Collection<Class<? extends Content>> modelClasses = new HashSet<Class<? extends Content>>();
         for (Class<Content> c : classes.values()) {
             if (c.getAnnotation(PersistenceCapable.class)!=null) {
                 // if (c.getAnnotation(Entity.class)!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("reset() defining "+c.getName()+"("+c.getAnnotation(PersistenceCapable.class)+")");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("reset() defining "+c.getName()+"("+c.getAnnotation(PersistenceCapable.class)+")");
                 } // if
 
                 try {
@@ -80,7 +80,7 @@ public class ClassRepositoryEnhancer implements BeanListener {
                         modelClasses.add((Class<? extends Content>) enhancedClass);
                     } // if
                 } catch (Throwable e) {
-                    log.error("reset()", e);
+                    LOG.error("reset()", e);
                 } // try/catch
             } // if
         } // for

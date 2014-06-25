@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,12 +19,12 @@
 package org.tangram.ftp;
 
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RnfrCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
@@ -39,7 +39,7 @@ import org.tangram.content.CodeResource;
  */
 public class RnfrFtpCommandHandler extends RnfrCommandHandler {
 
-    private static final Log log = LogFactory.getLog(RnfrFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RnfrFtpCommandHandler.class);
 
     private CodeResourceCache codeResourceCache;
 
@@ -52,14 +52,14 @@ public class RnfrFtpCommandHandler extends RnfrCommandHandler {
     @Override
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         for (String parameter : command.getParameters()) {
-            if (log.isInfoEnabled()) {
-                log.info("handleCommand() parameter "+parameter);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("handleCommand() parameter "+parameter);
             } // if
         } // for
         String oldName = command.getParameter(0);
         String dir = SessionHelper.getDirectoy(session);
-        if (log.isInfoEnabled()) {
-            log.info("handleCommand() renaming from "+oldName+" in directory "+dir);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("handleCommand() renaming from "+oldName+" in directory "+dir);
         } // if
         String mimetype = CodeHelper.getMimetype(dir);
         Map<String, CodeResource> typeCache = codeResourceCache.getTypeCache(mimetype);

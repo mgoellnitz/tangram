@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.TangramServices;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
@@ -38,7 +38,7 @@ public class LinkTag implements Tag, Serializable {
 
     private static final long serialVersionUID = 7615554589005573155L;
 
-    private static final Log log = LogFactory.getLog(LinkTag.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LinkTag.class);
 
     private PageContext context = null;
 
@@ -165,7 +165,7 @@ public class LinkTag implements Tag, Serializable {
                 } // for
             } // if
         } catch (IOException ioe) {
-            log.error("doEndTag() could not paste link into output");
+            LOG.error("doEndTag() could not paste link into output");
         } // try/catch
     } // render()
 

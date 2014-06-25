@@ -24,8 +24,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractInternalResourceTemplateResolver<T extends Object> extends AbstractTemplateResolver<T> {
 
-    private final static Log log = LogFactory.getLog(AbstractInternalResourceTemplateResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractInternalResourceTemplateResolver.class);
 
     private String prefix;
 
@@ -78,15 +78,15 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
 
     protected String checkJspExists(String url) {
-        if (log.isDebugEnabled()) {
-            log.debug("checkJspExists("+url+")");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("checkJspExists("+url+")");
         } // if
         String resourcePrefix = "/META-INF/resources";
         final URL resource = getClass().getResource(resourcePrefix+url);
         if (resource==null) {
             File f = new File(filePathPrefix+url);
-            if (log.isDebugEnabled()) {
-                log.debug("checkJspExists() f="+f.getAbsolutePath());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("checkJspExists() f="+f.getAbsolutePath());
             } // if
             if (!(f.exists())) {
                 url = null;

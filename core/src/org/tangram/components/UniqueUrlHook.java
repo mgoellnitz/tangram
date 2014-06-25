@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.components;
@@ -24,8 +24,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.controller.ControllerHook;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
@@ -39,7 +39,7 @@ import org.tangram.view.TargetDescriptor;
 @Singleton
 public class UniqueUrlHook implements ControllerHook {
 
-    private static Log log = LogFactory.getLog(UniqueUrlHook.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UniqueUrlHook.class);
 
     @Inject
     private LinkFactoryAggregator linkFactory;
@@ -52,8 +52,8 @@ public class UniqueUrlHook implements ControllerHook {
         try {
             link = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
         } catch (Exception e) {
-            if (log.isWarnEnabled()) {
-                log.warn("intercept() expensive things happen "+((descriptor.bean==null) ? "" : descriptor.bean.getClass().getName()));
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("intercept() expensive things happen "+((descriptor.bean==null) ? "" : descriptor.bean.getClass().getName()));
             } // if
         } // try/catch
         if (link!=null) {
@@ -63,8 +63,8 @@ public class UniqueUrlHook implements ControllerHook {
             String decodedUrl = link.getUrl();
             String requestURI = request.getRequestURI();
             if ( !decodedUrl.equals(requestURI)) {
-                if (log.isInfoEnabled()) {
-                    log.info("render() sending redirect for "+requestURI+" to "+decodedUrl);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("render() sending redirect for "+requestURI+" to "+decodedUrl);
                 } // if
                 response.setHeader("Location", link.getUrl());
                 response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);

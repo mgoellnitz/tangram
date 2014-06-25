@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.controller;
@@ -23,8 +23,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
@@ -39,7 +39,7 @@ import org.tangram.view.TargetDescriptor;
 @Singleton
 public class UniqueHostHook implements ControllerHook {
 
-    private static Log log = LogFactory.getLog(UniqueHostHook.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UniqueHostHook.class);
 
     @Inject
     private LinkFactoryAggregator linkFactory;
@@ -56,8 +56,8 @@ public class UniqueHostHook implements ControllerHook {
     public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
-        if (log.isDebugEnabled()) {
-            log.debug("intercept() serverName="+request.getServerName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("intercept() serverName="+request.getServerName());
         } // if
         boolean isOnLocalhost = request.getServerName().equals("localhost");
         if ( !(request.getServerName().equals(primaryDomain)||(isOnLocalhost))) {

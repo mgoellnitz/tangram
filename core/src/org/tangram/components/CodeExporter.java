@@ -30,8 +30,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
@@ -49,7 +49,8 @@ import org.tangram.view.TargetDescriptor;
 @LinkHandler
 public class CodeExporter {
 
-    private static final Log log = LogFactory.getLog(CodeExporter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CodeExporter.class);
+
 
     @Inject
     private LinkHandlerRegistry registry;

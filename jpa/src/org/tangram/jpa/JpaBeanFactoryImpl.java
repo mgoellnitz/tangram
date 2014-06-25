@@ -37,8 +37,8 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
@@ -53,7 +53,7 @@ import org.tangram.util.ClassResolver;
  */
 public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements JpaBeanFactory {
 
-    private static final Log log = LogFactory.getLog(JpaBeanFactoryImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JpaBeanFactoryImpl.class);
 
     private String persistenceUnitName = "tangram";
 
@@ -158,8 +158,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         if (!(cls.isAssignableFrom(kindClass))) {
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
-        if (log.isInfoEnabled()) {
-            log.info("getBean() "+kindClass.getName()+":"+internalId);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("getBean() "+kindClass.getName()+":"+internalId);
         } // if
         return (T) manager.find(kindClass, getPrimaryKey(internalId, kindClass));
     } // getBean()
@@ -223,13 +223,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
      */
     @Override
     public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() beginning transaction");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createBean() beginning transaction");
         } // if
         beginTransaction();
 
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() creating new instance of "+cls.getName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createBean() creating new instance of "+cls.getName());
         } // if
         T bean = cls.newInstance();
 
@@ -242,8 +242,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
-        if (log.isInfoEnabled()) {
-            log.info("clearCacheFor() "+cls.getName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("clearCacheFor() "+cls.getName());
         } // if
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
@@ -252,8 +252,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isDebugEnabled()) {
-                    log.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     removeKeys.add(key);
@@ -266,13 +266,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
             for (Class<? extends Content> c : getListeners().keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     List<BeanListener> listeners = getListeners().get(c);
-                    if (log.isInfoEnabled()) {
-                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
                     } // if
                     if (listeners!=null) {
                         for (BeanListener listener : listeners) {
@@ -282,7 +282,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 } // if
             } // for
         } catch (Exception e) {
-            log.error("clearCacheFor() "+cls.getSimpleName(), e);
+            LOG.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
 
@@ -300,18 +300,18 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             String findAllQuery = "select x from "+shortTypeName+" x";
             Query query = manager.createQuery(queryString==null ? findAllQuery : queryString, cls);
             // Default is no ordering - not even via IDs
-            if (log.isInfoEnabled()) {
-                log.info("listBeansOfExactClass() looking up instances of "+shortTypeName
+            if (LOG.isInfoEnabled()) {
+                LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
             List<Object> results = query.getResultList();
-            if (log.isInfoEnabled()) {
-                log.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
             filterExactClass(cls, results, result);
             statistics.increase("list beans");
         } catch (Exception e) {
-            log.error("listBeansOfExactClass() query ", e);
+            LOG.error("listBeansOfExactClass() query ", e);
         } // try/catch/finally
         return result;
     } // listBeansOfExactClass()
@@ -325,8 +325,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @Override
     public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = null;
-        if (log.isInfoEnabled()) {
-            log.info("listBeans() looking up instances of "+cls.getSimpleName()
+        if (LOG.isInfoEnabled()) {
+            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()
                     +(queryString==null ? "" : " with condition "+queryString));
         } // if
         String key = null;
@@ -334,8 +334,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             key = getCacheKey(cls, queryString, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("listBeans() found in cache "+idList);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("listBeans() found in cache "+idList);
                 } // if
                 // old style
                 result = new ArrayList<T>(idList.size());
@@ -368,8 +368,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             } // if
             statistics.increase("query beans uncached");
         } // if
-        if (log.isInfoEnabled()) {
-            log.info("listBeans() looked up "+result.size()+" raw entries");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("listBeans() looked up "+result.size()+" raw entries");
         } // if
         return result;
     } // listBeans()
@@ -389,30 +389,30 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                         ClassResolver resolver = new ClassResolver(basePackages);
                         classNames = new ArrayList<String>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JpaContent.class, Entity.class)) {
-                            if (log.isInfoEnabled()) {
-                                log.info("getAllClasses() * "+cls.getName());
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("getAllClasses() * "+cls.getName());
                             } // if
                             classNames.add(cls.getName());
                             tableNameMapping.put(cls.getSimpleName(), cls);
                             allClasses.add(cls);
                         } // for
-                        if (log.isInfoEnabled()) {
-                            log.info("getAllClasses() # class names "+classNames.size());
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("getAllClasses() # class names "+classNames.size());
                         } // if
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
                             Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
-                            if (log.isInfoEnabled()) {
-                                log.info("getAllClasses() # "+cls.getName());
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("getAllClasses() # "+cls.getName());
                             } // if
                             tableNameMapping.put(cls.getSimpleName(), cls);
                             allClasses.add(cls);
                         } // for
                     } // if
                 } catch (Exception e) {
-                    log.error("getAllClasses() outer", e);
+                    LOG.error("getAllClasses() outer", e);
                 } // try/catch
             } // if
         } // synchronized
@@ -442,7 +442,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 Collections.sort(modelClasses, comp);
                 tableNameMapping = new HashMap<String, Class<? extends Content>>();
                 for (Class<? extends Content> mc : modelClasses) {
-                    log.info("getClasses() setting table mapping for "+mc);
+                    LOG.info("getClasses() setting table mapping for "+mc);
                     tableNameMapping.put(mc.getSimpleName(), mc);
                 } // for
             } // if
@@ -482,8 +482,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
-        if (log.isInfoEnabled()) {
-            log.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
         } // if
         // this was the prefill - right at the moment allways necessary
         final Collection<Class<? extends Content>> classes = getAllClasses();
@@ -498,24 +498,24 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         Properties properties = new Properties();
         properties.putAll(configOverrides);
         properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
-        if (log.isInfoEnabled()) {
-            log.info("afterPropertiesSet() properties="+properties);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() properties="+properties);
         } // if
 
         // here we go with the basic stuff
         managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
         manager = managerFactory.createEntityManager();
 
-        if (log.isInfoEnabled()) {
-            log.info("afterPropertiesSet() manager factory: "+managerFactory.getClass().getName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() manager factory: "+managerFactory.getClass().getName());
             Metamodel metamodel = manager.getMetamodel();
             if (metamodel!=null) {
                 Set<EntityType<?>> entities = metamodel.getEntities();
                 for (EntityType<?> entity : entities) {
-                    log.info("afterPropertiesSet() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
+                    LOG.info("afterPropertiesSet() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
                 } // for
             } else {
-                log.info("afterPropertiesSet() not meta model");
+                LOG.info("afterPropertiesSet() not meta model");
             } // if
         } // if
 

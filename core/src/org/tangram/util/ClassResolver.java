@@ -29,8 +29,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ClassResolver {
 
-    private static final Log log = LogFactory.getLog(ClassResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClassResolver.class);
 
     private Set<String> packageNames;
 
@@ -81,13 +81,13 @@ public class ClassResolver {
                 if (!url.endsWith(".jar")) {
                     url = url.substring(0, url.length()-packagePath.length());
                 } //
-                if (log.isInfoEnabled()) {
-                    log.info("addPathsForPackage() "+url);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("addPathsForPackage() "+url);
                 } // if
                 urls.add(url);
             } // while
         } catch (IOException e) {
-            log.error("addPathsForPackage()", e);
+            LOG.error("addPathsForPackage()", e);
         } // try/catch
     } // addPathsForPackage()
 
@@ -100,8 +100,8 @@ public class ClassResolver {
      * @param name
      */
     private final void checkClassAndAdd(Set<String> classNames, String name) {
-        if (log.isDebugEnabled()) {
-            log.debug("checkClassAndAdd() name="+name);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("checkClassAndAdd() name="+name);
         } // if
         if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
             name = name.replace(File.separatorChar, '/').replace('/', '.');
@@ -118,13 +118,13 @@ public class ClassResolver {
 
 
     private final void recurseSubDir(Set<String> classNames, File dir, int basePathLength) {
-        if (log.isDebugEnabled()) {
-            log.debug("recurseSubDir() scanning "+dir.getAbsolutePath());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("recurseSubDir() scanning "+dir.getAbsolutePath());
         } // if
         for (File f : (dir.isDirectory() ? dir.listFiles() : new File[0])) {
             String fileName = f.getAbsolutePath().substring(basePathLength);
-            if (log.isDebugEnabled()) {
-                log.debug("recurseSubDir() fileName="+fileName);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("recurseSubDir() fileName="+fileName);
             } // if
             if ((fileName.endsWith(".class"))||(fileName.endsWith(".properties"))) {
                 checkClassAndAdd(classNames, fileName);
@@ -143,8 +143,8 @@ public class ClassResolver {
         } // for
         for (String path : paths) {
             try {
-                if (log.isDebugEnabled()) {
-                    log.debug("getClassNames() path="+path);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("getClassNames() path="+path);
                 } // if
                 if (path.endsWith(".jar")) {
                     JarInputStream is = new JarInputStream(new FileInputStream(path));
@@ -159,7 +159,7 @@ public class ClassResolver {
                     recurseSubDir(classNames, dir, basePathLength);
                 } // if
             } catch (IOException e) {
-                log.error("getClassNames()", e);
+                LOG.error("getClassNames()", e);
             } // try/catch
         } // for
         return classNames;
@@ -180,7 +180,7 @@ public class ClassResolver {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {
-                log.error("getSubclasses()", e);
+                LOG.error("getSubclasses()", e);
             } // try/catch
         } // if
         return result;
@@ -202,7 +202,7 @@ public class ClassResolver {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {
-                log.error("getAnnotatedSubclasses()", e);
+                LOG.error("getAnnotatedSubclasses()", e);
             } // try/catch
         } // if
         return result;

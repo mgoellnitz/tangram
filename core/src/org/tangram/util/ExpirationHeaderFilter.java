@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.util;
@@ -34,8 +34,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExpirationHeaderFilter implements Filter {
 
-    private static final Log log = LogFactory.getLog(ExpirationHeaderFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExpirationHeaderFilter.class);
 
     private Map<String, Long> extensionTimes = new HashMap<String, Long>();
 
@@ -96,19 +96,19 @@ public class ExpirationHeaderFilter implements Filter {
         if (idx>0) {
             String extension = uri.substring(idx+1);
             Long timeObject = getTimeObject(extension);
-            if (log.isDebugEnabled()) {
-                log.debug("doFilter("+uri+") extension="+extension+" timeObject="+timeObject);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("doFilter("+uri+") extension="+extension+" timeObject="+timeObject);
             } // if
             if (timeObject!=null) {
                 long time = timeObject;
                 if (time>0) {
                     long expirationValue = System.currentTimeMillis()+time;
-                    if (log.isDebugEnabled()) {
-                        log.debug("doFilter() expirationValue="+expirationValue);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("doFilter() expirationValue="+expirationValue);
                     } // if
                     String expires = formatter.format(new Date(expirationValue));
-                    if (log.isDebugEnabled()) {
-                        log.debug("doFilter() expires="+expires);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("doFilter() expires="+expires);
                     } // if
                     response.addHeader("Last-Modified", startTimeHeader);
                     response.addHeader("Etag", startTimeString+uri.hashCode()+"\"");
@@ -124,20 +124,20 @@ public class ExpirationHeaderFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         String expiry = config.getInitParameter("expirations");
         if (expiry!=null) {
-            if (log.isInfoEnabled()) {
-                log.info("init() expiry: "+expiry);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("init() expiry: "+expiry);
             } // if
             for (String exp : expiry.split(",")) {
-                if (log.isDebugEnabled()) {
-                    log.debug("init() exp: "+exp);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("init() exp: "+exp);
                 } // if
                 exp = exp.trim();
                 String[] kvp = exp.split("=");
                 String mimeType = kvp[0];
                 String timeString = kvp[1];
                 long time = Long.parseLong(timeString)*1000;
-                if (log.isInfoEnabled()) {
-                    log.info("init() time for "+mimeType+" is "+time);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("init() time for "+mimeType+" is "+time);
                 } // if
                 extensionTimes.put(mimeType, time);
             } // for

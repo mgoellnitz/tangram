@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
@@ -38,7 +38,7 @@ import org.tangram.content.CodeResource;
  */
 public abstract class AbstractRepositoryTemplateResolver<T extends Object> extends AbstractTemplateResolver<T> implements BeanListener {
 
-    private final static Log log = LogFactory.getLog(AbstractRepositoryTemplateResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractRepositoryTemplateResolver.class);
 
     @Inject
     private CodeResourceCache codeResourceCache;

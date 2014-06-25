@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,8 +24,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
@@ -41,7 +41,7 @@ import org.tangram.view.TargetDescriptor;
 @LinkHandler
 public class StatisticsHandler {
 
-    private static final Log log = LogFactory.getLog(StatisticsHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StatisticsHandler.class);
 
     public static final String STATS_URI = "/stats";
 
@@ -54,8 +54,8 @@ public class StatisticsHandler {
 
     @LinkAction("/stats")
     public TargetDescriptor statistics(HttpServletRequest request, HttpServletResponse response) {
-        if (log.isDebugEnabled()) {
-            log.debug("statistics()");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("statistics()");
         } // if
         response.setContentType("text/html");
         response.setCharacterEncoding("utf-8");

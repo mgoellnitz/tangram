@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,15 +21,15 @@ package org.tangram.servlet;
 import java.io.IOException;
 import java.util.Locale;
 import javax.inject.Named;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.view.AbstractInternalResourceTemplateResolver;
 
 
 @Named
 public class JspTemplateResolver extends AbstractInternalResourceTemplateResolver<String> {
 
-    private static final Log log = LogFactory.getLog(JspTemplateResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JspTemplateResolver.class);
 
     private final static String NOT_FOUND_DUMMY = "JspNotFoundDummy";
 
@@ -48,8 +48,8 @@ public class JspTemplateResolver extends AbstractInternalResourceTemplateResolve
 
     @Override
     protected String checkResourceExists(String url) {
-        if (log.isInfoEnabled()) {
-            log.info("checkResourceExists() url="+url);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("checkResourceExists() url="+url);
         } // if
         return checkJspExists(getPrefix()+url+getSuffix());
     } // checkResourceExists()
@@ -57,8 +57,8 @@ public class JspTemplateResolver extends AbstractInternalResourceTemplateResolve
 
     @Override
     protected String lookupView(String viewName, Locale locale, Object content, String key) throws IOException {
-        if (log.isInfoEnabled()) {
-            log.info("lookupView() "+viewName+"#"+content);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("lookupView() "+viewName+"#"+content);
         } // if
         return super.lookupView(viewName, locale, content, key);
     } // lookupView()
@@ -66,8 +66,8 @@ public class JspTemplateResolver extends AbstractInternalResourceTemplateResolve
 
     @Override
     protected String checkView(String view, String packageName, String simpleName, String key, Locale locale) {
-        if (log.isInfoEnabled()) {
-            log.info("checkView() "+view+"#"+packageName+"_"+simpleName);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("checkView() "+view+"#"+packageName+"_"+simpleName);
         } // if // if
         return super.checkView(view, packageName, simpleName, key, locale);
     } // checkView()

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,8 +31,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
@@ -46,7 +46,7 @@ import org.tangram.view.TargetDescriptor;
 @LinkHandler
 public class GaeToolHandler {
 
-    private static final Log log = LogFactory.getLog(GaeToolHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GaeToolHandler.class);
 
     @Inject
     private LinkHandlerRegistry registry;
@@ -66,16 +66,16 @@ public class GaeToolHandler {
         query.setFilter(new Query.FilterPredicate("_expires", FilterOperator.LESS_THAN, new Long(System.currentTimeMillis())));
         PreparedQuery results = datastore.prepare(query);
         FetchOptions limit = FetchOptions.Builder.withLimit(10000);
-        if (log.isInfoEnabled()) {
-            log.info("clearSessions() deleting "+results.countEntities(limit)+" sessions from data store");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("clearSessions() deleting "+results.countEntities(limit)+" sessions from data store");
         } // if
         for (Entity session : results.asIterable()) {
             datastore.delete(session.getKey());
         } // for
-        if (log.isInfoEnabled()) {
+        if (LOG.isInfoEnabled()) {
             query = new Query("_ah_SESSION");
             results = datastore.prepare(query);
-            log.info("clearSessions() "+results.countEntities(limit)+" sessions still available");
+            LOG.info("clearSessions() "+results.countEntities(limit)+" sessions still available");
         } // if
 
         return new TargetDescriptor(statistics, null, null);

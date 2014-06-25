@@ -30,8 +30,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
@@ -53,7 +53,8 @@ public class CodeResourceCache implements BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
-    private static final Log log = LogFactory.getLog(CodeResourceCache.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CodeResourceCache.class);
+
 
     @Inject
     private PersistentRestartCache startupCache;
@@ -77,13 +78,13 @@ public class CodeResourceCache implements BeanListener {
         if (resourceCache==null) {
             // just started
             resources = startupCache.get(CODE_RESOURCE_CACHE_KEY, List.class);
-            if (log.isInfoEnabled()) {
-                log.info("reset() cache: "+resources);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("reset() cache: "+resources);
             } // if
         } // if
         if (resources==null) {
-            if (log.isInfoEnabled()) {
-                log.info("reset() obtaining all code resources");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("reset() obtaining all code resources");
             } // if
             List<CodeResource> datastoreResources = factory.listBeans(CodeResource.class);
 
@@ -111,14 +112,14 @@ public class CodeResourceCache implements BeanListener {
                 } // if
             } // if
         } // for
-        if (log.isInfoEnabled()) {
-            log.info("reset() code resources obtained");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("reset() code resources obtained");
         } // if
         for (BeanListener listener : attachedListeners) {
             listener.reset();
         } // for
-        if (log.isInfoEnabled()) {
-            log.info("reset() listeners notified");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("reset() listeners notified");
         } // if
         lastResetTime = System.currentTimeMillis();
     } // reset()

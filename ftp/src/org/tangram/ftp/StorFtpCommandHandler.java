@@ -18,12 +18,12 @@
  */
 package org.tangram.ftp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.StorCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
@@ -36,7 +36,7 @@ import org.tangram.mutable.MutableCode;
  */
 public class StorFtpCommandHandler extends StorCommandHandler {
 
-    private static final Log log = LogFactory.getLog(StorFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StorFtpCommandHandler.class);
 
     private MutableBeanFactory beanFactory;
 
@@ -73,8 +73,8 @@ public class StorFtpCommandHandler extends StorCommandHandler {
             } // if
         } // if
 
-        if (log.isInfoEnabled()) {
-            log.info("afterProcessData() "+dir+" / "+filename+" ("+data.length+"b)");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterProcessData() "+dir+" / "+filename+" ("+data.length+"b)");
         } // if
     } // afterProcessData()
 

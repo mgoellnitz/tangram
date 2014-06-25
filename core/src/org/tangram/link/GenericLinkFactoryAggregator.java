@@ -28,8 +28,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.annotate.LinkAction;
 import org.tangram.monitor.Statistics;
 import org.tangram.view.TargetDescriptor;
@@ -44,7 +44,7 @@ import org.tangram.view.TargetDescriptor;
 @Singleton
 public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
-    private static final Log log = LogFactory.getLog(GenericLinkFactoryAggregator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenericLinkFactoryAggregator.class);
 
     /**
      * Dummy instance to be placed in Maps and the like.
@@ -108,14 +108,14 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public void postProcessResult(Link result, HttpServletRequest request) {
         StringBuffer url = new StringBuffer(result.getUrl());
         int idx = url.indexOf("/");
-        if (log.isDebugEnabled()) {
-            log.debug("postProcessResult() "+idx+" ("+url+")");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("postProcessResult() "+idx+" ("+url+")");
         } // if
         if (idx>=0) {
             url.insert(idx, getPrefix(request));
         } // if
-        if (log.isDebugEnabled()) {
-            log.debug("postProcessResult() "+idx+" ("+url+")");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("postProcessResult() "+idx+" ("+url+")");
         } // if
         result.setUrl(url.toString());
     } // postProcessResult()
@@ -129,8 +129,8 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         for (LinkFactory handler : handlers) {
             long startTime = System.currentTimeMillis();
             Link result = handler.createLink(request, response, bean, action, view);
-            if (log.isDebugEnabled()) {
-                log.debug("createLink() "+handler.getClass().getName()+" -> "+result+" ["+bean.getClass().getSimpleName()+"]");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("createLink() "+handler.getClass().getName()+" -> "+result+" ["+bean.getClass().getSimpleName()+"]");
             } // if
             if (result!=null) {
                 postProcessResult(result, request);
@@ -158,8 +158,8 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public Method findMethod(Object target, String methodName) {
         Class<? extends Object> targetClass = target.getClass();
         String key = targetClass.getName()+"#"+methodName;
-        if (log.isInfoEnabled()) {
-            log.info("findMethod() trying to find "+key);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("findMethod() trying to find "+key);
         } // if
         Method method = cache.get(key);
         if (method!=null) {
@@ -168,14 +168,14 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         for (Method m : targetClass.getMethods()) {
             if (m.getName().equals(methodName)) {
                 LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                if (log.isInfoEnabled()) {
-                    log.info("findMethod() linkAction="+linkAction+"  method.getReturnType()="+m.getReturnType());
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("findMethod() linkAction="+linkAction+"  method.getReturnType()="+m.getReturnType());
                 } // if
                 if (!TargetDescriptor.class.equals(m.getReturnType())) {
                     linkAction = null;
                 } // if
-                if (log.isDebugEnabled()) {
-                    log.debug("findMethod() linkAction="+linkAction);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("findMethod() linkAction="+linkAction);
                 } // if
                 if (linkAction!=null) {
                     method = m;

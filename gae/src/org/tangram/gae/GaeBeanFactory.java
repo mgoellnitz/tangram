@@ -22,15 +22,15 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
 
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
-    private static final Log log = LogFactory.getLog(GaeBeanFactory.class);
+    private static final Logger lOG = LoggerFactory.getLogger(GaeBeanFactory.class);
 
     private boolean useHdrDatastore = true;
 
@@ -98,9 +98,9 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                     numericId = k.getId();
                 } // if
             } // if
-            if (log.isDebugEnabled()) {
-                log.debug("getBean() kind="+kind);
-                log.debug("getBean() numericId="+numericId);
+            if (lOG.isDebugEnabled()) {
+                lOG.debug("getBean() kind="+kind);
+                lOG.debug("getBean() numericId="+numericId);
             } // if
             key = KeyFactory.createKey(kind, numericId);
             if (modelClasses==null) {
@@ -116,9 +116,9 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
                 cache.put(id, result);
             } // if
         } catch (Exception e) {
-            if (log.isWarnEnabled()) {
+            if (lOG.isWarnEnabled()) {
                 String simpleName = e.getClass().getSimpleName();
-                log.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
+                lOG.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
             } // if
         } // try/catch/finally
         statistics.increase("get bean uncached");

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,8 +28,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
@@ -46,7 +46,7 @@ import org.tangram.view.TargetDescriptor;
 @Singleton
 public class ProtectionHook implements ControllerHook {
 
-    private static final Log log = LogFactory.getLog(ProtectionHook.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProtectionHook.class);
 
     @Inject
     private BeanFactory beanFactory;
@@ -65,10 +65,9 @@ public class ProtectionHook implements ControllerHook {
         } else {
             List<Protection> protections = beanFactory.listBeans(Protection.class);
 
-            if (log.isInfoEnabled()) {
-                log.info("getRequiredProtections() total # of protections: "+protections.size());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("getRequiredProtections() total # of protections: "+protections.size());
             } // if
-
             if (protections.size()>0) {
                 result = new HashMap<String, Protection>();
                 for (Protection prot : protections) {
@@ -115,7 +114,7 @@ public class ProtectionHook implements ControllerHook {
                 } // for
             } // if
         } catch (Exception e) {
-            log.error("isProtectedBy()", e);
+            LOG.error("isProtectedBy()", e);
         } // try/catch
 
         return result;
@@ -131,29 +130,29 @@ public class ProtectionHook implements ControllerHook {
             ProtectedContent protectedContent = (ProtectedContent) (descriptor.bean);
             Map<String, Protection> protections = getRequiredProtections(protectedContent);
 
-            if (log.isInfoEnabled()) {
-                log.info("render() # of relevant protections: "+protections.size());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("render() # of relevant protections: "+protections.size());
             } // if
 
             String protectionKey = request.getParameter(Constants.PARAMETER_PROTECTION_KEY);
             if ((protectionKey!=null)&&("POST".equals(request.getMethod()))) {
                 // handle login
-                if (log.isInfoEnabled()) {
-                    log.info("render() handling login "+protectionKey+" for topic "+protectedContent.getId());
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("render() handling login "+protectionKey+" for topic "+protectedContent.getId());
                 } // if
                 loginResult = protections.get(protectionKey).handleLogin(request, response);
             } // if
 
             String necessaryProtectionKey = getFailingProtectionKey(request, protections);
             if (necessaryProtectionKey!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("render() topic "+protectedContent.getId()+" is not visible");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("render() topic "+protectedContent.getId()+" is not visible");
                 } // if
 
                 for (Protection p : protections.values()) {
                     if (p.needsAuthorization(request)) {
-                        if (log.isInfoEnabled()) {
-                            log.info("render() Protection specific authorization necessary: "+p.getProtectionKey());
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("render() Protection specific authorization necessary: "+p.getProtectionKey());
                         } // if
                         protection = p;
                     } // if

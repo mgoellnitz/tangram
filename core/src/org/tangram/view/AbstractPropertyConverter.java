@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
@@ -45,7 +45,7 @@ import org.tangram.content.Content;
  */
 public abstract class AbstractPropertyConverter implements PropertyConverter {
 
-    private static final Log log = LogFactory.getLog(AbstractPropertyConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractPropertyConverter.class);
 
     private DateFormat dateFormat = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
 
@@ -88,7 +88,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 return o.toString();
             } // if
         } catch (Exception e) {
-            log.error("getEditString() ", e);
+            LOG.error("getEditString() ", e);
             return "error while converting "+o;
         } // try/catch
     } // getEditString()
@@ -99,31 +99,31 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
         if (StringUtils.isNotBlank(title)) {
             List<T> beans = beanFactory.listBeans(c);
-            if (log.isDebugEnabled()) {
-                log.debug("getObjectsViaDescription("+title+") checking "+beans);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getObjectsViaDescription("+title+") checking "+beans);
             } // if
             for (T bean : beans) {
                 try {
-                    if (log.isDebugEnabled()) {
-                        log.debug("getObjectsViaDescription() checking "+bean);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getObjectsViaDescription() checking "+bean);
                     } // if
                     BufferResponse r = new BufferResponse();
                     viewUtilties.render(r.getWriter(), bean, "description", request, r);
                     String description = r.getContents();
-                    if (log.isDebugEnabled()) {
-                        log.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);
                     } // if
                     if (description.indexOf(title)>=0) {
                         result.add(bean);
                     } // if
                 } catch (IOException ioe) {
-                    log.error("getObjectsViaDescription() ignoring element "+bean, ioe);
+                    LOG.error("getObjectsViaDescription() ignoring element "+bean, ioe);
                 } // try/catch
             } // for
         } // if
 
-        if (log.isDebugEnabled()) {
-            log.debug("getObjectsViaDescription("+title+") result="+result);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getObjectsViaDescription("+title+") result="+result);
         } // if
         return result;
     } // getObjectsViaDescription()
@@ -159,18 +159,18 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         Matcher m = createIdMatcher(valueString);
         if (m.find()) {
             valueString = m.group(1);
-            if (log.isInfoEnabled()) {
-                log.info("getReferenceValue() pattern match result "+valueString);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("getReferenceValue() pattern match result "+valueString);
             } // if
             value = beanFactory.getBean(valueString);
         } else {
-            if (log.isWarnEnabled()) {
-                log.warn("getReferenceValue() we should have checked for selection via description template");
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("getReferenceValue() we should have checked for selection via description template");
             } // if
             value = getObjectViaDescription(cls, valueString.trim(), request);
             if (value!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("getReferenceValue() found a value from description "+value);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("getReferenceValue() found a value from description "+value);
                 } // if
             } // if
         } // if
@@ -183,8 +183,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         if (valueString==null) {
             return null;
         } // if
-        if (log.isDebugEnabled()) {
-            log.debug("getStorableObject() required type is "+cls.getName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getStorableObject() required type is "+cls.getName());
         } // if
         if (cls==String.class) {
             value = StringUtils.isNotBlank(valueString) ? ""+valueString : null;
@@ -192,7 +192,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             try {
                 value = dateFormat.parseObject(valueString);
             } catch (ParseException pe) {
-                log.error("getStorableObject() cannot parse as Date: "+valueString);
+                LOG.error("getStorableObject() cannot parse as Date: "+valueString);
             } // try/catch
         } else if (cls==Integer.class) {
             value = StringUtils.isNotBlank(valueString) ? Integer.parseInt(valueString) : null;
@@ -201,23 +201,23 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         } else if (cls==Boolean.class) {
             value = Boolean.parseBoolean(valueString);
         } else if (cls==List.class) {
-            if (log.isDebugEnabled()) {
-                log.debug("getStorableObject() splitting "+valueString);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("getStorableObject() splitting "+valueString);
             } // if
             String[] idStrings = valueString.split(",");
             List<Object> elements = new ArrayList<Object>();
             for (String idString : idStrings) {
                 idString = idString.trim();
-                if (log.isDebugEnabled()) {
-                    log.debug("getStorableObject() idString="+idString);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("getStorableObject() idString="+idString);
                 } // if
                 if (StringUtils.isNotBlank(idString)) {
                     Object o = null;
                     Matcher m = createIdMatcher(idString);
                     if (m.find()) {
                         idString = m.group(1);
-                        if (log.isInfoEnabled()) {
-                            log.info("getStorableObject() pattern match result "+idString);
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("getStorableObject() pattern match result "+idString);
                         } // if
                         elements.add(beanFactory.getBean(idString));
                     } else {

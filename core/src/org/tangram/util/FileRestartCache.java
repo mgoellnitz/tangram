@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
 
 
@@ -46,7 +46,7 @@ public class FileRestartCache implements PersistentRestartCache {
 
     private static final String PERSISTENT_CACHE_FILENAME_DEFAULT = "tangram.persistent.cache.ser";
 
-    private static final Log log = LogFactory.getLog(FileRestartCache.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileRestartCache.class);
 
     private String filename = PERSISTENT_CACHE_FILENAME_DEFAULT;
 
@@ -81,7 +81,7 @@ public class FileRestartCache implements PersistentRestartCache {
                 oos.writeObject(cache);
                 oos.close();
             } catch (IOException e) {
-                log.error("put()", e);
+                LOG.error("put()", e);
             } // try/catch
         } // if
     } // put()
@@ -90,16 +90,16 @@ public class FileRestartCache implements PersistentRestartCache {
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        if (log.isInfoEnabled()) {
-            log.info("afterPropertiesSet("+filename+")");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet("+filename+")");
         } //
         try {
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
             cache = (Map<String, Object>) (ois.readObject());
             ois.close();
         } catch (Exception e) {
-            if (log.isWarnEnabled()) {
-                log.warn("afterPropertiesSet() could not load cache '"+filename+"' starting with an empty set of values");
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("afterPropertiesSet() could not load cache '"+filename+"' starting with an empty set of values");
             } //
             cache = new HashMap<String, Object>();
         } // try/catch

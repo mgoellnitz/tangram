@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
  */
 package org.tangram.ftp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RntoCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
@@ -39,7 +39,7 @@ import org.tangram.mutable.MutableCode;
  */
 public class RntoFtpCommandHandler extends RntoCommandHandler {
 
-    private static final Log log = LogFactory.getLog(RntoFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RntoFtpCommandHandler.class);
 
     private MutableBeanFactory beanFactory;
 
@@ -56,8 +56,8 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         String newName = command.getParameter(0);
         String id = (String) session.getAttribute(SessionHelper.RENAME_ID);
-        if (log.isInfoEnabled()) {
-            log.info("handleCommand() renaming "+id+" to "+newName);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("handleCommand() renaming "+id+" to "+newName);
         } // if
         if (id!=null) {
             final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);

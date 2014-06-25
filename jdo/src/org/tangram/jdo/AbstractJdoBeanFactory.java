@@ -35,8 +35,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.annotations.PersistenceCapable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
@@ -45,7 +45,7 @@ import org.tangram.util.ClassResolver;
 
 public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory {
 
-    private static final Log log = LogFactory.getLog(AbstractJdoBeanFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractJdoBeanFactory.class);
 
     protected PersistenceManagerFactory managerFactory = null;
 
@@ -146,8 +146,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
         Object oid = getObjectId(internalId, kindClass);
-        if (log.isInfoEnabled()) {
-            log.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
         } // if
         return (T) manager.getObjectById(kindClass, oid);
     } // getBean()
@@ -208,13 +208,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      */
     @Override
     public <T extends Content> T createBean(Class<T> cls) {
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() beginning transaction");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createBean() beginning transaction");
         } // if
         beginTransaction();
 
-        if (log.isDebugEnabled()) {
-            log.debug("createBean() creating new instance of "+cls.getName());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createBean() creating new instance of "+cls.getName());
         } // if
         T bean = manager.newInstance(cls);
 
@@ -240,20 +240,20 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             // long from = start!=null ? start : 0;
             // query.setRange(from, end+1);
             // } // if
-            if (log.isInfoEnabled()) {
-                log.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
+            if (LOG.isInfoEnabled()) {
+                LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
             List<T> results = (List<T>) query.execute();
-            if (log.isInfoEnabled()) {
-                log.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
             for (T o : results) {
                 result.add(o);
             } // for
             statistics.increase("list beans");
         } catch (Exception e) {
-            log.error("listBeansOfExactClass() query ", e);
+            LOG.error("listBeansOfExactClass() query ", e);
         } // try/catch/finally
         return result;
     } // listBeansOfExactClass()
@@ -267,8 +267,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @Override
     public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = null;
-        if (log.isInfoEnabled()) {
-            log.info("listBeans() looking up instances of "+cls.getSimpleName()
+        if (LOG.isInfoEnabled()) {
+            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()
                     +(queryString==null ? "" : " with condition "+queryString));
         } // if
         String key = null;
@@ -276,8 +276,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             key = getCacheKey(cls, queryString, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("listBeans() found in cache "+idList);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("listBeans() found in cache "+idList);
                 } // if
                 // old style
                 result = new ArrayList<T>(idList.size());
@@ -310,8 +310,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             } // if
             statistics.increase("query beans uncached");
         } // if
-        if (log.isInfoEnabled()) {
-            log.info("listBeans() looked up "+result.size()+" raw entries");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("listBeans() looked up "+result.size()+" raw entries");
         } // if
         return result;
     } // listBeans()
@@ -321,8 +321,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
-        if (log.isInfoEnabled()) {
-            log.info("clearCacheFor() "+cls.getSimpleName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("clearCacheFor() "+cls.getSimpleName());
         } // if
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
@@ -331,8 +331,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isDebugEnabled()) {
-                    log.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     removeKeys.add(key);
@@ -345,13 +345,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
             for (Class<? extends Content> c : getListeners().keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (log.isInfoEnabled()) {
-                    log.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
                 } // if
                 if (assignableFrom) {
                     List<BeanListener> listeners = getListeners().get(c);
-                    if (log.isInfoEnabled()) {
-                        log.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
                     } // if
                     if (listeners!=null) {
                         for (BeanListener listener : listeners) {
@@ -361,7 +361,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 } // if
             } // for
         } catch (Exception e) {
-            log.error("clearCacheFor() "+cls.getSimpleName(), e);
+            LOG.error("clearCacheFor() "+cls.getSimpleName(), e);
         } // try/catch
     } // clearCacheFor()
 
@@ -385,28 +385,28 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                         ClassResolver resolver = new ClassResolver(basePackages);
                         classNames = new ArrayList<String>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JdoContent.class, PersistenceCapable.class)) {
-                            if (log.isInfoEnabled()) {
-                                log.info("getAllClasses() * "+cls.getName());
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("getAllClasses() * "+cls.getName());
                             } // if
                             classNames.add(cls.getName());
                             // table name mapping moved to getClasses()
                             allClasses.add(cls);
                         } // for
-                        if (log.isInfoEnabled()) {
-                            log.info("getAllClasses() # class names "+classNames.size());
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("getAllClasses() # class names "+classNames.size());
                         } // if
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
                             Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
-                            if (log.isInfoEnabled()) {
-                                log.info("getAllClasses() # "+cls.getName());
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("getAllClasses() # "+cls.getName());
                             } // if
                             allClasses.add(cls);
                         } // for
                     } // if
                 } catch (Exception e) {
-                    log.error("getAllClasses() outer", e);
+                    LOG.error("getAllClasses() outer", e);
                 } // try/catch
             } // if
         } // synchronized
@@ -474,12 +474,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() throws Exception {
-        if (log.isInfoEnabled()) {
-            log.info("afterPropertiesSet() bean factory is using "+getClass().getClassLoader().getClass().getName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() bean factory is using "+getClass().getClassLoader().getClass().getName());
         } // if
         Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
-        if (log.isInfoEnabled()) {
-            log.info("afterPropertiesSet() using overrides for persistence manager factory: "+configOverrides);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() using overrides for persistence manager factory: "+configOverrides);
         } // if
         managerFactory = JDOHelper.getPersistenceManagerFactory(configOverrides, "transactions-optional");
         manager = managerFactory.getPersistenceManager();
@@ -487,8 +487,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         // Just to prefill
         if (prefill) {
             final Collection<Class<? extends Content>> theClasses = getClasses();
-            if (log.isInfoEnabled()) {
-                log.info("afterPropertiesSet() prefilling done for "+basePackages+": "+theClasses);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("afterPropertiesSet() prefilling done for "+basePackages+": "+theClasses);
             } // if
         } // if
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());

@@ -19,16 +19,12 @@
 package org.tangram.servlet;
 
 import java.util.Locale;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.view.AbstractRepositoryTemplateResolver;
 
 
 public class RepositoryTemplateResolver extends AbstractRepositoryTemplateResolver<String> implements BeanListener {
-
-    private final static Log log = LogFactory.getLog(JspTemplateResolver.class);
 
     private final static String NOT_FOUND_DUMMY = "ResourceNotFoundDummy";
 

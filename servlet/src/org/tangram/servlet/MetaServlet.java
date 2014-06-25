@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,8 +24,8 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -38,7 +38,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 public class MetaServlet extends HttpServlet {
 
-    private static final Log log = LogFactory.getLog(MetaServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetaServlet.class);
 
     @Inject
     protected ViewUtilities viewUtilities;
@@ -59,8 +59,8 @@ public class MetaServlet extends HttpServlet {
             } // if
         } catch (Throwable ex) {
             ViewContext context = viewContextFactory.createViewContext(ex, request, response);
-            if (log.isDebugEnabled()) {
-                log.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
             } // if
             response.setContentType("text/html");
             response.setCharacterEncoding("utf-8");

@@ -28,8 +28,8 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JavaBean {
 
-    private static Log log = LogFactory.getLog(JavaBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JavaBean.class);
 
     private Object delegate;
 
@@ -84,7 +84,7 @@ public class JavaBean {
             try {
                 result = readMethod.invoke(delegate);
             } catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException ex) {
-                log.error("get()", ex);
+                LOG.error("get()", ex);
             } // try/catch
         } // if
         return result;
@@ -114,7 +114,7 @@ public class JavaBean {
             try {
                 writeMethod.invoke(delegate, value);
             } catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException ex) {
-                log.error("set()", ex);
+                LOG.error("set()", ex);
             } // try/catch
         } // if
     } // set()

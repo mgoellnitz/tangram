@@ -62,8 +62,8 @@ import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -72,7 +72,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AppEngineXStream extends XStream {
 
-    private static final Log log = LogFactory.getLog(AppEngineXStream.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AppEngineXStream.class);
 
 
     public AppEngineXStream(HierarchicalStreamDriver hierarchicalStreamDriver) {

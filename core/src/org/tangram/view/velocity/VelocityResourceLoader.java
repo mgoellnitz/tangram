@@ -21,26 +21,25 @@ package org.tangram.view.velocity;
 import java.io.InputStream;
 import java.util.Date;
 import org.apache.commons.collections.ExtendedProperties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
 
 
 public class VelocityResourceLoader extends ResourceLoader {
 
-    @SuppressWarnings("hiding")
-    private static final Log log = LogFactory.getLog(VelocityResourceLoader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VelocityResourceLoader.class);
 
     public static CodeResourceCache codeResourceCache;
 
 
     @Override
     public long getLastModified(Resource resource) {
-        if (log.isInfoEnabled()) {
-            log.info("getLastModified() "+resource.getName()+" "+new Date(codeResourceCache.getLastUpdate()));
+        if (LOG.isInfoEnabled()) {
+            LOG.info("getLastModified() "+resource.getName()+" "+new Date(codeResourceCache.getLastUpdate()));
         } // if
         return codeResourceCache.getLastUpdate();
     } // getLastModified()
@@ -51,15 +50,15 @@ public class VelocityResourceLoader extends ResourceLoader {
         InputStream result = null; // new ByteArrayInputStream("Oops!".getBytes());
         if (!"VM_global_library.vm".equals(source)) {
             try {
-                if (log.isDebugEnabled()) {
-                    log.debug("getResourceStream() "+source);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("getResourceStream() "+source);
                 } // if
                 CodeResource t = codeResourceCache.get(source);
                 if (t!=null) {
                     result = t.getStream();
                 } // if
             } catch (Exception e) {
-                log.error("getResourceStream() "+e.getMessage());
+                LOG.error("getResourceStream() "+e.getMessage());
             } // try/catch
         } // if
         return result;
@@ -68,16 +67,16 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public void init(ExtendedProperties configuration) {
-        if (log.isInfoEnabled()) {
-            log.info("init() "+configuration);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("init() "+configuration);
         } // if
     } // init()
 
 
     @Override
     public boolean isSourceModified(Resource resource) {
-        if (log.isInfoEnabled()) {
-            log.info("isSourceModified() "+resource.getName()+" "+new Date(resource.getLastModified())+" "
+        if (LOG.isInfoEnabled()) {
+            LOG.info("isSourceModified() "+resource.getName()+" "+new Date(resource.getLastModified())+" "
                     +new Date(codeResourceCache.getLastUpdate()));
         } // if
         return (codeResourceCache.getLastUpdate()>resource.getLastModified());
@@ -86,8 +85,8 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public boolean resourceExists(String resourceName) {
-        if (log.isInfoEnabled()) {
-            log.info("resourceExists() "+resourceName);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("resourceExists() "+resourceName);
         } // if
         return (codeResourceCache.get(resourceName)!=null);
     } // resourceExists()

@@ -29,8 +29,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.view.AbstractRequestParameterAccess;
 
 
@@ -41,7 +41,7 @@ import org.tangram.view.AbstractRequestParameterAccess;
  */
 public class ServletRequestParameterAccess extends AbstractRequestParameterAccess {
 
-    private static final Log log = LogFactory.getLog(ServletRequestParameterAccess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServletRequestParameterAccess.class);
 
 
     /**
@@ -50,9 +50,9 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
     @SuppressWarnings("unchecked")
     ServletRequestParameterAccess(HttpServletRequest request, long uploadFileMaxSize) {
         final String reqContentType = request.getContentType();
-        if (log.isDebugEnabled()) {
-            log.debug("() uploadFileMaxSize="+uploadFileMaxSize);
-            log.debug("() request.contentType="+reqContentType);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("() uploadFileMaxSize="+uploadFileMaxSize);
+            LOG.debug("() request.contentType="+reqContentType);
         } // if
         if (StringUtils.isNotBlank(reqContentType)&&reqContentType.startsWith("multipart/form-data")) {
             ServletFileUpload upload = new ServletFileUpload();
@@ -74,14 +74,14 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                             value = newValue;
                         } // if
                         value[i] = Streams.asString(stream, "UTF-8");
-                        if (log.isDebugEnabled()) {
-                            log.debug("() request parameter "+fieldName+"='"+value[0]+"'");
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("() request parameter "+fieldName+"='"+value[0]+"'");
                         } // if
                         parameterMap.put(item.getFieldName(), value);
                     } else {
                         try {
-                            if (log.isDebugEnabled()) {
-                                log.debug("() item "+item.getName()+" :"+item.getContentType());
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("() item "+item.getName()+" :"+item.getContentType());
                             } // if
                             final byte[] bytes = IOUtils.toByteArray(stream);
                             if (bytes.length>0) {
@@ -89,7 +89,7 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                                 blobs.put(fieldName, bytes);
                             } // if
                         } catch (IOException ex) {
-                            log.error("()", ex);
+                            LOG.error("()", ex);
                             if (ex.getCause() instanceof FileUploadBase.FileSizeLimitExceededException) {
                                 throw new RuntimeException(ex.getCause().getMessage());
                             } // if
@@ -97,7 +97,7 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                     } // if
                 } // for
             } catch (FileUploadException|IOException ex) {
-                log.error("()", ex);
+                LOG.error("()", ex);
             } // try/catch
         } else {
             parameterMap = request.getParameterMap();

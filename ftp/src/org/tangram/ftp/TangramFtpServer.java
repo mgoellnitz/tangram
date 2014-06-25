@@ -20,8 +20,6 @@ package org.tangram.ftp;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.AbstractTrackingCommandHandler;
 import org.mockftpserver.core.command.CommandHandler;
 import org.mockftpserver.core.command.CommandNames;
@@ -50,6 +48,8 @@ import org.mockftpserver.stub.command.StouCommandHandler;
 import org.mockftpserver.stub.command.StruCommandHandler;
 import org.mockftpserver.stub.command.SystCommandHandler;
 import org.mockftpserver.stub.command.TypeCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.mutable.MutableBeanFactory;
 
@@ -61,7 +61,7 @@ import org.tangram.mutable.MutableBeanFactory;
  */
 public class TangramFtpServer extends AbstractFtpServer {
 
-    private static final Log log = LogFactory.getLog(TangramFtpServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TangramFtpServer.class);
 
     private final Map<String, AbstractTrackingCommandHandler> commands = new HashMap<>();
 
@@ -130,7 +130,7 @@ public class TangramFtpServer extends AbstractFtpServer {
     public void finalize() throws Throwable {
         super.finalize();
         for (String key : commands.keySet()) {
-            log.info(key+": "+commands.get(key).numberOfInvocations());
+            LOG.info(key+": "+commands.get(key).numberOfInvocations());
         } // for
     } // finalize()
 

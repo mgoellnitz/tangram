@@ -25,14 +25,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.TangramServices;
 
 
 public class IncludeTag implements Tag, Serializable {
 
-    private static final Log log = LogFactory.getLog(IncludeTag.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IncludeTag.class);
 
     private static final long serialVersionUID = -5289460956117400994L;
 
@@ -91,12 +91,12 @@ public class IncludeTag implements Tag, Serializable {
         Object oldSelf = request.getAttribute(org.tangram.Constants.THIS);
         try {
             request.setAttribute(org.tangram.Constants.THIS, bean);
-            if (log.isDebugEnabled()) {
-                log.debug("render() bean="+bean.getClass().getName()+" #"+view);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("render() bean="+bean.getClass().getName()+" #"+view);
             } // if
             TangramServices.getViewUtilities().render(out, bean, view, request, resp);
         } catch (Exception e) {
-            log.error("render() bean="+bean.getClass().getName()+" #"+view, e);
+            LOG.error("render() bean="+bean.getClass().getName()+" #"+view, e);
         } // try/catch
         request.setAttribute(org.tangram.Constants.THIS, oldSelf);
     } // render()
@@ -110,8 +110,8 @@ public class IncludeTag implements Tag, Serializable {
 
     @Override
     public int doEndTag() throws JspException {
-        if (log.isDebugEnabled()) {
-            log.debug("doEndTag("+Thread.currentThread().getId()+") view "+view);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("doEndTag("+Thread.currentThread().getId()+") view "+view);
         } // if
         render(pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
         return EVAL_PAGE;

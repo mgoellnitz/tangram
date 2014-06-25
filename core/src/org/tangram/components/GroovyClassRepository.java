@@ -29,12 +29,12 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.Phases;
 import org.codehaus.groovy.tools.GroovyClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
@@ -53,7 +53,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
 
     private static final String BYTECODE_CACHE_KEY = "tangram.bytecode.cache";
 
-    private static Log log = LogFactory.getLog(GroovyClassRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GroovyClassRepository.class);
 
     @Inject
     private CodeResourceCache codeCache;
@@ -90,8 +90,8 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                 String annotation = resource.getAnnotation();
                 // Check for class name - must be with capital letter for last element
                 int idx = annotation.lastIndexOf('.')+1;
-                if (log.isInfoEnabled()) {
-                    log.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
                 } // if
                 if (idx>0) {
                     String suffix = annotation.substring(idx);
@@ -99,7 +99,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                         try {
                             codes.put(annotation, resource.getCodeText());
                         } catch (Throwable e) {
-                            log.error("fillClasses()", e);
+                            LOG.error("fillClasses()", e);
                         } // try/catch
                     } // if
                 } // if
@@ -109,8 +109,8 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
             while (i-->0&&codes.size()>byteCodes.size()) {
                 for (Map.Entry<String, String> code : codes.entrySet()) {
                     try {
-                        if (log.isInfoEnabled()) {
-                            log.info("fillClasses() compiling "+code.getKey());
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("fillClasses() compiling "+code.getKey());
                         } // if
                         CompilationUnit cu = new CompilationUnit(classLoader);
                         cu.addSource(code.getKey()+".groovy", code.getValue());
@@ -120,31 +120,31 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                             GroovyClass groovyClass = classList.get(0);
                             byteCodes.put(groovyClass.getName(), groovyClass.getBytes());
                             Class<? extends Object> clazz = classLoader.defineClass(groovyClass.getName(), groovyClass.getBytes());
-                            if (log.isInfoEnabled()) {
-                                log.info("fillClasses() defining "+clazz.getName());
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("fillClasses() defining "+clazz.getName());
                             } // if
                             classes.put(clazz.getName(), clazz);
                         } // if
                     } catch (CompilationFailedException cfe) {
                         compilationErrors.put(code.getKey(), cfe.getMessage());
-                        log.error("fillClasses()", cfe);
+                        LOG.error("fillClasses()", cfe);
                     } catch (Throwable t) {
-                        log.error("fillClasses() [not marked in source code]", t);
+                        LOG.error("fillClasses() [not marked in source code]", t);
                     } // try/catch
                 } // for
             } // while
             startupCache.put(BYTECODE_CACHE_KEY, byteCodes);
         } else {
             for (Map.Entry<String, byte[]> byteCode : byteCodes.entrySet()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("fillClasses() defining "+byteCode.getKey());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("fillClasses() defining "+byteCode.getKey());
                 } // if
                 Class<? extends Object> clazz = classLoader.defineClass(byteCode.getKey(), byteCode.getValue());
                 classes.put(clazz.getName(), clazz);
             } // if
         } // if
-        if (log.isInfoEnabled()) {
-            log.info("fillClasses() done");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("fillClasses() done");
         } // if
     } // fillClasses()
 
@@ -203,19 +203,19 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     @Override
     public void overrideClass(String className, byte[] bytes) {
         if (get(className)!=null) {
-            if (log.isInfoEnabled()) {
-                log.info("overrideClass() overriding "+className);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("overrideClass() overriding "+className);
             } // if
             byteCodes.put(className, bytes);
             classLoader = new GroovyClassLoader();
             for (String name : byteCodes.keySet()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("overrideClass() re-defining "+name);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("overrideClass() re-defining "+name);
                 } // if
                 @SuppressWarnings("unchecked")
                 Class<? extends Object> clazz = classLoader.defineClass(name, byteCodes.get(name));
-                if (log.isDebugEnabled()) {
-                    log.debug("overrideClass() re-defining "+clazz.getName());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("overrideClass() re-defining "+clazz.getName());
                 } // if
                 classes.put(clazz.getName(), clazz);
             } // for

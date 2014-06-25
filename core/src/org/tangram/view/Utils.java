@@ -27,13 +27,13 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public final class Utils {
 
-    private static final Log log = LogFactory.getLog(Utils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
     public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
@@ -63,8 +63,8 @@ public final class Utils {
                 String language[] = acceptLanguage[0].split("-");
                 if (language.length>0) {
                     final String localeCode = language[0];
-                    if (log.isInfoEnabled()) {
-                        log.info("setPrimaryBrowserLanguageForJstl() setting request language "+localeCode);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("setPrimaryBrowserLanguageForJstl() setting request language "+localeCode);
                     } // if
                     Config.set(request, Config.FMT_LOCALE, new Locale(localeCode));
                 } // if

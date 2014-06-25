@@ -18,8 +18,6 @@
  */
 package org.tangram.ftp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
@@ -32,8 +30,6 @@ import org.mockftpserver.stub.command.PwdCommandHandler;
  *
  */
 public class PwdFtpCommandHandler extends PwdCommandHandler {
-
-    private static final Log log = LogFactory.getLog(PwdFtpCommandHandler.class);
 
     @Override
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {

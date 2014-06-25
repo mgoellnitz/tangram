@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,13 +19,13 @@
 package org.tangram.ftp;
 
 import java.util.Properties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.command.ReplyCodes;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.PassCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
 
@@ -40,7 +40,7 @@ import org.tangram.content.CodeResource;
  */
 public class PassFtpCommandHandler extends PassCommandHandler {
 
-    private static final Log log = LogFactory.getLog(PassFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PassFtpCommandHandler.class);
 
     private CodeResourceCache codeResourceCache;
 
@@ -56,8 +56,8 @@ public class PassFtpCommandHandler extends PassCommandHandler {
         setReplyCode(ReplyCodes.PASS_LOG_IN_FAILED);
         if (user!=null) {
             String pass = command.getParameter(0);
-            if (log.isInfoEnabled()) {
-                log.info("handleCommand() logging in with password "+pass);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("handleCommand() logging in with password "+pass);
             } // if
             if (pass!=null) {
                 CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
@@ -65,16 +65,16 @@ public class PassFtpCommandHandler extends PassCommandHandler {
                 try {
                     p.load(code.getStream());
                 } catch (Exception e) {
-                    log.error("handleCommand() error while reading user database", e);
+                    LOG.error("handleCommand() error while reading user database", e);
                 } // try/catch
                 if (pass.equals(p.getProperty(user))) {
                     setReplyCode(ReplyCodes.PASS_OK);
                 } // if
             } else {
-                log.error("handleCommand() no password issued");
+                LOG.error("handleCommand() no password issued");
             } // if
         } else {
-            log.error("handleCommand() no user issued");
+            LOG.error("handleCommand() no user issued");
         } // if
         sendReply(session);
     } // handleCommand()

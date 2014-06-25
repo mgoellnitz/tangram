@@ -33,8 +33,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.security.LoginSupport;
 import org.tangram.util.StringUtil;
@@ -57,7 +57,7 @@ import org.tangram.util.StringUtil;
 @Singleton
 public class PasswordFilter implements Filter {
 
-    private static final Log log = LogFactory.getLog(PasswordFilter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PasswordFilter.class);
 
     private static LoginSupport loginSupport;
 
@@ -116,8 +116,8 @@ public class PasswordFilter implements Filter {
 
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
-        if (log.isDebugEnabled()) {
-            log.debug("doFilter() detected URI "+thisURL);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("doFilter() detected URI "+thisURL);
         } // if
 
         if (!getFreeUrls().contains(thisURL)) {
@@ -136,29 +136,29 @@ public class PasswordFilter implements Filter {
             } else {
                 if (principal!=null) {
                     String userName = principal.getName();
-                    if (log.isInfoEnabled()) {
-                        log.info("doFilter() checking for user: "+userName);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("doFilter() checking for user: "+userName);
                     } // if
                     loginSupport.storeLogoutURL(request, thisURL);
                     if (adminUsers.contains(userName)) {
                         request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
                     if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
-                        if (log.isWarnEnabled()) {
-                            log.warn("preHandle() user not allowed to access page: "+userName);
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("preHandle() user not allowed to access page: "+userName);
                         } // if
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                     } // if
                 } else {
                     String loginURL = loginSupport.createLoginURL(thisURL);
                     if (allowedUsers.size()>0) {
-                        if (log.isInfoEnabled()) {
-                            log.info("doFilter() no logged in user found");
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("doFilter() no logged in user found");
                         } // if
                         response.sendRedirect(loginURL);
                     } else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("doFilter() system doesn't need login but perhaps application");
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("doFilter() system doesn't need login but perhaps application");
                         } // if
                         request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
                     } // if
@@ -173,16 +173,16 @@ public class PasswordFilter implements Filter {
     @Override
     public void init(FilterConfig config) throws ServletException {
         freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
-        if (log.isInfoEnabled()) {
-            log.info("init() free urls "+freeUrls);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("init() free urls "+freeUrls);
         } // if
         allowedUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("allowed.users")));
-        if (log.isInfoEnabled()) {
-            log.info("init() allowed users "+allowedUsers);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("init() allowed users "+allowedUsers);
         } // if
         adminUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("admin.users")));
-        if (log.isInfoEnabled()) {
-            log.info("init() admin users "+adminUsers);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("init() admin users "+adminUsers);
         } // if
     } // init()
 

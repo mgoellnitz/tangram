@@ -34,10 +34,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.components.TangramServices;
@@ -58,7 +58,7 @@ import org.tangram.view.ViewUtilities;
 @Singleton
 public class ServletViewUtilities implements ViewUtilities {
 
-    private static final Log log = LogFactory.getLog(ServletViewUtilities.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ServletViewUtilities.class);
 
     private static final Pattern ID_PATTRN = Pattern.compile(Constants.ID_PATTERN);
 
@@ -73,17 +73,17 @@ public class ServletViewUtilities implements ViewUtilities {
 
 
     public ServletViewUtilities() {
-        if (log.isDebugEnabled()) {
-            log.debug("()");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("()");
         } // if
         Properties velocityProperties = new Properties();
         try {
             velocityProperties.load(this.getClass().getClassLoader().getResourceAsStream("tangram/velocity/velocity.properties"));
         } catch (IOException ex) {
-            log.error("()", ex);
+            LOG.error("()", ex);
         } // try/catch
-        if (log.isDebugEnabled()) {
-            log.debug("() velocityProperties="+velocityProperties);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("() velocityProperties="+velocityProperties);
         } // if
         velocityEngine = new VelocityEngine(velocityProperties);
     } // ServletViewUtilities()
@@ -109,20 +109,20 @@ public class ServletViewUtilities implements ViewUtilities {
         HttpServletResponse response = (HttpServletResponse) model.get("response");
         String template = null;
         final List<TemplateResolver> resolvers = TangramServices.getResolvers();
-        if (log.isDebugEnabled()) {
-            log.debug("render() resolvers="+resolvers);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("render() resolvers="+resolvers);
         } // if
         for (TemplateResolver<String> resolver : resolvers) {
-            if (log.isDebugEnabled()) {
-                log.debug("render() resolver="+resolver);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("render() resolver="+resolver);
             } // if
             if (template==null) {
                 template = resolver.resolveTemplate(view, model, Locale.getDefault());
             } // if
         } // for
 
-        if (log.isDebugEnabled()) {
-            log.debug("render() template="+template);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("render() template="+template);
         } // if
         if (template == null) {
             throw new IOException("no view found for model "+model);
@@ -132,14 +132,14 @@ public class ServletViewUtilities implements ViewUtilities {
 
         if (ID_PATTRN.matcher(template).matches()) {
             // Velocity:
-            if (log.isDebugEnabled()) {
-                log.debug("render() Velocity template="+template);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("render() Velocity template="+template);
             } // if
             try {
                 CodeResourceCache c = TangramServices.getCodeResourceCache();
                 CodeResource codeResource = c.get(template);
-                if (log.isDebugEnabled()) {
-                    log.debug("render() setting content type from "+response.getContentType()+" to "+codeResource.getMimeType()+" on "+response.getClass().getName());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("render() setting content type from "+response.getContentType()+" to "+codeResource.getMimeType()+" on "+response.getClass().getName());
                 } // if
                 response.setContentType(codeResource.getMimeType());
                 response.setCharacterEncoding("UTF-8");
@@ -163,8 +163,8 @@ public class ServletViewUtilities implements ViewUtilities {
                     for (String key : model.keySet()) {
                         request.setAttribute(key, model.get(key));
                     } // for
-                    if (log.isDebugEnabled()) {
-                        log.debug("render("+template+") writer "+out);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("render("+template+") writer "+out);
                     } // if
                     ResponseWrapper responseWrapper = null;
                     if (out==null) {
@@ -176,9 +176,9 @@ public class ServletViewUtilities implements ViewUtilities {
                     } // if
                     requestDispatcher.include(request, response);
                     if (out==null) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("render("+template+") setting content type for "+responseWrapper.getContentType());
-                            log.debug("render() setting character encoding for "+responseWrapper.getCharacterEncoding());
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("render("+template+") setting content type for "+responseWrapper.getContentType());
+                            LOG.debug("render() setting character encoding for "+responseWrapper.getCharacterEncoding());
                         } // if
                         final String contentType = responseWrapper.getContentType();
                         final String characterEncodingSuffix = "; charset="+responseWrapper.getCharacterEncoding();
@@ -186,14 +186,14 @@ public class ServletViewUtilities implements ViewUtilities {
                         response.setHeader("Content-Type", contentHeader);
                         responseWrapper.setHeader("Content-Type", contentHeader);
                         for (Map.Entry<String, String> entry : responseWrapper.getHeaders().entrySet()) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("render() setting header "+entry.getKey()+": "+entry.getValue());
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug("render() setting header "+entry.getKey()+": "+entry.getValue());
                             } // if
                             response.setHeader(entry.getKey(), entry.getValue());
                         } // for
                     } // if
                 } catch (ServletException ex) {
-                    log.error("render()", ex);
+                    LOG.error("render()", ex);
                     throw new IOException("Problem while including JSP", ex);
                 } // try/catch
             } // if

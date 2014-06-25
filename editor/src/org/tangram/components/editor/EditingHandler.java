@@ -39,8 +39,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
@@ -74,7 +74,7 @@ import org.tangram.view.ViewUtilities;
 @LinkHandler
 public class EditingHandler extends RenderingBase implements LinkFactory {
 
-    private static final Log log = LogFactory.getLog(EditingHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EditingHandler.class);
 
     public static final String EDIT_TARGET = "_tangram_editor";
 
@@ -170,8 +170,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
             RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
             Map<String, String[]> parameterMap = parameterAccess.getParameterMap();
-            if (log.isDebugEnabled()) {
-                log.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());
             } // if
             for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
                 Entry<String, String[]> parameter = entry;
@@ -186,21 +186,21 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                             msg.append(value);
                             msg.append(" ");
                         } // for
-                        if (log.isInfoEnabled()) {
-                            log.info(msg.toString());
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info(msg.toString());
                         } // if
 
                         Class<? extends Object> cls = wrapper.getType(key);
                         String valueString = values.length==1 ? values[0] : "";
                         Object value = propertyConverter.getStorableObject(valueString, cls, request);
-                        if (log.isInfoEnabled()) {
-                            log.info("store() value="+value);
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("store() value="+value);
                         } // if
                         if (!(Content.class.isAssignableFrom(cls)&&value==null)) {
                             newValues.put(key, value);
                         } else {
-                            if (log.isInfoEnabled()) {
-                                log.info("store() not setting value");
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("store() not setting value");
                             } // if
                         } // if
                         if (Content.class.isAssignableFrom(cls)&&"".equals(valueString)) {
@@ -242,8 +242,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 throw new Exception("Could not persist bean "+bean.getId());
             } // if
 
-            if (log.isDebugEnabled()) {
-                log.debug("store() id="+id);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("store() id="+id);
             } // if
 
             if (e!=null) {
@@ -272,8 +272,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         if (agent.indexOf("MIDP")>0) {
             variant = "$mobile";
         } // if
-        if (log.isDebugEnabled()) {
-            log.debug("getVariant() agent="+agent+" -> "+variant);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getVariant() agent="+agent+" -> "+variant);
         } // if
         return variant;
     } // getVariant()
@@ -303,8 +303,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     public TargetDescriptor create(@ActionParameter(PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
                                    HttpServletResponse response) {
         try {
-            if (log.isInfoEnabled()) {
-                log.info("create() creating new instance of type "+typeName);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("create() creating new instance of type "+typeName);
             } // if
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
@@ -313,15 +313,15 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             Class<? extends Content> cls = loadClass(typeName);
             Content content = getMutableBeanFactory().createBean(cls);
             if (getMutableBeanFactory().persist(content)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("create() content="+content);
-                    log.debug("create() id="+content.getId());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("create() content="+content);
+                    LOG.debug("create() id="+content.getId());
                 } // if
                 return describeTarget(content);
             } // if
             return new TargetDescriptor(new Exception("Cannot persist new "+typeName), null, null);
         } catch (Exception e) {
-            log.error("create() error while creating object ", e);
+            LOG.error("create() error while creating object ", e);
             return new TargetDescriptor(e, null, null);
         } // try/catch
     } // create()
@@ -332,8 +332,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
                                  HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (log.isInfoEnabled()) {
-                log.info("list() listing instances of type '"+typeName+"'");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("list() listing instances of type '"+typeName+"'");
             } // if
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
@@ -359,7 +359,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 try {
                     Collections.sort(contents);
                 } catch (Exception e) {
-                    log.error("list() error while sorting", e);
+                    LOG.error("list() error while sorting", e);
                 } // try/catch
             } // if
             response.setContentType("text/html; charset=UTF-8");
@@ -384,8 +384,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @LinkAction("/edit/id_(.*)")
     public TargetDescriptor edit(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (log.isInfoEnabled()) {
-                log.info("edit() editing "+id);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("edit() editing "+id);
             } // if
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
@@ -420,8 +420,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                                  @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
                                  HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (log.isInfoEnabled()) {
-                log.info("link() creating new instance of type "+typeName);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("link() creating new instance of type "+typeName);
             } // if
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
@@ -430,9 +430,9 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             Class<? extends Content> cls = loadClass(typeName);
             Content content = getMutableBeanFactory().createBean(cls);
             if (getMutableBeanFactory().persist(content)) {
-                if (log.isDebugEnabled()) {
-                    log.debug("link() content="+content);
-                    log.debug("link() id="+content.getId());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("link() content="+content);
+                    LOG.debug("link() id="+content.getId());
                 } // if
 
                 // re-get for update to avoid xg transactions where ever possible
@@ -460,8 +460,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @LinkAction("/delete/id_(.*)")
     public TargetDescriptor delete(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (log.isInfoEnabled()) {
-                log.info("delete() trying to delete instance "+id);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("delete() trying to delete instance "+id);
             } // if
             if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
                 throw new Exception("User may not edit");
@@ -500,8 +500,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         while (oneClass.getSuperclass()!=Object.class) {
             oneClass = oneClass.getSuperclass();
         } // while
-        if (log.isInfoEnabled()) {
-            log.info("contentExport() root class to ignore id in: "+oneClass.getName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("contentExport() root class to ignore id in: "+oneClass.getName());
         } // if
         xstream.omitField(oneClass, "id");
         xstream.omitField(oneClass, "ebeanInternalId");
@@ -516,14 +516,14 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             try {
                 allContent.addAll(beanFactory.listBeansOfExactClass(c));
             } catch (Exception e) {
-                log.error("contentExport()/list", e);
+                LOG.error("contentExport()/list", e);
             } // try/catch
         } // for
         try {
             xstream.toXML(allContent, response.getWriter());
             response.getWriter().flush();
         } catch (IOException e) {
-            log.error("contentExport()/toxml", e);
+            LOG.error("contentExport()/toxml", e);
         } // try/catch
         return TargetDescriptor.DONE;
     } // contentExport()
@@ -543,14 +543,14 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         } // for
 
         Object contents = xstream.fromXML(input);
-        if (log.isInfoEnabled()) {
-            log.info("read() "+contents);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("read() "+contents);
         } // if
         if (contents instanceof List) {
             List<? extends Content> list = (List<? extends Content>) contents;
             for (Content o : list) {
-                if (log.isInfoEnabled()) {
-                    log.info("read() "+o);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("read() "+o);
                 } // if
                 getMutableBeanFactory().persistUncommitted(o);
             } // for

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.nucleus;
@@ -24,10 +24,10 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.datanucleus.identity.OID;
 import org.datanucleus.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.jdo.JdoContent;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
@@ -35,13 +35,13 @@ import org.tangram.jdo.JdoContent;
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
 public abstract class NucleusContent extends JdoContent {
 
-    private static final Log log = LogFactory.getLog(NucleusContent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NucleusContent.class);
 
 
     @Override
     public String postprocessPlainId(Object id) {
-        if (log.isDebugEnabled()) {
-            log.debug("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
         } // if
         if (id instanceof OID) {
             OID oid = (OID)id;
@@ -50,8 +50,8 @@ public abstract class NucleusContent extends JdoContent {
             pcClass = pcClass.substring(idx+1);
             return pcClass+":"+oid.getKeyValue();
         } else {
-            if (log.isWarnEnabled()) {
-                log.warn("postprocessPlainId() returning default '"+id+"'");
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("postprocessPlainId() returning default '"+id+"'");
             } // if
             return ""+id;
         } // if

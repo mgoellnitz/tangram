@@ -1,17 +1,19 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
- * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
- * later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with this program. If not, see
- * <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.ftp;
@@ -20,12 +22,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.ListCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
@@ -40,7 +42,7 @@ import org.tangram.content.CodeResource;
  */
 public class ListFtpCommandHandler extends ListCommandHandler {
 
-    private static final Log log = LogFactory.getLog(ListFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ListFtpCommandHandler.class);
 
     private CodeResourceCache codeResourceCache;
 
@@ -109,8 +111,8 @@ public class ListFtpCommandHandler extends ListCommandHandler {
     protected void processData(Command command, Session session, InvocationRecord invocationRecord) {
         String options = command.getParameter(0);
         String dir = SessionHelper.getCwd(session);
-        if (log.isInfoEnabled()) {
-            log.info("handleCommand() listing directory with options "+options+" in directory "+dir);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("handleCommand() listing directory with options "+options+" in directory "+dir);
         } // if
 
         // TODO: make codes stored with real modification time
@@ -119,8 +121,8 @@ public class ListFtpCommandHandler extends ListCommandHandler {
         StringBuilder listing = new StringBuilder();
         Set<String> types = codeResourceCache.getTypes();
         if (dir.length()==1) {
-            if (log.isInfoEnabled()) {
-                log.info("handleCommand() root listing of all type directories");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("handleCommand() root listing of all type directories");
             } // if
             for (String type : types) {
                 String name = CodeHelper.getFolder(type);
@@ -129,8 +131,8 @@ public class ListFtpCommandHandler extends ListCommandHandler {
             } // for
         } else {
             dir = SessionHelper.getDirectoy(session);
-            if (log.isInfoEnabled()) {
-                log.info("handleCommand() listing for directory "+dir);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("handleCommand() listing for directory "+dir);
             } // if
             String type = CodeHelper.getMimetype(dir);
             if (types.contains(type)) {

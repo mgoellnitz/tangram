@@ -37,8 +37,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.annotate.ActionForm;
 import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
@@ -67,7 +67,7 @@ import org.tangram.view.ViewUtilities;
 @Singleton
 public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanListener {
 
-    private static final Log log = LogFactory.getLog(MetaLinkHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetaLinkHandler.class);
 
     @Inject
     private BeanFactory beanFactory;
@@ -122,8 +122,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
         try {
             for (ControllerHook controllerHook : controllerHooks) {
-                if (log.isDebugEnabled()) {
-                    log.debug("createModel() "+controllerHook.getClass().getName());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("createModel() "+controllerHook.getClass().getName());
                 } // if
                 boolean result = controllerHook.intercept(descriptor, model, request, response);
                 if (result) {
@@ -140,8 +140,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Matcher matcher, Method method, TargetDescriptor descriptor,
                                         Object target) throws Throwable, IllegalAccessException {
         TargetDescriptor result = null;
-        if (log.isDebugEnabled()) {
-            log.debug("callAction() "+method+"@"+target);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("callAction() "+method+"@"+target);
         } // if
 
         if (method!=null) {
@@ -162,8 +162,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof LinkPart) {
                         String valueString = matcher.group(((LinkPart) annotation).value());
-                        if (log.isDebugEnabled()) {
-                            log.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
                         } // if
                         parameters.add(propertyConverter.getStorableObject(valueString, type, request));
                     } // if
@@ -175,8 +175,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         if (parameterMap==null) {
                             parameterMap = viewUtilities.createParameterAccess(request).getParameterMap();
                         } // if
-                        if (log.isDebugEnabled()) {
-                            log.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
                         } // if
                         Object value = propertyConverter.getStorableObject(request.getParameter(parameterName), type, request);
                         parameters.add(value);
@@ -192,27 +192,27 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                             } // for
                             parameters.add(form);
                         } catch (Exception e) {
-                            log.error("callAction() cannot create and fill form "+type.getName());
+                            LOG.error("callAction() cannot create and fill form "+type.getName());
                         } // try/catch
                     } // if
                 } // for
             } // for
 
-            if (log.isInfoEnabled()) {
-                log.info("callAction() calling method "+method.getName()+" with "+parameters.size()+" parameters");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("callAction() calling method "+method.getName()+" with "+parameters.size()+" parameters");
             } // if
             try {
                 descriptor = (TargetDescriptor) method.invoke(target, parameters.toArray());
             } catch (InvocationTargetException ite) {
                 throw ite.getTargetException();
             } // try/catch
-            if (log.isInfoEnabled()) {
-                log.info("callAction() result is "+descriptor);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("callAction() result is "+descriptor);
             } // if
             result = descriptor;
         } // if
-        if (log.isInfoEnabled()) {
-            log.info("callAction() link="+result);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("callAction() link="+result);
         } // if
         return result;
     } // callAction()
@@ -221,8 +221,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
         ViewContext result = null;
         if (resultDescriptor!=null) {
-            if (log.isInfoEnabled()) {
-                log.info("handleResultDescriptor() received link "+resultDescriptor);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("handleResultDescriptor() received link "+resultDescriptor);
             } // if
             if (resultDescriptor!=TargetDescriptor.DONE) {
                 if (resultDescriptor.action!=null) {
@@ -230,7 +230,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
                         response.sendRedirect(link.getUrl());
                     } catch (Exception e) {
-                        log.error("handleResultDescriptor()", e);
+                        LOG.error("handleResultDescriptor()", e);
                         result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
                     } // try/catch
                 } else {
@@ -253,9 +253,9 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             if (handlerClass.getAnnotation(org.tangram.annotate.LinkHandler.class)!=null) {
                 for (Method m : handlerClass.getMethods()) {
                     LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                    if (log.isDebugEnabled()) {
-                        log.debug("registerLinkHandler("+handlerClass.getName()+") linkAction="+linkAction);
-                        log.debug("registerLinkHandler() "+m.getName()+" :"+m.getReturnType());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("registerLinkHandler("+handlerClass.getName()+") linkAction="+linkAction);
+                        LOG.debug("registerLinkHandler() "+m.getName()+" :"+m.getReturnType());
                     } // if
                     if (!TargetDescriptor.class.equals(m.getReturnType())) {
                         linkAction = null;
@@ -263,8 +263,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     if (linkAction!=null) {
                         if (StringUtils.isNotBlank(linkAction.value())) {
                             Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
-                            if (log.isInfoEnabled()) {
-                                log.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
+                            if (LOG.isInfoEnabled()) {
+                                LOG.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
                             } // if
                             staticMethods.put(pathPattern, m);
                             methods.put(pathPattern, m);
@@ -292,21 +292,21 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                 customViewProvider.getCustomLinkViews().remove(view);
             } // for
         } // for
-        if (log.isInfoEnabled()) {
-            log.info("reset() view provider "+customViewProvider);
-            log.info("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("reset() view provider "+customViewProvider);
+            LOG.info("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
         } // if
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
                 String annotation = entry.getKey();
                 Class<LinkHandler> clazz = entry.getValue();
                 if (LinkHandler.class.isAssignableFrom(clazz)) {
-                    if (log.isInfoEnabled()) {
-                        log.info("reset() "+clazz.getName()+" is a LinkScheme");
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("reset() "+clazz.getName()+" is a LinkScheme");
                     } // if
                     LinkHandler linkHandler = clazz.newInstance();
-                    if (log.isInfoEnabled()) {
-                        log.info("reset() "+clazz.getName()+" instanciated");
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("reset() "+clazz.getName()+" instanciated");
                     } // if
                     if (linkHandler instanceof BeanFactoryAware) {
                         ((BeanFactoryAware) linkHandler).setBeanFactory(beanFactory);
@@ -314,46 +314,46 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     Collection<String> schemeCustomViews = linkHandler.getCustomViews();
                     customViews.put(linkHandler, schemeCustomViews);
                     customViewProvider.getCustomLinkViews().addAll(schemeCustomViews);
-                    if (log.isInfoEnabled()) {
-                        log.info("reset() adding custom views "+schemeCustomViews);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("reset() adding custom views "+schemeCustomViews);
                     } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
                     } // if
                     handlers.put(annotation, linkHandler);
                 } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("reset() "+clazz.getName()+" is not a LinkScheme");
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("reset() "+clazz.getName()+" is not a LinkScheme");
                     } // if
                 } // if
             } catch (Throwable e) {
                 // who cares
-                if (log.isErrorEnabled()) {
-                    log.error("reset()", e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("reset()", e);
                 } // if
             } // try/catch
         } // for
-        if (log.isInfoEnabled()) {
-            log.info("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
         } // if
     } // reset()
 
 
     public ViewContext handleRequest(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
-        if (log.isInfoEnabled()) {
-            log.info("handleRequestl() "+url);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("handleRequestl() "+url);
         } // if
         Utils.setPrimaryBrowserLanguageForJstl(request);
         for (Map.Entry<Pattern, Method> entry : methods.entrySet()) {
             Pattern p = entry.getKey();
-            if (log.isDebugEnabled()) {
-                log.debug("handleRequest() url pattern "+p.pattern());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("handleRequest() url pattern "+p.pattern());
             } // if
             Matcher matcher = p.matcher(url);
             if (matcher.matches()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("handleRequest() match "+matcher.groupCount());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("handleRequest() match "+matcher.groupCount());
                 } // if
                 Object target = atHandlers.get(entry.getKey());
                 TargetDescriptor descriptor = new TargetDescriptor(target, null, null);
@@ -365,22 +365,22 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             LinkHandler linkHandler = handlers.get(className);
             TargetDescriptor descriptor = linkHandler.parseLink(url, response);
             if (descriptor!=null) {
-                if (log.isInfoEnabled()) {
-                    log.info("handleRequest() "+linkHandler.getClass().getName()+" hit for "+url);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("handleRequest() "+linkHandler.getClass().getName()+" hit for "+url);
                 } // if
-                if (log.isDebugEnabled()) {
-                    log.debug("handleRequest() found bean "+descriptor.bean);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("handleRequest() found bean "+descriptor.bean);
                 } // if
 
                 Map<String, Object> model = createModel(descriptor, request, response);
                 if (descriptor.action==null) {
-                    if (log.isInfoEnabled()) {
-                        log.info("handleRequest() handing over to view "+descriptor.view);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("handleRequest() handing over to view "+descriptor.view);
                     } // if
                     return viewContextFactory.createViewContext(model, descriptor.view);
                 } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("handleRequest() trying to call action "+descriptor.action);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("handleRequest() trying to call action "+descriptor.action);
                     } // if
                     Method method = linkFactoryAggregator.findMethod(linkHandler, descriptor.action);
                     TargetDescriptor resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);

@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
@@ -37,7 +37,7 @@ import org.tangram.monitor.Statistics;
  */
 public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory implements MutableBeanFactory {
 
-    private static final Log log = LogFactory.getLog(AbstractMutableBeanFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMutableBeanFactory.class);
 
     protected static final String QUERY_CACHE_KEY = "tangram.query.cache";
 
@@ -125,7 +125,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             clearCacheFor(bean.getClass());
             result = true;
         } catch (Exception e) {
-            log.error("persistUncommitted()", e);
+            LOG.error("persistUncommitted()", e);
             if (rollback&&hasManager()) {
                 // yes we saw situations where this was not the case thus hiding other errors!
                 rollbackTransaction();
@@ -146,7 +146,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             clearCacheFor(bean.getClass());
             result = true;
         } catch (Exception e) {
-            log.error("delete()", e);
+            LOG.error("delete()", e);
             if (rollback&&hasManager()) {
                 // yes we saw situations where this was not the case thus hiding other errors!
                 rollbackTransaction();
@@ -202,8 +202,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     @SuppressWarnings("unchecked")
     protected <T extends Content> Class<T> getKeyClass(String key) {
         String className = key.split(":")[0];
-        if (log.isDebugEnabled()) {
-            log.debug("getKeyClass() "+className);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getKeyClass() "+className);
         } // if
         return (Class<T>) getClassForName(className);
     } // getKeyClass()
@@ -225,8 +225,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
             listeners.add(listener);
         } // synchronized
-        if (log.isInfoEnabled()) {
-            log.info("addListener() "+cls.getSimpleName()+": "+attachedListeners.get(cls).size());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("addListener() "+cls.getSimpleName()+": "+attachedListeners.get(cls).size());
         } // if
     } // addListener()
 
@@ -252,8 +252,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             if (instanceClass.isAssignableFrom(cls)) {
                 filteredList.add((T) o);
             } else {
-                if (log.isWarnEnabled()) {
-                    log.warn("filterExactClass() class name of instance "+o.getClass().getName());
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("filterExactClass() class name of instance "+o.getClass().getName());
                 } // if
             } // if
         } // for
@@ -284,9 +284,9 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 cache.put(id, result);
             } // if
         } catch (Exception e) {
-            if (log.isWarnEnabled()) {
+            if (LOG.isWarnEnabled()) {
                 String simpleName = e.getClass().getSimpleName();
-                log.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
+                LOG.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
             } // if
         } // try/catch/finally
         statistics.increase("get bean uncached");

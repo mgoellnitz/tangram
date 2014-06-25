@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
  */
 package org.tangram.ftp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.UserCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,14 +35,14 @@ import org.mockftpserver.stub.command.UserCommandHandler;
  */
 public class UserFtpCommandHandler extends UserCommandHandler {
 
-    private static final Log log = LogFactory.getLog(UserFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserFtpCommandHandler.class);
 
 
     @Override
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         String user = command.getParameter(0);
-        if (log.isInfoEnabled()) {
-            log.info("handleCommand() welcome to user "+user);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("handleCommand() welcome to user "+user);
         } // if
         session.setAttribute(SessionHelper.USER, user);
         super.handleCommand(command, session, invocationRecord);

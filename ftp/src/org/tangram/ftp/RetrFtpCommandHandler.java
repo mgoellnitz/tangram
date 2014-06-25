@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,12 +19,12 @@
 package org.tangram.ftp;
 
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.InvocationRecord;
 import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RetrCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
@@ -39,7 +39,7 @@ import org.tangram.content.CodeResource;
  */
 public class RetrFtpCommandHandler extends RetrCommandHandler {
 
-    private static final Log log = LogFactory.getLog(RetrFtpCommandHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RetrFtpCommandHandler.class);
 
     private CodeResourceCache codeResourceCache;
 
@@ -54,26 +54,26 @@ public class RetrFtpCommandHandler extends RetrCommandHandler {
         String filename = command.getParameter(0);
         byte[] data = new byte[0];
         try {
-            if (log.isInfoEnabled()) {
-                log.info("processData() retrieving "+filename);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("processData() retrieving "+filename);
             } // if
             String type = CodeHelper.getMimetype(SessionHelper.getDirectoy(session));
             String annotation = filename.substring(0, filename.lastIndexOf('.'));
             Map<String, CodeResource> cache = codeResourceCache.getTypeCache(type);
-            if (log.isInfoEnabled()) {
-                log.info("processData() 'directory' for "+type+" is "+cache);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("processData() 'directory' for "+type+" is "+cache);
             } // if
             final String key = "text/plain".equals(type) ? filename : annotation;
             CodeResource code = cache.get(key);
-            if (log.isInfoEnabled()) {
-                log.info("processData() code for "+key+" is "+code);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("processData() code for "+key+" is "+code);
             } // if
             data = code.getCodeText().getBytes("UTF-8");
         } catch (Exception e) {
-            log.error("processData()", e);
+            LOG.error("processData()", e);
         } // try/catch
-        if (log.isInfoEnabled()) {
-            log.info("processData() sending "+data.length+" bytes");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("processData() sending "+data.length+" bytes");
         } // if
         session.sendData(data, data.length);
     } // processData()

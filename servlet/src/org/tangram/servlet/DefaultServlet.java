@@ -30,8 +30,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
@@ -53,7 +53,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 public class DefaultServlet extends HttpServlet implements CustomViewProvider, LinkFactory {
 
-    private static final Log log = LogFactory.getLog(DefaultServlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultServlet.class);
 
     @Inject
     protected BeanFactory beanFactory;
@@ -121,8 +121,8 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
         String uri = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         String view = null;
         String id = null;
-        if (log.isInfoEnabled()) {
-            log.info("doGet() uri="+uri);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("doGet() uri="+uri);
         } // if
         Utils.setPrimaryBrowserLanguageForJstl(request);
         if (uri.indexOf("view")>0) {
@@ -140,13 +140,13 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
             } // if
         } // if
         try {
-            if (log.isInfoEnabled()) {
-                log.info("doGet() id="+id);
-                log.info("doGet() view="+view);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("doGet() id="+id);
+                LOG.info("doGet() view="+view);
             } // if
             Content content = beanFactory.getBean(id);
-            if (log.isDebugEnabled()) {
-                log.debug("doGet() content="+content);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("doGet() content="+content);
             } // if
             if (content==null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository. (Tangram Default Servlet)");
@@ -159,18 +159,18 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
                     response.setHeader("Location", redirectLink.getUrl());
                     response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 } catch (Exception e) {
-                    log.error("doGet() cannot redirect", e);
+                    LOG.error("doGet() cannot redirect", e);
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "custom view required.");
                 } // try/catch
                 return;
             } // if
             Map<String, Object> model = viewContextFactory.createModel(content, request, response);
-            if (log.isDebugEnabled()) {
-                log.debug("doGet() model="+model);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("doGet() model="+model);
             } // if
             viewUtilities.render(null, model, view);
-            if (log.isDebugEnabled()) {
-                log.debug("doGet() done "+response.getContentType()+" on "+response.getClass().getName());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("doGet() done "+response.getContentType()+" on "+response.getClass().getName());
             } // if
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);

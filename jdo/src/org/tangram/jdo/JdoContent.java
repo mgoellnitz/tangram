@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.NotPersistent;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.TangramServices;
 import org.tangram.content.Content;
 
@@ -31,7 +31,7 @@ import org.tangram.content.Content;
 
 public abstract class JdoContent implements Content {
 
-    private static final Log log = LogFactory.getLog(JdoContent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JdoContent.class);
 
     @NotPersistent
     private String id;

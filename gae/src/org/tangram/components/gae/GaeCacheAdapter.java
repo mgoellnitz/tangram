@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,17 +26,16 @@ import javax.inject.Singleton;
 import net.sf.jsr107cache.CacheException;
 import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
-import org.tangram.gae.GaeBeanFactory;
 
 
 @Named
 @Singleton
 public class GaeCacheAdapter implements PersistentRestartCache {
 
-    private static final Log log = LogFactory.getLog(GaeBeanFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GaeCacheAdapter.class);
 
     private Map<String, Object> jsrCache = null;
 
@@ -46,11 +45,11 @@ public class GaeCacheAdapter implements PersistentRestartCache {
         try {
             CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
             jsrCache = cacheFactory.createCache(Collections.emptyMap());
-            if (log.isInfoEnabled()) {
-                log.info("() jsrCache="+jsrCache);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("() jsrCache="+jsrCache);
             } // if
         } catch (CacheException ce) {
-            log.error("()", ce);
+            LOG.error("()", ce);
         } // try
     }// GaeCacheAdapter()
 
@@ -58,8 +57,8 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
-        if (log.isDebugEnabled()) {
-            log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
         } // if
         return jsrCache==null ? null : (T) jsrCache.get(key);
     } // get()
@@ -68,8 +67,8 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Type t) {
-        if (log.isDebugEnabled()) {
-            log.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
         } // if
         return jsrCache==null ? null : (T) jsrCache.get(key);
     } // get()
@@ -79,8 +78,8 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     public <T> void put(String key, T value) {
         if (jsrCache!=null) {
             jsrCache.put(key, value);
-            if (log.isDebugEnabled()) {
-                log.debug("put() "+jsrCache.get(key));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("put() "+jsrCache.get(key));
             } // if
         } // if
     } // Put()

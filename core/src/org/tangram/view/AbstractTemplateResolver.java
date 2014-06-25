@@ -27,15 +27,15 @@ import java.util.Set;
 import javax.inject.Inject;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
 
 
 public abstract class AbstractTemplateResolver<T extends Object> implements TemplateResolver<T> {
 
-    private static Log log = LogFactory.getLog(AbstractTemplateResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractTemplateResolver.class);
 
     /**
      * replace bracktes [] in array type names with _array in class names for resolution.
@@ -111,25 +111,25 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
         T result = null;
 
         String path = getFullViewName(view, packageName, simpleName);
-        if (log.isInfoEnabled()) {
-            log.info("checkView("+getName()+") view="+view+"  path="+path);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("checkView("+getName()+") view="+view+"  path="+path);
         } // if
         try {
             result = resolveView(path, locale);
-            if (log.isDebugEnabled()) {
-                log.debug("checkView() resolved view "+result);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("checkView() resolved view "+result);
             } // if
             if (result!=null) {
                 result = checkResourceExists(result);
             } // if
-            if (log.isDebugEnabled()) {
-                log.debug("checkView() result="+result);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("checkView() result="+result);
             } // if
         } catch (Exception e) {
             if ((e.getCause()!=null)&&(e.getCause().getClass().getName().indexOf("Parse")>=0)) {
                 throw (RuntimeException) (e.getCause());
             } else {
-                log.warn("checkView()", e);
+                LOG.warn("checkView()", e);
             } // if
         } // try/catch
         return result;
@@ -149,8 +149,8 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
             if (view==null) {
                 for (Object i : ClassUtils.getAllInterfaces(cls)) {
                     Class<? extends Object> c = (Class<? extends Object>) i;
-                    if (log.isDebugEnabled()) {
-                        log.debug("lookupView() type to check templates for "+c.getName());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("lookupView() type to check templates for "+c.getName());
                     } // if
                     if (!(alreadyChecked.contains(c.getName()))) {
                         alreadyChecked.add(c.getName());
@@ -170,8 +170,8 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
 
     @Override
     public T resolveTemplate(String viewName, Map<String, Object> model, Locale locale) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("resolveViewName("+getName()+") "+viewName);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("resolveViewName("+getName()+") "+viewName);
         } // if
         Object content = model.get(Constants.THIS);
         if (content==null) {
@@ -191,8 +191,8 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
         T view = lookupView(viewName, locale, content, key);
         T cacheView = view;
         if (view==null) {
-            if (log.isInfoEnabled()) {
-                log.info("resolveViewName("+getName()+") no template found for "+content.getClass().getSimpleName());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("resolveViewName("+getName()+") no template found for "+content.getClass().getSimpleName());
             } // if
             cacheView = getNotFoundDummy();
         } // if
