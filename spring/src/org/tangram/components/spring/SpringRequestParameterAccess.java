@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.tangram.spring.StreamingMultipartResolver;
@@ -35,7 +35,7 @@ import org.tangram.view.AbstractRequestParameterAccess;
  */
 public class SpringRequestParameterAccess extends AbstractRequestParameterAccess {
 
-    private static final Log log = LogFactory.getLog(SpringRequestParameterAccess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SpringRequestParameterAccess.class);
 
 
     /**
@@ -53,24 +53,24 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
                 } // if
                 String key = entry.getKey();
                 String filename = entry.getValue().getName();
-                if (log.isInfoEnabled()) {
-                    log.info("() size "+entry.getValue().getSize());
-                    log.info("() name "+filename);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("() size "+entry.getValue().getSize());
+                    LOG.info("() name "+filename);
                 } // if
                 final String originalFilename = entry.getValue().getOriginalFilename();
-                if (log.isDebugEnabled()) {
-                    log.debug("() key "+key);
-                    log.debug("() original filename "+originalFilename);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("() key "+key);
+                    LOG.debug("() original filename "+originalFilename);
                 } // if
                 if (filename.length()>0) {
-                    if (log.isInfoEnabled()) {
-                        log.info("multipart file "+key);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("multipart file "+key);
                     } // if
                     try {
                         originalNames.put(key, originalFilename);
                         blobs.put(key, entry.getValue().getBytes());
                     } catch (IOException ex) {
-                        log.error("()", ex);
+                        LOG.error("()", ex);
                     } // try/catch
                 } // if
             } // for

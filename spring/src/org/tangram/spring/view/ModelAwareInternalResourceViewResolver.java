@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,18 +18,18 @@
  */
 package org.tangram.spring.view;
 
-import org.tangram.components.spring.SpringViewUtilities;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+import org.tangram.components.spring.SpringViewUtilities;
 import org.tangram.view.AbstractInternalResourceTemplateResolver;
 
 
@@ -42,7 +42,7 @@ import org.tangram.view.AbstractInternalResourceTemplateResolver;
  */
 public class ModelAwareInternalResourceViewResolver extends AbstractInternalResourceTemplateResolver<View> implements ServletContextAware, ModelAwareViewResolver {
 
-    private static Log log = LogFactory.getLog(ModelAwareInternalResourceViewResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ModelAwareInternalResourceViewResolver.class);
 
     private int order = Integer.MAX_VALUE;
 
@@ -67,7 +67,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractInternalReso
     public void setDelegate(UrlBasedViewResolver delegate) {
         this.delegate = delegate;
     }
-    
+
 
     @Override
     protected View getNotFoundDummy() {

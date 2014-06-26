@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,8 +27,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
@@ -48,7 +48,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 public class SpringViewUtilities implements ViewUtilities {
 
-    private static final Log log = LogFactory.getLog(SpringViewUtilities.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SpringViewUtilities.class);
 
     /**
      * Value to be used if there is not view in hash tables and the like where the use of null would not indicate
@@ -107,8 +107,8 @@ public class SpringViewUtilities implements ViewUtilities {
         ViewContext vc = vcf.createViewContext(model, view);
         ModelAndView mav = SpringViewUtilities.createModelAndView(vc);
         View effectiveView = mav.getView();
-        if (log.isDebugEnabled()) {
-            log.debug("render() effectiveView="+effectiveView);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("render() effectiveView="+effectiveView);
         } // if
         try {
             if (effectiveView==null) {
@@ -123,13 +123,13 @@ public class SpringViewUtilities implements ViewUtilities {
             if (out!=null) {
                 out.flush();
             } // if
-            if (log.isDebugEnabled()) {
-                log.debug("render() model="+mav.getModel());
-                log.debug("render("+mav.getViewName()+") effectiveView="+effectiveView);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("render() model="+mav.getModel());
+                LOG.debug("render("+mav.getViewName()+") effectiveView="+effectiveView);
             } // if
             effectiveView.render(mav.getModel(), (HttpServletRequest) request, (HttpServletResponse) response);
         } catch (Exception e) {
-            log.error("render() #"+view, e);
+            LOG.error("render() #"+view, e);
             if (out!=null) {
                 out.write(e.getLocalizedMessage());
             } // if

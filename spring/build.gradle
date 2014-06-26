@@ -22,7 +22,10 @@ dependencies {
   compile project (':tangram-core')
   
   compile "org.springframework:spring-beans:$versions.springframework"  
-  compile "org.springframework:spring-core:$versions.springframework"
+  compile ("org.springframework:spring-core:$versions.springframework") {
+    exclude group: 'commons-logging'
+  }
+  testCompile "org.slf4j:jcl-over-slf4j:$versions.slf4j"
   compile "org.springframework:spring-context:$versions.springframework"
   compile "org.springframework:spring-context-support:$versions.springframework"
   compile "org.springframework:spring-expression:$versions.springframework"

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,8 @@ package org.tangram.components.spring;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +33,7 @@ import org.tangram.spring.view.ViewHandler;
 @Named
 public class TangramSpringServices implements ApplicationContextAware {
 
-    private static Log log = LogFactory.getLog(TangramSpringServices.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TangramSpringServices.class);
 
     private static ApplicationContext applicationContext;
 
@@ -109,8 +109,8 @@ public class TangramSpringServices implements ApplicationContextAware {
             if (converter!=null) {
                 wrapper.setConversionService(converter);
             } // if
-            if (log.isInfoEnabled()) {
-                log.info("createWrapper() conversion service "+wrapper.getConversionService());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("createWrapper() conversion service "+wrapper.getConversionService());
             } // if
         } catch (Exception e) {
             // conversion services are still optional for some time

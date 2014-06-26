@@ -29,8 +29,8 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -43,7 +43,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 public class StreamingMultipartResolver implements MultipartResolver {
 
-    private static final Log log = LogFactory.getLog(StreamingMultipartResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StreamingMultipartResolver.class);
 
     public static final String ERROR = "errorcode";
 
@@ -99,8 +99,8 @@ public class StreamingMultipartResolver implements MultipartResolver {
                         multipartFiles.add(name, file);
                         multipartFileContentTypes.put(name, file.getContentType());
                     } catch (final IOException e) {
-                        if (log.isWarnEnabled()) {
-                            log.warn("("+e.getCause().getMessage()+")", e);
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("("+e.getCause().getMessage()+")", e);
                         } // if
                         MultipartFile file = new MultipartFile() {
 

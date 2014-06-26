@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,8 +21,8 @@ package org.tangram.spring;
 import java.util.Enumeration;
 import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 
@@ -48,7 +48,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
  */
 public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
-    private static final Log log = LogFactory.getLog(PropertySplittingPlaceholderConfigurer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PropertySplittingPlaceholderConfigurer.class);
 
     final private Properties learnings = new Properties();
 
@@ -63,14 +63,14 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
     private void storeUrlParts(String propertyValue, String propertyName, Properties props) {
         // split
         int idx = propertyValue.indexOf("://");
-        if (log.isDebugEnabled()) {
-            log.debug("storeUrlParts("+idx+") "+propertyValue);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("storeUrlParts("+idx+") "+propertyValue);
         } // if
         if ((idx>0)&&(propertyValue.length()>idx+5)) {
             // Might be a URL
             try {
-                if (log.isInfoEnabled()) {
-                    log.info("storeUrlParts() splitting "+propertyValue+"("+propertyName+")");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("storeUrlParts() splitting "+propertyValue+"("+propertyName+")");
                 } // if
                 String protocol = propertyValue.substring(0, idx);
                 if (StringUtils.isNotBlank(protocol)) {
@@ -78,8 +78,8 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
                 } // if
                 idx += 3;
                 String host = propertyValue.substring(idx);
-                if (log.isDebugEnabled()) {
-                    log.debug("storeUrlParts() host I: "+host);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("storeUrlParts() host I: "+host);
                 } // if
                 String uri = "";
                 idx = host.indexOf('/');
@@ -87,9 +87,9 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
                     uri = host.substring(idx+1);
                     host = host.substring(0, idx);
                 } // if
-                if (log.isDebugEnabled()) {
-                    log.debug("storeUrlParts() host II: "+host);
-                    log.debug("storeUrlParts() uri: "+uri);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("storeUrlParts() host II: "+host);
+                    LOG.debug("storeUrlParts() uri: "+uri);
                 } // if
                 if (StringUtils.isNotBlank(uri)) {
                     props.setProperty(propertyName+".uri", uri);
@@ -100,9 +100,9 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
                     username = host.substring(0, idx);
                     host = host.substring(idx+1);
                 } // if
-                if (log.isDebugEnabled()) {
-                    log.debug("storeUrlParts() host III: "+host);
-                    log.debug("storeUrlParts() username: "+username);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("storeUrlParts() host III: "+host);
+                    LOG.debug("storeUrlParts() username: "+username);
                 } // if
                 idx = username.indexOf(':');
                 if (idx>0) {
@@ -129,7 +129,7 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
                     props.setProperty(propertyName+".port", port);
                 } // if
             } catch (Exception e) {
-                log.error("storeUrlParts() error reading "+propertyValue+" as a url", e);
+                LOG.error("storeUrlParts() error reading "+propertyValue+" as a url", e);
             } // try/catch
         } // if
     } // storeUrlParts()
@@ -156,20 +156,20 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
     protected String resolveSystemProperty(String key) {
         String result = super.resolveSystemProperty(key);
         if (result==null) {
-            if (log.isDebugEnabled()) {
-                log.debug("resolveSystemProperty() nothing found in system properties for "+key);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("resolveSystemProperty() nothing found in system properties for "+key);
             } // if
             int idx = key.lastIndexOf('.');
             if (idx>0) {
                 String baseKey = key.substring(0, idx);
-                if (log.isDebugEnabled()) {
-                    log.debug("resolveSystemProperty() lookup for baseKey "+baseKey);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("resolveSystemProperty() lookup for baseKey "+baseKey);
                 } // if
                 String value = super.resolveSystemProperty(baseKey);
                 storeUrlParts(value, baseKey, learnings);
                 result = learnings.getProperty(key);
-                if (log.isDebugEnabled()) {
-                    log.debug("resolveSystemProperty() result "+baseKey+" is "+result);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("resolveSystemProperty() result "+baseKey+" is "+result);
                 } // if
             } // if
         } // if

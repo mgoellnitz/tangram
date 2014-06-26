@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +50,7 @@ import org.tangram.view.ViewContext;
 @Controller
 public class DefaultController extends RenderingBase implements CustomViewProvider {
 
-    private static final Log log = LogFactory.getLog(DefaultController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultController.class);
 
     private HashSet<String> customLinkViews = new HashSet<String>();
 
@@ -65,13 +65,13 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
                                HttpServletResponse response) {
         try {
             Utils.setPrimaryBrowserLanguageForJstl(request);
-            if (log.isDebugEnabled()) {
-                log.debug("render() id="+id);
-                log.debug("render() view="+view);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("render() id="+id);
+                LOG.debug("render() view="+view);
             } // if
             Content content = beanFactory.getBean(id);
-            if (log.isDebugEnabled()) {
-                log.debug("render() content="+content);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("render() content="+content);
             } // if
             if (content==null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
@@ -84,7 +84,7 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
                     response.setHeader("Location", redirectLink.getUrl());
                     response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 } catch (Exception e) {
-                    log.error("render() cannot redirect", e);
+                    LOG.error("render() cannot redirect", e);
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "custom view required.");
                 } // try/catch
                 return null;

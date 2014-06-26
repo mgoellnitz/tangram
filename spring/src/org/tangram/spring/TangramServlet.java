@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.spring;
@@ -30,8 +30,6 @@ import org.tangram.spring.view.ViewHandler;
 public class TangramServlet extends DispatcherServlet {
 
     private static final long serialVersionUID = -5434847968531348468L;
-
-    // private static Log log = LogFactory.getLog(TangramServlet.class);
 
     private ViewHandler viewHandler;
 

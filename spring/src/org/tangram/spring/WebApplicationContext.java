@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,13 +13,13 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.spring;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.context.support.XmlWebApplicationContext;
@@ -29,7 +29,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
  */
 public class WebApplicationContext extends XmlWebApplicationContext {
 
-    private static Log log = LogFactory.getLog(WebApplicationContext.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebApplicationContext.class);
 
 
     /**
@@ -37,8 +37,8 @@ public class WebApplicationContext extends XmlWebApplicationContext {
      */
     @Override
     protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
-        if (log.isInfoEnabled()) {
-            log.info("finishBeanFactoryInitialization() start");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("finishBeanFactoryInitialization() start");
         } // if
         // Initialize conversion service for this context.
         if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME)
@@ -53,13 +53,13 @@ public class WebApplicationContext extends XmlWebApplicationContext {
         // Allow for caching all bean definition metadata, not expecting further changes.
         beanFactory.freezeConfiguration();
 
-        if (log.isInfoEnabled()) {
-            log.info("finishBeanFactoryInitialization() "+beanFactory.getClass().getName());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("finishBeanFactoryInitialization() "+beanFactory.getClass().getName());
         } // if
         // Instantiate all remaining (non-lazy-init) singletons.
         beanFactory.preInstantiateSingletons();
-        if (log.isInfoEnabled()) {
-            log.info("finishBeanFactoryInitialization() end");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("finishBeanFactoryInitialization() end");
         } // if
     } // finishBeanFactoryInitialization()
 
