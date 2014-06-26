@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2012 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.coma;
@@ -29,20 +29,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
 public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
-    protected static Log log = LogFactory.getLog(AbstractComaBeanFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractComaBeanFactory.class);
 
     private Connection dbConnection;
 
@@ -188,8 +187,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             if (resultSet.next()) {
                 int contentId = resultSet.getInt("id_");
                 int version = resultSet.getInt("version_");
-                if (log.isDebugEnabled()) {
-                    log.debug("getProperties() "+contentId+"/"+version+": "+type);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("getProperties() "+contentId+"/"+version+": "+type);
                 } // if
 
                 ResultSetMetaData metaData = resultSet.getMetaData();
@@ -197,13 +196,13 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     String columnName = metaData.getColumnName(i);
                     // if ( !columnName.endsWith("_")) {
                     Object value = resultSet.getObject(i);
-                    if (log.isDebugEnabled()) {
-                        log.debug("getProperties() property "+columnName+" = "+value);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getProperties() property "+columnName+" = "+value);
                     } // if
                     properties.put(columnName, value);
                     // } else {
-                    // if (log.isDebugEnabled()) {
-                    // log.debug("getProperties() implicit property "+columnName);
+                    // if (LOG.isDebugEnabled()) {
+                    // LOG.debug("getProperties() implicit property "+columnName);
                     // } // if
                     // } // if
                 } // for
@@ -218,8 +217,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     String propertyName = resultSet.getString("propertyname");
                     String targetId = resultSet.getString("targetdocument");
                     int linkIndex = resultSet.getInt("linkindex");
-                    if (log.isDebugEnabled()) {
-                        log.debug("getProperties() "+propertyName+"["+linkIndex+"] "+targetId);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getProperties() "+propertyName+"["+linkIndex+"] "+targetId);
                     } // if
                     List<String> ids = linkLists.get(propertyName);
                     if (ids==null) {
@@ -248,8 +247,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                         byte[] data = blobSet.getBytes("data");
                         long len = blobSet.getLong("len");
                         properties.put(propertyName, createBlob(id, propertyName, mimeType, len, data));
-                        if (log.isDebugEnabled()) {
-                            log.debug("getProperties() "+propertyName+" blob bytes "+data.length+" ("+len+")");
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("getProperties() "+propertyName+" blob bytes "+data.length+" ("+len+")");
                         } // if
                     } // if
                 } // while
@@ -270,12 +269,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     while (textSet.next()) {
                         String xmlText = textSet.getString("text");
                         text.append(xmlText);
-                        if (log.isDebugEnabled()) {
-                            log.debug("getBean() "+propertyName+" "+textSet.getInt("id")+" "+textSet.getInt("segmentno")+" "+xmlText);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("getBean() "+propertyName+" "+textSet.getInt("id")+" "+textSet.getInt("segmentno")+" "+xmlText);
                         } // if
                     } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("getProperties() "+propertyName+" text="+text.toString());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getProperties() "+propertyName+" text="+text.toString());
                     } // if
 
                     Statement sd = dbConnection.createStatement();
@@ -285,25 +284,25 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     while (dataSet.next()) {
                         String xmlData = dataSet.getString("data");
                         data.append(xmlData);
-                        if (log.isDebugEnabled()) {
-                            log.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "+dataSet.getInt("segmentno")+" "
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "+dataSet.getInt("segmentno")+" "
                                     +xmlData);
                         } // if
                     } // if
-                    if (log.isDebugEnabled()) {
-                        log.debug("getProperties() "+propertyName+" data="+data.toString());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getProperties() "+propertyName+" data="+data.toString());
                     } // if
 
                     try {
                         properties.put(propertyName, ComaTextConverter.convert(text, data));
                     } catch (Exception e) {
-                        log.error("getProperties() ignoring richtext", e);
+                        LOG.error("getProperties() ignoring richtext", e);
                         properties.put(propertyName, text.toString());
                     } // try/catch
                 } // while
             } // if
         } catch (SQLException se) {
-            log.error("getProperties() "+query, se);
+            LOG.error("getProperties() "+query, se);
         } // try/catch
         return properties;
     } // getProperties()
@@ -317,16 +316,16 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             ResultSet resultSet = s.executeQuery(query);
             if (resultSet.next()) {
                 type = resultSet.getString("documenttype_");
-                if (log.isDebugEnabled()) {
+                if (LOG.isDebugEnabled()) {
                     int contentId = resultSet.getInt("id_");
-                    log.debug("getType() "+contentId+": "+type);
+                    LOG.debug("getType() "+contentId+": "+type);
                 } // if
                 if (type==null) {
                     type = ""; // Folder indication
                 } // if
             } // if
         } catch (SQLException se) {
-            log.error("getType()", se);
+            LOG.error("getType()", se);
         } // try/catch
         return type;
     } // getType()
@@ -337,8 +336,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             String[] arcs = path.split("/");
             String currentFolder = "1"; // root
             for (String folder : arcs) {
-                if (log.isInfoEnabled()) {
-                    log.info("getChildId() lookup up "+folder+" in id "+currentFolder);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("getChildId() lookup up "+folder+" in id "+currentFolder);
                 } // if
                 if (folder.length()>0) {
                     currentFolder = getChildId(folder, currentFolder);
@@ -346,7 +345,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             } // for
             return currentFolder;
         } catch (RuntimeException se) {
-            log.error("getChildId()", se);
+            LOG.error("getChildId()", se);
         } // try/catch
         return null;
     } // getChildId()
@@ -371,16 +370,16 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             Statement s = dbConnection.createStatement();
             ResultSet resultSet = s.executeQuery(query);
             while (resultSet.next()) {
-                if (log.isInfoEnabled()) {
+                if (LOG.isInfoEnabled()) {
                     int contentId = resultSet.getInt("id_");
                     ids.add(""+contentId);
-                    if (log.isDebugEnabled()) {
-                        log.debug("getBean() "+contentId);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("getBean() "+contentId);
                     } // if
                 } // if
             } // while
         } catch (SQLException se) {
-            log.error("getListBeans() "+query, se);
+            LOG.error("getListBeans() "+query, se);
         } // try/catch
         return ids;
     } // listIds()
@@ -395,21 +394,21 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             String id = null;
             if (resultSet.next()) {
                 id = ""+resultSet.getInt("id_");
-                if (log.isDebugEnabled()) {
-                    log.debug("getChildId() "+parentId+"/"+name+": "+id);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("getChildId() "+parentId+"/"+name+": "+id);
                 } // if
             } // if
             return id;
         } catch (SQLException se) {
-            log.error("getChildId() "+query, se);
+            LOG.error("getChildId() "+query, se);
         } // try/catch
         return null;
     } // getChildId()
 
 
     public Set<String> getChildrenIds(String parentId, String type, String pattern) {
-        if (log.isInfoEnabled()) {
-            log.info("getChildrenIds() parentId="+parentId+" type="+type+" pattern="+pattern);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("getChildrenIds() parentId="+parentId+" type="+type+" pattern="+pattern);
         } // if
         Pattern p = null;
         if (pattern!=null) {
@@ -428,15 +427,15 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             while (resultSet.next()) {
                 id = ""+resultSet.getInt("id_");
                 String name = resultSet.getString("name_");
-                if (log.isInfoEnabled()) {
-                    log.info("getChildrenIds() "+parentId+"/"+name+": "+id);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("getChildrenIds() "+parentId+"/"+name+": "+id);
                 } // if
                 if (p==null) {
                     result.add(id);
                 } else {
                     if (p.matcher(name).matches()) {
-                        if (log.isInfoEnabled()) {
-                            log.info("getChildrenIds() match!");
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("getChildrenIds() match!");
                         } // if
                         result.add(id);
                     } // if
@@ -444,7 +443,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             } // if
             return result;
         } catch (SQLException se) {
-            log.error("getChildrenIds() "+query, se);
+            LOG.error("getChildrenIds() "+query, se);
         } // try/catch
         return result;
     } // getChildrenIds()
@@ -466,8 +465,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     public Set<String> getReferrerIds(String targetId, String type, String property) {
-        if (log.isInfoEnabled()) {
-            log.info("getReferrerIds() parentId="+targetId+" type="+type+" property="+property);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("getReferrerIds() parentId="+targetId+" type="+type+" property="+property);
         } // if
         Set<String> result = new HashSet<String>();
         String query = null;
@@ -481,8 +480,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             while (resultSet.next()) {
                 String sourceid = ""+resultSet.getInt("sourcedocument");
                 String sourceversion = ""+resultSet.getInt("sourceversion");
-                if (log.isInfoEnabled()) {
-                    log.info("getReferrerIds() "+sourceid+"/"+sourceversion+"#"+property+" -> "+targetId);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("getReferrerIds() "+sourceid+"/"+sourceversion+"#"+property+" -> "+targetId);
                 } // if
                   // TODO: check for latest version
                 if ( !result.contains(sourceid)) {
@@ -491,7 +490,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             } // if
             return result;
         } catch (SQLException se) {
-            log.error("getReferrerIds() "+query, se);
+            LOG.error("getReferrerIds() "+query, se);
         } // try/catch
         return result;
     } // getReferrerIds()

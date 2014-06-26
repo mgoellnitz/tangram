@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.coma;
@@ -22,14 +22,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.View;
 import org.tangram.spring.view.ModelAwareInternalResourceViewResolver;
 
 public class DocumentTypeResourceViewResolver extends ModelAwareInternalResourceViewResolver {
 
-    private static final Log log = LogFactory.getLog(DocumentTypeResourceViewResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DocumentTypeResourceViewResolver.class);
 
     private String packageName;
 
@@ -73,8 +73,8 @@ public class DocumentTypeResourceViewResolver extends ModelAwareInternalResource
         View view = null;
         if (content instanceof ComaContent) {
             ComaContent cc = (ComaContent)content;
-            if (log.isWarnEnabled()) {
-                log.warn("lookupView() have coma content "+cc.getId()+" :"+cc.getDocumentType());
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("lookupView() have coma content "+cc.getId()+" :"+cc.getDocumentType());
             } // if
             String documentType = cc.getDocumentType();
             while ((view==null)&&(documentType!=null)) {
@@ -82,12 +82,12 @@ public class DocumentTypeResourceViewResolver extends ModelAwareInternalResource
                 if (packName==null) {
                     packName = this.packageName;
                 } // if
-                if (log.isWarnEnabled()) {
-                    log.warn("lookupView() checking "+packName+"/"+documentType+"#"+viewName);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("lookupView() checking "+packName+"/"+documentType+"#"+viewName);
                 } // if
                 view = checkView(viewName, packName, documentType, key, locale);
-                if (log.isWarnEnabled()) {
-                    log.warn("lookupView() result "+view);
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("lookupView() result "+view);
                 } // if
                   // TODO: How about fake interfaces?
                   // if (view==null) {

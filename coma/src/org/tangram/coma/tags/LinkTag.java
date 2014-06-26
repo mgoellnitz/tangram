@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.coma.tags;
@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.TangramServices;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
@@ -35,7 +35,7 @@ public class LinkTag implements Tag, Serializable {
 
     private static final long serialVersionUID = -3685617977023857332L;
 
-    private static final Log log = LogFactory.getLog(Link.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Link.class);
 
     private PageContext pageContext = null;
 
@@ -96,13 +96,13 @@ public class LinkTag implements Tag, Serializable {
             HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
             HttpServletResponse response = (HttpServletResponse)pageContext.getResponse();
             LinkFactoryAggregator builder = TangramServices.getLinkFactoryAggregator();
-            if (log.isDebugEnabled()) {
-                log.debug("doEndTag() "+target+" "+view);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("doEndTag() "+target+" "+view);
             } // if
             Link link = builder.createLink(request, response, target, null, view);
             pageContext.getOut().write(link.getUrl());
         } catch (IOException ioe) {
-            log.error("doEndTag() could not paste link into output", ioe);
+            LOG.error("doEndTag() could not paste link into output", ioe);
         } // try/catch
         return EVAL_PAGE;
     } // doEndTag()

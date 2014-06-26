@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,8 +24,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
@@ -45,7 +45,7 @@ import org.tangram.view.TargetDescriptor;
 @LinkHandler
 public class ComaHandler extends RenderingBase {
 
-    private static final Log log = LogFactory.getLog(ComaHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 
     // @Autowired(required = false)
     @Inject
@@ -58,13 +58,13 @@ public class ComaHandler extends RenderingBase {
     @LinkAction("/content/(.*)")
     public TargetDescriptor render(@LinkPart(1) String id, @ActionParameter(value = "view") String view, HttpServletRequest request,
                                    HttpServletResponse response) {
-        if (log.isInfoEnabled()) {
-            log.info("render() id="+id);
-            log.info("render() view="+view);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("render() id="+id);
+            LOG.info("render() view="+view);
         } // if
         ComaContent content = (ComaContent) beanFactory.getBean(id);
-        if (log.isInfoEnabled()) {
-            log.info("render() content="+content);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("render() content="+content);
         } // if
         if (content==null) {
             try {
@@ -84,14 +84,14 @@ public class ComaHandler extends RenderingBase {
     @LinkAction("/contentblob/(.*)/(.*)/(.*)")
     public TargetDescriptor renderBlob(@LinkPart(1) String id, @LinkPart(2) String property, @LinkPart(3) String propertyId,
                                        @ActionParameter("view") String view, HttpServletRequest request, HttpServletResponse response) {
-        if (log.isInfoEnabled()) {
-            log.info("render() id="+id);
-            log.info("render() property="+id);
-            log.info("render() view="+view);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("render() id="+id);
+            LOG.info("render() property="+id);
+            LOG.info("render() view="+view);
         } // if
         ComaContent content = (ComaContent) beanFactory.getBean(id);
-        if (log.isInfoEnabled()) {
-            log.info("render() content="+content);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("render() content="+content);
         } // if
         if (content==null) {
             try {

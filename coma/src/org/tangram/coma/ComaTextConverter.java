@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,23 +14,18 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.coma;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This is the perfectly most simple and non sufficient implementation
  * It definitely only deals with the cases I have in my newly generated example database.
  */
 public final class ComaTextConverter {
-
-    @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(ComaTextConverter.class);
 
     private static byte[] hexValues = new byte['g'];
 
@@ -193,7 +188,7 @@ public final class ComaTextConverter {
 
     /**
      * starts merging the two separate buffers
-     * 
+     *
      * @throws IOException
      */
     private String mergeBuilders() {
