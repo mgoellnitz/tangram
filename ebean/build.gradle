@@ -27,8 +27,7 @@ dependencies {
   // compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
   compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
 
-  compile "org.slf4j:slf4j-api:1.6.6"
-  compile "org.slf4j:slf4j-log4j12:1.6.6"
+  compile "org.slf4j:slf4j-api:$versions.slf4j"
   
   testCompile "junit:junit:$versions.junit"
   // bean wire up for test cases is done via dinistiq

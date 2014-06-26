@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,7 +39,7 @@ import org.tangram.mutable.MutableBeanFactory;
 @Singleton
 public class FtpDirectory {
 
-    private static final Logger log = LoggerFactory.getLogger(FtpDirectory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FtpDirectory.class);
 
     private TangramFtpServer ftpServerStub;
 
@@ -52,17 +52,17 @@ public class FtpDirectory {
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        if (log.isInfoEnabled()) {
-            log.info("() initializing with code cache "+codeResourceCache);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("() initializing with code cache "+codeResourceCache);
         } // if
         if (beanFactory instanceof MutableBeanFactory) {
             ftpServerStub = new TangramFtpServer((MutableBeanFactory) beanFactory, codeResourceCache);
-            if (log.isInfoEnabled()) {
-                log.info("() starting");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("() starting");
             } // if
             ftpServerStub.start();
         } else {
-            log.error("afterPropertiesSet() no factory for mutable beans - not starting ftp service");
+            LOG.error("afterPropertiesSet() no factory for mutable beans - not starting ftp service");
         } // if
     } // afterPropertiesSet()
 

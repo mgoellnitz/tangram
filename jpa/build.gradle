@@ -31,10 +31,6 @@ dependencies {
     exclude group: 'asm'
   }
   
-  // This is the API as packages with EclipseLink - which should not make
-  // that much of a difference
-  // compile "$versions.persistence_api"
-
   testCompile "junit:junit:$versions.junit"
   // bean wire up for test cases is done via dinistiq
   testCompile "dinistiq:dinistiq:$versions.dinistiq"

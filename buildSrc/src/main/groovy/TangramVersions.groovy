@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
@@ -27,6 +27,7 @@ public class TangramVersions {
   String jsp = '2.0'
   String groovy = '2.3.0'
   String velocity = '1.7'
+  String slf4j = '1.7.7'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String junit = '4.11'

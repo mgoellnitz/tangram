@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
@@ -24,8 +24,6 @@ import java.util.Set;
  * Constant string to be used as keys for the session store of an ftp session.
  */
 public class CodeHelper {
-
-    // private static final Log log = LogFactory.getLog(CodeHelper.class);
 
     private static final Set<String> EXTENSION_TO_CUT = new HashSet<String>();
 
