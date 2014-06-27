@@ -25,7 +25,7 @@ dependencies {
   compile ("org.springframework:spring-core:$versions.springframework") {
     exclude group: 'commons-logging'
   }
-  testCompile "org.slf4j:jcl-over-slf4j:$versions.slf4j"
+  runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
   compile "org.springframework:spring-context:$versions.springframework"
   compile "org.springframework:spring-context-support:$versions.springframework"
   compile "org.springframework:spring-expression:$versions.springframework"

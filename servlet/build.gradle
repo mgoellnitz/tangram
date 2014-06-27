@@ -20,6 +20,7 @@ apply from: '../lib.gradle'
 
 dependencies {
   compile project (':tangram-core')
+  runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
   
   testCompile "junit:junit:$versions.junit"
 }
