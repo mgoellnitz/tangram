@@ -21,12 +21,14 @@ package org.tangram.components.gae;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import org.tangram.Constants;
 import org.tangram.security.LoginSupport;
 
 
 @Named("loginSupport")
+@Singleton
 public class GaeLoginSupport implements LoginSupport {
 
     private String liveSuffix = "live";

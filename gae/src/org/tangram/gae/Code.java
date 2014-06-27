@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -46,6 +46,7 @@ public final class Code extends GaeContent implements MutableCode {
     }
 
 
+    @Override
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
     }
@@ -57,6 +58,7 @@ public final class Code extends GaeContent implements MutableCode {
     }
 
 
+    @Override
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
@@ -72,6 +74,7 @@ public final class Code extends GaeContent implements MutableCode {
     }
 
 
+    @Override
     public void setCode(char[] code) {
         this.code = new Text(String.valueOf(code));
     }

@@ -44,6 +44,7 @@ public final class Code extends EContent implements MutableCode {
     }
 
 
+    @Override
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
     }
@@ -55,6 +56,7 @@ public final class Code extends EContent implements MutableCode {
     }
 
 
+    @Override
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
@@ -65,6 +67,7 @@ public final class Code extends EContent implements MutableCode {
     }
 
 
+    @Override
     public void setCode(char[] code) {
         this.code = code;
     }
