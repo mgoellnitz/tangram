@@ -62,6 +62,9 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
      */
     private void storeUrlParts(String propertyValue, String propertyName, Properties props) {
         // split
+        if (propertyValue == null) {
+            return;
+        } // if
         int idx = propertyValue.indexOf("://");
         if (LOG.isDebugEnabled()) {
             LOG.debug("storeUrlParts("+idx+") "+propertyValue);
