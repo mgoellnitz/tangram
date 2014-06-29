@@ -56,7 +56,7 @@ class TangramUtilities {
   public overlayWebapp(War w) {
     Project p = w.project
         
-    // Strange way of overwriting things - it must be the first webapp dependency
+    // Strange way of overwriting things
     Object iter = p.configurations.webapp.dependencies.iterator()
     int i = 0;
     while (iter.hasNext()) {

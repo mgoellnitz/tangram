@@ -104,4 +104,4 @@ public class DocumentTypeResourceViewResolver extends ModelAwareInternalResource
         return view;
     }// lookupView()
 
-} // FolderTemplateRepository
+} // DocumentTypeResourceViewResolver
