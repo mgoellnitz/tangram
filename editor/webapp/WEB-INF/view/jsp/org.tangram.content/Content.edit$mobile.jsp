@@ -4,8 +4,8 @@
 %><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
-%><%@page import="org.tangram.Constants,org.tangram.view.Utils,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.components.TangramServices,org.tangram.components.editor.EditingHandler,org.tangram.content.Content"
+%><%@page import="org.tangram.Constants,org.tangram.view.Utils,org.tangram.view.PropertyConverter,org.tangram.util.JavaBean"
+%><%@page import="org.tangram.content.BeanFactory,org.tangram.components.editor.EditingHandler,org.tangram.content.Content"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
@@ -31,6 +31,8 @@
 </div>
 <div class="cms_editor_table">
 <%
+BeanFactory beanFactory = (BeanFactory)request.getAttribute("beanFactory");
+PropertyConverter propertyConverter = (PropertyConverter)request.getAttribute("propertyConverter");
 JavaBean bw = new JavaBean(request.getAttribute(Constants.THIS));
 for (String key : bw.propertyNames()) {
     if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {          
@@ -45,26 +47,25 @@ if (value instanceof Collection) {
 	%>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
 } // if
 %>)<br/><%
-    if (TangramServices.getPropertyConverter().isBlobType(type)) {
-      long blobLength = TangramServices.getPropertyConverter().getBlobLength(bw.get(key));
+    if (propertyConverter.isBlobType(type)) {
+      long blobLength = propertyConverter.getBlobLength(bw.get(key));
 %><div class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</div><%
     } else {
 %><div class="cms_editor_field_value">
 <%
-    if (TangramServices.getPropertyConverter().isTextType(type)) {
+    if (propertyConverter.isTextType(type)) {
 %>
-<textarea class="cms_editor_textfield" cols="60" rows="7" name="<%=key%>"><%=TangramServices.getPropertyConverter().getEditString(value)%></textarea>
+<textarea class="cms_editor_textfield" cols="60" rows="7" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
 <%
     } else {
 %>
-<input class="cms_editor_textfield" name="<%=key%>" value="<%=TangramServices.getPropertyConverter().getEditString(value)%>" />
+<input class="cms_editor_textfield" name="<%=key%>" value="<%=propertyConverter.getEditString(value)%>" />
 <%
 if (value instanceof Collection) {
   Class<? extends Object> elementClass = bw.getCollectionType(key);
   boolean abstractClass = (elementClass.getModifiers() | Modifier.ABSTRACT) == Modifier.ABSTRACT;
   request.setAttribute("propertyValue", value);
-  request.setAttribute("elementClass", elementClass); 
-  request.setAttribute("beanFactory", TangramServices.getBeanFactory()); 
+  request.setAttribute("elementClass", elementClass);
 %><c:if test="${! empty beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
  <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 

@@ -400,6 +400,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 CodeResource code = (CodeResource) content;
                 request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
             } // if
+            request.setAttribute("beanFactory", getMutableBeanFactory());
+            request.setAttribute("propertyConverter", propertyConverter);
             request.setAttribute("classes", getMutableBeanFactory().getClasses());
             request.setAttribute("prefix", Utils.getUriPrefix(request));
             Class<? extends Content> cls = content.getClass();

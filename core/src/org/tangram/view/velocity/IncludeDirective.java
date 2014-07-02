@@ -29,6 +29,7 @@ import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.tangram.components.TangramServices;
+import org.tangram.view.ViewUtilities;
 
 public class IncludeDirective extends Directive {
 
@@ -61,7 +62,8 @@ public class IncludeDirective extends Directive {
         String view = (node.jjtGetNumChildren()>1) ? (String)node.jjtGetChild(1).value(context) : null;
 
         // copy model from original context
-        Map<String, Object> model = TangramServices.getViewContextFactory().createModel(bean, request, response);
+        final ViewUtilities viewUtilities = TangramServices.getViewUtilities();
+        Map<String, Object> model = viewUtilities.getViewContextFactory().createModel(bean, request, response);
         Object[] keys = context.getKeys();
         for (Object key : keys) {
             String k = ""+key;
@@ -71,7 +73,7 @@ public class IncludeDirective extends Directive {
         } // for
         model.remove("springMacroRequestContext");
 
-        TangramServices.getViewUtilities().render(writer, model, view);
+        viewUtilities.render(writer, model, view);
         return false;
     } // render()
 

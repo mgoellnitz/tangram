@@ -44,22 +44,9 @@ public class ClassResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClassResolver.class);
 
-    private Set<String> packageNames;
+    private final Set<String> packageNames;
 
-
-    public ClassResolver() {
-        packageNames = new HashSet<String>();
-    } // ClassResolver()
-
-
-    public ClassResolver(Set<String> packageNames) {
-        this.packageNames = packageNames;
-    } // ClassResolver()
-
-
-    public void addPackageName(String packageName) {
-        packageNames.add(packageName);
-    } // addPackageName()
+    private final Set<String> classNames;
 
 
     private void addPathsForPackage(Set<String> urls, String packageName) {
@@ -99,7 +86,7 @@ public class ClassResolver {
      * @param classNames
      * @param name
      */
-    private final void checkClassAndAdd(Set<String> classNames, String name) {
+    private void checkClassAndAdd(Set<String> classNames, String name) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("checkClassAndAdd() name="+name);
         } // if
@@ -117,7 +104,7 @@ public class ClassResolver {
     } // checkClassAndAdd()
 
 
-    private final void recurseSubDir(Set<String> classNames, File dir, int basePathLength) {
+    private void recurseSubDir(Set<String> classNames, File dir, int basePathLength) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("recurseSubDir() scanning "+dir.getAbsolutePath());
         } // if
@@ -135,8 +122,9 @@ public class ClassResolver {
     } // recurseSubDir()
 
 
-    private Set<String> getClassNames() {
-        Set<String> classNames = new HashSet<>();
+    public ClassResolver(Set<String> packageNames) {
+        this.packageNames = packageNames;
+        this.classNames = new HashSet<>();
         Set<String> paths = new HashSet<>();
         for (String packageName : packageNames) {
             addPathsForPackage(paths, packageName);
@@ -162,8 +150,7 @@ public class ClassResolver {
                 LOG.error("getClassNames()", e);
             } // try/catch
         } // for
-        return classNames;
-    } // getClassNames()
+    } // ClassResolver()
 
 
     /**
@@ -171,7 +158,6 @@ public class ClassResolver {
      */
     public <T extends Object> Set<Class<T>> getSubclasses(Class<T> c) {
         Set<Class<T>> result = new HashSet<Class<T>>();
-        Set<String> classNames = getClassNames();
         for (String className : classNames) {
             try {
                 @SuppressWarnings("unchecked")
@@ -193,7 +179,6 @@ public class ClassResolver {
      */
     public <T extends Object> Set<Class<T>> getAnnotatedSubclasses(Class<T> c, Class<? extends Annotation> annotation) {
         Set<Class<T>> result = new HashSet<Class<T>>();
-        Set<String> classNames = getClassNames();
         for (String className : classNames) {
             try {
                 @SuppressWarnings("unchecked")

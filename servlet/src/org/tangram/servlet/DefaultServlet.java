@@ -141,8 +141,7 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
         } // if
         try {
             if (LOG.isInfoEnabled()) {
-                LOG.info("doGet() id="+id);
-                LOG.info("doGet() view="+view);
+                LOG.info("doGet() view="+view+" id="+id);
             } // if
             Content content = beanFactory.getBean(id);
             if (LOG.isDebugEnabled()) {
@@ -153,9 +152,8 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
                 return;
             } // if
             if (customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
-                Link redirectLink = null;
                 try {
-                    redirectLink = getLinkFactory().createLink(request, response, content, null, view);
+                    Link redirectLink = getLinkFactory().createLink(request, response, content, null, view);
                     response.setHeader("Location", redirectLink.getUrl());
                     response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 } catch (Exception e) {

@@ -33,6 +33,14 @@ public interface ViewUtilities {
 
 
     /**
+     * Return the view context factory used by the implementing view utilities instance.
+     *
+     * @return
+     */
+    public ViewContextFactory getViewContextFactory();
+
+
+    /**
      * create a new request blob mapper instance for the given request.
      *
      * @param request

@@ -3,9 +3,9 @@
 %><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
-%><%@page import="org.tangram.Constants,org.tangram.view.Utils,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.content.Content"
-%><%@page import="org.tangram.components.TangramServices,org.tangram.components.editor.EditingHandler"
+%><%@page import="org.tangram.Constants,org.tangram.components.editor.EditingHandler,org.tangram.util.JavaBean"
+%><%@page import="org.tangram.content.Content,org.tangram.content.BeanFactory"
+%><%@page import="org.tangram.view.Utils,org.tangram.view.PropertyConverter"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
@@ -37,6 +37,8 @@
 </div>
 <table class="cms_editor_table">
 <%
+BeanFactory beanFactory = (BeanFactory)request.getAttribute("beanFactory");
+PropertyConverter propertyConverter = (PropertyConverter)request.getAttribute("propertyConverter");
 int fid = 0; // form ids
 JavaBean bw = new JavaBean(request.getAttribute(Constants.THIS));
 for (String key : bw.propertyNames()) {
@@ -47,7 +49,7 @@ for (String key : bw.propertyNames()) {
     Class<? extends Object> type = bw.getType(key);
 %><tr class="cms_editor_row"><td class="cms_editor_label_td"><%=key%>:
 <% 
-if ((TangramServices.getPropertyConverter().isTextType(type)) &&("code".equals(key)) && bw.isReadable("mimeType") && (!(""+bw.get("mimeType")).equals("text/javascript")) && (!(""+bw.get("mimeType")).equals("text/css"))) {
+if ((propertyConverter.isTextType(type)) &&("code".equals(key)) && bw.isReadable("mimeType") && (!(""+bw.get("mimeType")).equals("text/javascript")) && (!(""+bw.get("mimeType")).equals("text/css"))) {
 Class<? extends Object> c = null;
 Object annotation = bw.get("annotation");
 String className = annotation == null ? null : ""+annotation;
@@ -88,16 +90,16 @@ for (PropertyDescriptor p : ps) {
 %></div><%
 } // if
 %></td><%
-if (TangramServices.getPropertyConverter().isBlobType(type)) {
-    long blobLength = TangramServices.getPropertyConverter().getBlobLength(bw.get(key));
+if (propertyConverter.isBlobType(type)) {
+    long blobLength = propertyConverter.getBlobLength(bw.get(key));
 %><td class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</td><%
     } else {
 %><td class="cms_editor_field_value">
 <%
-    if (TangramServices.getPropertyConverter().isTextType(type)) {
+    if (propertyConverter.isTextType(type)) {
       if (!("code".equals(key))) {
 %>
-<textarea id="ke<%=key%>" class="cms_editor_textfield ckeditor" cols="60" rows="5" name="<%=key%>"><%=TangramServices.getPropertyConverter().getEditString(value)%></textarea>
+<textarea id="ke<%=key%>" class="cms_editor_textfield ckeditor" cols="60" rows="5" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
 <script type="text/javascript">
 //<![CDATA[
 CKEDITOR.replace( 'ke<%=key%>');
@@ -133,9 +135,9 @@ CKEDITOR.replace( 'ke<%=key%>');
             
         } // try/catch
         if (parserfile.length() == 0) {
-%><textarea class="cms_editor_textfield" cols="60" rows="25" name="<%=key%>"><%=TangramServices.getPropertyConverter().getEditString(value)%></textarea><%
+%><textarea class="cms_editor_textfield" cols="60" rows="25" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea><%
         } else {
-%><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=TangramServices.getPropertyConverter().getEditString(value)%></textarea>
+%><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
 <script type="text/javascript">
   var editor = CodeMirror.fromTextArea('code', {
     height: "dynamic", continuousScanning: 500, path: "${prefix}/editor/codemirror/js/",
@@ -149,7 +151,7 @@ CKEDITOR.replace( 'ke<%=key%>');
     } // if
   } else {
 %>
-<input class="cms_editor_textfield" name="<%=key%>" value="<%=TangramServices.getPropertyConverter().getEditString(value)%>" />
+<input class="cms_editor_textfield" name="<%=key%>" value="<%=propertyConverter.getEditString(value)%>" />
  (<%=type.getSimpleName()%><%
 if (value instanceof Collection) {
   Class<? extends Object>  elementClass = bw.getCollectionType(key);
@@ -158,8 +160,7 @@ if (value instanceof Collection) {
 %>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
   } // if
   request.setAttribute("propertyValue", value);
-  request.setAttribute("elementClass", elementClass); 
-  request.setAttribute("beanFactory", TangramServices.getBeanFactory()); 
+  request.setAttribute("elementClass", elementClass);
 %><c:if test="${! empty beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 

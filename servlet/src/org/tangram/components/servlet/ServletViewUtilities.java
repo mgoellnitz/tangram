@@ -21,11 +21,15 @@ package org.tangram.components.servlet;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.RequestDispatcher;
@@ -40,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
-import org.tangram.components.TangramServices;
 import org.tangram.content.CodeResource;
 import org.tangram.servlet.ResponseWrapper;
 import org.tangram.view.RequestParameterAccess;
@@ -54,13 +57,22 @@ import org.tangram.view.ViewUtilities;
  * View utility implementation for plain servlet environments.
  * Deals with request parameters and rendering of included views.
  */
-@Named
+@Named("viewUtilities")
 @Singleton
 public class ServletViewUtilities implements ViewUtilities {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServletViewUtilities.class);
 
     private static final Pattern ID_PATTRN = Pattern.compile(Constants.ID_PATTERN);
+
+    @Inject
+    private ViewContextFactory viewContextFactory;
+
+    @Inject
+    private CodeResourceCache codeResourceCache;
+
+    @SuppressWarnings("rawtypes")
+    private static List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
 
     private static VelocityEngine velocityEngine;
 
@@ -89,6 +101,20 @@ public class ServletViewUtilities implements ViewUtilities {
     } // ServletViewUtilities()
 
 
+    @Inject
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setResolvers(Set<TemplateResolver> resolvers) {
+        this.resolvers = new ArrayList<>(resolvers);
+        Collections.sort(this.resolvers);
+    } // setResolvers()
+
+
+    @Override
+    public ViewContextFactory getViewContextFactory() {
+        return viewContextFactory;
+    }
+
+
     /**
      * Creates a plain servlet api based request blob wrapper.
      *
@@ -108,7 +134,6 @@ public class ServletViewUtilities implements ViewUtilities {
         HttpServletRequest request = (HttpServletRequest) model.get("request");
         HttpServletResponse response = (HttpServletResponse) model.get("response");
         String template = null;
-        final List<TemplateResolver> resolvers = TangramServices.getResolvers();
         if (LOG.isDebugEnabled()) {
             LOG.debug("render() resolvers="+resolvers);
         } // if
@@ -127,8 +152,7 @@ public class ServletViewUtilities implements ViewUtilities {
         if (template == null) {
             throw new IOException("no view found for model "+model);
         } // if
-        ViewContextFactory vcf = TangramServices.getViewContextFactory();
-        ViewContext vc = vcf.createViewContext(model, view);
+        ViewContext vc = viewContextFactory.createViewContext(model, view);
 
         if (ID_PATTRN.matcher(template).matches()) {
             // Velocity:
@@ -136,8 +160,7 @@ public class ServletViewUtilities implements ViewUtilities {
                 LOG.debug("render() Velocity template="+template);
             } // if
             try {
-                CodeResourceCache c = TangramServices.getCodeResourceCache();
-                CodeResource codeResource = c.get(template);
+                CodeResource codeResource = codeResourceCache.get(template);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("render() setting content type from "+response.getContentType()+" to "+codeResource.getMimeType()+" on "+response.getClass().getName());
                 } // if
@@ -203,7 +226,7 @@ public class ServletViewUtilities implements ViewUtilities {
 
     @Override
     public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
-        render(out, TangramServices.getViewContextFactory().createModel(bean, request, response), view);
+        render(out, viewContextFactory.createModel(bean, request, response), view);
     } // render()
 
 } // ServletViewUtilities

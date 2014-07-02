@@ -18,18 +18,11 @@
  */
 package org.tangram.components;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.tangram.content.BeanFactory;
 import org.tangram.link.LinkFactoryAggregator;
-import org.tangram.view.PropertyConverter;
-import org.tangram.view.TemplateResolver;
-import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 
 
@@ -42,20 +35,12 @@ import org.tangram.view.ViewUtilities;
 @Named
 public class TangramServices {
 
+    // TODO: get rid if this. It is only used in the char_array.jsp
     private static BeanFactory beanFactory = null;
 
     private static LinkFactoryAggregator linkFactoryAggregator = null;
 
-    private static ViewContextFactory viewContextFactory = null;
-
-    private static PropertyConverter propertyConverter = null;
-
-    private static CodeResourceCache codeResourceCache = null;
-
     private static ViewUtilities viewUtilities = null;
-
-    @SuppressWarnings("rawtypes")
-    private static List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
 
     private static Map<String, Object> viewSettings = null;
 
@@ -82,39 +67,6 @@ public class TangramServices {
     }
 
 
-    public static ViewContextFactory getViewContextFactory() {
-        return viewContextFactory;
-    }
-
-
-    @Inject
-    public void setViewContextFactory(ViewContextFactory viewContextFactory) {
-        TangramServices.viewContextFactory = viewContextFactory;
-    }
-
-
-    public static PropertyConverter getPropertyConverter() {
-        return propertyConverter;
-    }
-
-
-    @Inject
-    public void setPropertyConverter(PropertyConverter propertyConverter) {
-        TangramServices.propertyConverter = propertyConverter;
-    }
-
-
-    public static CodeResourceCache getCodeResourceCache() {
-        return codeResourceCache;
-    }
-
-
-    @Inject
-    public void setCodeResourceCache(CodeResourceCache codeResourceCache) {
-        TangramServices.codeResourceCache = codeResourceCache;
-    }
-
-
     public static ViewUtilities getViewUtilities() {
         return viewUtilities;
     }
@@ -124,23 +76,6 @@ public class TangramServices {
     public void setViewUtilities(ViewUtilities viewUtilities) {
         TangramServices.viewUtilities = viewUtilities;
     }
-
-
-    /**
-     * This is "rawtypes" because of google guice's weak injection mechanism.
-     */
-    @SuppressWarnings("rawtypes")
-    public static List<TemplateResolver> getResolvers() {
-        return resolvers;
-    }
-
-
-    @Inject
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public void setResolvers(Set<TemplateResolver> resolvers) {
-        TangramServices.resolvers = new ArrayList<>(resolvers);
-        Collections.sort(TangramServices.resolvers);
-    } // setResolvers()
 
 
     /**

@@ -22,17 +22,20 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
-import org.tangram.components.TangramServices;
 import org.tangram.spring.view.ViewHandler;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContext;
@@ -45,10 +48,17 @@ import org.tangram.view.ViewUtilities;
  *
  * It might be a good idea to plce this in the view package hierarchy
  */
-@Named
+@Named("viewUtilities")
+@Singleton
 public class SpringViewUtilities implements ViewUtilities {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpringViewUtilities.class);
+
+    @Inject
+    private ViewContextFactory viewContextFactory;
+
+    @Inject
+    private ViewHandler viewHandler;
 
     /**
      * Value to be used if there is not view in hash tables and the like where the use of null would not indicate
@@ -67,6 +77,12 @@ public class SpringViewUtilities implements ViewUtilities {
         }
 
     };
+
+
+    @Override
+    public ViewContextFactory getViewContextFactory() {
+        return viewContextFactory;
+    }
 
 
     /**
@@ -98,13 +114,7 @@ public class SpringViewUtilities implements ViewUtilities {
         ServletRequest request = (ServletRequest) model.get("request");
         ServletResponse response = (ServletResponse) model.get("response");
 
-        ViewHandler viewHandler = TangramSpringServices.getViewHandler();
-        if (viewHandler==null) {
-            throw new RuntimeException("No view handler found");
-        } // if
-
-        ViewContextFactory vcf = TangramServices.getViewContextFactory();
-        ViewContext vc = vcf.createViewContext(model, view);
+        ViewContext vc = viewContextFactory.createViewContext(model, view);
         ModelAndView mav = SpringViewUtilities.createModelAndView(vc);
         View effectiveView = mav.getView();
         if (LOG.isDebugEnabled()) {
@@ -139,7 +149,13 @@ public class SpringViewUtilities implements ViewUtilities {
 
     @Override
     public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
-        render(out, TangramServices.getViewContextFactory().createModel(bean, request, response), view);
+        render(out, viewContextFactory.createModel(bean, request, response), view);
     } // render()
+
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        Assert.notNull(viewHandler, "No view handler found");
+    } // afterPropertiesSet()
 
 } // SpringViewUtilities

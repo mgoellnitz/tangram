@@ -20,6 +20,7 @@ package org.tangram.components.spring;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
@@ -27,17 +28,15 @@ import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.convert.ConversionService;
-import org.tangram.spring.view.ViewHandler;
 
 
 @Named
+@Singleton
 public class TangramSpringServices implements ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(TangramSpringServices.class);
 
     private static ApplicationContext applicationContext;
-
-    private static ViewHandler viewHandler = null;
 
     private static ConversionService conversionService = null;
 
@@ -50,17 +49,6 @@ public class TangramSpringServices implements ApplicationContextAware {
     @Inject
     public void setApplicationContext(ApplicationContext applicationContext) {
         TangramSpringServices.applicationContext = applicationContext;
-    }
-
-
-    public static ViewHandler getViewHandler() {
-        return viewHandler;
-    }
-
-
-    @Inject
-    public void setViewHandler(ViewHandler viewHandler) {
-        TangramSpringServices.viewHandler = viewHandler;
     }
 
 
