@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public final class Constants {
 
     private static final Logger LOG = LoggerFactory.getLogger(Constants.class);
@@ -71,6 +72,16 @@ public final class Constants {
 
     public static final String PARAMETER_PROTECTION_KEY = "protection.key";
 
+    /**
+     * Name of the request attribute to hold the view to be used for link generation within text properties.
+     */
+    public static final String ATTRIBUTE_EMBEDDED_VIEW = "embedded.link.view";
+
+    /**
+     * Name of the request attribute to hold the action to be used for link generation within text properties.
+     */
+    public static final String ATTRIBUTE_EMBEDDED_ACTION = "embedded.link.action";
+    
     /**
      * name of the request attribute to take a currently valid logout url from
      */

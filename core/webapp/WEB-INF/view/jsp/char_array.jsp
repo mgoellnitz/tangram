@@ -6,8 +6,8 @@
 %><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
-        String view = (String)request.getAttribute("embedded.link.view");
-        String action = (String)request.getAttribute("embedded.link.action");
+        String view = (String)request.getAttribute(Constants.ATTRIBUTE_EMBDDED_VIEW);
+        String action = (String)request.getAttribute(Constants.ATTRIBUTE_EMBEDDED_ACTION);
         BeanFactory beanFactory = TangramServices.getBeanFactory();
         LinkFactoryAggregator linkFactory = TangramServices.getLinkFactoryAggregator();
         Pattern p = Constants.TEXT_ID_PATTERN;
