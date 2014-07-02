@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.AbstractBeanFactory;
+import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
@@ -280,6 +281,10 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 internalId = id.substring(idx+1);
             } // if
             result = getBean(cls, kind, internalId);
+            if (result instanceof BeanFactoryAware) {
+                BeanFactoryAware bfa = (BeanFactoryAware)result;
+                bfa.setBeanFactory(this);
+            } // if
             if (activateCaching) {
                 cache.put(id, result);
             } // if

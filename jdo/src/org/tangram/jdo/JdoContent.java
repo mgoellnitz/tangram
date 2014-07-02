@@ -24,17 +24,26 @@ import javax.jdo.JDOHelper;
 import javax.jdo.annotations.NotPersistent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.TangramServices;
+import org.tangram.content.BeanFactory;
+import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
 
 
 
-public abstract class JdoContent implements Content {
+public abstract class JdoContent implements Content, BeanFactoryAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(JdoContent.class);
 
+    private BeanFactory beanFactory;
+
     @NotPersistent
     private String id;
+
+
+    @Override
+    public void setBeanFactory(BeanFactory factory) {
+        beanFactory = factory;
+    } // setBeanFactory()
 
 
     /**
@@ -113,7 +122,7 @@ public abstract class JdoContent implements Content {
      */
     @Deprecated
     protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
-        return TangramServices.getBeanFactory().getBean(cls, id);
+        return beanFactory.getBean(cls, id);
     } // getContent()
 
 
@@ -129,7 +138,7 @@ public abstract class JdoContent implements Content {
         if (ids!=null) {
             result = new ArrayList<T>(ids.size());
             for (String id : ids) {
-                result.add(TangramServices.getBeanFactory().getBean(cls, id));
+                result.add(beanFactory.getBean(cls, id));
             } // for
         } // if
         return result;

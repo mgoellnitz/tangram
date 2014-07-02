@@ -147,7 +147,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
+    protected <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
         if (modelClasses==null) {
             getClasses();
         } // if
