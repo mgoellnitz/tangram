@@ -37,7 +37,7 @@ import org.springframework.web.servlet.View;
 import org.tangram.spring.view.ModelAwareViewResolver;
 import org.tangram.spring.view.ViewHandler;
 
-@Named
+@Named("viewHandler")
 public class TangramViewHandler implements ViewHandler, ApplicationContextAware {
 
     private ApplicationContext applicationContext;

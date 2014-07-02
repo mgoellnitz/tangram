@@ -32,7 +32,9 @@ public interface LinkHandlerRegistry {
      *
      * In the later case some @LinkAction at some methods must be present for the handler to
      * be in effect.
+     *
+     * @param handler instance implementing the link handler interfaces or with the link handler annotation
      */
-    void registerLinkHandler(Object scheme);
+    void registerLinkHandler(Object handler);
 
 } // LinkHandlerRegistry

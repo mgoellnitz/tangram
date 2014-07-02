@@ -28,7 +28,7 @@ import org.springframework.web.servlet.View;
  *
  * Instances of this bean are used to find valid views.
  *
- * Used by many components and thus should not be private element of TangramServlet
+ * Spring View implementations are selected according to name, model, locale, and request.
  *
  */
 public interface ViewHandler {
