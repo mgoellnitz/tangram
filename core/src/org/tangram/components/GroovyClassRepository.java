@@ -47,7 +47,7 @@ import org.tangram.logic.ClassRepository;
  *
  * The elements in the repository are classes.
  */
-@Named
+@Named("classRepository")
 @Singleton
 public class GroovyClassRepository implements ClassRepository, BeanListener {
 
