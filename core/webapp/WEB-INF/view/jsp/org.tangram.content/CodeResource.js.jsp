@@ -2,14 +2,14 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat"
 %><%@page import="java.io.PrintWriter,java.io.InputStream,java.io.InputStreamReader" 
-%><%@page import="org.tangram.Constants,org.tangram.content.CodeResource,org.tangram.components.TangramServices"
+%><%@page import="org.tangram.Constants,org.tangram.content.CodeResource"
 %><%@page import="org.tangram.view.Utils,com.yahoo.platform.yui.compressor.JavaScriptCompressor"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard coded mimetype
 response.setContentType("text/javascript");
 Calendar calendar = Calendar.getInstance();
 response.setHeader("Last-modified", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
-Map<String, Object> viewSettings = TangramServices.getViewSettings();
+  Map<String, Object> viewSettings = (Map<String, Object>)application.getAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS);
 if (viewSettings.get("jsCacheTime") != null) {
   int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("jsCacheTime"));
   calendar.add(Calendar.MINUTE, cacheTimeMinutes);

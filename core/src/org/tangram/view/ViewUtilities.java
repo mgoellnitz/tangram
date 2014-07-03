@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Instances implement the tangram view include mechanism for object oriented templating of generic models.
+ *
+ * Instances are required to populate the servlet context with the view settings hash maps containg caching
+ * time values for images, css, and java script.
  */
 public interface ViewUtilities {
 

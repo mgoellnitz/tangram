@@ -26,13 +26,14 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
+import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
@@ -50,7 +51,7 @@ import org.tangram.view.ViewUtilities;
  */
 @Named("viewUtilities")
 @Singleton
-public class SpringViewUtilities implements ViewUtilities {
+public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpringViewUtilities.class);
 
@@ -59,6 +60,10 @@ public class SpringViewUtilities implements ViewUtilities {
 
     @Inject
     private ViewHandler viewHandler;
+
+    private Map<String, Object> viewSettings = null;
+
+    private ServletContext servletContext;
 
     /**
      * Value to be used if there is not view in hash tables and the like where the use of null would not indicate
@@ -77,6 +82,30 @@ public class SpringViewUtilities implements ViewUtilities {
         }
 
     };
+
+
+    @Inject
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+
+    /**
+     * This is "rawtypes" because of google guice's weak injection mechanism.
+     */
+    public Map<String, Object> getViewSettings() {
+        return viewSettings;
+    }
+
+
+    @Inject
+    @SuppressWarnings("unchecked")
+    public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
+        if (viewSettings.containsKey("viewSettings")) {
+            viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));
+        } // if
+        this.viewSettings = viewSettings;
+    } // setViewSettings()
 
 
     @Override
@@ -155,7 +184,7 @@ public class SpringViewUtilities implements ViewUtilities {
 
     @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(viewHandler, "No view handler found");
+        servletContext.setAttribute("viewSettings", viewSettings);
     } // afterPropertiesSet()
 
 } // SpringViewUtilities

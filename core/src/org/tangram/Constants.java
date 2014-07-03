@@ -81,19 +81,24 @@ public final class Constants {
      * Name of the request attribute to hold the action to be used for link generation within text properties.
      */
     public static final String ATTRIBUTE_EMBEDDED_ACTION = "embedded.link.action";
-    
+
     /**
-     * name of the request attribute to take a currently valid logout url from
+     * name of the request attribute to hold the view settings hash map.
+     */
+    public static final String ATTRIBUTE_VIEW_SETTINGS = "viewSettings";
+
+    /**
+     * name of the request attribute to take a currently valid logout url from.
      */
     public static final String ATTRIBUTE_LOGOUT_URL = "logoutUrl";
 
     /*
-     * name of the request attribute to take a currently valid login from
+     * name of the request attribute to take a currently valid login from.
      */
     public static final String ATTRIBUTE_LOGIN_URL = "loginUrl";
 
     /**
-     * name of the request attribute to take the result of a login attempt from
+     * name of the request attribute to take the result of a login attempt from.
      */
     public static final String ATTRIBUTE_LOGIN_RESULT = "loginResult";
 

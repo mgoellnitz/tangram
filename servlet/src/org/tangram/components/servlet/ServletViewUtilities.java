@@ -29,10 +29,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -71,17 +73,17 @@ public class ServletViewUtilities implements ViewUtilities {
     @Inject
     private CodeResourceCache codeResourceCache;
 
-    @SuppressWarnings("rawtypes")
-    private static List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
+    @Inject
+    private ServletContext servletContext;
 
-    private static VelocityEngine velocityEngine;
+    private static Map<String, Object> viewSettings = null;
+
+    @SuppressWarnings("rawtypes")
+    private List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
+
+    private VelocityEngine velocityEngine;
 
     private long uploadFileMaxSize = 500000;
-
-
-    public void setUploadFileMaxSize(long uploadFileMaxSize) {
-        this.uploadFileMaxSize = uploadFileMaxSize;
-    }
 
 
     public ServletViewUtilities() {
@@ -112,6 +114,29 @@ public class ServletViewUtilities implements ViewUtilities {
     @Override
     public ViewContextFactory getViewContextFactory() {
         return viewContextFactory;
+    }
+
+
+    /**
+     * This is "rawtypes" because of google guice's weak injection mechanism.
+     */
+    public Map<String, Object> getViewSettings() {
+        return viewSettings;
+    }
+
+
+    @Inject
+    @SuppressWarnings("unchecked")
+    public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
+        if (viewSettings.containsKey("viewSettings")) {
+            viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));
+        } // if
+        this.viewSettings = viewSettings;
+    } // setViewSettings()
+
+
+    public void setUploadFileMaxSize(long uploadFileMaxSize) {
+        this.uploadFileMaxSize = uploadFileMaxSize;
     }
 
 
@@ -149,7 +174,7 @@ public class ServletViewUtilities implements ViewUtilities {
         if (LOG.isDebugEnabled()) {
             LOG.debug("render() template="+template);
         } // if
-        if (template == null) {
+        if (template==null) {
             throw new IOException("no view found for model "+model);
         } // if
         ViewContext vc = viewContextFactory.createViewContext(model, view);
@@ -228,5 +253,14 @@ public class ServletViewUtilities implements ViewUtilities {
     public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
         render(out, viewContextFactory.createModel(bean, request, response), view);
     } // render()
+
+
+    @PostConstruct
+    public void afterPropertiesSet() throws Exception {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() viewSettings="+viewSettings);
+        } // if
+        servletContext.setAttribute("viewSettings", viewSettings);
+    } // afterPropertiesSet()
 
 } // ServletViewUtilities

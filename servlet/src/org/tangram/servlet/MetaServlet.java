@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.view.ViewContext;
-import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 
 
@@ -44,9 +43,6 @@ public class MetaServlet extends HttpServlet {
     protected ViewUtilities viewUtilities;
 
     @Inject
-    protected ViewContextFactory viewContextFactory;
-
-    @Inject
     private MetaLinkHandler handler;
 
 
@@ -58,7 +54,7 @@ public class MetaServlet extends HttpServlet {
                 viewUtilities.render(null, context.getModel(), context.getViewName());
             } // if
         } catch (Throwable ex) {
-            ViewContext context = viewContextFactory.createViewContext(ex, request, response);
+            ViewContext context = viewUtilities.getViewContextFactory().createViewContext(ex, request, response);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
             } // if

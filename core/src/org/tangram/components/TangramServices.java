@@ -18,7 +18,6 @@
  */
 package org.tangram.components;
 
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.tangram.content.BeanFactory;
@@ -41,8 +40,6 @@ public class TangramServices {
     private static LinkFactoryAggregator linkFactoryAggregator = null;
 
     private static ViewUtilities viewUtilities = null;
-
-    private static Map<String, Object> viewSettings = null;
 
 
     public static BeanFactory getBeanFactory() {
@@ -76,23 +73,5 @@ public class TangramServices {
     public void setViewUtilities(ViewUtilities viewUtilities) {
         TangramServices.viewUtilities = viewUtilities;
     }
-
-
-    /**
-     * This is "rawtypes" because of google guice's weak injection mechanism.
-     */
-    public static Map<String, Object> getViewSettings() {
-        return viewSettings;
-    }
-
-
-    @Inject
-    @SuppressWarnings("unchecked")
-    public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
-        if (viewSettings.containsKey("viewSettings")) {
-            viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));
-        } // if
-        TangramServices.viewSettings = viewSettings;
-    } // setViewSettings()
 
 } // TangramServices
