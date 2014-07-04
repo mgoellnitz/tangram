@@ -42,6 +42,16 @@ public interface LinkFactoryAggregator {
     void unregisterFactory(LinkFactory handler);
 
 
+    /**
+     * Create a link for the given bean, action, and view in the context of a request and response.
+     *
+     * @param request
+     * @param response
+     * @param bean
+     * @param action
+     * @param view
+     * @return
+     */
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
 

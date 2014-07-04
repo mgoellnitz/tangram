@@ -29,7 +29,7 @@
 
   <bean id="viewContextFactory" class="org.tangram.view.DynamicViewContextFactory" />
 
-  <bean id="linkFactory" class="org.tangram.link.GenericLinkFactoryAggregator">
+  <bean id="linkFactoryAggregator" class="org.tangram.link.GenericLinkFactoryAggregator">
     <property name="dispatcherPath" value="${tangram.servlet.path}" />
   </bean>
 
