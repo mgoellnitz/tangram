@@ -156,8 +156,8 @@ public class ServletViewUtilities implements ViewUtilities {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void render(Writer out, Map<String, Object> model, String view) throws IOException {
         view = (view==null) ? Constants.DEFAULT_VIEW : view;
-        HttpServletRequest request = (HttpServletRequest) model.get("request");
-        HttpServletResponse response = (HttpServletResponse) model.get("response");
+        HttpServletRequest request = (HttpServletRequest) model.get(Constants.ATTRIBUTE_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
         String template = null;
         if (LOG.isDebugEnabled()) {
             LOG.debug("render() resolvers="+resolvers);

@@ -83,9 +83,34 @@ public final class Constants {
     public static final String ATTRIBUTE_EMBEDDED_ACTION = "embedded.link.action";
 
     /**
-     * name of the request attribute to hold the view settings hash map.
+     * name of the attribute holding the handled request.
+     */
+    public static final String ATTRIBUTE_REQUEST = "request";
+
+    /**
+     * name of the attribute holding response to be issued.
+     */
+    public static final String ATTRIBUTE_RESPONSE = "response";
+
+    /**
+     * name of the application attribute to hold the view settings hash map.
      */
     public static final String ATTRIBUTE_VIEW_SETTINGS = "viewSettings";
+
+    /**
+     * name of the application attribute to hold the bean factory instance.
+     */
+    public static final String ATTRIBUTE_BEAN_FACTORY = "beanFactory";
+
+    /**
+     * name of the application attribute to hold the view utilities instance.
+     */
+    public static final String ATTRIBUTE_VIEW_UTILITIES = "viewUtilities";
+
+    /**
+     * name of the application attribute to hold the link factory aggregator instance.
+     */
+    public static final String ATTRIBUTE_LINK_FACTORY_AGGREGATOR = "linkFactoryAggregator";
 
     /**
      * name of the request attribute to take a currently valid logout url from.

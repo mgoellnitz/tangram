@@ -364,8 +364,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             } // if
             response.setContentType("text/html; charset=UTF-8");
             request.setAttribute(Constants.THIS, contents);
-            request.setAttribute("request", request);
-            request.setAttribute("response", response);
+            request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
+            request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
             request.setAttribute("classes", classes);
             request.setAttribute("canDelete", deleteMethodEnabled);
             request.setAttribute("prefix", Utils.getUriPrefix(request));

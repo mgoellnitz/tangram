@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view;
@@ -40,8 +40,8 @@ public class DefaultViewContextFactory implements ViewContextFactory {
     public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(Constants.THIS, bean);
-        model.put("request", request);
-        model.put("response", response);
+        model.put(Constants.ATTRIBUTE_REQUEST, request);
+        model.put(Constants.ATTRIBUTE_RESPONSE, response);
         return model;
     } // createModelAndView()
 

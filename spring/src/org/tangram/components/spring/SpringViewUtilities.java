@@ -140,8 +140,8 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
 
 
     public void render(Writer out, Map<String, Object> model, String view) throws IOException {
-        ServletRequest request = (ServletRequest) model.get("request");
-        ServletResponse response = (ServletResponse) model.get("response");
+        ServletRequest request = (ServletRequest) model.get(Constants.ATTRIBUTE_REQUEST);
+        ServletResponse response = (ServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
 
         ViewContext vc = viewContextFactory.createViewContext(model, view);
         ModelAndView mav = SpringViewUtilities.createModelAndView(vc);
