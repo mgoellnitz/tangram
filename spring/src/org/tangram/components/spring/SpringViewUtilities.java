@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -61,8 +60,6 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
     @Inject
     private ViewHandler viewHandler;
 
-    private Map<String, Object> viewSettings = null;
-
     private ServletContext servletContext;
 
     /**
@@ -88,24 +85,6 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
-
-
-    /**
-     * This is "rawtypes" because of google guice's weak injection mechanism.
-     */
-    public Map<String, Object> getViewSettings() {
-        return viewSettings;
-    }
-
-
-    @Inject
-    @SuppressWarnings("unchecked")
-    public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
-        if (viewSettings.containsKey("viewSettings")) {
-            viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));
-        } // if
-        this.viewSettings = viewSettings;
-    } // setViewSettings()
 
 
     @Override
@@ -180,11 +159,5 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
     public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
         render(out, viewContextFactory.createModel(bean, request, response), view);
     } // render()
-
-
-    @PostConstruct
-    public void afterPropertiesSet() throws Exception {
-        servletContext.setAttribute("viewSettings", viewSettings);
-    } // afterPropertiesSet()
 
 } // SpringViewUtilities

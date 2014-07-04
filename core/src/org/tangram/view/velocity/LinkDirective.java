@@ -29,6 +29,8 @@ import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.Constants;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.jsp.LinkTag;
 
 public class LinkDirective extends Directive {
@@ -57,8 +59,9 @@ public class LinkDirective extends Directive {
 
     @Override
     public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException {
-        HttpServletRequest request = (HttpServletRequest)context.get("request");
-        HttpServletResponse response = (HttpServletResponse)context.get("response");
+        HttpServletRequest request = (HttpServletRequest)context.get(Constants.ATTRIBUTE_REQUEST);
+        HttpServletResponse response = (HttpServletResponse)context.get(Constants.ATTRIBUTE_RESPONSE);
+        LinkFactoryAggregator builder = (LinkFactoryAggregator)context.get(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
 
         /* getting direct parameters */
         Object bean = node.jjtGetChild(0).value(context);
@@ -101,7 +104,7 @@ public class LinkDirective extends Directive {
         } // if
 
         try {
-            LinkTag.render(request, response, writer, bean, action, view, href, target, handlers);
+            LinkTag.render(builder, request, response, writer, bean, action, view, href, target, handlers);
         } catch (RuntimeException rte) {
             LOG.error("render()", rte);
         } // try/catch

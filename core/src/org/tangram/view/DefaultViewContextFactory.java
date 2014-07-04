@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -20,13 +20,16 @@ package org.tangram.view;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import org.tangram.Constants;
+import org.tangram.link.LinkFactoryAggregator;
+
 
 /**
  * Factory implementation to create instances describing a view and its context.
- * The context in this case is describes as a multi value model taken from a hash map.
+ * The context in this case is described as a multi value model taken from a hash map.
  *
  * Despite it's name it's not really the default for tangram anymore.
  *
@@ -36,10 +39,15 @@ import org.tangram.Constants;
  */
 public class DefaultViewContextFactory implements ViewContextFactory {
 
+    @Inject
+    private LinkFactoryAggregator linkFactoryAggregator;
+
+
     @Override
     public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(Constants.THIS, bean);
+        model.put(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR, linkFactoryAggregator);
         model.put(Constants.ATTRIBUTE_REQUEST, request);
         model.put(Constants.ATTRIBUTE_RESPONSE, response);
         return model;

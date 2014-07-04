@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -50,7 +49,6 @@ import org.tangram.content.CodeResource;
 import org.tangram.servlet.ResponseWrapper;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
-import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 
@@ -75,8 +73,6 @@ public class ServletViewUtilities implements ViewUtilities {
 
     @Inject
     private ServletContext servletContext;
-
-    private static Map<String, Object> viewSettings = null;
 
     @SuppressWarnings("rawtypes")
     private List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
@@ -115,24 +111,6 @@ public class ServletViewUtilities implements ViewUtilities {
     public ViewContextFactory getViewContextFactory() {
         return viewContextFactory;
     }
-
-
-    /**
-     * This is "rawtypes" because of google guice's weak injection mechanism.
-     */
-    public Map<String, Object> getViewSettings() {
-        return viewSettings;
-    }
-
-
-    @Inject
-    @SuppressWarnings("unchecked")
-    public void setViewSettings(@Named("viewSettings") Map<String, Object> viewSettings) {
-        if (viewSettings.containsKey("viewSettings")) {
-            viewSettings = (Map<String, Object>) (viewSettings.get("viewSettings"));
-        } // if
-        this.viewSettings = viewSettings;
-    } // setViewSettings()
 
 
     public void setUploadFileMaxSize(long uploadFileMaxSize) {
@@ -175,10 +153,8 @@ public class ServletViewUtilities implements ViewUtilities {
             LOG.debug("render() template="+template);
         } // if
         if (template==null) {
-            throw new IOException("no view found for model "+model);
+            throw new IOException("no view "+view+" found for model "+model);
         } // if
-        ViewContext vc = viewContextFactory.createViewContext(model, view);
-
         if (ID_PATTRN.matcher(template).matches()) {
             // Velocity:
             if (LOG.isDebugEnabled()) {
@@ -197,6 +173,9 @@ public class ServletViewUtilities implements ViewUtilities {
                     out.flush();
                 } // if
                 VelocityContext context = new VelocityContext(model);
+                if (!context.containsKey(Constants.ATTRIBUTE_VIEW_UTILITIES)) {
+                    context.put(Constants.ATTRIBUTE_VIEW_UTILITIES, this);
+                } // if
                 // Doesn't work and fails with wrong encoding - but would have used the caching of velocity
                 // velocityEngine.getTemplate(template).merge(context, response.getWriter());
                 velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new StringReader(codeResource.getCodeText()));
@@ -253,14 +232,5 @@ public class ServletViewUtilities implements ViewUtilities {
     public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
         render(out, viewContextFactory.createModel(bean, request, response), view);
     } // render()
-
-
-    @PostConstruct
-    public void afterPropertiesSet() throws Exception {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() viewSettings="+viewSettings);
-        } // if
-        servletContext.setAttribute("viewSettings", viewSettings);
-    } // afterPropertiesSet()
 
 } // ServletViewUtilities

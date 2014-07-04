@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.view.velocity;
@@ -28,8 +28,9 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
-import org.tangram.components.TangramServices;
+import org.tangram.Constants;
 import org.tangram.view.ViewUtilities;
+
 
 public class IncludeDirective extends Directive {
 
@@ -54,20 +55,21 @@ public class IncludeDirective extends Directive {
 
     @Override
     public boolean render(InternalContextAdapter context, Writer writer, Node node) throws IOException {
-        HttpServletRequest request = (HttpServletRequest)context.get("request");
-        HttpServletResponse response = (HttpServletResponse)context.get("response");
+        HttpServletRequest request = (HttpServletRequest) context.get(Constants.ATTRIBUTE_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) context.get(Constants.ATTRIBUTE_RESPONSE);
 
         /* getting direct parameters */
         Object bean = node.jjtGetChild(0).value(context);
-        String view = (node.jjtGetNumChildren()>1) ? (String)node.jjtGetChild(1).value(context) : null;
+        String view = (node.jjtGetNumChildren()>1) ? (String) node.jjtGetChild(1).value(context) : null;
+
+        final ViewUtilities viewUtilities = ((ViewUtilities) (context.get(Constants.ATTRIBUTE_VIEW_UTILITIES)));
 
         // copy model from original context
-        final ViewUtilities viewUtilities = TangramServices.getViewUtilities();
         Map<String, Object> model = viewUtilities.getViewContextFactory().createModel(bean, request, response);
         Object[] keys = context.getKeys();
         for (Object key : keys) {
             String k = ""+key;
-            if ( !model.containsKey(k)) {
+            if (!model.containsKey(k)) {
                 model.put(k, context.get(k));
             } // if
         } // for

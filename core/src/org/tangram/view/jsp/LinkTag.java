@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Map;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
@@ -29,7 +30,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.TangramServices;
+import org.tangram.Constants;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 
@@ -141,12 +142,10 @@ public class LinkTag implements Tag, Serializable {
     } // doStartTag()
 
 
-    public static void render(HttpServletRequest request, HttpServletResponse response, Writer out, Object bean, String action, String view, boolean isHref,
+    public static void render(LinkFactoryAggregator builder, HttpServletRequest request, HttpServletResponse response, Writer out, Object bean, String action, String view, boolean isHref,
                               boolean isTarget, boolean isHandlers) {
-        LinkFactoryAggregator linkBuilder = TangramServices.getLinkFactoryAggregator();
-
         try {
-            Link link = linkBuilder.createLink(request, response, bean, action, view);
+            Link link = builder.createLink(request, response, bean, action, view);
             if (isHref) {
                 out.write("href=\"");
             } // if
@@ -170,17 +169,14 @@ public class LinkTag implements Tag, Serializable {
     } // render()
 
 
-    public static void render(HttpServletRequest request, HttpServletResponse response, Writer out, Object bean, String action, String view) {
-        render(request, response, out, bean, action, view, false, false, false);
-    } // render()
-
-
     @Override
     public int doEndTag() throws JspException {
         Writer out = context.getOut();
         HttpServletRequest request = (HttpServletRequest) (context.getRequest());
         HttpServletResponse response = (HttpServletResponse) (context.getResponse());
-        render(request, response, out, getBean(), getAction(), getView(), isHref(), isTarget(), isHandlers());
+        final ServletContext servletContext = context.getServletContext();
+        LinkFactoryAggregator builder = (LinkFactoryAggregator)servletContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
+        render(builder, request, response, out, getBean(), getAction(), getView(), isHref(), isTarget(), isHandlers());
         return EVAL_PAGE;
     } // doEndTag()
 

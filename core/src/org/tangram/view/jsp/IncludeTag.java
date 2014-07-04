@@ -20,6 +20,7 @@ package org.tangram.view.jsp;
 
 import java.io.Serializable;
 import java.io.Writer;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.jsp.JspException;
@@ -27,7 +28,8 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.TangramServices;
+import org.tangram.Constants;
+import org.tangram.view.ViewUtilities;
 
 
 public class IncludeTag implements Tag, Serializable {
@@ -83,18 +85,17 @@ public class IncludeTag implements Tag, Serializable {
     }
 
 
-    public static void render(ServletRequest request, ServletResponse resp, Writer out, Object bean, String view) {
+    public static void render(ServletContext context, ServletRequest request, ServletResponse resp, Writer out, Object bean, String view) {
         if (bean==null) {
             return;
         } // if
-
         Object oldSelf = request.getAttribute(org.tangram.Constants.THIS);
         try {
             request.setAttribute(org.tangram.Constants.THIS, bean);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("render() bean="+bean.getClass().getName()+" #"+view);
             } // if
-            TangramServices.getViewUtilities().render(out, bean, view, request, resp);
+            ((ViewUtilities)(context.getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES))).render(out, bean, view, request, resp);
         } catch (Exception e) {
             LOG.error("render() bean="+bean.getClass().getName()+" #"+view, e);
         } // try/catch
@@ -113,7 +114,7 @@ public class IncludeTag implements Tag, Serializable {
         if (LOG.isDebugEnabled()) {
             LOG.debug("doEndTag("+Thread.currentThread().getId()+") view "+view);
         } // if
-        render(pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
+        render(pc.getServletContext(), pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
         return EVAL_PAGE;
     } // doEndTag()
 

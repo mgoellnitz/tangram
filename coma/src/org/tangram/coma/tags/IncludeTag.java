@@ -1,7 +1,7 @@
 /**
- * 
- * Copyright 2011 Martin Goellnitz
- * 
+ *
+ * Copyright 2011-2014 Martin Goellnitz
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,13 +13,12 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package org.tangram.coma.tags;
 
 import java.io.Serializable;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
@@ -83,7 +82,7 @@ public class IncludeTag implements Tag, Serializable {
 
     @Override
     public int doEndTag() throws JspException {
-        org.tangram.view.jsp.IncludeTag.render(pc.getRequest(), pc.getResponse(), pc.getOut(), theSelf, view);
+        org.tangram.view.jsp.IncludeTag.render(pc.getServletContext(), pc.getRequest(), pc.getResponse(), pc.getOut(), theSelf, view);
         return EVAL_PAGE;
     } // doEndTag()
 
@@ -96,4 +95,4 @@ public class IncludeTag implements Tag, Serializable {
         view = null;
     } // release()
 
-} // Include
+} // IncludeTag

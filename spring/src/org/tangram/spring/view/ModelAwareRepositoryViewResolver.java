@@ -18,19 +18,25 @@
  */
 package org.tangram.spring.view;
 
-import org.tangram.components.spring.SpringViewUtilities;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+import javax.inject.Inject;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.velocity.VelocityView;
+import org.tangram.Constants;
+import org.tangram.components.spring.SpringViewUtilities;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.view.AbstractRepositoryTemplateResolver;
+import org.tangram.view.ViewUtilities;
 
 
 public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplateResolver<View> implements BeanListener, ModelAwareViewResolver {
+
+    @Inject
+    private ViewUtilities viewUtilities;
 
     private int order = Integer.MAX_VALUE;
 
@@ -73,6 +79,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplate
             if (result!=null) {
                 if (result instanceof VelocityView) {
                     VelocityView v = (VelocityView) result;
+                    v.addStaticAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, viewUtilities);
                     v.setContentType(template.getMimeType()+";charset=UTF-8");
                     v.setEncoding("UTF-8");
                 } // if

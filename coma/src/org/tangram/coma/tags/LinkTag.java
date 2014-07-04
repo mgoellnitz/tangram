@@ -27,7 +27,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.TangramServices;
+import org.tangram.Constants;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 
@@ -95,7 +95,7 @@ public class LinkTag implements Tag, Serializable {
         try {
             HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
             HttpServletResponse response = (HttpServletResponse)pageContext.getResponse();
-            LinkFactoryAggregator builder = TangramServices.getLinkFactoryAggregator();
+            LinkFactoryAggregator builder = (LinkFactoryAggregator)(pageContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR));
             if (LOG.isDebugEnabled()) {
                 LOG.debug("doEndTag() "+target+" "+view);
             } // if

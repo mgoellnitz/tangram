@@ -6,10 +6,10 @@
 %><%
     char[] t = (char[])request.getAttribute(Constants.THIS);
     if (t!=null) {
-        String view = (String)request.getAttribute(Constants.ATTRIBUTE_EMBDDED_VIEW);
+        String view = (String)request.getAttribute(Constants.ATTRIBUTE_EMBEDDED_VIEW);
         String action = (String)request.getAttribute(Constants.ATTRIBUTE_EMBEDDED_ACTION);
-        BeanFactory beanFactory = (LinkFactoryAggregator)application.get(Constants.ATTRIBUTE_BEAN_FACTORY_AGGREGATOR);
-        LinkFactoryAggregator linkFactory = (LinkFactoryAggregator)application.get(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
+        BeanFactory beanFactory = (BeanFactory)application.getAttribute(Constants.ATTRIBUTE_BEAN_FACTORY);
+        LinkFactoryAggregator linkFactory = (LinkFactoryAggregator)application.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
         Pattern p = Constants.TEXT_ID_PATTERN;
         StringBuffer valueString = new StringBuffer(new String(t));
         Matcher m = p.matcher(valueString);
