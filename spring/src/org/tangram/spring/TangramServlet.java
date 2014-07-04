@@ -34,16 +34,21 @@ public class TangramServlet extends DispatcherServlet {
     private ViewHandler viewHandler;
 
 
-    public TangramServlet() {
-        // Just for performance testing:
-        // this.setContextClass(org.tangram.WebApplicationContext.class);
-    } // TangramServlet()
-
-
+    /**
+     * Obtain view handler and expose application scope to the servlet context.
+     *
+     * resolves the view handler instance from the application context and exposes any bean on that context
+     * to the servleet context scope if the servlet layer.
+     *
+     * @param context (spring) application context
+     */
     @Override
     protected void initStrategies(ApplicationContext context) {
         super.initStrategies(context);
         viewHandler = context.getBeansOfType(ViewHandler.class).values().iterator().next();
+        for (String name : context.getBeanNamesForType(Object.class)) {
+            getServletContext().setAttribute(name, context.getBean(name));
+        } // for
         if (viewHandler==null) {
             throw new RuntimeException("no view handler");
         } // if
