@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.gae.protection;
@@ -60,11 +60,21 @@ public class OpenIDProtection extends AbstractProtection {
     }
 
 
+    /**
+     * Returns a Map of provider key mapping to login URLs for the given backend service.
+     *
+     * @return
+     */
     public Map<String, String> getProviders() {
         return OPEN_ID_PROVIDERS;
     } // getProviders()
 
 
+    /**
+     * Returns a collection of keys for the getProviders() map.
+     *
+     * @return
+     */
     public Collection<String> getProviderNames() {
         return OPEN_ID_PROVIDERS.keySet();
     } // getProviders()
