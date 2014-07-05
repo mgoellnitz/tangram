@@ -24,7 +24,7 @@ apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 
 String[] roots = ["${project.projectDir}/src/main/groovy"]
-def versions = new GroovyScriptEngine(roots).loadScriptByName('TangramVersions.groovy').newInstance()
+def versions = new GroovyScriptEngine(roots).loadScriptByName('org/tangram/gradle/plugin/TangramVersions.groovy').newInstance()
 
 repositories {
   // most of the usual stuff
@@ -51,20 +51,25 @@ dependencies {
   compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
 }
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      // TODO: Not available on Gradle 1.6 - which is again effective on buildhive
-      // groupId 'tangram'
-      // artifactId 'gradle-plugin'
-      // version '0.9-SNAPSHOT'
-      from components.java
-      artifact sourcesJar 
-    }
-  }
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
   classifier = 'sources'
   from sourceSets.main.allSource
+}
+
+task groovydocJar(type: Jar, dependsOn: groovydoc) {
+  classifier = 'javadoc'
+  from "${buildDir}/docs/groovydoc"
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId 'tangram'
+      artifactId 'gradle-plugin'
+      version '0.9-SNAPSHOT'
+      from components.java
+      artifact sourcesJar
+      artifact groovydocJar
+    }
+  }
 }
