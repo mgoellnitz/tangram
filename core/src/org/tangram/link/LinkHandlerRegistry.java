@@ -27,8 +27,8 @@ package org.tangram.link;
 public interface LinkHandlerRegistry {
 
     /**
-     * Handlers to be registered need not implement the LinkHandler interface but might be annotated with
-     * @LinkHandler.
+     * Handlers to be registered need not implement the LinkHandler interface but might be annotated as
+     * being a LinkHandler.
      *
      * In the later case some @LinkAction at some methods must be present for the handler to
      * be in effect.

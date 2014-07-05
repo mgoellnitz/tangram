@@ -216,8 +216,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     /**
      * remember that the newly created bean has to be persisted in the now open transaction!
      *
-     * @param <>> type of bean to create
-     * @param cls type of bean to create
+     * @param <T> type of bean to create
+     * @param cls instance of that type
      * @throws IllegalAccessException
      * @throws InstantiationException
      */

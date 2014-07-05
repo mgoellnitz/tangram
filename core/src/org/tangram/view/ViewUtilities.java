@@ -38,7 +38,7 @@ public interface ViewUtilities {
     /**
      * Return the view context factory used by the implementing view utilities instance.
      *
-     * @return
+     * @return view context factory instance
      */
     public ViewContextFactory getViewContextFactory();
 

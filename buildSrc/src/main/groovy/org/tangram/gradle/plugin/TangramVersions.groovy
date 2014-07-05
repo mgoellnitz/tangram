@@ -16,10 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package org.tangram.gradle.plugin;
 
 /**
- *  Version constants for the components used to consistent reference through
- *  build files.
+ *  Version constants for the components used in tangram and (optionally but reommended) 
+ *  the applications using it. 
+ *  
+ *  By the use of the constants from within build files a consistent library set is ensured. 
  */
 public class TangramVersions {
 

@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package org.tangram.gradle.plugin;
 
 /**
- *  Minification filter classes for JavaScript and CSS
+ *  Minification filter class for JavaScript
  */
 class JavaScriptMinify extends FilterReader {
 
@@ -42,6 +43,9 @@ class JavaScriptMinify extends FilterReader {
 } // JavaScriptMinify
 
 
+/**
+ *  Minification filter class for Cascading Style Sheets
+ */
 class CSSMinify extends FilterReader {
 
     Reader inputReader

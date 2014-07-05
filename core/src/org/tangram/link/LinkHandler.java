@@ -44,9 +44,8 @@ public interface LinkHandler extends LinkFactory {
      * return the id of the object to be show, null otherwise
      *
      * @param url
-     * @param response
-     *            for error handling
-     * @return
+     * @param response for error handling
+     * @return parsing result as a target descriptor instance
      */
     TargetDescriptor parseLink(String url, HttpServletResponse response);
 

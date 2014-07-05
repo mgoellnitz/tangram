@@ -81,8 +81,8 @@ public interface PropertyConverter {
     /**
      * Create an instance of the blob type (s.a.) from the given bytes.
      *
-     * @param octets
-     * @return
+     * @param octets bytes for the blob
+     * @return object resembling the byte[]
      */
     public abstract Object createBlob(byte[] octets);
 

@@ -48,8 +48,8 @@ public interface ClassRepository {
 
     /**
      * Get classes from this repository being subclasses of a given class.
-     * @param <T>
-     * @param cls base class for the result
+     * @param <T> Type to look for
+     * @param annotation class level annotation the resulting classes must have
      * @return map code resource annotation to class instance
      */
     <T extends Object> Map<String, Class<T>> getAnnotated(Class<? extends Annotation> annotation);

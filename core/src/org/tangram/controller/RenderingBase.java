@@ -76,12 +76,13 @@ public abstract class RenderingBase implements LinkFactory {
 
 
     /**
-     * also calls any registered hooks
+     * Creates model from a common set of parameters.
+     *
+     * Uses the meta link handler and thus also calls any registered hooks.
      *
      * @param request
      * @param response
-     * @param bean
-     * @return
+     * @return map resembling the model
      * @throws Exception
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)

@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,11 +24,32 @@ configurations {
   providedCompile
 }
 
+// right now this is only necessary for the libs
+// http://forums.gradle.org/gradle/topics/exclude_not_set_in_generated_pom_maven_publish
 publishing {
   publications {
     mavenJava(MavenPublication) {
       from components.java
       artifact sourcesJar 
+      artifact javadocJar 
+      configurations[JavaPlugin.RUNTIME_CONFIGURATION_NAME].allDependencies.findAll {  
+        it instanceof ModuleDependency && !it.excludeRules.isEmpty()  
+      }.each { ModuleDependency dep ->  
+        pom.withXml {  
+          def xmlDep = asNode().dependencies.dependency.find {  
+            it.groupId[0].text() == dep.group && it.artifactId[0].text() == dep.name  
+          }
+          if (xmlDep) {
+            def xmlExclusions = xmlDep.exclusions[0]  
+            if (!xmlExclusions) xmlExclusions = xmlDep.appendNode('exclusions')
+            dep.excludeRules.each { ExcludeRule rule ->
+              def xmlExclusion = xmlExclusions.appendNode('exclusion')  
+              xmlExclusion.appendNode('groupId', rule.group)  
+              xmlExclusion.appendNode('artifactId', rule.module)  
+            }  
+          }
+        }
+      }  
     }
   }
 }

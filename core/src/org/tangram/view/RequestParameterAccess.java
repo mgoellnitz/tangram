@@ -32,7 +32,7 @@ public interface RequestParameterAccess {
     /**
      * Instances return a aollection of blob parameter names
      *
-     * @return
+     * @return get names of parameters holding blobs
      */
     Collection<String> getBlobNames();
 

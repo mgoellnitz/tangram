@@ -35,6 +35,7 @@ publishing {
     mavenJava(MavenPublication) {
       from components.java
       artifact sourcesJar 
+      artifact javadocJar 
       artifact war {
         classifier 'war'
         extension 'war'

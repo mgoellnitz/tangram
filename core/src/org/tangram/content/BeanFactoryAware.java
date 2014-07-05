@@ -25,6 +25,11 @@ package org.tangram.content;
  */
 public interface BeanFactoryAware {
 
+    /**
+     * attach bean factory to implementing instance.
+     *
+     * @param factory bean factory instance to attach
+     */
     void setBeanFactory(BeanFactory factory);
 
 } // BeanFactoryAware

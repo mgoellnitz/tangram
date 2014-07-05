@@ -32,7 +32,7 @@ public interface JdoBeanFactory extends MutableBeanFactory {
     /**
      * Get all classes related with models - also the abstract ones
      *
-     * @return
+     * @return collection with all classes
      */
     Collection<Class<? extends Content>> getAllClasses();
 

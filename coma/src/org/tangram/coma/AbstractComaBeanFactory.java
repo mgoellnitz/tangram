@@ -167,11 +167,13 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     /**
-     * instance "id" must be of type "type"!!!
+     * Get the properties for an object with a given type and id.
+     *
+     * The instance "id" must be of type "type" otherwise the method will fail!
      *
      * @param type
      * @param id
-     * @return
+     * @return map mapping the property names to their respective values
      */
     public Map<String, Object> getProperties(BeanFactory factory, String type, String id) {
         Map<String, Object> properties = new HashMap<String, Object>();

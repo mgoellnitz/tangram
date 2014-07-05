@@ -87,8 +87,7 @@ public class TangramSpringServices implements ApplicationContextAware {
      * create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
      *
      * @param bean
-     * @param conversionService
-     * @return
+     * @return wrapper for the given bean
      */
     public static BeanWrapper createWrapper(Object bean) {
         BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);

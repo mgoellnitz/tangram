@@ -50,7 +50,7 @@ public interface LinkFactoryAggregator {
      * @param bean
      * @param action
      * @param view
-     * @return
+     * @return link instance for the given parameters
      */
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
@@ -60,13 +60,13 @@ public interface LinkFactoryAggregator {
      *
      * Ignores the internally registered set of implementations.
      *
-     * @param linkkHandlers
+     * @param handlers
      * @param request
      * @param response
      * @param bean
      * @param action
      * @param view
-     * @return
+     * @return link instance for the given parameters
      */
     Link createLink(Collection<? extends LinkFactory> handlers, HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
@@ -76,7 +76,7 @@ public interface LinkFactoryAggregator {
      *
      * @param target
      * @param methodName
-     * @return
+     * @return method instance or null
      */
     Method findMethod(Object target, String methodName);
 

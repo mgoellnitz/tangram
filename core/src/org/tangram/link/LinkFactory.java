@@ -37,7 +37,7 @@ public interface LinkFactory {
      * @param bean
      * @param action
      * @param view
-     * @return
+     * @return link for the given set of parameters
      */
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 

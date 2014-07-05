@@ -63,7 +63,7 @@ public class OpenIDProtection extends AbstractProtection {
     /**
      * Returns a Map of provider key mapping to login URLs for the given backend service.
      *
-     * @return
+     * @return map mapping names to URLs
      */
     public Map<String, String> getProviders() {
         return OPEN_ID_PROVIDERS;
@@ -73,7 +73,7 @@ public class OpenIDProtection extends AbstractProtection {
     /**
      * Returns a collection of keys for the getProviders() map.
      *
-     * @return
+     * @return collection with the mentioned names
      */
     public Collection<String> getProviderNames() {
         return OPEN_ID_PROVIDERS.keySet();

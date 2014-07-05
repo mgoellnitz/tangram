@@ -64,7 +64,7 @@ public class JavaBean {
     /**
      * Return a collection of all property names of the underying bean.
      *
-     * @return
+     * @return names of properties
      */
     public Collection<String> propertyNames() {
         return descriptors.keySet();

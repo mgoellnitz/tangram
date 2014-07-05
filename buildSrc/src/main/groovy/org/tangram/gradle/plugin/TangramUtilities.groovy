@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+package org.tangram.gradle.plugin;
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.datanucleus.enhancer.DataNucleusEnhancer
@@ -27,19 +29,11 @@ import com.avaje.ebean.enhance.ant.OfflineFileTransform
 import org.eclipse.persistence.tools.weaving.jpa.StaticWeaveProcessor;
 
 
-class TangramPlugin implements Plugin<Project> {
-
-  public void apply(Project project) {
-    project.convention.plugins.utilities = new TangramUtilities(project)
-    project.extensions.create('versions', TangramVersions)
-  } // apply()
-    
-  public static void main(String[] args) {
-  }
-
-} // TangramPlugin
-
-
+/**
+ * Utility class building the foundation of the tangram plugin.
+ * The main utility functions for the hanlding of the needed oberlays and 
+ * the ORM frameworks are placed here.
+ */
 class TangramUtilities {
 
   private Project project

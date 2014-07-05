@@ -111,10 +111,10 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     /**
      * creates a model and also calls any registered controller hooks.
      *
+     * @param descriptor
      * @param request
      * @param response
-     * @param bean
-     * @return
+     * @return map resembling the model
      * @throws Exception
      */
     public Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)

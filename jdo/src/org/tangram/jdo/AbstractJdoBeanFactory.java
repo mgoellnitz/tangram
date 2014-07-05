@@ -371,7 +371,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      *
      * This method also returns the abstract classes or interfaces in the base packages.
      *
-     * @return
+     * @return collection with all classes
      */
     @Override
     @SuppressWarnings("unchecked")

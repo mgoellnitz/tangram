@@ -96,9 +96,9 @@ public class ProtectionHook implements ControllerHook {
 
     /**
      * Returns if a given protected content is protected by a given protection instance.
-     * @param protectedContent
-     * @param p
-     * @return
+     * @param protectedContent content potentially protected by p
+     * @param p proection instance to check content against
+     * @return true if the given content is protected by the instance p
      */
     public boolean isProtectedBy(ProtectedContent protectedContent, Protection p) {
         boolean result = false;
