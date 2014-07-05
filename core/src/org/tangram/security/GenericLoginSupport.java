@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,17 @@
  */
 package org.tangram.security;
 
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 
 @Named("loginSupport")
 public class GenericLoginSupport implements LoginSupport {
+
+    @Inject
+    ServletContext servletContext;
 
     private String staticLoginURL = "";
 
@@ -31,7 +36,7 @@ public class GenericLoginSupport implements LoginSupport {
 
 
     public void setStaticLoginURL(@Named("staticLoginURL") String staticLoginURL) {
-        this.staticLoginURL = staticLoginURL;
+        this.staticLoginURL = servletContext.getContextPath()+staticLoginURL;
     }
 
 
