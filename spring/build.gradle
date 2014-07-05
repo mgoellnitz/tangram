@@ -32,5 +32,7 @@ dependencies {
   compile "org.springframework:spring-web:$versions.springframework"
   compile "org.springframework:spring-webmvc:$versions.springframework"
   
+  compile "org.springframework.security:spring-security-core:$versions.springsecurity"
+  
   testCompile "junit:junit:$versions.junit"
 }
