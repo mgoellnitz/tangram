@@ -47,13 +47,15 @@ HOW-TO
 To make all this work you need
 
 - Java 7 (Java 8 is untested)
-- Gradle 1.8 or later (Including 2.0-rc1)
+- Gradle 1.8 or later (Including 2.0)
 
-To make things easier for applications using this framework we provide a gradle plugin now. 
-This means that you now have to prepare that first:
+To make things easier for applications using this framework we provide a gradle plugin now.
+
+To use this plugin seperately - which very much makes sense for applications using JPA, JDO, 
+or EBean - you have to build and publish the tangram buildSrc folder.
 
 ```bash
-cd gradle-plugin
+cd buildSrc
 gradle
 ```
 
@@ -69,11 +71,10 @@ which again automatically expands to
 gradle clean publishToMavenLocal
 ```
 
-and then you can build and use your projects using tangram or the examples
+and then you can build and use your projects using tangram or the examples.
 
 Optionally you might need Google App Engine but just if you want to use it 
-for your target systems
-(Yes, you will want to install java AND python version)
+for your target systems (Yes, you will want to install ths Java AND python version)
 
 Eclipse preparation:
 

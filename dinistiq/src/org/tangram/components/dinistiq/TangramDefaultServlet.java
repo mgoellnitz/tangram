@@ -25,7 +25,7 @@ import javax.inject.Named;
 import org.tangram.servlet.DefaultServlet;
 
 
-@Named
+@Named("defaultServlet")
 public class TangramDefaultServlet extends DefaultServlet implements RegisterableServlet {
 
     @Override

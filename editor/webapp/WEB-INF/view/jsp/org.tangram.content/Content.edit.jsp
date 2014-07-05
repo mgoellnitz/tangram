@@ -198,7 +198,7 @@ if (value instanceof Content) {
 %>
 </table>
 </form>
-(${self.class.name})<br/>
+(${contentClass.name})<br/>
 <cms:include bean="${self}" view="tangramEditorClasses" />
 <cms:include bean="${self}" view="tangramEditorFooter" />
 <script type="text/javascript">

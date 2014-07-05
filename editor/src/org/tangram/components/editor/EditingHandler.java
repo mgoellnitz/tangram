@@ -406,6 +406,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             request.setAttribute("prefix", Utils.getUriPrefix(request));
             Class<? extends Content> cls = content.getClass();
             final Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+            request.setAttribute("contentClass", cls);
             request.setAttribute("designClass", designClass);
             request.setAttribute("designClassPackage", designClass.getPackage());
 

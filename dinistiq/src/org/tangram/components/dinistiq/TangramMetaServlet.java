@@ -25,7 +25,7 @@ import javax.inject.Named;
 import org.tangram.servlet.MetaServlet;
 
 
-@Named
+@Named("metaServlet")
 public class TangramMetaServlet extends MetaServlet implements RegisterableServlet {
 
     @Override
