@@ -64,6 +64,6 @@ public class TangramVersions {
   String ebean_api = '3.1.1'
   String ebean_agent = '3.2.2'
 
-  String appengine = '1.9.4'
+  String appengine = '1.9.6'
   
 } // TangramVersions

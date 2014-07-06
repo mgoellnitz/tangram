@@ -18,7 +18,6 @@
  */
 package org.tangram.gae;
 
-import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,60 +69,14 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
      * we had to override the whole getBeans, so this one should never be called.
      */
     @Override
-    protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
-        throw new RuntimeException("GAE implementation is somewhat different");
-    } // getObjectId()
-
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Content> T getBean(Class<T> cls, String id) {
-        if (isActivateCaching()&&(cache.containsKey(id))) {
-            statistics.increase("get bean cached");
-            return (T) cache.get(id);
+    protected Object getObjectId(String internalId, Class<? extends Content> kindClass, String kind) {
+        long numericId = Long.parseLong(internalId);
+        if (lOG.isDebugEnabled()) {
+            lOG.debug("getObjectId() kind="+kind);
+            lOG.debug("getObjectId() numericId="+numericId);
         } // if
-        T result = null;
-        try {
-            Key key = null;
-            String kind = null;
-            long numericId = 0;
-            int idx = id.indexOf(':');
-            if (idx>0) {
-                kind = id.substring(0, idx);
-                numericId = Long.parseLong(id.substring(idx+1));
-            } else {
-                if (id.length()>25) {
-                    Key k = KeyFactory.stringToKey(id);
-                    kind = k.getKind();
-                    numericId = k.getId();
-                } // if
-            } // if
-            if (lOG.isDebugEnabled()) {
-                lOG.debug("getBean() kind="+kind);
-                lOG.debug("getBean() numericId="+numericId);
-            } // if
-            key = KeyFactory.createKey(kind, numericId);
-            if (modelClasses==null) {
-                getClasses();
-            } // if
-            Class<? extends Content> kindClass = tableNameMapping.get(kind);
-            if (!(cls.isAssignableFrom(kindClass))) {
-                throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
-            } // if
-            result = (T) manager.getObjectById(kindClass, key);
-
-            if (isActivateCaching()) {
-                cache.put(id, result);
-            } // if
-        } catch (Exception e) {
-            if (lOG.isWarnEnabled()) {
-                String simpleName = e.getClass().getSimpleName();
-                lOG.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
-            } // if
-        } // try/catch/finally
-        statistics.increase("get bean uncached");
-        return result;
-    } // getBean()
+        return KeyFactory.createKey(kind, numericId);
+    } // getObjectId()
 
 
     @Override

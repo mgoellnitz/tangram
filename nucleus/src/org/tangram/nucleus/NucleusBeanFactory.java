@@ -25,8 +25,8 @@ import org.tangram.jdo.AbstractJdoBeanFactory;
 public class NucleusBeanFactory extends AbstractJdoBeanFactory {
 
     @Override
-    protected Object getObjectId(String internalId, Class<? extends Content> kindClass) {
-         return internalId+"[OID]"+kindClass.getName();
+    protected Object getObjectId(String internalId, Class<? extends Content> kindClass, String kind) {
+        return internalId+"[OID]"+kindClass.getName();
     } // getObjectId()
 
 
