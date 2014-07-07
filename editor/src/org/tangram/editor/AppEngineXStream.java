@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * XStream derived class dealing with the weaknesses resulting from the limit of the Google App Engine
+ * XStream derived class dealing with the weaknesses resulting from the limits of the Google App Engine
  * class white list.
  */
 public class AppEngineXStream extends XStream {

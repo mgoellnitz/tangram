@@ -9,17 +9,18 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.gae.protection;
 
 import com.google.appengine.api.datastore.Text;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
@@ -27,6 +28,7 @@ import javax.jdo.annotations.Persistent;
 import org.tangram.content.Content;
 import org.tangram.feature.protection.Protection;
 import org.tangram.gae.GaeContent;
+
 
 @PersistenceCapable
 public abstract class AbstractProtection extends GaeContent implements Protection {
@@ -63,8 +65,13 @@ public abstract class AbstractProtection extends GaeContent implements Protectio
 
     @Override
     public List<Content> getProtectedContents() {
-        return protectedContents;
-    }
+        try {
+            final List<Content> result = protectedContents;
+            return result;
+        } catch (Exception e) {
+            return Collections.emptyList();
+        } // try/catch
+    } // getProtectedContents()
 
 
     public void setProtectedContents(List<Content> protectedContents) {

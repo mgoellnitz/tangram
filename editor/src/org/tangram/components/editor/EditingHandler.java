@@ -507,6 +507,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             LOG.info("contentExport() root class to ignore id in: "+oneClass.getName());
         } // if
         xstream.omitField(oneClass, "id");
+        xstream.omitField(oneClass, "beanFactory");
         xstream.omitField(oneClass, "ebeanInternalId");
         // TODO: Get rid of this in the output somehow
         // xstream.omitField(oneClass, "__ebean__intercept");
