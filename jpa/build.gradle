@@ -35,6 +35,7 @@ dependencies {
   // bean wire up for test cases is done via dinistiq
   testCompile "dinistiq:dinistiq:$versions.dinistiq"
   // dinistiq logging at debug level through special log4j.properties
+  testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
   testCompile "log4j:log4j:$versions.log4j"
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-dinistiq')
