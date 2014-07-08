@@ -39,7 +39,7 @@ public class MockServletContext implements ServletContext {
 
     @Override
     public String getContextPath() {
-        throw new UnsupportedOperationException("NYI");
+        return "/";
     }
 
 

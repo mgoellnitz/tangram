@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import org.tangram.view.Utils;
 
 
 @Named("loginSupport")
@@ -36,7 +37,7 @@ public class GenericLoginSupport implements LoginSupport {
 
 
     public void setStaticLoginURL(@Named("staticLoginURL") String staticLoginURL) {
-        this.staticLoginURL = servletContext.getContextPath()+staticLoginURL;
+        this.staticLoginURL = Utils.getUriPrefix(servletContext)+staticLoginURL;
     }
 
 

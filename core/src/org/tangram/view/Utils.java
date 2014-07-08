@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.jstl.core.Config;
 import org.apache.commons.lang.StringUtils;
@@ -96,6 +97,15 @@ public final class Utils {
         } // for
         return URLEncoder.encode(result, "UTF-8");
     } // urlize()
+
+
+    public static String getUriPrefix(ServletContext context) {
+        if (uriPrefix==null) {
+            String contextPath = context.getContextPath();
+            uriPrefix = (contextPath.length()==1) ? "" : contextPath;
+        } // if
+        return uriPrefix;
+    } // getUriPrefix()
 
 
     public static String getUriPrefix(HttpServletRequest request) {
