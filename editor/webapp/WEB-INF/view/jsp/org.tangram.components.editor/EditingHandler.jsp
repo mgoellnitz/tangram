@@ -19,7 +19,7 @@
     <fmt:message key="text.export.prefix" bundle="${msg}"/> <a href="export"><fmt:message key="button.export" bundle="${msg}"/></a><fmt:message key="text.export.suffix" bundle="${msg}"/>
     <br/>
     <br/>
-    <fmt:message key="text.codes.prefix" bundle="${msg}"/> <a href="codes.zip"><fmt:message key="button.export" bundle="${msg}"/></a> <fmt:message key="text.codes.suffix" bundle="${msg}"/>
+    <fmt:message key="text.codes.prefix" bundle="${msg}"/> <a href="codes.zip"><fmt:message key="button.codes" bundle="${msg}"/></a><fmt:message key="text.codes.suffix" bundle="${msg}"/>
     <br/>
     <br/>
     <form action="import" method="post" enctype="multipart/form-data">
