@@ -449,6 +449,9 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
             } // if
             serverConfig.addClass(c);
         } // for
+        if (LOG.isInfoEnabled()) {
+            LOG.info("afterPropertiesSet() DDL: "+serverConfig.isDdlGenerate()+"/"+serverConfig.isDdlRun());
+        } // if
         server = EbeanServerFactory.create(serverConfig);
 
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());

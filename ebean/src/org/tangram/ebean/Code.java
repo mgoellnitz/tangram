@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
@@ -37,6 +38,8 @@ public final class Code extends EContent implements MutableCode {
     @Column(length = 32000)
     private char[] code;
 
+    @ManyToOne
+    private EContent codeOf; // For any item refering this code
 
     @Override
     public String getAnnotation() {

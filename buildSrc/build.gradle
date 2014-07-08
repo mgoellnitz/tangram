@@ -46,7 +46,6 @@ dependencies {
   // for the direct ecliselink enhancer
   compile "org.eclipse.persistence:org.eclipse.persistence.jpa:$versions.eclipselink"  
   // For the direct ebean enhancer
-  compile "org.avaje.ebeanorm:avaje-ebeanorm-api:$versions.ebean_api"
   compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
   compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
 }
