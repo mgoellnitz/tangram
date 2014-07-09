@@ -508,9 +508,13 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         } // if
         xstream.omitField(oneClass, "id");
         xstream.omitField(oneClass, "beanFactory");
+        xstream.omitField(oneClass, "jdoBeanFactory");
         xstream.omitField(oneClass, "ebeanInternalId");
-        // TODO: Get rid of this in the output somehow
-        // xstream.omitField(oneClass, "__ebean__intercept");
+        for (Class<? extends Object> ormClass : classes) {
+            xstream.omitField(ormClass, "beanFactory");
+            xstream.omitField(ormClass, "jdoBeanFactory");
+            xstream.omitField(ormClass, "userServices");
+        } // for
 
         for (Class<? extends Content> c : classes) {
             xstream.alias(c.getSimpleName(), c);

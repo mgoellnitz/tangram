@@ -46,6 +46,9 @@ import com.thoughtworks.xstream.converters.collections.SingletonCollectionConver
 import com.thoughtworks.xstream.converters.collections.SingletonMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
+import com.thoughtworks.xstream.converters.enums.EnumConverter;
+import com.thoughtworks.xstream.converters.enums.EnumMapConverter;
+import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
 import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
 import com.thoughtworks.xstream.converters.extended.FileConverter;
 import com.thoughtworks.xstream.converters.extended.GregorianCalendarConverter;
@@ -57,11 +60,13 @@ import com.thoughtworks.xstream.converters.reflection.ExternalizableConverter;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionConverter;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.converters.reflection.SerializableConverter;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.util.SelfStreamingInstanceChecker;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
+import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,10 +74,51 @@ import org.slf4j.LoggerFactory;
 /**
  * XStream derived class dealing with the weaknesses resulting from the limits of the Google App Engine
  * class white list.
+ *
+ * Inspired by Chris http://stackoverflow.com/users/1043467/chris-khoo
+ * and snae http://stackoverflow.com/users/930326/snae
  */
 public class AppEngineXStream extends XStream {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppEngineXStream.class);
+
+
+    private class AppEngineSerializableConverter extends SerializableConverter {
+
+
+        public AppEngineSerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
+            super(mapper, reflectionProvider, classLoaderReference);
+        }
+
+
+        @Override
+        public boolean canConvert(Class type) {
+            return JVM.canCreateDerivedObjectOutputStream()&&myIsSerializable(type);
+        }
+
+
+        private boolean myIsSerializable(final Class<?> type) {
+            // LOG.warn("myIsSerializable() "+type.getName());
+            if (type!=null) {
+                if (type.getName().startsWith("org.datanucleus.store.types")) {
+                    return true;
+                } // if
+                if (Serializable.class.isAssignableFrom(type)
+                        &&!type.isInterface()
+                        &&(serializationMethodInvoker.supportsReadObject(type, true)||serializationMethodInvoker
+                        .supportsWriteObject(type, true))) {
+                    for (Object o : hierarchyFor(type)) {
+                        final Class<?> clazz = (Class<?>) o;
+                        if (!Serializable.class.isAssignableFrom(clazz)) {
+                            return canAccess(type);
+                        }
+                    }
+                    return true;
+                } // if
+            } // if
+            return false;
+        } // myIsSerializable()
+    } // AppEngineSerializableConverter
 
 
     public AppEngineXStream(HierarchicalStreamDriver hierarchicalStreamDriver) {
@@ -90,7 +136,8 @@ public class AppEngineXStream extends XStream {
         final ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
-        registerConverter(new SerializableConverter(mapper, reflectionProvider, reference), PRIORITY_LOW);
+        registerConverter(new AppEngineSerializableConverter(mapper, reflectionProvider, reference), PRIORITY_LOW);
+
         registerConverter(new ExternalizableConverter(mapper, reference), PRIORITY_LOW);
 
         registerConverter(new NullConverter(), PRIORITY_VERY_HIGH);
@@ -128,6 +175,11 @@ public class AppEngineXStream extends XStream {
         registerConverter(new JavaFieldConverter(reference), PRIORITY_NORMAL);
         registerConverter(new LocaleConverter(), PRIORITY_NORMAL);
         registerConverter(new GregorianCalendarConverter(), PRIORITY_NORMAL);
+
+        // extension by
+        registerConverter(new EnumConverter(), PRIORITY_NORMAL);
+        registerConverter(new EnumSetConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new EnumMapConverter(mapper), PRIORITY_NORMAL);
 
         registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
     } // setupConverters()

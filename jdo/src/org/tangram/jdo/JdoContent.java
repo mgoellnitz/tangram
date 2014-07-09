@@ -34,7 +34,7 @@ public abstract class JdoContent implements Content, BeanFactoryAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(JdoContent.class);
 
-    private BeanFactory beanFactory;
+    private BeanFactory jdoBeanFactory;
 
     @NotPersistent
     private String id;
@@ -42,7 +42,7 @@ public abstract class JdoContent implements Content, BeanFactoryAware {
 
     @Override
     public void setBeanFactory(BeanFactory factory) {
-        beanFactory = factory;
+        jdoBeanFactory = factory;
     } // setBeanFactory()
 
 
@@ -122,7 +122,7 @@ public abstract class JdoContent implements Content, BeanFactoryAware {
      */
     @Deprecated
     protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
-        return beanFactory.getBean(cls, id);
+        return jdoBeanFactory.getBean(cls, id);
     } // getContent()
 
 
@@ -138,7 +138,7 @@ public abstract class JdoContent implements Content, BeanFactoryAware {
         if (ids!=null) {
             result = new ArrayList<T>(ids.size());
             for (String id : ids) {
-                result.add(beanFactory.getBean(cls, id));
+                result.add(jdoBeanFactory.getBean(cls, id));
             } // for
         } // if
         return result;
