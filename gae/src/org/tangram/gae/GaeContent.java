@@ -20,19 +20,25 @@ package org.tangram.gae;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import java.util.ArrayList;
+import java.util.List;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+import org.tangram.content.BeanFactory;
+import org.tangram.content.BeanFactoryAware;
+import org.tangram.content.Content;
 import org.tangram.jdo.JdoContent;
 
 
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
-public abstract class GaeContent extends JdoContent {
+public abstract class GaeContent extends JdoContent implements BeanFactoryAware {
 
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     @PrimaryKey
@@ -40,6 +46,15 @@ public abstract class GaeContent extends JdoContent {
     // This is not really unused - but the compiler thinks so.
     // We might want to redesign this to application IDs anyway
     private String id;
+
+    @NotPersistent
+    private BeanFactory gaeBeanFactory;
+
+
+    @Override
+    public void setBeanFactory(BeanFactory factory) {
+        gaeBeanFactory = factory;
+    } // setBeanFactory()
 
 
     @Override
@@ -53,5 +68,82 @@ public abstract class GaeContent extends JdoContent {
         } // try/catch
         return result;
     } // postprocessPlainId()
+
+
+    /**
+     * Return bean factory used by this instance.
+     *
+     * This is just a deprecated convenience method since we only have the bean factory at hand
+     * for the other deprecated convenience methods.
+     *
+     * @return GAE bean factory instance
+     */
+    public BeanFactory getBeanFactory() {
+        return gaeBeanFactory;
+    } // getBeanFactory()
+
+
+    /**
+     * One more convenience method to use IDs in persistence layer.
+     *
+     * This is still a useful pattern in google app engine scenarios
+     *
+     * @param c Content instance - may be null
+     * @return id of content or null
+     */
+    protected String getId(Content c) {
+        return c==null ? null : c.getId();
+    } // getId()
+
+
+    /**
+     * One more convenience method to use IDs in persistence layer.
+     *
+     * This is still a useful pattern in google app engine scenarios
+     *
+     * @param contents list of contents - should not be null
+     * @return list of ids for the given list of contents
+     */
+    @Deprecated
+    protected List<String> getIds(List<? extends Content> contents) {
+        List<String> result = new ArrayList<String>();
+        if (contents!=null) {
+            for (Object o : contents) {
+                result.add(((Content) o).getId());
+            } // for
+        } // if
+        return result;
+    } // getIds()
+
+
+    /**
+     * Legacy helper to store IDs as references.
+     *
+     * @param id
+     * @return content for the given ID
+     */
+    @Deprecated
+    protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
+        return gaeBeanFactory.getBean(cls, id);
+    } // getContent()
+
+
+    /**
+     * Legacy helper to store IDs as references.
+     *
+     * @param ids list of ids to get contents for
+     * @return list of contents for the given ids in the same order
+     */
+    @Deprecated
+    protected <T extends JdoContent> List<T> getContents(Class<T> cls, List<String> ids) {
+        List<T> result = null;
+        if (ids!=null) {
+            result = new ArrayList<T>(ids.size());
+            for (String id : ids) {
+                result.add(gaeBeanFactory.getBean(cls, id));
+            } // for
+        } // if
+        return result;
+    } // getContents()
 
 } // GaeContent

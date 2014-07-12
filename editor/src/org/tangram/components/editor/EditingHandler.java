@@ -508,11 +508,11 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         } // if
         xstream.omitField(oneClass, "id");
         xstream.omitField(oneClass, "beanFactory");
-        xstream.omitField(oneClass, "jdoBeanFactory");
+        xstream.omitField(oneClass, "gaeBeanFactory");
         xstream.omitField(oneClass, "ebeanInternalId");
         for (Class<? extends Object> ormClass : classes) {
             xstream.omitField(ormClass, "beanFactory");
-            xstream.omitField(ormClass, "jdoBeanFactory");
+            xstream.omitField(ormClass, "gaeBeanFactory");
             xstream.omitField(ormClass, "userServices");
         } // for
 

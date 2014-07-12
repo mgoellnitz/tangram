@@ -18,32 +18,20 @@
  */
 package org.tangram.jdo;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.NotPersistent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.content.BeanFactory;
-import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
 
 
 
-public abstract class JdoContent implements Content, BeanFactoryAware {
+public abstract class JdoContent implements Content {
 
     private static final Logger LOG = LoggerFactory.getLogger(JdoContent.class);
 
-    private BeanFactory jdoBeanFactory;
-
     @NotPersistent
     private String id;
-
-
-    @Override
-    public void setBeanFactory(BeanFactory factory) {
-        jdoBeanFactory = factory;
-    } // setBeanFactory()
 
 
     /**
@@ -79,70 +67,6 @@ public abstract class JdoContent implements Content, BeanFactoryAware {
     public boolean equals(Object obj) {
         return (obj instanceof JdoContent) ? getId().equals(((Content) obj).getId()) : super.equals(obj);
     } // equals()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer.
-     *
-     * This is still a useful pattern in google app engine scenarios
-     *
-     * @param c Content instance - may be null
-     * @return id of content or null
-     */
-    protected String getId(Content c) {
-        return c==null ? null : c.getId();
-    } // getId()
-
-
-    /**
-     * One more convenience method to use IDs in persistence layer.
-     *
-     * This is still a useful pattern in google app engine scenarios
-     *
-     * @param contents list of contents - should not be null
-     * @return list of ids for the given list of contents
-     */
-    @Deprecated
-    protected List<String> getIds(List<? extends Content> contents) {
-        List<String> result = new ArrayList<String>();
-        if (contents!=null) {
-            for (Object o : contents) {
-                result.add(((Content) o).getId());
-            } // for
-        } // if
-        return result;
-    } // getIds()
-
-
-    /**
-     * Legacy helper to store IDs as references.
-     *
-     * @param id
-     * @return content for the given ID
-     */
-    @Deprecated
-    protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
-        return jdoBeanFactory.getBean(cls, id);
-    } // getContent()
-
-
-    /**
-     * Legacy helper to store IDs as references.
-     *
-     * @param ids list of ids to get contents for
-     * @return list of contents for the given ids in the same order
-     */
-    @Deprecated
-    protected <T extends JdoContent> List<T> getContents(Class<T> cls, List<String> ids) {
-        List<T> result = null;
-        if (ids!=null) {
-            result = new ArrayList<T>(ids.size());
-            for (String id : ids) {
-                result.add(jdoBeanFactory.getBean(cls, id));
-            } // for
-        } // if
-        return result;
-    } // getContents()
 
 
     @Override
