@@ -165,7 +165,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("callAction() parameter #"+typeIndex+"='"+valueString+"' should be of type "+type.getName());
                         } // if
-                        parameters.add(propertyConverter.getStorableObject(valueString, type, request));
+                        parameters.add(propertyConverter.getStorableObject(null, valueString, type, request));
                     } // if
                     if (annotation instanceof ActionParameter) {
                         String parameterName = ((ActionParameter) annotation).value();
@@ -178,7 +178,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("callAction() parameter "+parameterName+" should be of type "+type.getName());
                         } // if
-                        Object value = propertyConverter.getStorableObject(request.getParameter(parameterName), type, request);
+                        Object value = propertyConverter.getStorableObject(null, request.getParameter(parameterName), type, request);
                         parameters.add(value);
                     } // if
                     if (annotation instanceof ActionForm) {
@@ -187,7 +187,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                             JavaBean wrapper = new JavaBean(form);
                             for (String propertyName : wrapper.propertyNames()) {
                                 String valueString = request.getParameter(propertyName);
-                                Object value = propertyConverter.getStorableObject(valueString, wrapper.getType(propertyName), request);
+                                Object value = propertyConverter.getStorableObject(null, valueString, wrapper.getType(propertyName), request);
                                 wrapper.set(propertyName, value);
                             } // for
                             parameters.add(form);

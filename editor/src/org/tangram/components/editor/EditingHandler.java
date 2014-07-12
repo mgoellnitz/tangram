@@ -192,7 +192,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
                         Class<? extends Object> cls = wrapper.getType(key);
                         String valueString = values.length==1 ? values[0] : "";
-                        Object value = propertyConverter.getStorableObject(valueString, cls, request);
+                        Object value = propertyConverter.getStorableObject(bean, valueString, cls, request);
                         if (LOG.isInfoEnabled()) {
                             LOG.info("store() value="+value);
                         } // if

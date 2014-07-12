@@ -154,8 +154,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // createidMatcher()
 
 
-    private Object getReferenceValue(Class<? extends Content> cls, ServletRequest request, String valueString) {
-        Object value = null;
+    private Content getReferenceValue(Class<? extends Content> cls, ServletRequest request, String valueString) {
+        Content value = null;
         Matcher m = createIdMatcher(valueString);
         if (m.find()) {
             valueString = m.group(1);
@@ -178,7 +178,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // getReferenceValue()
 
 
-    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
+    public Object getStorableObject(Content customer, String valueString, Class<? extends Object> cls, ServletRequest request) {
         Object value = null;
         if (valueString==null) {
             return null;
@@ -219,7 +219,10 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                         if (LOG.isInfoEnabled()) {
                             LOG.info("getStorableObject() pattern match result "+idString);
                         } // if
-                        elements.add(beanFactory.getBean(idString));
+                        final Content bean = beanFactory.getBean(idString);
+                        if ((bean!=null) && ((customer == null) || (!bean.getId().equals(customer.getId())))) {
+                            elements.add(bean);
+                        } // if
                     } else {
                         List<Content> results = getObjectsViaDescription(Content.class, idString, request);
                         if (results.size()>0) {
@@ -232,7 +235,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         } else if (Content.class.isAssignableFrom(cls)) {
             @SuppressWarnings("unchecked")
             Class<? extends Content> cc = (Class<? extends Content>) cls;
-            value = getReferenceValue(cc, request, valueString);
+            Content referenceValue = getReferenceValue(cc, request, valueString);
+            value = (customer != null) && customer.equals(referenceValue) ? null : referenceValue;
         } // if
         return value;
     } // getStorableObject()

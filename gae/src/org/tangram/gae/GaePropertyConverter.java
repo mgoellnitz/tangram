@@ -24,6 +24,7 @@ import javax.servlet.ServletRequest;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.content.Content;
 import org.tangram.view.AbstractPropertyConverter;
 
 /**
@@ -82,8 +83,8 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
      * only handle special GAE specific cases like Text and Blob
      */
     @Override
-    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
-        Object result = super.getStorableObject(valueString, cls, request);
+    public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
+        Object result = super.getStorableObject(client, valueString, cls, request);
         if (result==null) {
             if (cls==Blob.class) {
                 if (LOG.isDebugEnabled()) {

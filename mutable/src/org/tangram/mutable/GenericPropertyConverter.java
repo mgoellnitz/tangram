@@ -20,6 +20,7 @@ package org.tangram.mutable;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletRequest;
+import org.tangram.content.Content;
 import org.tangram.view.AbstractPropertyConverter;
 
 
@@ -62,8 +63,8 @@ public class GenericPropertyConverter extends AbstractPropertyConverter {
 
 
     @Override
-    public Object getStorableObject(String valueString, Class<? extends Object> cls, ServletRequest request) {
-        return (cls==char[].class) ? valueString.toCharArray() : super.getStorableObject(valueString, cls, request);
+    public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
+        return (cls==char[].class) ? valueString.toCharArray() : super.getStorableObject(client, valueString, cls, request);
     } // getStorableObject()
 
 } // GenericPropertyConverter
