@@ -26,6 +26,9 @@ import org.tangram.view.TargetDescriptor;
 
 /**
  * Interception hook for controller implementations derived/inheriting from RenderingBase class.
+ *
+ * In any implementation of a custom controller/handler/servle you're supposed to respect the collection
+ * of hooks available in the application scope.
  */
 public interface ControllerHook {
 

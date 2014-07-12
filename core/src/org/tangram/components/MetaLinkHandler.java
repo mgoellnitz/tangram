@@ -342,7 +342,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     public ViewContext handleRequest(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
         if (LOG.isInfoEnabled()) {
-            LOG.info("handleRequestl() "+url);
+            LOG.info("handleRequest() "+url);
         } // if
         Utils.setPrimaryBrowserLanguageForJstl(request);
         for (Map.Entry<Pattern, Method> entry : methods.entrySet()) {
