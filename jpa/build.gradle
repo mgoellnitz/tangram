@@ -100,8 +100,8 @@ publishing {
     mavenJava(MavenPublication) {
       // remove any dependency for the JPA implementations
       Object oneDependency = pom.runtimeDependencies.iterator().next()
-      ext.theCopy = pom.runtimeDependencies.clone()
-      ext.theCopy.each {
+      def theCopy = pom.runtimeDependencies.clone()
+      theCopy.each {
         if (it != oneDependency) {
           pom.runtimeDependencies.remove(it)
         }
