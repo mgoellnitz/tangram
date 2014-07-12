@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,6 @@ apply from: '../lib.gradle'
 
 dependencies {
   compile project (':tangram-core')
-  runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
   
   testCompile "junit:junit:$versions.junit"
 }
