@@ -52,6 +52,7 @@ class TangramUtilities {
         
     // Strange way of overwriting things
     Object iter = p.configurations.webapp.dependencies.iterator()
+    String[] archiveFileNames = p.configurations.webapp.asPath.split(File.pathSeparator)
     int i = 0;
     while (iter.hasNext()) {
       Object webappDependency = iter.next()
@@ -61,7 +62,6 @@ class TangramUtilities {
         p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
       } else {
         if (p.configurations.webapp.dependencies.size() > 0) {
-          String[] archiveFileNames = p.configurations.webapp.asPath.split(File.pathSeparator)
           String archiveFileName = archiveFileNames[i];
           println "$project.name: path: $archiveFileName"
           int idx = archiveFileName.indexOf(';')

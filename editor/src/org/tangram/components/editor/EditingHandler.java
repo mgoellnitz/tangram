@@ -226,7 +226,8 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 } // try/catch
             } // for
 
-            bean = getMutableBeanFactory().getBean(Content.class, id);
+            // TODO: This should be superfluous
+            // bean = getMutableBeanFactory().getBean(Content.class, id);
             getMutableBeanFactory().beginTransaction();
             wrapper = new JavaBean(bean);
             Exception e = null;
@@ -417,7 +418,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     } // edit()
 
 
-    // Changed to method get for new class selection mimik
     @LinkAction("/link")
     public TargetDescriptor link(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
                                  @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
@@ -438,7 +438,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                     LOG.debug("link() id="+content.getId());
                 } // if
 
-                // re-get for update to avoid xg transactions where ever possible
+                // get bean here for update to avoid xg transactions where ever possible
                 Content bean = getMutableBeanFactory().getBean(Content.class, id);
                 getMutableBeanFactory().beginTransaction();
                 JavaBean wrapper = new JavaBean(bean);
@@ -510,13 +510,14 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
         xstream.omitField(oneClass, "beanFactory");
         xstream.omitField(oneClass, "gaeBeanFactory");
         xstream.omitField(oneClass, "ebeanInternalId");
-        for (Class<? extends Object> ormClass : classes) {
-            xstream.omitField(ormClass, "beanFactory");
-            xstream.omitField(ormClass, "gaeBeanFactory");
-            xstream.omitField(ormClass, "userServices");
-        } // for
 
         for (Class<? extends Content> c : classes) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("contentExport() aliasing and ignoring fields for "+c.getName());
+            } // if
+            xstream.omitField(c, "beanFactory");
+            xstream.omitField(c, "gaeBeanFactory");
+            xstream.omitField(c, "userServices");
             xstream.alias(c.getSimpleName(), c);
         } // for
         Collection<Content> allContent = new ArrayList<Content>();
