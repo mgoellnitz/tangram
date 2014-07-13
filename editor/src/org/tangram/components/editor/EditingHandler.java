@@ -504,12 +504,20 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             oneClass = oneClass.getSuperclass();
         } // while
         if (LOG.isInfoEnabled()) {
-            LOG.info("contentExport() root class to ignore id in: "+oneClass.getName());
+            LOG.info("contentExport() root class to ignore fields in: "+oneClass.getName());
         } // if
         xstream.omitField(oneClass, "id");
-        xstream.omitField(oneClass, "beanFactory");
-        xstream.omitField(oneClass, "gaeBeanFactory");
         xstream.omitField(oneClass, "ebeanInternalId");
+        final Class<? extends Content> baseClass = getMutableBeanFactory().getBaseClass();
+        if (baseClass!=oneClass) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("contentExport() additional base class to ignore fields in: "+oneClass.getName());
+            } // if
+            xstream.omitField(baseClass, "id");
+            xstream.omitField(baseClass, "beanFactory");
+            xstream.omitField(baseClass, "gaeBeanFactory");
+            xstream.omitField(baseClass, "ebeanInternalId");
+        } // if
 
         for (Class<? extends Content> c : classes) {
             if (LOG.isInfoEnabled()) {
