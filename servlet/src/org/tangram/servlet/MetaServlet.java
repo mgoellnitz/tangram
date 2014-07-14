@@ -20,7 +20,6 @@ package org.tangram.servlet;
 
 import java.io.IOException;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +33,6 @@ import org.tangram.view.ViewUtilities;
 /**
  * Servlet and component implementation of the "meta controller" front controller.
  */
-@Named
 public class MetaServlet extends HttpServlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetaServlet.class);

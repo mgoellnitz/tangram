@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +49,6 @@ import org.tangram.view.ViewUtilities;
 /**
  * Servlet and component implementation of the same url mapping as the spring default controller.
  */
-@Named
 public class DefaultServlet extends HttpServlet implements CustomViewProvider, LinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultServlet.class);
