@@ -178,7 +178,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // getReferenceValue()
 
 
-    public Object getStorableObject(Content customer, String valueString, Class<? extends Object> cls, ServletRequest request) {
+    public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
         Object value = null;
         if (valueString==null) {
             return null;
@@ -220,7 +220,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                             LOG.info("getStorableObject() pattern match result "+idString);
                         } // if
                         final Content bean = beanFactory.getBean(idString);
-                        if ((bean!=null) && ((customer == null) || (!bean.getId().equals(customer.getId())))) {
+                        if ((bean!=null) && ((client == null) || (!bean.getId().equals(client.getId())))) {
                             elements.add(bean);
                         } // if
                     } else {
@@ -236,7 +236,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             @SuppressWarnings("unchecked")
             Class<? extends Content> cc = (Class<? extends Content>) cls;
             Content referenceValue = getReferenceValue(cc, request, valueString);
-            value = (customer != null) && customer.equals(referenceValue) ? null : referenceValue;
+            value = (client != null) && client.equals(referenceValue) ? null : referenceValue;
         } // if
         return value;
     } // getStorableObject()

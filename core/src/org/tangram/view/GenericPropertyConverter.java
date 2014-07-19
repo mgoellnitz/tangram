@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.mutable;
+package org.tangram.view;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletRequest;

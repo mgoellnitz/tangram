@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,7 +52,7 @@ public interface PropertyConverter {
      * @param request request used when passing the string to convert
      * @return object representation of valueString
      */
-    Object getStorableObject(Content customer, String valueString, Class<? extends Object> cls, ServletRequest request);
+    Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request);
 
 
     /**

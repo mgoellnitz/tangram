@@ -44,10 +44,8 @@
   <bean id="persistentRestartCache" class="org.tangram.util.FileRestartCache">
     <property name="filename" value="${tangram.restart.cache.file}"/>
   </bean>
-    
-  <!--  edit scenarios only  -->
-
-  <bean id="propertyConverter" class="org.tangram.mutable.GenericPropertyConverter">
+  
+  <bean id="propertyConverter" class="org.tangram.view.GenericPropertyConverter">
     <property name="dateFormat" value="${tangram.date.format}"/>
   </bean>
           

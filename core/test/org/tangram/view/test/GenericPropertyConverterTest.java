@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.mutable.test;
+package org.tangram.view.test;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.tangram.mutable.GenericPropertyConverter;
+import org.tangram.view.GenericPropertyConverter;
 
 
 public class GenericPropertyConverterTest {
