@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,6 @@
 package org.tangram.components.servlet;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -33,7 +32,10 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.monitor.Statistics;
+import org.tangram.util.StringUtil;
 
 
 /**
@@ -42,28 +44,18 @@ import org.tangram.monitor.Statistics;
  * The result is calculated by means of the tangram statistics facility and a set of URLs to be ignored
  * can be filled with URIs if needed.
  *
- * The filter is instanciated as a DI component but the cnfiguration is then held in static members.
+ * The filter is instanciated as a DI component but the configuration is then held in static members.
  * So the separate instanciation from the web.xml get's the injected values.
  */
 @Named
 @Singleton
 public class MeasureTimeFilter implements Filter {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MeasureTimeFilter.class);
+
     private static Set<String> freeUrls = new HashSet<String>();
 
     private static Statistics statistics;
-
-
-    public Set<String> getFreeUrls() {
-        return freeUrls;
-    }
-
-
-    @Inject
-    @Named("freeUrls")
-    public void setFreeUrls(Set<String> freeUrls) {
-        MeasureTimeFilter.freeUrls = freeUrls;
-    }
 
 
     @Inject
@@ -83,8 +75,9 @@ public class MeasureTimeFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
         String thisURL = request.getRequestURI();
         long startTime = System.currentTimeMillis();
+        request.setAttribute("start.time", startTime);
         chain.doFilter(request, response);
-        if (!getFreeUrls().contains(thisURL)) {
+        if (!freeUrls.contains(thisURL)) {
             statistics.avg("page render time", System.currentTimeMillis()-startTime);
         } // if
     } // afterCompletion()
@@ -93,13 +86,10 @@ public class MeasureTimeFilter implements Filter {
     @Override
     @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
-        final Enumeration initParameterNames = config.getInitParameterNames();
-        while (initParameterNames.hasMoreElements()) {
-            String parameterName = ""+(initParameterNames.nextElement());
-            if (parameterName.startsWith("free.url.")) {
-                freeUrls.add(config.getInitParameter(parameterName));
-            } // if
-        } // for
+        freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
+        if (LOG.isInfoEnabled()) {
+            LOG.info("init() free urls "+freeUrls);
+        } // if
     } // init()
 
 } // MeasureTimeFilter
