@@ -19,8 +19,10 @@
 package org.tangram.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -143,27 +145,39 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
         Class<? extends Object> cls = content.getClass();
         T view = null;
         Set<String> alreadyChecked = new HashSet<String>();
+        List<Object> allInterfaces = new ArrayList<>();
         while ((view==null)&&(cls!=null)) {
             String pack = (cls.getPackage()==null) ? "" : cls.getPackage().getName();
             view = checkView(viewName, pack, cls.getSimpleName(), key, locale);
             if (view==null) {
                 for (Object i : ClassUtils.getAllInterfaces(cls)) {
-                    Class<? extends Object> c = (Class<? extends Object>) i;
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("lookupView() type to check templates for "+c.getName());
+                    if (allInterfaces.contains(i)) {
+                        allInterfaces.remove(i);
                     } // if
-                    if (!(alreadyChecked.contains(c.getName()))) {
-                        alreadyChecked.add(c.getName());
-                        String interfacePackage = (c.getPackage()==null) ? "" : c.getPackage().getName();
-                        view = checkView(viewName, interfacePackage, c.getSimpleName(), key, locale);
-                        if (view!=null) {
-                            break;
-                        } // if
-                    } // if
+                } // for
+                for (Object i : ClassUtils.getAllInterfaces(cls)) {
+                    allInterfaces.add(i);
                 } // for
             } // if
             cls = cls.getSuperclass();
         } // while
+        // Walk down interfaces
+        if (view==null) {
+            for (Object i : allInterfaces) {
+                Class<? extends Object> c = (Class<? extends Object>) i;
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("lookupView() type to check templates for "+c.getName());
+                } // if
+                if (!(alreadyChecked.contains(c.getName()))) {
+                    alreadyChecked.add(c.getName());
+                    String interfacePackage = (c.getPackage()==null) ? "" : c.getPackage().getName();
+                    view = checkView(viewName, interfacePackage, c.getSimpleName(), key, locale);
+                    if (view!=null) {
+                        break;
+                    } // if
+                } // if
+            } // for
+        } // if
         return view;
     } // lookupView()
 
