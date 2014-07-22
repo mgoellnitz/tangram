@@ -53,8 +53,7 @@ class TangramUtilities {
     // Strange way of overwriting things
     Object iter = p.configurations.webapp.dependencies.iterator()
     String[] archiveFileNames = p.configurations.webapp.asPath.split(File.pathSeparator)
-    int i = 0;
-    while (iter.hasNext()) {
+    for (int i = 0; iter.hasNext(); i++) {
       Object webappDependency = iter.next()
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFileName = webappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
@@ -73,7 +72,6 @@ class TangramUtilities {
           println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
         } // if
       } // if 
-      i++;
     } // while
         
     // The next three are for the tangram system where codes reside in webapp
