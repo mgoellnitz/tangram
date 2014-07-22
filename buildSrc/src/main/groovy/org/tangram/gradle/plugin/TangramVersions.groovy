@@ -36,9 +36,6 @@ public class TangramVersions {
   String junit = '4.11'
   String xstream = '1.4.7'
   
-  String guice = '3.0'
-  String mycila = '3.2.ga'
-  
   String dinistiq = '0.2-SNAPSHOT'
   String shiro = '1.2.3'
 
@@ -48,8 +45,8 @@ public class TangramVersions {
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
   
-  String openjpa = '2.2.2'
-  String eclipselink = '2.5.1'
+  String openjpa = '2.3.0'
+  String eclipselink = '2.5.2'
   
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
   String datanucleus = '3.1.3'
@@ -63,6 +60,6 @@ public class TangramVersions {
   String ebean = '4.1.1'
   String ebean_agent = '4.1.4'
 
-  String appengine = '1.9.6'
+  String appengine = '1.9.7'
   
 } // TangramVersions
