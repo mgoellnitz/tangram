@@ -87,7 +87,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         codeResourceCache.addListener(this);
     } // afterPropertiesSet()
 

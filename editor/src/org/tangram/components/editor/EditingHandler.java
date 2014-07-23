@@ -628,7 +628,7 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         registry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

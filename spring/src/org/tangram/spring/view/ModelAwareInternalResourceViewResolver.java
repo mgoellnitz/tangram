@@ -96,7 +96,7 @@ public class ModelAwareInternalResourceViewResolver extends AbstractInternalReso
 
     @PostConstruct
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         super.afterPropertiesSet();
         Assert.notNull(delegate, "delegate is null");
         delegate.setPrefix(getPrefix());

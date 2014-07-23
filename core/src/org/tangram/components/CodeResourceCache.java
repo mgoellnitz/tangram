@@ -217,7 +217,7 @@ public class CodeResourceCache implements BeanListener {
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         factory.addListener(CodeResource.class, this);
         reset();
     } // afterPropertiesSet()

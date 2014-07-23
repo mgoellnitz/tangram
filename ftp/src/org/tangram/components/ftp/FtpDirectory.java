@@ -51,7 +51,7 @@ public class FtpDirectory {
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (LOG.isInfoEnabled()) {
             LOG.info("() initializing with code cache "+codeResourceCache);
         } // if

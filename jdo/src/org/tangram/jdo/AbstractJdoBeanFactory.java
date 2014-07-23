@@ -473,7 +473,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     @PostConstruct
     @SuppressWarnings("unchecked")
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (LOG.isInfoEnabled()) {
             LOG.info("afterPropertiesSet() bean factory is using "+getClass().getClassLoader().getClass().getName());
         } // if

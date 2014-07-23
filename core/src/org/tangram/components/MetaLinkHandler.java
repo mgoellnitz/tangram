@@ -410,7 +410,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         linkFactoryAggregator.registerFactory(this);
         classRepository.addListener(this);
         reset();

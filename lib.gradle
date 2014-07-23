@@ -16,6 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+import org.gradle.api.artifacts.ExcludeRule
+import org.gradle.api.artifacts.ModuleDependency
+
 apply from: '../commons.gradle'
 
 // Since this is just a lib we need this "providedCompile" stuff explicitly here
@@ -23,6 +26,15 @@ configurations {
   libs 
   providedCompile
 }
+
+/* TODO: try to add only the webapp stuff to the WEB-INF
+jar {
+  include {
+    from 'webapp'
+    into 'destination'
+  }
+}
+*/
 
 // right now this is only necessary for the libs
 // http://forums.gradle.org/gradle/topics/exclude_not_set_in_generated_pom_maven_publish
@@ -41,15 +53,17 @@ publishing {
           }
           if (xmlDep) {
             def xmlExclusions = xmlDep.exclusions[0]  
-            if (!xmlExclusions) xmlExclusions = xmlDep.appendNode('exclusions')
+            if (!xmlExclusions) {
+              xmlExclusions = xmlDep.appendNode('exclusions')
+            }
             dep.excludeRules.each { ExcludeRule rule ->
               def xmlExclusion = xmlExclusions.appendNode('exclusion')  
               xmlExclusion.appendNode('groupId', rule.group)  
               xmlExclusion.appendNode('artifactId', rule.module)  
-            }  
+            }
           }
         }
-      }  
+      }
     }
   }
 }

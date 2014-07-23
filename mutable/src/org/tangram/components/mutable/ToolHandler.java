@@ -83,7 +83,7 @@ public class ToolHandler {
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         registry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

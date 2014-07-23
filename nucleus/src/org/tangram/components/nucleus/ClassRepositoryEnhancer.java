@@ -89,7 +89,7 @@ public class ClassRepositoryEnhancer implements BeanListener {
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         classRepository.addListener(this);
         reset();
     } // afterPropertiesSet()

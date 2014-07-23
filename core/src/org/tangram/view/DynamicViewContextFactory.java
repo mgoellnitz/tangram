@@ -207,7 +207,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // actually in real world scenarios this should always be true
         if (classRepository!=null) {
             classRepository.addListener(this);

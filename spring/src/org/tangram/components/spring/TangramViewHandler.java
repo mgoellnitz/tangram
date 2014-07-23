@@ -110,7 +110,7 @@ public class TangramViewHandler implements ViewHandler, ApplicationContextAware 
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         initViewResolvers(applicationContext);
     } // afterPropertiesSet()
 

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+
 
 public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
@@ -127,7 +128,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String id) {
-        return (T)getBean(id);
+        return (T) getBean(id);
     } // getBeanForUpdate()
 
 
@@ -151,7 +152,9 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     } // listBeans()
 
 
-    /** supporting methods for implementing CM style access to content **/
+    /**
+     * supporting methods for implementing CM style access to content *
+     */
 
     /**
      * Create a transient blob object from content instance.
@@ -194,7 +197,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                 } // if
 
                 ResultSetMetaData metaData = resultSet.getMetaData();
-                for (int i = 1; i<=metaData.getColumnCount(); i++ ) {
+                for (int i = 1; i<=metaData.getColumnCount(); i++) {
                     String columnName = metaData.getColumnName(i);
                     // if ( !columnName.endsWith("_")) {
                     Object value = resultSet.getObject(i);
@@ -485,8 +488,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                 if (LOG.isInfoEnabled()) {
                     LOG.info("getReferrerIds() "+sourceid+"/"+sourceversion+"#"+property+" -> "+targetId);
                 } // if
-                  // TODO: check for latest version
-                if ( !result.contains(sourceid)) {
+                // TODO: check for latest version
+                if (!result.contains(sourceid)) {
                     result.add(sourceid);
                 } // if
             } // if
@@ -499,9 +502,17 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
-        Class.forName(dbDriver).newInstance();
-        dbConnection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+    public void afterPropertiesSet() {
+        try {
+            Class.forName(dbDriver).newInstance();
+        } catch (ClassNotFoundException|InstantiationException|IllegalAccessException ex) {
+            LOG.error("afterPropertiesSet()", ex);
+        } // try/catch
+        try {
+            dbConnection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        } catch (SQLException ex) {
+            LOG.error("afterPropertiesSet()", ex);
+        } // try/catch
     } // afterPropertiesSet()
 
 } // AbstractComaBeanFactory
