@@ -47,7 +47,6 @@ import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
 import org.tangram.controller.ControllerHook;
-import org.tangram.controller.CustomViewProvider;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
@@ -80,9 +79,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     @Inject
     private ViewContextFactory viewContextFactory;
-
-    @Inject
-    private CustomViewProvider customViewProvider;
 
     @Inject
     private LinkFactoryAggregator linkFactoryAggregator;
@@ -289,12 +285,11 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         // remove current custom views from view provider
         for (Object key : customViews.keySet()) {
             for (String view : customViews.get(key)) {
-                customViewProvider.getCustomLinkViews().remove(view);
+                linkFactoryAggregator.getCustomLinkViews().remove(view);
             } // for
         } // for
         if (LOG.isInfoEnabled()) {
-            LOG.info("reset() view provider "+customViewProvider);
-            LOG.info("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
+            LOG.info("reset() custom views "+linkFactoryAggregator.getCustomLinkViews());
         } // if
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
@@ -313,12 +308,12 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     } // if
                     Collection<String> schemeCustomViews = linkHandler.getCustomViews();
                     customViews.put(linkHandler, schemeCustomViews);
-                    customViewProvider.getCustomLinkViews().addAll(schemeCustomViews);
+                    linkFactoryAggregator.getCustomLinkViews().addAll(schemeCustomViews);
                     if (LOG.isInfoEnabled()) {
                         LOG.info("reset() adding custom views "+schemeCustomViews);
                     } // if
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("reset() custom views in provider "+customViewProvider.getCustomLinkViews());
+                        LOG.debug("reset() custom views "+linkFactoryAggregator.getCustomLinkViews());
                     } // if
                     handlers.put(annotation, linkHandler);
                 } else {
@@ -334,7 +329,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             } // try/catch
         } // for
         if (LOG.isInfoEnabled()) {
-            LOG.info("reset() custom views in default controller "+customViewProvider.getCustomLinkViews());
+            LOG.info("reset() custom views "+linkFactoryAggregator.getCustomLinkViews());
         } // if
     } // reset()
 

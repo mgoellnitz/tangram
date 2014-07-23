@@ -35,7 +35,6 @@ import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
-import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
@@ -49,7 +48,7 @@ import org.tangram.view.ViewUtilities;
 /**
  * Servlet and component implementation of the same url mapping as the spring default controller.
  */
-public class DefaultServlet extends HttpServlet implements CustomViewProvider, LinkFactory {
+public class DefaultServlet extends HttpServlet implements LinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultServlet.class);
 
@@ -66,8 +65,6 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
     private Set<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
 
     private LinkFactoryAggregator linkFactory;
-
-    private HashSet<String> customLinkViews = new HashSet<String>();
 
     /**
      * URL part pattern to match ID and VIEW based calls
@@ -98,15 +95,10 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
     }
 
 
-    public Set<String> getCustomLinkViews() {
-        return customLinkViews;
-    } // getCustomLinkViews
-
-
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
-            if (!customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
+            if (!linkFactory.getCustomLinkViews().contains(view==null ? Constants.DEFAULT_VIEW : view)) {
                 return RenderingBase.createDefaultLink(bean, action, view);
             } // if
         } // if
@@ -149,7 +141,7 @@ public class DefaultServlet extends HttpServlet implements CustomViewProvider, L
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository. (Tangram Default Servlet)");
                 return;
             } // if
-            if (customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
+            if (linkFactory.getCustomLinkViews().contains(view==null ? Constants.DEFAULT_VIEW : view)) {
                 try {
                     Link redirectLink = getLinkFactory().createLink(request, response, content, null, view);
                     response.setHeader("Location", redirectLink.getUrl());

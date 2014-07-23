@@ -20,6 +20,7 @@ package org.tangram.link;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,17 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 public interface LinkFactoryAggregator {
+
+    /**
+     * returns a modifiable set of names of views to be handled in a custom way by the application.
+     *
+     * View in this list will not be handled by the default URL format and need their custom link factory
+     * or link handler.
+     *
+     * @return list of view which are handled by a custom URL format.
+     */
+    Set<String> getCustomLinkViews();
+
 
     String getPrefix(HttpServletRequest request);
 

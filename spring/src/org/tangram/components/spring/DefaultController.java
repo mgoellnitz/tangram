@@ -18,9 +18,8 @@
  */
 package org.tangram.components.spring;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -31,9 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.Constants;
 import org.tangram.content.Content;
-import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
@@ -48,16 +47,12 @@ import org.tangram.view.ViewContext;
  * view layers of the framework.
  */
 @Controller
-public class DefaultController extends RenderingBase implements CustomViewProvider {
+public class DefaultController extends RenderingBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultController.class);
 
-    private HashSet<String> customLinkViews = new HashSet<String>();
-
-
-    public Set<String> getCustomLinkViews() {
-        return customLinkViews;
-    } // getCustomLinkViews
+    @Inject
+    private LinkFactoryAggregator linkFactoryAggregator;
 
 
     @RequestMapping(value = "/id_{id}/view_{view}")
@@ -77,7 +72,7 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
                 return null;
             } // if
-            if (customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
+            if (linkFactoryAggregator.getCustomLinkViews().contains(view==null ? Constants.DEFAULT_VIEW : view)) {
                 Link redirectLink = null;
                 try {
                     redirectLink = getLinkFactory().createLink(request, response, content, null, view);
@@ -108,7 +103,7 @@ public class DefaultController extends RenderingBase implements CustomViewProvid
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
-            if (!customLinkViews.contains(view==null ? Constants.DEFAULT_VIEW : view)) {
+            if (!linkFactoryAggregator.getCustomLinkViews().contains(view==null ? Constants.DEFAULT_VIEW : view)) {
                 return RenderingBase.createDefaultLink(bean, action, view);
             } // if
         } // if

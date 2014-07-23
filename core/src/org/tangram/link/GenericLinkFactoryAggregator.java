@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -54,6 +55,8 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     @Inject
     private Statistics statistics;
 
+    private HashSet<String> customLinkViews = new HashSet<String>();
+
     private String dispatcherPath = "";
 
     private List<LinkFactory> handlers = new ArrayList<LinkFactory>();
@@ -62,6 +65,13 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
      * method classname#methodname to method cache
      */
     private Map<String, Method> cache = new HashMap<String, Method>();
+
+    private String prefix = null;
+
+
+    public HashSet<String> getCustomLinkViews() {
+        return customLinkViews;
+    }
 
 
     public String getDispatcherPath() {
@@ -92,14 +102,12 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         handlers.remove(factory);
     } // unregisterFactory()
 
-    String prefix = null;
-
 
     @Override
     public String getPrefix(HttpServletRequest request) {
         if (prefix==null) {
             String contextPath = request.getContextPath();
-            prefix = (contextPath.length() == 1 ? "" : contextPath)+dispatcherPath;
+            prefix = (contextPath.length()==1 ? "" : contextPath)+dispatcherPath;
         } // if
         return prefix;
     } // getPrefix()

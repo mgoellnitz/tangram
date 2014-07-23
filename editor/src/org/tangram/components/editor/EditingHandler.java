@@ -48,11 +48,11 @@ import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
-import org.tangram.controller.CustomViewProvider;
 import org.tangram.controller.RenderingBase;
 import org.tangram.editor.AppEngineXStream;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
@@ -136,10 +136,10 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
 
     @Inject
-    public void setCustomViewProvider(CustomViewProvider customViewProvider) {
+    public void setLinkFactoryAggregator(LinkFactoryAggregator linkFactoryAggregator) {
         // Automagically set edit view
-        customViewProvider.getCustomLinkViews().add("edit");
-    } // setCustomViewProvider()
+        linkFactoryAggregator.getCustomLinkViews().add("edit");
+    } // setLinkFactoryAggregator()
 
 
     public void setDeleteMethodEnabled(boolean deleteMethodEnabled) {
