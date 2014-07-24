@@ -226,8 +226,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 } // try/catch
             } // for
 
-            // TODO: This should be superfluous
-            // bean = getMutableBeanFactory().getBean(Content.class, id);
             getMutableBeanFactory().beginTransaction();
             wrapper = new JavaBean(bean);
             Exception e = null;

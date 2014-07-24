@@ -194,4 +194,4 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         return method;
     } // findMethod()
 
-} // GenericLinkBuilder
+} // GenericLinkFactoryAggregator

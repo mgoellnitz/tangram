@@ -80,7 +80,9 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
 
 
     /**
-     * only handle special GAE specific cases like Text and Blob
+     * Only handle special GAE specific cases like Text and Blob.
+     * 
+     * The rest is delegated to the super class implementation.
      */
     @Override
     public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {

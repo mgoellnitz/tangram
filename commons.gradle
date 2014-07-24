@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 version = '0.9-SNAPSHOT'
@@ -40,30 +40,30 @@ eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/cla
 sourceSets {
   main {
     java { 
-      srcDir 'src' 
+      srcDir 'src'
       exclude '**/*.properties'
       exclude '**/*.xml'
     }
     resources { 
-      srcDir 'src' 
+      srcDir 'src'
       exclude '**/*.java'
     }
   }
   test {
     java { 
-      srcDir 'test' 
+      srcDir 'test'
       exclude '**/*.properties'
       exclude '**/*.xml'
     }
     resources { 
-      srcDir 'test' 
+      srcDir 'test'
       exclude '**/*.java'
     }
   }
 }
 
 // A place for a common checkstyle config file
-ext.checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
+def checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
 
 compileJava.doLast {
   // do this here to avoid compiling without source changes since this here is a source change
