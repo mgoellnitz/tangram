@@ -17,9 +17,8 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  
 -->
-<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
         
   <!-- This persistence.xml is just intended for the enhancement phase of OpenJPA -->
   <persistence-unit name="tangram" transaction-type="RESOURCE_LOCAL">
