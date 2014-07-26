@@ -19,9 +19,7 @@
 package org.tangram.servlet;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -34,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
-import org.tangram.controller.ControllerHook;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
@@ -60,9 +57,6 @@ public class DefaultServlet extends HttpServlet implements LinkFactory {
 
     @Inject
     protected ViewUtilities viewUtilities;
-
-    @Inject
-    private Set<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
 
     private LinkFactoryAggregator linkFactory;
 
