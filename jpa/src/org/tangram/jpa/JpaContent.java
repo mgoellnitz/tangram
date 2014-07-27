@@ -51,13 +51,13 @@ public abstract class JpaContent implements Content {
             kind = getClass().getSuperclass().getSimpleName();
         } // if
         return kind+":"+id;
-        // return id;
     } // getId()
 
 
     @Override
     public int hashCode() {
-        return id==null ? 0 : id.hashCode();
+        String myId = getId();
+        return myId==null ? 0 : myId.hashCode();
     } // hashCode()
 
 
