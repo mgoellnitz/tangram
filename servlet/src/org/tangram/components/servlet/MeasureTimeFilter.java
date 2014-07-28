@@ -53,9 +53,9 @@ public class MeasureTimeFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MeasureTimeFilter.class);
 
-    private static Set<String> freeUrls = new HashSet<String>();
-
     private static Statistics statistics;
+
+    private Set<String> freeUrls = new HashSet<String>();
 
 
     @Inject

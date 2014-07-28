@@ -32,9 +32,7 @@ public class LogFormatter extends Formatter {
 
     Date dat = new Date();
 
-    private final static String format = "{0,date} {0,time}";
-
-    private MessageFormat formatter;
+    private final static MessageFormat dateFormat = new MessageFormat("{0,date} {0,time}");
 
     private Object[] args = new Object[1];
 
@@ -53,12 +51,9 @@ public class LogFormatter extends Formatter {
         dat.setTime(record.getMillis());
         args[0] = dat;
         StringBuffer text = new StringBuffer();
-        if (formatter==null) {
-            formatter = new MessageFormat(format);
-        } // if
-        formatter.format(args, text, null);
+        dateFormat.format(args, text, null);
         sb.append(text);
-        sb.append(" ");
+        sb.append(" xx ");
         sb.append(record.getLevel().getLocalizedName().toUpperCase());
         sb.append(": ");
         String sourceClassName = record.getSourceClassName();

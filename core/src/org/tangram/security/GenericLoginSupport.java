@@ -20,16 +20,18 @@ package org.tangram.security;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.tangram.view.Utils;
 
 
 @Named("loginSupport")
+@Singleton
 public class GenericLoginSupport implements LoginSupport {
 
     @Inject
-    ServletContext servletContext;
+    private ServletContext servletContext;
 
     private String staticLoginURL = "";
 
