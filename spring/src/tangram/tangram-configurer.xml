@@ -14,7 +14,7 @@
  GNU Lesser General Public License for more details.
  
  You should have received a copy of the GNU Lesser General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
  
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -83,7 +83,7 @@
   </bean>
   
   <!-- 
-       The common default list of interceptors for timemeasurement and login check.
+       The common default list of interceptors for time measurement and login check.
        Re-define this in your WEB-INF/tangram directory with values as needed.
   -->  
   <bean name="interceptors" class="java.util.ArrayList">
