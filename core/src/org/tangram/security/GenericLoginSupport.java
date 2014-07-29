@@ -20,14 +20,16 @@ package org.tangram.security;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.tangram.view.Utils;
 
 
-@Named("loginSupport")
-@Singleton
+/**
+ * Simple login support implementation.
+ *
+ * Live system flag is a configuration switch, login URL is a static URL, Logout URLs are ignored.
+ */
 public class GenericLoginSupport implements LoginSupport {
 
     @Inject
