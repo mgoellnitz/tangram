@@ -35,8 +35,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
@@ -417,7 +415,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             } // if
         } // synchronized
         return allClasses;
-    }// getAllClasses()
+    } // getAllClasses()
 
 
     @Override
@@ -454,12 +452,43 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
 
+    /**
+     * Initialize entity manager and the needed factory for it.
+     *
+     * Special OpenJPA handling and done as a separate method to be re-initializable for "setAdditionalClasses".
+     */
+    private void initManager() {
+        Collection<Class<? extends Content>> classes = new HashSet<Class<? extends Content>>();
+        classes.addAll(getAllClasses());
+        classes.addAll(getClasses());
+
+        // OpenJPA specific class handling to be able to handle classes from the class repository
+        StringBuilder classList = new StringBuilder(JpaContent.class.getName());
+        for (Class<? extends Content> c : classes) {
+            if (!c.getName().equals(JpaContent.class.getName())) {
+                classList.append(";");
+                classList.append(c.getName());
+            } // if
+        } // for
+        Properties properties = new Properties();
+        properties.putAll(configOverrides);
+        properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("initManager() properties="+properties);
+        } // if
+
+        // here we go with the basic stuff
+        managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
+        manager = managerFactory.createEntityManager();
+    } // initManager()
+
+
     @Override
     public void setAdditionalClasses(Collection<Class<? extends Content>> classes) {
         Set<Class<? extends Content>> classSet = new HashSet<Class<? extends Content>>();
         if (classes!=null) {
             for (Class<? extends Content> cls : classes) {
-                if (JpaContent.class.isAssignableFrom(cls)) {
+                if (getBaseClass().isAssignableFrom(cls)) {
                     if (cls.getAnnotation(Entity.class)!=null) {
                         if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
                             classSet.add(cls);
@@ -470,6 +499,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         } // if
         additionalClasses = classSet;
         modelClasses = null;
+        initManager();
     } // setAdditionalClasses()
 
 
@@ -485,40 +515,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         if (LOG.isInfoEnabled()) {
             LOG.info("afterPropertiesSet() using overrides for entity manager factory: "+configOverrides);
         } // if
-        // this was the prefill - right at the moment allways necessary
-        final Collection<Class<? extends Content>> classes = getAllClasses();
-        // OpenJPA specific class handling to be able to handle classes from the class repository
-        StringBuilder classList = new StringBuilder(JpaContent.class.getName());
-        for (Class<? extends Content> c : classes) {
-            if (!c.getName().equals(JpaContent.class.getName())) {
-                classList.append(";");
-                classList.append(c.getName());
-            } // if
-        } // for
-        Properties properties = new Properties();
-        properties.putAll(configOverrides);
-        properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() properties="+properties);
-        } // if
-
-        // here we go with the basic stuff
-        managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
-        manager = managerFactory.createEntityManager();
-
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() manager factory: "+managerFactory.getClass().getName());
-            Metamodel metamodel = manager.getMetamodel();
-            if (metamodel!=null) {
-                Set<EntityType<?>> entities = metamodel.getEntities();
-                for (EntityType<?> entity : entities) {
-                    LOG.info("afterPropertiesSet() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
-                } // for
-            } else {
-                LOG.info("afterPropertiesSet() not meta model");
-            } // if
-        } // if
-
+        initManager();
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;
