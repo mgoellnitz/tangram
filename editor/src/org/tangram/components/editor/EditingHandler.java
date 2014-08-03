@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -404,8 +405,28 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
             request.setAttribute("classes", getMutableBeanFactory().getClasses());
             request.setAttribute("prefix", Utils.getUriPrefix(request));
             Class<? extends Content> cls = content.getClass();
-            final Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+            Method[] methods = cls.getMethods();
+            String note = "Plain";
+            for (Method method : methods) {
+                if (method.getName().startsWith("_ebean")) {
+                    note = "EBean enhanced";
+                } // if
+                if (method.getName().startsWith("jdo")) {
+                    note = "DataNucleus JDO/JPA Enhanced";
+                } // if
+                if (method.getName().startsWith("pc")) {
+                    note = "OpenJPA Enhanced";
+                } // if
+                if (method.getName().startsWith("_persistence")) {
+                    note = "EclipseLink Woven (Weaved)";
+                } // if
+                if (method.getName().startsWith("$$_hibernate")) {
+                    note = "Hibernate Enhanced";
+                } // if
+            } // for
+            Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
             request.setAttribute("contentClass", cls);
+            request.setAttribute("note", note);
             request.setAttribute("designClass", designClass);
             request.setAttribute("designClassPackage", designClass.getPackage());
 
