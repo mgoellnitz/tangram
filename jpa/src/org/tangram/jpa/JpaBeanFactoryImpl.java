@@ -39,7 +39,6 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.util.ClassResolver;
@@ -69,11 +68,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     private Map<Object, Object> configOverrides = null;
 
-    private boolean activateQueryCaching = false;
-
     private Set<String> basePackages;
-
-    private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
 
 
     public JpaBeanFactoryImpl() {
@@ -127,16 +122,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     @Override
     public EntityManager getManager() {
         return manager;
-    }
-
-
-    public boolean isActivateQueryCaching() {
-        return activateQueryCaching;
-    }
-
-
-    public void setActivateQueryCaching(boolean activateQueryCaching) {
-        this.activateQueryCaching = activateQueryCaching;
     }
 
 
@@ -239,55 +224,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
 
     @Override
-    public void clearCacheFor(Class<? extends Content> cls) {
-        statistics.increase("bean cache clear");
-        cache.clear();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("clearCacheFor() "+cls.getName());
-        } // if
-        try {
-            // clear query cache first since listeners might want to use query to obtain fresh data
-            Collection<String> removeKeys = new HashSet<String>();
-            for (Object keyObject : queryCache.keySet()) {
-                String key = (String) keyObject;
-                Class<? extends Content> c = getKeyClass(key);
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    removeKeys.add(key);
-                } // if
-            } // for
-            for (String key : removeKeys) {
-                queryCache.remove(key);
-            } // for
-            startupCache.put(QUERY_CACHE_KEY, queryCache);
-
-            for (Class<? extends Content> c : getListeners().keySet()) {
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    List<BeanListener> listeners = getListeners().get(c);
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
-                    } // if
-                    if (listeners!=null) {
-                        for (BeanListener listener : listeners) {
-                            listener.reset();
-                        } // for
-                    } // if
-                } // if
-            } // for
-        } catch (Exception e) {
-            LOG.error("clearCacheFor() "+cls.getSimpleName(), e);
-        } // try/catch
-    } // clearCacheFor()
-
-
-    @Override
     @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<T>();
@@ -315,64 +251,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
         } // try/catch/finally
         return result;
     } // listBeansOfExactClass()
-
-
-    private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+queryString;
-    } // getCacheKey()
-
-
-    @Override
-    public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = null;
-        if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()
-                    +(queryString==null ? "" : " with condition "+queryString));
-        } // if
-        String key = null;
-        if (activateQueryCaching) {
-            key = getCacheKey(cls, queryString, orderProperty, ascending);
-            List<String> idList = queryCache.get(key);
-            if (idList!=null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("listBeans() found in cache "+idList);
-                } // if
-                // old style
-                result = new ArrayList<T>(idList.size());
-                for (String id : idList) {
-                    result.add(getBean(cls, id));
-                } // for
-
-                // New style with lazy content list - perhaps will work some day
-                // result = new LazyContentList<T>(this, idList);
-                statistics.increase("query beans cached");
-            } // if
-        } // if
-        if (result==null) {
-            result = new ArrayList<T>();
-            for (Class<? extends Content> cx : getClasses()) {
-                if (cls.isAssignableFrom(cx)) {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends T> c = (Class<? extends T>) cx;
-                    List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
-                    result.addAll(beans);
-                } // if
-            } // for
-            if (activateQueryCaching) {
-                List<String> idList = new ArrayList<String>(result.size());
-                for (T content : result) {
-                    idList.add(content.getId());
-                } // for
-                queryCache.put(key, idList);
-                startupCache.put(QUERY_CACHE_KEY, queryCache);
-            } // if
-            statistics.increase("query beans uncached");
-        } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looked up "+result.size()+" raw entries");
-        } // if
-        return result;
-    } // listBeans()
 
 
     @Override

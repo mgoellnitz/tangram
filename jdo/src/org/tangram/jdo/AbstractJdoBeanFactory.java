@@ -37,7 +37,6 @@ import javax.jdo.Query;
 import javax.jdo.annotations.PersistenceCapable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.util.ClassResolver;
@@ -64,11 +63,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     private Set<String> basePackages;
 
-    private boolean activateQueryCaching = false;
-
     private boolean prefill = true;
-
-    private Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
 
 
     @Override
@@ -106,16 +101,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      */
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
-    }
-
-
-    public boolean isActivateQueryCaching() {
-        return activateQueryCaching;
-    }
-
-
-    public void setActivateQueryCaching(boolean activateQueryCaching) {
-        this.activateQueryCaching = activateQueryCaching;
     }
 
 
@@ -272,7 +257,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                     +(queryString==null ? "" : " with condition "+queryString));
         } // if
         String key = null;
-        if (activateQueryCaching) {
+        if (isActivateQueryCaching()) {
             key = getCacheKey(cls, queryString, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
@@ -300,7 +285,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                     result.addAll(beans);
                 } // if
             } // for
-            if (activateQueryCaching) {
+            if (isActivateQueryCaching()) {
                 List<String> idList = new ArrayList<String>(result.size());
                 for (T content : result) {
                     idList.add(content.getId());
@@ -315,55 +300,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         } // if
         return result;
     } // listBeans()
-
-
-    @Override
-    public void clearCacheFor(Class<? extends Content> cls) {
-        statistics.increase("bean cache clear");
-        cache.clear();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("clearCacheFor() "+cls.getSimpleName());
-        } // if
-        try {
-            // clear query cache first since listeners might want to use query to obtain fresh data
-            Collection<String> removeKeys = new HashSet<String>();
-            for (Object keyObject : queryCache.keySet()) {
-                String key = (String) keyObject;
-                Class<? extends Content> c = getKeyClass(key);
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    removeKeys.add(key);
-                } // if
-            } // for
-            for (String key : removeKeys) {
-                queryCache.remove(key);
-            } // for
-            startupCache.put(QUERY_CACHE_KEY, queryCache);
-
-            for (Class<? extends Content> c : getListeners().keySet()) {
-                boolean assignableFrom = c.isAssignableFrom(cls);
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
-                if (assignableFrom) {
-                    List<BeanListener> listeners = getListeners().get(c);
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("clearCacheFor() triggering "+(listeners==null ? "no" : listeners.size())+" listeners");
-                    } // if
-                    if (listeners!=null) {
-                        for (BeanListener listener : listeners) {
-                            listener.reset();
-                        } // for
-                    } // if
-                } // if
-            } // for
-        } catch (Exception e) {
-            LOG.error("clearCacheFor() "+cls.getSimpleName(), e);
-        } // try/catch
-    } // clearCacheFor()
 
 
     /**
