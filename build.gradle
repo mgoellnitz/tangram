@@ -35,7 +35,7 @@ public incrementBuildCounter(Project prj) {
   String filename = "${dirname}/${prj.projectDir.name}-build.properties"
   Properties p = new Properties()
   try {
-    FileInputStream fis = new FileInputStream(filename);
+    FileInputStream fis = new FileInputStream(filename)
     p.load(fis)
     fis.close()
   } catch (Exception e) {

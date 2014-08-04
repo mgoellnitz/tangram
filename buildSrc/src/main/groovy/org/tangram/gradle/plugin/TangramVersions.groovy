@@ -47,12 +47,13 @@ public class TangramVersions {
   
   String openjpa = '2.3.0'
   String eclipselink = '2.5.2'
+  String hibernate = '4.3.6.Final'
   
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
   String datanucleus = '3.1.3'
   // The byte code enhancer is not included in every version for some reason
   String datanucleus_enhancer = '3.1.1'
-  // Latest version presented by google is 2.1.2 - this version her is provided
+  // Latest version presented by google is 2.1.2 - this version here is provided
   // by datanucleus for plattform version 3.3
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'

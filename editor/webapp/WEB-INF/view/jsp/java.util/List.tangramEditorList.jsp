@@ -25,12 +25,14 @@
 <cms:include bean="${item}" view="tangramEditorItem"/>
 </c:forEach></ul>
 </div>
+<c:if test="${designClass != null}">
 <form method="post" action="<cms:link bean="${self}" action="create"/>">
 <div class="cms_editor_row">
 <input class="cms_editor_textfield" type="hidden" name="cms.editor.class.name" value="${designClass.name}"/>
 <input type="submit" value="  <fmt:message key="button.newobject" bundle="${msg}"/>  " />
 </div>
 </form>
+</c:if>
 <hr/>
 <cms:include bean="${self}" view="tangramEditorClasses"/>
 <cms:include bean="${self}" view="tangramEditorFooter" />
