@@ -58,11 +58,9 @@ public class ClassRepositoryEnhancer implements BeanListener {
         Collection<Class<? extends Content>> modelClasses = new HashSet<Class<? extends Content>>();
         for (Class<Content> c : classes.values()) {
             if (c.getAnnotation(PersistenceCapable.class)!=null) {
-                // if (c.getAnnotation(Entity.class)!=null) {
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("reset() defining "+c.getName()+"("+c.getAnnotation(PersistenceCapable.class)+")");
+                    LOG.info("reset() defining "+c.getName());
                 } // if
-
                 try {
                     DataNucleusEnhancer enhancer = new DataNucleusEnhancer();
                     enhancer.setVerbose(true);
@@ -71,13 +69,13 @@ public class ClassRepositoryEnhancer implements BeanListener {
                     enhancer.setClassLoader(classRepository.getClassLoader());
                     enhancer.addClass(classname, classRepository.getBytes(classname));
                     int numClasses = enhancer.enhance();
-                    // System.out.println("enhanced "+numClasses);
                     if (numClasses>0) {
                         final byte[] enhancedBytes = enhancer.getEnhancedBytes(classname);
                         classRepository.overrideClass(classname, enhancedBytes);
                         final Class<? extends Object> enhancedClass = classRepository.get(classname);
-                        // System.out.println("enhanced "+enhancedClass);
                         modelClasses.add((Class<? extends Content>) enhancedClass);
+                    } else {
+                        LOG.error("reset() cannot integrate model class "+classname);
                     } // if
                 } catch (Throwable e) {
                     LOG.error("reset()", e);
