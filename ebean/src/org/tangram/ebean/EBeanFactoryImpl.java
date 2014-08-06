@@ -22,26 +22,21 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.config.ServerConfig;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.persistence.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
+import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.util.ClassResolver;
 
 
-public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBeanFactory {
+public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements MutableBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(EBeanFactoryImpl.class);
 
@@ -51,31 +46,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     private Transaction currentTransaction = null;
 
-    protected List<Class<? extends Content>> modelClasses = null;
-
     protected List<Class<? extends Content>> allClasses = null;
-
-    protected Map<String, Class<? extends Content>> tableNameMapping = null;
-
-    private Map<Object, Object> configOverrides = null;
-
-    private Set<String> basePackages;
-
-
-    public EBeanFactoryImpl() {
-        basePackages = new HashSet<>();
-        basePackages.add(getBaseClass().getPackage().getName());
-    } // EBeanFactoryImpl()
-
-
-    public Set<String> getBasePackages() {
-        return basePackages;
-    }
-
-
-    public void setBasePackages(Set<String> basePackages) {
-        this.basePackages = basePackages;
-    }
 
 
     public void setServerConfig(ServerConfig serverConfig) {
@@ -170,31 +141,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     } // apiDelete()
 
 
-    /**
-     * remember that the newly created bean has to be persisted in the now open transaction!
-     *
-     * @param <T> type of bean to create
-     * @param cls instance of that type
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    @Override
-    public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() beginning transaction");
-        } // if
-        beginTransaction();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() creating new instance of "+cls.getName());
-        } // if
-        T bean = cls.newInstance();
-
-        statistics.increase("create bean");
-        return bean;
-    } // createBean()
-
-
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
@@ -209,8 +155,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
             // TODO: How to use query string
             // Default is no ordering - not even via IDs
             if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName
-                        +(queryString==null ? "" : " with condition "+queryString));
+                LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName+(queryString==null ? "" : " with condition "+queryString));
             } // if
             List<T> results = query.findList();
             if (LOG.isInfoEnabled()) {
@@ -234,7 +179,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
-                        ClassResolver resolver = new ClassResolver(basePackages);
+                        ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<String>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(EContent.class, Entity.class)) {
                             if (LOG.isInfoEnabled()) {
@@ -264,35 +209,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         } // synchronized
         return allClasses;
     } // getAllClasses()
-
-
-    @Override
-    public Collection<Class<? extends Content>> getClasses() {
-        synchronized (this) {
-            if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
-                for (Class<? extends Content> cls : getAllClasses()) {
-                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
-                        modelClasses.add(cls);
-                    } // if
-                } // for
-                Comparator<Class<?>> comp = new Comparator<Class<?>>() {
-
-                    @Override
-                    public int compare(Class<?> o1, Class<?> o2) {
-                        return o1.getName().compareTo(o2.getName());
-                    } // compareTo()
-
-                };
-                Collections.sort(modelClasses, comp);
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
-                for (Class<? extends Content> mc : modelClasses) {
-                    tableNameMapping.put(mc.getSimpleName(), mc);
-                } // for
-            } // if
-        } // if
-        return modelClasses;
-    } // getClasses()
 
 
     @PostConstruct

@@ -18,12 +18,16 @@
  */
 package org.tangram.mutable;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +56,16 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();
 
+    private Set<String> basePackages;
+
     /**
      * mapping from classes or interfaces to non abstract classes implementing them
      */
     protected Map<Class<? extends Content>, List<Class<? extends Content>>> implementingClassesMap = null;
+
+    protected List<Class<? extends Content>> modelClasses = null;
+
+    protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
     protected Map<String, Content> cache = new HashMap<String, Content>();
 
@@ -66,18 +76,20 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     private boolean activateQueryCaching = false;
 
 
-    protected Map<Class<? extends Content>, List<BeanListener>> getListeners() {
-        return attachedListeners;
-    } // getListeners() {
+    public AbstractMutableBeanFactory() {
+        basePackages = new HashSet<>();
+        basePackages.add(getBaseClass().getPackage().getName());
+    } // AbstractMutableBeanFactory()
 
 
-    /**
-     * Check if the underlying API implementation of the bean factory really has the needed managing instance
-     * of some sort at hand.
-     *
-     * common case to check for persisting and deleting instanced though highly API specific in detail.
-     */
-    protected abstract boolean hasManager();
+    public Set<String> getBasePackages() {
+        return basePackages;
+    }
+
+
+    public void setBasePackages(Set<String> basePackages) {
+        this.basePackages = basePackages;
+    }
 
 
     public boolean isActivateCaching() {
@@ -100,6 +112,20 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     }
 
 
+    protected Map<Class<? extends Content>, List<BeanListener>> getListeners() {
+        return attachedListeners;
+    } // getListeners() {
+
+
+    /**
+     * Check if the underlying API implementation of the bean factory really has the needed managing instance
+     * of some sort at hand.
+     *
+     * common case to check for persisting and deleting instanced though highly API specific in detail.
+     */
+    protected abstract boolean hasManager();
+
+
     /**
      * Wrap API specific persistence call.
      * Higher level methods in this class in turn deal with exception and cachce handling.
@@ -118,6 +144,31 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @param bean
      */
     protected abstract <T extends Content> void apiDelete(T bean);
+
+
+    /**
+     * remember that the newly created bean has to be persisted in the now open transaction!
+     *
+     * @param <T> type of bean to create
+     * @param cls instance of that type
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    @Override
+    public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createBean() beginning transaction");
+        } // if
+        beginTransaction();
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createBean() creating new instance of "+cls.getName());
+        } // if
+        T bean = cls.newInstance();
+
+        statistics.increase("create bean");
+        return bean;
+    } // createBean()
 
 
     /**
@@ -425,8 +476,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = null;
         if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()
-                    +(queryString==null ? "" : " with condition "+queryString));
+            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
         } // if
         String key = null;
         if (isActivateQueryCaching()) {
@@ -441,7 +491,6 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 for (String id : idList) {
                     result.add(getBean(cls, id));
                 } // for
-
                 // New style with lazy content list - perhaps will work some day
                 // result = new LazyContentList<T>(this, idList);
                 statistics.increase("query beans cached");
@@ -472,5 +521,34 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
         } // if
         return result;
     } // listBeans()
+
+
+    @Override
+    public Collection<Class<? extends Content>> getClasses() {
+        synchronized (this) {
+            if (modelClasses==null) {
+                modelClasses = new ArrayList<Class<? extends Content>>();
+                for (Class<? extends Content> cls : getAllClasses()) {
+                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                        modelClasses.add(cls);
+                    } // if
+                } // for
+                Comparator<Class<?>> comp = new Comparator<Class<?>>() {
+
+                    @Override
+                    public int compare(Class<?> o1, Class<?> o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    } // compareTo()
+
+                };
+                Collections.sort(modelClasses, comp);
+                tableNameMapping = new HashMap<String, Class<? extends Content>>();
+                for (Class<? extends Content> mc : modelClasses) {
+                    tableNameMapping.put(mc.getSimpleName(), mc);
+                } // for
+            } // if
+        } // synchronized
+        return modelClasses;
+    } // getClasses()
 
 } // AbstractMutableBeanFactory

@@ -19,7 +19,6 @@
 package org.tangram.jdo;
 
 import java.util.Collection;
-import javax.jdo.PersistenceManager;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
 
@@ -28,22 +27,6 @@ import org.tangram.mutable.MutableBeanFactory;
  * All BeanFactories dealing with Java Data Objects implement this interface.
  */
 public interface JdoBeanFactory extends MutableBeanFactory {
-
-    /**
-     * Get all classes related with models - also the abstract ones
-     *
-     * @return collection with all classes
-     */
-    Collection<Class<? extends Content>> getAllClasses();
-
-
-    /**
-     * returns the underlying persistence manager handling all objects at this layer.
-     *
-     * @return JDO persistence manager instance
-     */
-    PersistenceManager getManager();
-
 
     /**
      * set a list of classes to be used as model classes in addition to the statically scanned ones.

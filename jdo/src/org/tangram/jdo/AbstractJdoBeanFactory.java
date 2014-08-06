@@ -18,12 +18,9 @@
  */
 package org.tangram.jdo;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -50,44 +47,13 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected PersistenceManager manager = null;
 
-    /**
-     * non abstract classes for storaable mutable data models
-     */
-    protected List<Class<? extends Content>> modelClasses = null;
-
     protected List<Class<? extends Content>> allClasses = null;
 
     private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
-    protected Map<String, Class<? extends Content>> tableNameMapping = null;
-
     private Map<Object, Object> configOverrides = null;
 
-    private Set<String> basePackages;
-
     private boolean prefill = true;
-
-
-    @Override
-    public PersistenceManager getManager() {
-        return manager;
-    }
-
-
-    protected AbstractJdoBeanFactory() {
-        basePackages = new HashSet<String>();
-        basePackages.add(getBaseClass().getPackage().getName());
-    } // AbstractJdoBeanFactory()
-
-
-    public Set<String> getBasePackages() {
-        return basePackages;
-    }
-
-
-    public void setBasePackages(Set<String> basePackages) {
-        this.basePackages = basePackages;
-    }
 
 
     public Map<Object, Object> getConfigOverrides() {
@@ -228,8 +194,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             // query.setRange(from, end+1);
             // } // if
             if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()
-                        +(queryString==null ? "" : " with condition "+queryString));
+                LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
             } // if
             List<T> results = (List<T>) query.execute();
             if (LOG.isInfoEnabled()) {
@@ -251,59 +216,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // getCacheKey()
 
 
-    @Override
-    public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = null;
-        if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()
-                    +(queryString==null ? "" : " with condition "+queryString));
-        } // if
-        String key = null;
-        if (isActivateQueryCaching()) {
-            key = getCacheKey(cls, queryString, orderProperty, ascending);
-            List<String> idList = queryCache.get(key);
-            if (idList!=null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("listBeans() found in cache "+idList);
-                } // if
-                // old style
-                result = new ArrayList<T>(idList.size());
-                for (String id : idList) {
-                    result.add(getBean(cls, id));
-                } // for
-
-                // New style with lazy content list - perhaps will work some day
-                // result = new LazyContentList<T>(this, idList);
-                statistics.increase("query beans cached");
-            } // if
-        } // if
-        if (result==null) {
-            result = new ArrayList<T>();
-            for (Class<? extends Content> cx : getClasses()) {
-                if (cls.isAssignableFrom(cx)) {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends T> c = (Class<? extends T>) cx;
-                    List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
-                    result.addAll(beans);
-                } // if
-            } // for
-            if (isActivateQueryCaching()) {
-                List<String> idList = new ArrayList<String>(result.size());
-                for (T content : result) {
-                    idList.add(content.getId());
-                } // for
-                queryCache.put(key, idList);
-                startupCache.put(QUERY_CACHE_KEY, queryCache);
-            } // if
-            statistics.increase("query beans uncached");
-        } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looked up "+result.size()+" raw entries");
-        } // if
-        return result;
-    } // listBeans()
-
-
     /**
      * Get a collection of model related classes.
      *
@@ -320,7 +232,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
-                        ClassResolver resolver = new ClassResolver(basePackages);
+                        ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<String>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JdoContent.class, PersistenceCapable.class)) {
                             if (LOG.isInfoEnabled()) {
@@ -351,35 +263,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         } // synchronized
         return allClasses;
     } // getAllClasses()
-
-
-    @Override
-    public Collection<Class<? extends Content>> getClasses() {
-        synchronized (this) {
-            if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
-                for (Class<? extends Content> cls : getAllClasses()) {
-                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
-                        modelClasses.add(cls);
-                    } // if
-                } // for
-                Comparator<Class<?>> comp = new Comparator<Class<?>>() {
-
-                    @Override
-                    public int compare(Class<?> o1, Class<?> o2) {
-                        return o1.getName().compareTo(o2.getName());
-                    } // compareTo()
-
-                };
-                Collections.sort(modelClasses, comp);
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
-                for (Class<? extends Content> mc : modelClasses) {
-                    tableNameMapping.put(mc.getSimpleName(), mc);
-                } // for
-            } // if
-        } // synchronized
-        return modelClasses;
-    } // getClasses()
 
 
     @Override
@@ -424,7 +307,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         if (prefill) {
             final Collection<Class<? extends Content>> theClasses = getClasses();
             if (LOG.isInfoEnabled()) {
-                LOG.info("afterPropertiesSet() prefilling done for "+basePackages+": "+theClasses);
+                LOG.info("afterPropertiesSet() prefilling done for "+getBasePackages()+": "+theClasses);
             } // if
         } // if
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());

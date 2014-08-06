@@ -18,13 +18,9 @@
  */
 package org.tangram.jpa;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -41,16 +37,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
+import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.util.ClassResolver;
 
 
 /**
- * BeanFactory implementation for use with Java Persistence API.
- *
- * For the moment this is either an OpenJPA or an EclipseLink specific solution dependending on the
- * comments in the build file.
+ * Generic BeanFactory implementation for use with Java Persistence API implementations.
  */
-public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements JpaBeanFactory {
+public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements MutableBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(JpaBeanFactoryImpl.class);
 
@@ -60,39 +54,15 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     protected EntityManager manager = null;
 
-    protected List<Class<? extends Content>> modelClasses = null;
-
     protected List<Class<? extends Content>> allClasses = null;
 
-    private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
-
-    protected Map<String, Class<? extends Content>> tableNameMapping = null;
-
     private Map<Object, Object> configOverrides = null;
-
-    private Set<String> basePackages;
-
-
-    public JpaBeanFactoryImpl() {
-        basePackages = new HashSet<String>();
-        basePackages.add(getBaseClass().getPackage().getName());
-    } // JpaBeanFactoryImpl()
 
 
     @Override
     public Class<? extends Content> getBaseClass() {
         return JpaContent.class;
     } // getBaseClass()
-
-
-    public Set<String> getBasePackages() {
-        return basePackages;
-    }
-
-
-    public void setBasePackages(Set<String> basePackages) {
-        this.basePackages = basePackages;
-    }
 
 
     public Map<Object, Object> getConfigOverrides() {
@@ -118,12 +88,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
 
     public void setPersistenceUnitName(String persistenceUnitName) {
         this.persistenceUnitName = persistenceUnitName;
-    }
-
-
-    @Override
-    public EntityManager getManager() {
-        return manager;
     }
 
 
@@ -200,31 +164,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // apiDelete()
 
 
-    /**
-     * remember that the newly created bean has to be persisted in the now open transaction!
-     *
-     * @param <T> type of bean to create
-     * @param cls instance of that type
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    @Override
-    public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() beginning transaction");
-        } // if
-        beginTransaction();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() creating new instance of "+cls.getName());
-        } // if
-        T bean = cls.newInstance();
-
-        statistics.increase("create bean");
-        return bean;
-    } // createBean()
-
-
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
@@ -264,7 +203,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
-                        ClassResolver resolver = new ClassResolver(basePackages);
+                        ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<String>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class)) {
                             if (LOG.isInfoEnabled()) {
@@ -287,7 +226,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                             allClasses.add(cls);
                         } // for
                     } // if
-                    allClasses.addAll(additionalClasses);
                 } catch (Exception e) {
                     LOG.error("getAllClasses() outer", e);
                 } // try/catch
@@ -297,43 +235,14 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
     } // getAllClasses()
 
 
-    @Override
-    public Collection<Class<? extends Content>> getClasses() {
-        synchronized (this) {
-            if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
-                for (Class<? extends Content> cls : getAllClasses()) {
-                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
-                        modelClasses.add(cls);
-                    } // if
-                } // for
-                Comparator<Class<?>> comp = new Comparator<Class<?>>() {
-
-                    @Override
-                    public int compare(Class<?> o1, Class<?> o2) {
-                        return o1.getName().compareTo(o2.getName());
-                    } // compareTo()
-
-                };
-                Collections.sort(modelClasses, comp);
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
-                for (Class<? extends Content> mc : modelClasses) {
-                    LOG.info("getClasses() setting table mapping for "+mc);
-                    tableNameMapping.put(mc.getSimpleName(), mc);
-                } // for
-            } // if
-        } // if
-        return modelClasses;
-    } // getClasses()
+    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
+        return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
+    } // getFactoryConfigOverrides()
 
 
-    /**
-     * Initialize entity manager and the needed factory for it.
-     *
-     * Special OpenJPA handling and done as a separate method to be re-initializable for "setAdditionalClasses".
-     */
+    @PostConstruct
     @SuppressWarnings("unchecked")
-    private void initManager() {
+    public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
         if (LOG.isInfoEnabled()) {
             LOG.info("initManager() using overrides for entity manager factory: "+overrides);
@@ -354,8 +263,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             LOG.info("initManager() properties="+properties);
         } // if
 
-        allClasses = new ArrayList<Class<? extends Content>>();
-        modelClasses = null;
         // initialize manager
         managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
         manager = managerFactory.createEntityManager();
@@ -363,9 +270,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
             LOG.info("initManager() manager factory: "+managerFactory.getClass().getName());
             LOG.info("initManager() manager: "+manager.getClass().getName());
         } // if
-        Metamodel metamodel = manager.getMetamodel();
         // calibrate classes discovered by annotation with classes found by manager
+        Metamodel metamodel = manager.getMetamodel();
         if (metamodel!=null) {
+            allClasses = new ArrayList<Class<? extends Content>>();
+            modelClasses = null;
             Set<EntityType<?>> entities = metamodel.getEntities();
             for (EntityType<?> entity : entities) {
                 if (LOG.isInfoEnabled()) {
@@ -378,44 +287,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Jp
                 LOG.warn("initManager() not meta model");
             } // if
         } // if
-        clearCacheFor(Content.class);
-    } // initManager()
-
-
-    @Override
-    public void setAdditionalClasses(Collection<Class<? extends Content>> classes) {
-        Set<Class<? extends Content>> classSet = new HashSet<Class<? extends Content>>();
-        if (classes!=null) {
-            for (Class<? extends Content> cls : classes) {
-                if (getBaseClass().isAssignableFrom(cls)) {
-                    if (cls.getAnnotation(Entity.class)!=null) {
-                        classSet.add(cls);
-                    } // if
-                } // if
-            } // for
-        } // if
-        if (additionalClasses.size()!=classSet.size()) {
-            additionalClasses = classSet;
-            synchronized (this) {
-                allClasses = null;
-                modelClasses = null;
-            } // synchronized
-            // Manager cannot be re-initialized yet - so additional classes are not really available as of now
-            getManager().flush();
-            initManager();
-        } // if
-    } // setAdditionalClasses()
-
-
-    protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
-        return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
-    } // getFactoryConfigOverrides()
-
-
-    @PostConstruct
-    @SuppressWarnings("unchecked")
-    public void afterPropertiesSet() {
-        initManager();
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;
