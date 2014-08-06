@@ -51,8 +51,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     private Transaction currentTransaction = null;
 
-    private Set<String> basePackages;
-
     protected List<Class<? extends Content>> modelClasses = null;
 
     protected List<Class<? extends Content>> allClasses = null;
@@ -61,14 +59,12 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     private Map<Object, Object> configOverrides = null;
 
-    private Map<String, List<String>> queryCache = new HashMap<>();
-
-    private boolean activateQueryCaching = false;
+    private Set<String> basePackages;
 
 
     public EBeanFactoryImpl() {
         basePackages = new HashSet<>();
-        basePackages.add("org.tangram");
+        basePackages.add(getBaseClass().getPackage().getName());
     } // EBeanFactoryImpl()
 
 
@@ -79,16 +75,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
     public void setBasePackages(Set<String> basePackages) {
         this.basePackages = basePackages;
-    }
-
-
-    public boolean isActivateQueryCaching() {
-        return activateQueryCaching;
-    }
-
-
-    public void setActivateQueryCaching(boolean activateQueryCaching) {
-        this.activateQueryCaching = activateQueryCaching;
     }
 
 
@@ -245,8 +231,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
         synchronized (this) {
             if (allClasses==null) {
                 allClasses = new ArrayList<Class<? extends Content>>();
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
-
                 try {
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
@@ -257,7 +241,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                                 LOG.info("getAllClasses() * "+cls.getName());
                             } // if
                             classNames.add(cls.getName());
-                            tableNameMapping.put(cls.getSimpleName(), cls);
                             allClasses.add(cls);
                         } // for
                         if (LOG.isInfoEnabled()) {
@@ -271,7 +254,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() # "+cls.getName());
                             } // if
-                            tableNameMapping.put(cls.getSimpleName(), cls);
                             allClasses.add(cls);
                         } // for
                     } // if
@@ -303,6 +285,10 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
 
                 };
                 Collections.sort(modelClasses, comp);
+                tableNameMapping = new HashMap<String, Class<? extends Content>>();
+                for (Class<? extends Content> mc : modelClasses) {
+                    tableNameMapping.put(mc.getSimpleName(), mc);
+                } // for
             } // if
         } // if
         return modelClasses;
@@ -312,9 +298,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements EBea
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        final Collection<Class<? extends Content>> classes = getAllClasses();
-
-        for (Class<? extends Content> c : classes) {
+        for (Class<? extends Content> c : getAllClasses()) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("afterPropertiesSet() class "+c.getName());
             } // if

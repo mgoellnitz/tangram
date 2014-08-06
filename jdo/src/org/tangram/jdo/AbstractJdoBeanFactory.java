@@ -50,12 +50,14 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     protected PersistenceManager manager = null;
 
-    protected List<Class<? extends Content>> allClasses = null;
-
     /**
      * non abstract classes for storaable mutable data models
      */
     protected List<Class<? extends Content>> modelClasses = null;
+
+    protected List<Class<? extends Content>> allClasses = null;
+
+    private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
     protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
@@ -72,9 +74,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     }
 
 
-    public AbstractJdoBeanFactory() {
+    protected AbstractJdoBeanFactory() {
         basePackages = new HashSet<String>();
-        basePackages.add("org.tangram");
+        basePackages.add(getBaseClass().getPackage().getName());
     } // AbstractJdoBeanFactory()
 
 
@@ -341,6 +343,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                             allClasses.add(cls);
                         } // for
                     } // if
+                    allClasses.addAll(additionalClasses);
                 } catch (Exception e) {
                     LOG.error("getAllClasses() outer", e);
                 } // try/catch
@@ -368,19 +371,15 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                     } // compareTo()
 
                 };
-                modelClasses.addAll(additionalClasses);
                 Collections.sort(modelClasses, comp);
                 tableNameMapping = new HashMap<String, Class<? extends Content>>();
                 for (Class<? extends Content> mc : modelClasses) {
                     tableNameMapping.put(mc.getSimpleName(), mc);
                 } // for
             } // if
-        } // if
+        } // synchronized
         return modelClasses;
     } // getClasses()
-
-
-    private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
 
     @Override
@@ -390,15 +389,16 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             for (Class<? extends Content> cls : classes) {
                 if (JdoContent.class.isAssignableFrom(cls)) {
                     if (cls.getAnnotation(PersistenceCapable.class)!=null) {
-                        if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
-                            classSet.add(cls);
-                        } // if
+                        classSet.add(cls);
                     } // if
                 } // if
             } // for
         } // if
         additionalClasses = classSet;
-        modelClasses = null;
+        synchronized (this) {
+            allClasses = null;
+            modelClasses = null;
+        } // synchronized
     } // setAdditionalClasses()
 
 
@@ -413,11 +413,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         if (LOG.isInfoEnabled()) {
             LOG.info("afterPropertiesSet() bean factory is using "+getClass().getClassLoader().getClass().getName());
         } // if
-        Map<? extends Object, ? extends Object> configOverrides = getFactoryConfigOverrides();
+        Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
         if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() using overrides for persistence manager factory: "+configOverrides);
+            LOG.info("afterPropertiesSet() using overrides for persistence manager factory: "+overrides);
         } // if
-        managerFactory = JDOHelper.getPersistenceManagerFactory(configOverrides, "transactions-optional");
+        managerFactory = JDOHelper.getPersistenceManagerFactory(overrides, "transactions-optional");
         manager = managerFactory.getPersistenceManager();
 
         // Just to prefill
