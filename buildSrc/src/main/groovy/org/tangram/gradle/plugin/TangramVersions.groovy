@@ -28,7 +28,7 @@ public class TangramVersions {
 
   String servlet = '2.5'
   String jsp = '2.0'
-  String groovy = '2.3.0'
+  String groovy = '2.3.6'
   String velocity = '1.7'
   String slf4j = '1.7.7'
   String log4j = '1.2.17'
@@ -61,6 +61,6 @@ public class TangramVersions {
   String ebean = '4.1.1'
   String ebean_agent = '4.1.4'
 
-  String appengine = '1.9.7'
+  String appengine = '1.9.8'
   
 } // TangramVersions
