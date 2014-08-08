@@ -32,6 +32,7 @@ import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.view.TargetDescriptor;
 
@@ -53,6 +54,13 @@ public class ComaHandler extends RenderingBase {
 
     @Inject
     private LinkHandlerRegistry linkHandlerRegistry;
+
+
+    @Inject
+    public void setLinkFactoryAggregator(LinkFactoryAggregator linkFactoryAggregator) {
+        // Automagically avoid default view to be handled by default URL mimik.
+        linkFactoryAggregator.getCustomLinkViews().add("NULL");
+    } // setLinkFactoryAggregator()
 
 
     @LinkAction("/content/(.*)")

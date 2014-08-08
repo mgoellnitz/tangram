@@ -24,7 +24,6 @@ dependencies {
   webapp project(path: ':tangram-core')
 
   compile project(':tangram-core')
-  compile project(':tangram-spring')
 
   providedCompile "javax.servlet:servlet-api:$versions.servlet"
   providedCompile "javax.servlet:jsp-api:$versions.jsp"
