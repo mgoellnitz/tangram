@@ -20,13 +20,11 @@ package org.tangram.servlet;
 
 import java.io.IOException;
 import java.util.Locale;
-import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.view.AbstractInternalResourceTemplateResolver;
 
 
-@Named
 public class JspTemplateResolver extends AbstractInternalResourceTemplateResolver<String> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JspTemplateResolver.class);

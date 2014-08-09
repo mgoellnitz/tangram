@@ -50,13 +50,23 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
     private String persistenceUnitName = "tangram";
 
-    protected EntityManagerFactory managerFactory = null;
+    private EntityManagerFactory managerFactory = null;
 
-    protected EntityManager manager = null;
+    private EntityManager manager = null;
 
     protected List<Class<? extends Content>> allClasses = null;
 
     private Map<Object, Object> configOverrides = null;
+
+
+    protected void setEntityManagerFactory(EntityManagerFactory factory) {
+        managerFactory = factory;
+    } // setEntityManagerFactory()
+
+
+    protected void setEntityManager(EntityManager manager) {
+        this.manager = manager;
+    } // setEntityManagerFactory()
 
 
     @Override
@@ -240,12 +250,47 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     } // getFactoryConfigOverrides()
 
 
+    /**
+     * Initializes the bean factory after JPA manager and factory have been obtained.
+     *
+     * intializes the queryCache from the startupCache if possible and re-calibrates the available entity list.
+     */
+    @SuppressWarnings("unchecked")
+    protected void initFactory() {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("initFactory() manager factory: "+managerFactory.getClass().getName());
+            LOG.info("initFactory() manager: "+manager.getClass().getName());
+        } // if
+        // calibrate classes discovered by annotation with classes found by manager
+        Metamodel metamodel = manager.getMetamodel();
+        if (metamodel!=null) {
+            allClasses = new ArrayList<Class<? extends Content>>();
+            modelClasses = null;
+            Set<EntityType<?>> entities = metamodel.getEntities();
+            for (EntityType<?> entity : entities) {
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("initFactory() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
+                } // if
+                allClasses.add((Class<? extends Content>) entity.getJavaType());
+            } // for
+        } else {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("initFactory() not meta model");
+            } // if
+        } // if
+        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        if (c!=null) {
+            queryCache = c;
+        } // if
+    } // initFactory()
+
+
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
         if (LOG.isInfoEnabled()) {
-            LOG.info("initManager() using overrides for entity manager factory: "+overrides);
+            LOG.info("afterPropertiesSet() using overrides for entity manager factory: "+overrides);
         } // if
 
         // OpenJPA specific class handling to be able to handle classes from the class repository
@@ -260,37 +305,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         properties.putAll(overrides);
         properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
         if (LOG.isInfoEnabled()) {
-            LOG.info("initManager() properties="+properties);
+            LOG.info("afterPropertiesSet() properties="+properties);
         } // if
 
         // initialize manager
         managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);
         manager = managerFactory.createEntityManager();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("initManager() manager factory: "+managerFactory.getClass().getName());
-            LOG.info("initManager() manager: "+manager.getClass().getName());
-        } // if
-        // calibrate classes discovered by annotation with classes found by manager
-        Metamodel metamodel = manager.getMetamodel();
-        if (metamodel!=null) {
-            allClasses = new ArrayList<Class<? extends Content>>();
-            modelClasses = null;
-            Set<EntityType<?>> entities = metamodel.getEntities();
-            for (EntityType<?> entity : entities) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("initManager() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
-                } // if
-                allClasses.add((Class<? extends Content>) entity.getJavaType());
-            } // for
-        } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("initManager() not meta model");
-            } // if
-        } // if
-        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
-        if (c!=null) {
-            queryCache = c;
-        } // if
+        initFactory();
     } // afterPropertiesSet()
 
 } // JpaBeanFactoryImpl

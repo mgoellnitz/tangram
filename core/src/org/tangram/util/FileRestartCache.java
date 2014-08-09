@@ -27,7 +27,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
@@ -41,7 +40,6 @@ import org.tangram.PersistentRestartCache;
  * the interface for other flavours of tangram as google app engine as well
  *
  */
-@Singleton
 public class FileRestartCache implements PersistentRestartCache {
 
     private static final String PERSISTENT_CACHE_FILENAME_DEFAULT = "tangram.persistent.cache.ser";

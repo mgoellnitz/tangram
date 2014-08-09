@@ -19,7 +19,6 @@
 package org.tangram.util;
 
 import java.lang.reflect.Type;
-import javax.inject.Singleton;
 import org.tangram.PersistentRestartCache;
 
 /**
@@ -28,7 +27,6 @@ import org.tangram.PersistentRestartCache;
  * Since Google App Engine provides such a nice persistent cache and we want to generically use this we had to
  * implement the interface for other flavours of tangram as google app engine as well.
  */
-@Singleton
 public class DummyRestartCache implements PersistentRestartCache {
 
     public DummyRestartCache() {
