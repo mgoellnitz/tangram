@@ -41,7 +41,7 @@ public class GenericLoginSupport implements LoginSupport {
 
 
     public void setStaticLoginURL(@Named("staticLoginURL") String staticLoginURL) {
-        this.staticLoginURL = Utils.getUriPrefix(servletContext)+staticLoginURL;
+        this.staticLoginURL = staticLoginURL;
     }
 
 
@@ -64,7 +64,7 @@ public class GenericLoginSupport implements LoginSupport {
 
     @Override
     public String createLoginURL(String currentURL) {
-        return staticLoginURL;
+        return Utils.getUriPrefix(servletContext)+staticLoginURL;
     }
 
 } // GenericLoginSupport
