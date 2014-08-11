@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,7 @@ import org.tangram.view.TargetDescriptor;
  * So this is the generic not just default implementation of a link factory aggregator to be used to create
  * any link you might need.
  */
+@Named("linkFactoryAggregator")
 @Singleton
 public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
