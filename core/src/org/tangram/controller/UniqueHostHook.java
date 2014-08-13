@@ -20,7 +20,6 @@ package org.tangram.controller;
 
 import java.util.Map;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -36,13 +35,12 @@ import org.tangram.view.TargetDescriptor;
  * In many scenarios there are alternate names for the delivering components so it is possible to configure
  * a hook of this class and select the unique host to be used un URL - accepted and generated.
  */
-@Singleton
 public class UniqueHostHook implements ControllerHook {
 
     private static final Logger LOG = LoggerFactory.getLogger(UniqueHostHook.class);
 
     @Inject
-    private LinkFactoryAggregator linkFactory;
+    private LinkFactoryAggregator linkFactoryAggregator;
 
     private String primaryDomain = null;
 
@@ -61,7 +59,7 @@ public class UniqueHostHook implements ControllerHook {
         } // if
         boolean isOnLocalhost = request.getServerName().equals("localhost");
         if ( !(request.getServerName().equals(primaryDomain)||(isOnLocalhost))) {
-            Link redirectLink = linkFactory.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
+            Link redirectLink = linkFactoryAggregator.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
             response.setHeader("Location", "http://"+primaryDomain+redirectLink.getUrl());
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             return true;
