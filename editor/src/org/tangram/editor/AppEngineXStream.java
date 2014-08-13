@@ -92,6 +92,7 @@ public class AppEngineXStream extends XStream {
 
 
         @Override
+        @SuppressWarnings("rawtypes")
         public boolean canConvert(Class type) {
             return JVM.canCreateDerivedObjectOutputStream()&&myIsSerializable(type);
         }
