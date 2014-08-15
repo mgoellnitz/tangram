@@ -61,7 +61,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   
-  <!-- Apache shiro example - shiro.ini config file and more tangram setup missing -->
+  <!-- Apache Shiro integration -->
   <listener>
     <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
   </listener>

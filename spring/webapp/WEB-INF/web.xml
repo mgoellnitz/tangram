@@ -23,7 +23,7 @@
   
     <!-- Default web.xml from the spring overlay. -->
 
-    <display-name>Tangram Web Application for Spring Scenarios</display-name>
+    <display-name>Tangram Web Application for Springframework Scenarios</display-name>
 
     <!-- location of the bootstrap logging configuration -->
     <context-param>

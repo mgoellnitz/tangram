@@ -35,6 +35,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String junit = '4.11'
   String xstream = '1.4.7'
+  String tomcat = '7.0.54'
   
   String dinistiq = '0.2-SNAPSHOT'
   String shiro = '1.2.3'
