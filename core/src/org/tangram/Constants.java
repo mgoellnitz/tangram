@@ -209,7 +209,7 @@ public final class Constants {
         } catch (Exception e) {
             LOG.error("{} error while reading all modules building properties", e);
         } // try/catch
-        StringBuilder versionBuilder = new StringBuilder();
+        StringBuilder versionBuilder = new StringBuilder(128);
         versionBuilder.append(VERSION_MAJOR);
         versionBuilder.append(".");
         versionBuilder.append(VERSION_MINOR);

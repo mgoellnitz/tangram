@@ -179,15 +179,16 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
                 String key = parameter.getKey();
                 if (!key.startsWith("cms.editor")) {
                     try {
-                        StringBuilder msg = new StringBuilder("store() ");
-                        msg.append(key);
-                        msg.append(": ");
                         String[] values = parameter.getValue();
-                        for (String value : values) {
-                            msg.append(value);
-                            msg.append(" ");
-                        } // for
                         if (LOG.isInfoEnabled()) {
+                            StringBuilder msg = new StringBuilder(128);
+                            msg.append("store() ");
+                            msg.append(key);
+                            msg.append(": ");
+                            for (String value : values) {
+                                msg.append(value);
+                                msg.append(" ");
+                            } // for
                             LOG.info(msg.toString());
                         } // if
 

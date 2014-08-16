@@ -294,7 +294,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         } // if
 
         // OpenJPA specific class handling to be able to handle classes from the class repository
-        StringBuilder classList = new StringBuilder(getBaseClass().getName());
+        StringBuilder classList = new StringBuilder(256);
+        classList.append(getBaseClass().getName());
         for (Class<? extends Content> c : getAllClasses()) {
             if (!c.getName().equals(getBaseClass().getName())) {
                 classList.append(";");

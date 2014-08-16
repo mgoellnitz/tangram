@@ -118,7 +118,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
         // TODO: make codes stored with real modification time
         String now = getUnixDate(codeResourceCache.getLastUpdate());
 
-        StringBuilder listing = new StringBuilder();
+        StringBuilder listing = new StringBuilder(256);
         Set<String> types = codeResourceCache.getTypes();
         if (dir.length()==1) {
             if (LOG.isInfoEnabled()) {

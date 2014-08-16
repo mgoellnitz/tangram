@@ -46,11 +46,11 @@ public class LogFormatter extends Formatter {
      */
     @Override
     public synchronized String format(LogRecord record) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(256);
         // Minimize memory allocations here.
         dat.setTime(record.getMillis());
         args[0] = dat;
-        StringBuffer text = new StringBuffer();
+        StringBuffer text = new StringBuffer(32);
         dateFormat.format(args, text, null);
         sb.append(text);
         sb.append(" xx ");

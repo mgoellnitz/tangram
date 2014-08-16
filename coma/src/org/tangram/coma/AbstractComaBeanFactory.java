@@ -270,7 +270,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     Statement st = dbConnection.createStatement();
                     query = "SELECT * FROM sgmltext WHERE id = "+target;
                     ResultSet textSet = st.executeQuery(query);
-                    StringBuilder text = new StringBuilder();
+                    StringBuilder text = new StringBuilder(256);
                     while (textSet.next()) {
                         String xmlText = textSet.getString("text");
                         text.append(xmlText);
@@ -285,7 +285,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     Statement sd = dbConnection.createStatement();
                     query = "SELECT * FROM sgmldata WHERE id = "+target;
                     ResultSet dataSet = sd.executeQuery(query);
-                    StringBuilder data = new StringBuilder();
+                    StringBuilder data = new StringBuilder(256);
                     while (dataSet.next()) {
                         String xmlData = dataSet.getString("data");
                         data.append(xmlData);

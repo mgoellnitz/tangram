@@ -70,7 +70,7 @@ public final class ComaTextConverter {
         this.textBuilder = text;
         dataPosition = 0;
         textPosition = 0;
-        this.resultBuilder = new StringBuilder();
+        this.resultBuilder = new StringBuilder(512);
     } // ComaTextConverter()
 
 
