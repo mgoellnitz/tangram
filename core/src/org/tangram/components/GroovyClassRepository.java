@@ -224,14 +224,6 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
 
 
     /**
-     * TODO: Hack for now since it does not deal with the byte codes but only with class objects.
-     */
-    public void overrideClass(Class<? extends Object> cls) {
-        classes.put(cls.getName(), cls);
-    } // overrideClass()
-
-
-    /**
      * Obtain compilation errors for all codes in this repository.
      *
      * @see ClassRepository#getCompilationErrors()
