@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 package org.tangram.gradle.plugin;
@@ -145,7 +145,9 @@ class TangramUtilities {
         println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
       } // if 
     } // while
-    w.classpath = p.jar.outputs.files
+    // This is a strange way to get one of the smallest jars as dependency
+    // included in the web archive since empty paths are not allowed here.
+    w.classpath = 'WEB-INF/lib/javax.inject-1.jar' // p.jar.outputs.files
   } // customizeWar()
 
   
