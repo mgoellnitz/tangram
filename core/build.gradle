@@ -43,8 +43,8 @@ dependencies {
     exclude module: 'js'
   }
   
-  providedCompile "javax.servlet:servlet-api:$versions.servlet"
-  providedCompile "javax.servlet:jsp-api:$versions.jsp"
-  
   testCompile "junit:junit:$versions.junit"  
+  
+  providedCompile "$versions.servlet_api"
+  providedCompile "$versions.jsp_api"
 }

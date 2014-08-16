@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,34 +13,30 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 apply from: '../webapp.gradle'
 
 war.dependsOn ':tangram-core:war'
 
-// Google App Engine always includes the editor
 dependencies {
   webapp project (':tangram-core')
-  webapp project (':tangram-editor')
-
-  providedCompile "javax.servlet:servlet-api:$versions.servlet"
-  providedCompile "javax.servlet:jsp-api:$versions.jsp"
   compile project (':tangram-jdo')
-  compile project (':tangram-editor')
 
   compile "com.google.appengine:appengine-api-1.0-sdk:$versions.appengine"
   compile "com.google.appengine:appengine-api-labs:$versions.appengine"
   compile "com.google.appengine:appengine-jsr107cache:$versions.appengine"
+  compile "net.sf.jsr107cache:jsr107cache:1.1"
 
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "com.google.appengine.orm:datanucleus-appengine:$versions.datanucleus_appengine"
 
-  compile "net.sf.jsr107cache:jsr107cache:1.1"
-
   testCompile "junit:junit:$versions.junit"
+  
+  providedCompile "$versions.servlet_api"
+  providedCompile "$versions.jsp_api"
 }
 
 compileJava.doLast { 

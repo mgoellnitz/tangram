@@ -28,6 +28,8 @@ public class TangramVersions {
 
   String servlet = '2.5'
   String jsp = '2.0'
+  String servlet_api = "javax.servlet:servlet-api:$servlet"
+  String jsp_api = "javax.servlet:jsp-api:$jsp"
   String groovy = '2.3.6'
   String velocity = '1.7'
   String slf4j = '1.7.7'
@@ -42,6 +44,9 @@ public class TangramVersions {
 
   String springframework = '4.0.5.RELEASE'
   String springsecurity = '3.2.4.RELEASE'
+  
+  String weld = '2.2.4.Final'
+  String openwebbeans = '1.2.6'
   
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
