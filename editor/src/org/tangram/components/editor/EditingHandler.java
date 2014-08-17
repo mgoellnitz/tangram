@@ -159,102 +159,98 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
 
     @LinkAction("/store/id_(.*)")
-    public TargetDescriptor store(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new Exception("User may not edit");
-            } // if
-            Content bean = beanFactory.getBean(Content.class, id);
-            JavaBean wrapper = new JavaBean(bean);
-            Map<String, Object> newValues = new HashMap<String, Object>();
-            // List<String> deleteValues = new ArrayList<String>();
+    public TargetDescriptor store(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not edit");
+        } // if
+        Content bean = beanFactory.getBean(Content.class, id);
+        JavaBean wrapper = new JavaBean(bean);
+        Map<String, Object> newValues = new HashMap<String, Object>();
+        // List<String> deleteValues = new ArrayList<String>();
 
-            RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
-            Map<String, String[]> parameterMap = parameterAccess.getParameterMap();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());
-            } // if
-            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-                Entry<String, String[]> parameter = entry;
-                String key = parameter.getKey();
-                if (!key.startsWith("cms.editor")) {
-                    try {
-                        String[] values = parameter.getValue();
-                        if (LOG.isInfoEnabled()) {
-                            StringBuilder msg = new StringBuilder(128);
-                            msg.append("store() ");
-                            msg.append(key);
-                            msg.append(": ");
-                            for (String value : values) {
-                                msg.append(value);
-                                msg.append(" ");
-                            } // for
-                            LOG.info(msg.toString());
-                        } // if
-
-                        Class<? extends Object> cls = wrapper.getType(key);
-                        String valueString = values.length==1 ? values[0] : "";
-                        Object value = propertyConverter.getStorableObject(bean, valueString, cls, request);
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("store() value="+value);
-                        } // if
-                        if (!(Content.class.isAssignableFrom(cls)&&value==null)) {
-                            newValues.put(key, value);
-                        } else {
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("store() not setting value");
-                            } // if
-                        } // if
-                        if (Content.class.isAssignableFrom(cls)&&"".equals(valueString)) {
-                            newValues.put(key, null);
-                        } // if
-                    } catch (Exception e) {
-                        throw new Exception("Cannot set value for "+key, e);
-                    } // try/catch
-                } // if
-            } // for
-
-            for (String key : parameterAccess.getBlobNames()) {
+        RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
+        Map<String, String[]> parameterMap = parameterAccess.getParameterMap();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());
+        } // if
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+            Entry<String, String[]> parameter = entry;
+            String key = parameter.getKey();
+            if (!key.startsWith("cms.editor")) {
                 try {
-                    if (!key.startsWith("cms.editor")) {
-                        Class<? extends Object> cls = wrapper.getType(key);
-                        if (propertyConverter.isBlobType(cls)) {
-                            byte[] octets = parameterAccess.getData(key);
-                            newValues.put(key, propertyConverter.createBlob(octets));
+                    String[] values = parameter.getValue();
+                    if (LOG.isInfoEnabled()) {
+                        StringBuilder msg = new StringBuilder(128);
+                        msg.append("store() ");
+                        msg.append(key);
+                        msg.append(": ");
+                        for (String value : values) {
+                            msg.append(value);
+                            msg.append(" ");
+                        } // for
+                        LOG.info(msg.toString());
+                    } // if
+
+                    Class<? extends Object> cls = wrapper.getType(key);
+                    String valueString = values.length==1 ? values[0] : "";
+                    Object value = propertyConverter.getStorableObject(bean, valueString, cls, request);
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("store() value="+value);
+                    } // if
+                    if (!(Content.class.isAssignableFrom(cls)&&value==null)) {
+                        newValues.put(key, value);
+                    } else {
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("store() not setting value");
                         } // if
                     } // if
+                    if (Content.class.isAssignableFrom(cls)&&"".equals(valueString)) {
+                        newValues.put(key, null);
+                    } // if
                 } catch (Exception e) {
-                    throw new Exception("Cannot set value for "+key);
+                    throw new Exception("Cannot set value for "+key, e);
                 } // try/catch
-            } // for
-
-            getMutableBeanFactory().beginTransaction();
-            wrapper = new JavaBean(bean);
-            Exception e = null;
-            for (String propertyName : newValues.keySet()) {
-                try {
-                    wrapper.set(propertyName, newValues.get(propertyName));
-                } catch (Exception ex) {
-                    e = new Exception("Cannot set value for "+propertyName, ex);
-                } // try/catch
-            } // for
-
-            if (!getMutableBeanFactory().persist(bean)) {
-                throw new Exception("Could not persist bean "+bean.getId());
             } // if
+        } // for
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("store() id="+id);
-            } // if
+        for (String key : parameterAccess.getBlobNames()) {
+            try {
+                if (!key.startsWith("cms.editor")) {
+                    Class<? extends Object> cls = wrapper.getType(key);
+                    if (propertyConverter.isBlobType(cls)) {
+                        byte[] octets = parameterAccess.getData(key);
+                        newValues.put(key, propertyConverter.createBlob(octets));
+                    } // if
+                } // if
+            } catch (Exception e) {
+                throw new Exception("Cannot set value for "+key);
+            } // try/catch
+        } // for
 
-            if (e!=null) {
-                throw e;
-            } // if
+        getMutableBeanFactory().beginTransaction();
+        wrapper = new JavaBean(bean);
+        Exception e = null;
+        for (String propertyName : newValues.keySet()) {
+            try {
+                wrapper.set(propertyName, newValues.get(propertyName));
+            } catch (Exception ex) {
+                e = new Exception("Cannot set value for "+propertyName, ex);
+            } // try/catch
+        } // for
 
-            return describeTarget(bean);
-        } catch (Exception e) {
-            return new TargetDescriptor(e, null, null);
-        } // try/catch
+        if (!getMutableBeanFactory().persist(bean)) {
+            throw new Exception("Could not persist bean "+bean.getId());
+        } // if
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("store() id="+id);
+        } // if
+
+        if (e!=null) {
+            throw e;
+        } // if
+
+        return describeTarget(bean);
     } // store()
 
 
@@ -302,29 +298,24 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
     @LinkAction("/create")
     public TargetDescriptor create(@ActionParameter(PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
-                                   HttpServletResponse response) {
-        try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("create() creating new instance of type "+typeName);
+                                   HttpServletResponse response) throws Exception {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("create() creating new instance of type "+typeName);
+        } // if
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not edit");
+        } // if
+        @SuppressWarnings("unchecked")
+        Class<? extends Content> cls = loadClass(typeName);
+        Content content = getMutableBeanFactory().createBean(cls);
+        if (getMutableBeanFactory().persist(content)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("create() content="+content);
+                LOG.debug("create() id="+content.getId());
             } // if
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new Exception("User may not edit");
-            } // if
-            @SuppressWarnings("unchecked")
-            Class<? extends Content> cls = loadClass(typeName);
-            Content content = getMutableBeanFactory().createBean(cls);
-            if (getMutableBeanFactory().persist(content)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("create() content="+content);
-                    LOG.debug("create() id="+content.getId());
-                } // if
-                return describeTarget(content);
-            } // if
-            return new TargetDescriptor(new Exception("Cannot persist new "+typeName), null, null);
-        } catch (Exception e) {
-            LOG.error("create() error while creating object ", e);
-            return new TargetDescriptor(e, null, null);
-        } // try/catch
+            return describeTarget(content);
+        } // if
+        throw new Exception("Cannot persist new "+typeName);
     } // create()
 
 
@@ -332,177 +323,161 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     @SuppressWarnings("unchecked")
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
                                  HttpServletRequest request, HttpServletResponse response) {
-        try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("list() listing instances of type '"+typeName+"'");
-            } // if
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new Exception("User may not edit");
-            } // if
-            Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
-            Class<? extends Content> cls = null;
-            // take first one of classes available
-            if (!classes.isEmpty()) {
-                cls = classes.iterator().next();
-            } // if
-            // try to take class from provided classes
-            if (StringUtils.isNotBlank(typeName)) {
-                for (Class<? extends Content> c : classes) {
-                    if (c.getName().equals(typeName)) {
-                        cls = c;
-                    } // if
-                } // for
-            } // if
+        if (LOG.isInfoEnabled()) {
+            LOG.info("list() listing instances of type '"+typeName+"'");
+        } // if
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new RuntimeException("User may not edit");
+        } // if
+        Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
+        Class<? extends Content> cls = null;
+        // take first one of classes available
+        if (!classes.isEmpty()) {
+            cls = classes.iterator().next();
+        } // if
+        // try to take class from provided classes
+        if (StringUtils.isNotBlank(typeName)) {
+            for (Class<? extends Content> c : classes) {
+                if (c.getName().equals(typeName)) {
+                    cls = c;
+                } // if
+            } // for
+        } // if
 
-            List<? extends Content> contents = Collections.emptyList();
-            if (cls!=null) {
-                contents = beanFactory.listBeansOfExactClass(cls);
-                try {
-                    Collections.sort(contents);
-                } catch (Exception e) {
-                    LOG.error("list() error while sorting", e);
-                } // try/catch
-            } // if
-            response.setContentType("text/html; charset=UTF-8");
-            request.setAttribute(Constants.THIS, contents);
-            request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
-            request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
-            request.setAttribute("classes", classes);
-            request.setAttribute("canDelete", deleteMethodEnabled);
-            request.setAttribute("prefix", Utils.getUriPrefix(request));
-            if (cls!=null) {
-                Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
-                request.setAttribute("designClass", designClass);
-                request.setAttribute("designClassPackage", designClass.getPackage());
-            } // if
-            return new TargetDescriptor(contents, "tangramEditorList"+getVariant(request), null);
-        } catch (Exception e) {
-            return new TargetDescriptor(e, null, null);
-        } // try/catch
+        List<? extends Content> contents = Collections.emptyList();
+        if (cls!=null) {
+            contents = beanFactory.listBeansOfExactClass(cls);
+            try {
+                Collections.sort(contents);
+            } catch (Exception e) {
+                LOG.error("list() error while sorting", e);
+            } // try/catch
+        } // if
+        response.setContentType("text/html; charset=UTF-8");
+        request.setAttribute(Constants.THIS, contents);
+        request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
+        request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
+        request.setAttribute("classes", classes);
+        request.setAttribute("canDelete", deleteMethodEnabled);
+        request.setAttribute("prefix", Utils.getUriPrefix(request));
+        if (cls!=null) {
+            Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+            request.setAttribute("designClass", designClass);
+            request.setAttribute("designClassPackage", designClass.getPackage());
+        } // if
+        return new TargetDescriptor(contents, "tangramEditorList"+getVariant(request), null);
     } // list()
 
 
     @LinkAction("/edit/id_(.*)")
-    public TargetDescriptor edit(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("edit() editing "+id);
+    public TargetDescriptor edit(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("edit() editing "+id);
+        } // if
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not edit");
+        } // if
+        response.setContentType("text/html; charset=UTF-8");
+        Content content = beanFactory.getBean(id);
+        if (content==null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
+            return null;
+        } // if
+        if (content instanceof CodeResource) {
+            CodeResource code = (CodeResource) content;
+            request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
+        } // if
+        request.setAttribute("beanFactory", getMutableBeanFactory());
+        request.setAttribute("propertyConverter", propertyConverter);
+        request.setAttribute("classes", getMutableBeanFactory().getClasses());
+        request.setAttribute("prefix", Utils.getUriPrefix(request));
+        Class<? extends Content> cls = content.getClass();
+        Method[] methods = cls.getMethods();
+        String note = "Plain";
+        for (Method method : methods) {
+            if (method.getName().startsWith("_ebean")) {
+                note = "EBean enhanced";
             } // if
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new Exception("User may not edit");
+            if (method.getName().startsWith("jdo")) {
+                note = "DataNucleus JDO/JPA Enhanced";
             } // if
-            response.setContentType("text/html; charset=UTF-8");
-            Content content = beanFactory.getBean(id);
-            if (content==null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
-                return null;
+            if (method.getName().startsWith("pc")) {
+                note = "OpenJPA Enhanced";
             } // if
-            if (content instanceof CodeResource) {
-                CodeResource code = (CodeResource) content;
-                request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
+            if (method.getName().startsWith("_persistence")) {
+                note = "EclipseLink Woven (Weaved)";
             } // if
-            request.setAttribute("beanFactory", getMutableBeanFactory());
-            request.setAttribute("propertyConverter", propertyConverter);
-            request.setAttribute("classes", getMutableBeanFactory().getClasses());
-            request.setAttribute("prefix", Utils.getUriPrefix(request));
-            Class<? extends Content> cls = content.getClass();
-            Method[] methods = cls.getMethods();
-            String note = "Plain";
-            for (Method method : methods) {
-                if (method.getName().startsWith("_ebean")) {
-                    note = "EBean enhanced";
-                } // if
-                if (method.getName().startsWith("jdo")) {
-                    note = "DataNucleus JDO/JPA Enhanced";
-                } // if
-                if (method.getName().startsWith("pc")) {
-                    note = "OpenJPA Enhanced";
-                } // if
-                if (method.getName().startsWith("_persistence")) {
-                    note = "EclipseLink Woven (Weaved)";
-                } // if
-                if (method.getName().startsWith("$$_hibernate")) {
-                    note = "Hibernate Enhanced";
-                } // if
-            } // for
-            Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
-            request.setAttribute("contentClass", cls);
-            request.setAttribute("note", note);
-            request.setAttribute("designClass", designClass);
-            request.setAttribute("designClassPackage", designClass.getPackage());
+            if (method.getName().startsWith("$$_hibernate")) {
+                note = "Hibernate Enhanced";
+            } // if
+        } // for
+        Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+        request.setAttribute("contentClass", cls);
+        request.setAttribute("note", note);
+        request.setAttribute("designClass", designClass);
+        request.setAttribute("designClassPackage", designClass.getPackage());
 
-            return new TargetDescriptor(content, "edit"+getVariant(request), null);
-        } catch (Exception e) {
-            return new TargetDescriptor(e, null, null);
-        } // try/catch
+        return new TargetDescriptor(content, "edit"+getVariant(request), null);
     } // edit()
 
 
     @LinkAction("/link")
     public TargetDescriptor link(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
                                  @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
-                                 HttpServletRequest request, HttpServletResponse response) {
-        try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("link() creating new instance of type "+typeName);
+                                 HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("link() creating new instance of type "+typeName);
+        } // if
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not edit");
+        } // if
+        @SuppressWarnings("unchecked")
+        Class<? extends Content> cls = loadClass(typeName);
+        Content content = getMutableBeanFactory().createBean(cls);
+        if (getMutableBeanFactory().persist(content)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("link() content="+content);
+                LOG.debug("link() id="+content.getId());
             } // if
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new Exception("User may not edit");
-            } // if
+
+            // get bean here for update to avoid xg transactions where ever possible
+            Content bean = getMutableBeanFactory().getBean(Content.class, id);
+            getMutableBeanFactory().beginTransaction();
+            JavaBean wrapper = new JavaBean(bean);
+
+            Object listObject = wrapper.get(propertyName);
             @SuppressWarnings("unchecked")
-            Class<? extends Content> cls = loadClass(typeName);
-            Content content = getMutableBeanFactory().createBean(cls);
-            if (getMutableBeanFactory().persist(content)) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("link() content="+content);
-                    LOG.debug("link() id="+content.getId());
-                } // if
+            List<Object> list = (List<Object>) listObject;
+            list.add(content);
 
-                // get bean here for update to avoid xg transactions where ever possible
-                Content bean = getMutableBeanFactory().getBean(Content.class, id);
-                getMutableBeanFactory().beginTransaction();
-                JavaBean wrapper = new JavaBean(bean);
-
-                Object listObject = wrapper.get(propertyName);
-                @SuppressWarnings("unchecked")
-                List<Object> list = (List<Object>) listObject;
-                list.add(content);
-
-                wrapper.set(propertyName, list);
-                getMutableBeanFactory().persist(bean);
-                return describeTarget(content);
-            } else {
-                throw new Exception("could not create new instance of type "+typeName);
-            } // if
-        } catch (Exception e) {
-            return new TargetDescriptor(e, null, null);
-        } // try/catch
+            wrapper.set(propertyName, list);
+            getMutableBeanFactory().persist(bean);
+            return describeTarget(content);
+        } else {
+            throw new Exception("could not create new instance of type "+typeName);
+        } // if
     } // link()
 
 
     @LinkAction("/delete/id_(.*)")
-    public TargetDescriptor delete(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("delete() trying to delete instance "+id);
-            } // if
-            if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-                throw new Exception("User may not edit");
-            } // if
-            if (!deleteMethodEnabled) {
-                throw new Exception("Object deletion not activated");
-            } // if
-            Content bean = getMutableBeanFactory().getBean(Content.class, id);
-            if (bean==null) {
-                throw new Exception("No object found for deletion of id "+id);
-            } // if
-            String typeName = bean.getClass().getName();
-            getMutableBeanFactory().beginTransaction();
-            getMutableBeanFactory().delete(bean);
-            return list(typeName, request, response);
-        } catch (Exception e) {
-            return new TargetDescriptor(e, null, null);
-        } // try/catch
+    public TargetDescriptor delete(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("delete() trying to delete instance "+id);
+        } // if
+        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
+            throw new Exception("User may not edit");
+        } // if
+        if (!deleteMethodEnabled) {
+            throw new Exception("Object deletion not activated");
+        } // if
+        Content bean = getMutableBeanFactory().getBean(Content.class, id);
+        if (bean==null) {
+            throw new Exception("No object found for deletion of id "+id);
+        } // if
+        String typeName = bean.getClass().getName();
+        getMutableBeanFactory().beginTransaction();
+        getMutableBeanFactory().delete(bean);
+        return list(typeName, request, response);
     } // delete()
 
 
