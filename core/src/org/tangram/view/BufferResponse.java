@@ -179,11 +179,6 @@ public class BufferResponse implements HttpServletResponse {
 
             @Override
             public void write(int b) throws IOException {
-                /*
-                 if (log.isDebugEnabled()) {
-                 log.debug("write() "+b);
-                 } // if
-                 */
                 out.write(b);
             }
 

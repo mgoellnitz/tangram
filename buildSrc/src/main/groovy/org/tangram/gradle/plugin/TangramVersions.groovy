@@ -26,10 +26,9 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
-  String servlet = '2.5'
-  String jsp = '2.0'
-  String servlet_api = "javax.servlet:servlet-api:$servlet"
-  String jsp_api = "javax.servlet:jsp-api:$jsp"
+  String lombok = '1.14.4'
+  String servlet_api = 'javax.servlet:servlet-api:2.5'
+  String jsp_api = 'javax.servlet:jsp-api:2.0'
   String groovy = '2.3.6'
   String velocity = '1.7'
   String slf4j = '1.7.7'
@@ -39,7 +38,7 @@ public class TangramVersions {
   String xstream = '1.4.7'
   String tomcat = '7.0.54'
   
-  String dinistiq = '0.2-SNAPSHOT'
+  String dinistiq = '0.2'
   String shiro = '1.2.3'
 
   String springframework = '4.0.5.RELEASE'
@@ -67,6 +66,6 @@ public class TangramVersions {
   String ebean = '4.1.1'
   String ebean_agent = '4.1.4'
 
-  String appengine = '1.9.8'
+  String appengine = '1.9.9'
   
 } // TangramVersions

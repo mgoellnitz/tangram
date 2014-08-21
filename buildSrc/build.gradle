@@ -67,7 +67,7 @@ publishing {
     mavenJava(MavenPublication) {
       // groupId 'tangram'
       // artifactId 'gradle-plugin'
-      version '0.9'
+      version '1.0-SNAPSHOT'
       from components.java
       artifact sourcesJar
       artifact groovydocJar
