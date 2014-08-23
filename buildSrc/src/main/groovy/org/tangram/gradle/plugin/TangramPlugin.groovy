@@ -30,11 +30,77 @@ import org.gradle.api.Project
 class TangramPlugin implements Plugin<Project> {
 
   public void apply(Project project) {
-    project.convention.plugins.utilities = new TangramUtilities(project)
+    def utilities = new TangramUtilities(project)
+    project.convention.plugins.utilities = utilities
     project.extensions.create('versions', TangramVersions)
+    
+    project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.");
+    
+    def cjIterator = project.getTasksByName('compileJava', true).iterator()
+    if(cjIterator.hasNext()) {
+      def compileJava = cjIterator.next();
+      compileJava.doLast {
+        def jarPath = project.getConfigurations().getByName('runtime').asPath
+        def persistenceAPI = ''
+        def jpaBackend = ''
+        if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
+        if (jarPath.indexOf('jdo-api') > 0) { persistenceAPI = 'jdo' }
+        if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
+        if (jarPath.indexOf('datanucleus') > 0) { jpaBackend = 'datanucleus' }
+        // println "API: $persistenceAPI"
+        // println "JPA: $jpaBackend"
+        if (persistenceAPI == 'jpa') {
+          if (jpaBackend == 'datanucleus') {
+            println "Performing DataNucleus JPA byte code transformation."
+            utilities.nucleusJpaEnhance()
+          }
+        }
+        if (persistenceAPI == 'jdo') {
+          println "Performing DataNucleus JDO byte code transformation."
+          utilities.nucleusJdoEnhance()
+        }
+        if (persistenceAPI == 'ebean') {
+          println "Performing EBean byte code transformation."
+          utilities.ebeanEnhance()
+        }
+      }
+      
+      def jar = project.getTasksByName('jar', true).iterator().next();
+      jar.doFirst { 
+        def jarPath = project.getConfigurations().getByName('runtime').asPath
+        def persistenceAPI = ''
+        def jpaBackend = ''
+        if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
+        if (jarPath.indexOf('org.eclipse.persistence.core') > 0) { jpaBackend = 'eclipselink' }
+        if (jarPath.indexOf('openjpa') > 0) { jpaBackend = 'openjpa' }
+        def byteCodeTransform = (persistenceAPI != 'jpa')
+        if (jarPath.indexOf('-eclipselink.jar') > 0) { byteCodeTransform = true }
+        if (jarPath.indexOf('-openjpa.jar') > 0) { byteCodeTransform = true }  
+        // println "API: $persistenceAPI"
+        // println "JPA: $jpaBackend"
+        // println "enhance: $byteCodeTransform"
+        if (persistenceAPI == 'jpa') {
+          if (byteCodeTransform) {
+            if (jpaBackend == 'openjpa') {
+              println "Performing OpenJPA byte code transformation."
+              utilities.openjpaEnhance()
+            }
+            if (jpaBackend == 'eclipselink') {
+              println "Performing EclipseLink byte code transformation."
+              utilities.eclipselinkWeave()
+            }
+          }
+        }
+      }
+    }
+    
+    def warIterator = project.getTasksByName('war', true).iterator()
+    if (warIterator.hasNext()) {
+      def war = warIterator.next();
+      war.doFirst() {
+        utilities.overlayWebapp(war)
+      }
+    }
   } // apply()
     
-  public static void main(String[] args) {
-  }
-
 } // TangramPlugin

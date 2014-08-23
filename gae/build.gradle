@@ -35,7 +35,3 @@ dependencies {
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
 }
-
-compileJava.doLast { 
-  nucleusJdoEnhance() 
-}
