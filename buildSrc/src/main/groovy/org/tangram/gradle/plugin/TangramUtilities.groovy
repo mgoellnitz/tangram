@@ -18,7 +18,6 @@
  */
 package org.tangram.gradle.plugin;
 
-import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.datanucleus.enhancer.DataNucleusEnhancer
 import org.gradle.api.GradleException
@@ -55,13 +54,23 @@ class TangramUtilities {
   }
   
   /**
-   *  Extract all webarchives we depend on. 
+   *  Extract all webarchives we depend on and leave ut files we'd like 
+   *  to overwrite with local versions.
    *  Then copy JavaScript and CSS Codes and try to minify them.
    */
   public overlayWebapp(War w) {
     Project p = w.project
         
-    // Strange way of overwriting things
+    // calculate all files in the local webapp dir for the exclusion from wars
+    def exclusion = []
+    def base=p.webAppDir.path.length()+1
+    FileTree tree = p.fileTree(p.webAppDir)
+    tree.each {
+      exclusion.add(it.path.substring(base))
+    }
+    
+    // extract wars from the dependencies as project dependencies or file paths
+    // and leave out the exclusions while adding them
     Object iter = p.configurations.webapp.dependencies.iterator()
     String[] archiveFileNames = p.configurations.webapp.asPath.split(File.pathSeparator)
     for (int i = 0; iter.hasNext(); i++) {
@@ -69,7 +78,9 @@ class TangramUtilities {
       if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
         String archiveFileName = webappDependency.dependencyProject.war.outputs.files.singleFile.absolutePath
         println "$project.name: project: $webappDependency.dependencyProject.war.outputs.files.singleFile.name"
-        p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
+        w.from (p.zipTree("$archiveFileName")) {
+          exclude exclusion
+        }
       } else {
         if (p.configurations.webapp.dependencies.size() > 0) {
           String archiveFileName = archiveFileNames[i];
@@ -78,36 +89,22 @@ class TangramUtilities {
           if (idx >= 0) {
             archiveFileName = archiveFileName.substring(0, idx)
           } // if
-          p.ant.unzip(src: archiveFileName, dest: "$p.buildDir/target")  
+          w.from (p.zipTree("$archiveFileName")) {
+            exclude exclusion
+          }
         } else {
           println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
         } // if
       } // if 
     } // while
         
-    // for standard layout applications use these subdirectories
-    p.copy {
-      from "${webAppDir}"
-      into "$p.buildDir/target"
-      include '**/**'
-      exclude '**/*.css'
-    }
-    p.copy {
-      from "${webAppDir}"
-      into "$p.buildDir/target"
-      include '**/*.js'
-      filter(JavaScriptMinify)
-    }
-    p.copy {
-      from "${webAppDir}"
-      into "$p.buildDir/target"
-      include '**/*.css'
-      filter(CSSMinify)
-    }
-    // and now move it to the web archive
-    w.into ('') {
-      from "$p.buildDir/target"
-      exclude 'WEB-INF/lib/**'
+    w.eachFile {
+      if(isCss(it)) {
+        it.filter(org.tangram.gradle.plugin.CSSMinify)
+      }
+      if(isJavaScript(it)) {
+        it.filter(org.tangram.gradle.plugin.JavaScriptMinify)
+      }
     }
   } // overlayWebapp()
 
