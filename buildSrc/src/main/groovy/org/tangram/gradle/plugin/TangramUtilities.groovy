@@ -46,11 +46,11 @@ class TangramUtilities {
    * Helper methods to be used for conditional filtering of input files.
    */
   public isCss(input) {
-    input.name.endsWith('.css')
+    return (input.displayName.startsWith('file') && input.name.endsWith('.css'))
   }
 
   public isJavaScript(input) {
-    input.name.endsWith('.js')
+    return (input.displayName.startsWith('file') && input.name.endsWith('.js'))
   }
   
   /**
