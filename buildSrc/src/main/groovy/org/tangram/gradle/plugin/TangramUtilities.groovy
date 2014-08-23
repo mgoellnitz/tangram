@@ -44,7 +44,18 @@ class TangramUtilities {
     
   
   /**
-   *  extract base webarchive which must be the first webapp dependency of this project.
+   * Helper methods to be used for conditional filtering of input files.
+   */
+  public isCss(input) {
+    input.name.endsWith('.css')
+  }
+
+  public isJavaScript(input) {
+    input.name.endsWith('.js')
+  }
+  
+  /**
+   *  Extract all webarchives we depend on. 
    *  Then copy JavaScript and CSS Codes and try to minify them.
    */
   public overlayWebapp(War w) {
@@ -74,41 +85,21 @@ class TangramUtilities {
       } // if 
     } // while
         
-    // The next three are for the tangram system where codes reside in webapp
-    p.copy {
-      from 'webapp'
-      into "$p.buildDir/target"
-      include '**/**'
-      exclude '**/*.css'
-    }
-    p.copy {
-      from 'webapp'
-      into "$p.buildDir/target"
-      include '**/*.js'
-      exclude 'editor/ckeditor/**'
-      filter(JavaScriptMinify)
-    }
-    p.copy {
-      from 'webapp'
-      into "$p.buildDir/target"
-      include '**/*.css'
-      filter(CSSMinify)
-    }
     // for standard layout applications use these subdirectories
     p.copy {
-      from 'src/main/webapp'
+      from "${webAppDir}"
       into "$p.buildDir/target"
       include '**/**'
       exclude '**/*.css'
     }
     p.copy {
-      from 'src/main/webapp'
+      from "${webAppDir}"
       into "$p.buildDir/target"
       include '**/*.js'
       filter(JavaScriptMinify)
     }
     p.copy {
-      from 'src/main/webapp'
+      from "${webAppDir}"
       into "$p.buildDir/target"
       include '**/*.css'
       filter(CSSMinify)
@@ -119,36 +110,6 @@ class TangramUtilities {
       exclude 'WEB-INF/lib/**'
     }
   } // overlayWebapp()
-
-  
-  /**
-   * customize war dependencies for non-clean build intended for system build.
-   */
-  public customizeWar(War w) {
-    Project p = w.project
-    // For some reason webapp files are not included in the inputs collection
-    FileTree tree = p.fileTree(dir: 'webapp')
-    w.inputs.files tree
-    /* And also the web-archive of the upstream project has to be added
-     * so that no classes subdirectory is present and the lib directory 
-     * is nearly empty.
-     */
-    Object iter = p.configurations.webapp.dependencies.iterator()
-    while (iter.hasNext()) {
-      Object webappDependency = iter.next()
-      // println "$project.name: dependency: $webappDependency"
-      if (webappDependency instanceof org.gradle.api.artifacts.ProjectDependency) {
-        String archiveFile = webappDependency.dependencyProject.war.outputs.files.singleFile
-        println "$project.name: adding project dependency: $archiveFile.name"
-        w.inputs.file archiveFile
-      } else {
-        println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
-      } // if 
-    } // while
-    // This is a strange way to get one of the smallest jars as dependency
-    // included in the web archive since empty paths are not allowed here.
-    w.classpath = 'WEB-INF/lib/javax.inject-1.jar' // p.jar.outputs.files
-  } // customizeWar()
 
   
   /**

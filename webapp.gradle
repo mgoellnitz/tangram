@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 apply from: '../commons.gradle'
@@ -45,16 +45,28 @@ publishing {
 }
 
 // avoid gradles default mimik to fiddle around with this directory
-webAppDirName = 'disabled'
+webAppDirName = 'webapp'
 
-// we want jars and wars - in most cases
+// we want jars and wars
 jar.enabled = true 
-
-war.dependsOn sourcesJar
+war.dependsOn jar
 
 // Special handling for the war packaging
-war.doFirst { overlayWebapp(war) }
-war { customizeWar(war) }
+// war.doFirst { overlayWebapp(war) }
+war {
+  eachFile {
+    if(isCss(it)) {
+      it.filter(org.tangram.gradle.plugin.CSSMinify)
+    }
+    if(isJavaScript(it)) {
+      it.filter(org.tangram.gradle.plugin.JavaScriptMinify)
+    }
+  }
+  // This is a strange way to get one of the smallest jars as dependency
+  // included in the web archive since empty paths are not allowed here.
+  classpath = 'WEB-INF/lib/javax.inject-1.jar' // p.jar.outputs.files
+  excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**' ]
+}
 
 // just for debugging purposes
 // war.doLast { ant.unzip(src: war.archivePath, dest: "$buildDir/war") }

@@ -18,11 +18,7 @@
  */
 apply from: '../webapp.gradle'
 
-war.dependsOn ':tangram-core:war'
-
 dependencies {
-  webapp project(path: ':tangram-core')
-
   compile project(':tangram-core')
 
   providedCompile "$versions.servlet_api"
