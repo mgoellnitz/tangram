@@ -367,6 +367,9 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 instanceClass = instanceClass.getSuperclass();
             } // if
             if (instanceClass.isAssignableFrom(cls)) {
+                if (o instanceof BeanFactoryAware) {
+                    ((BeanFactoryAware)o).setBeanFactory(this);
+                } // if
                 filteredList.add((T) o);
             } else {
                 if (LOG.isWarnEnabled()) {

@@ -34,6 +34,7 @@ import javax.jdo.Query;
 import javax.jdo.annotations.PersistenceCapable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.util.ClassResolver;
@@ -54,6 +55,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     private Map<Object, Object> configOverrides = null;
 
     private boolean prefill = true;
+
+    private String factoryName = "transactions-optional";
 
 
     public Map<Object, Object> getConfigOverrides() {
@@ -79,6 +82,15 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     public void setPrefill(boolean prefill) {
         this.prefill = prefill;
+    }
+
+
+    /**
+     * Override the default id when obtaining the persistence factory.
+     * @param factoryName
+     */
+    public void setFactoryName(String factoryName) {
+        this.factoryName = factoryName;
     }
 
 
@@ -201,6 +213,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
             for (T o : results) {
+                if (o instanceof BeanFactoryAware) {
+                    ((BeanFactoryAware)o).setBeanFactory(this);
+                } // if
                 result.add(o);
             } // for
             statistics.increase("list beans");
@@ -300,7 +315,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         if (LOG.isInfoEnabled()) {
             LOG.info("afterPropertiesSet() using overrides for persistence manager factory: "+overrides);
         } // if
-        managerFactory = JDOHelper.getPersistenceManagerFactory(overrides, "transactions-optional");
+        managerFactory = JDOHelper.getPersistenceManagerFactory(overrides, factoryName);
         manager = managerFactory.getPersistenceManager();
 
         // Just to prefill
