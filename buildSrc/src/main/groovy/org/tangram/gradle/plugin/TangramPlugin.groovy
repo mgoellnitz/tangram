@@ -66,7 +66,8 @@ class TangramPlugin implements Plugin<Project> {
       }
       
       def jar = project.getTasksByName('jar', true).iterator().next();
-      jar.enabled = true
+      // TODO: It's still not clear if the can be left out in any situation
+      // jar.enabled = true
       jar.doFirst { 
         def jarPath = project.getConfigurations().getByName('runtime').asPath
         def persistenceAPI = ''
