@@ -368,7 +368,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
             if (instanceClass.isAssignableFrom(cls)) {
                 if (o instanceof BeanFactoryAware) {
-                    ((BeanFactoryAware)o).setBeanFactory(this);
+                    ((BeanFactoryAware) o).setBeanFactory(this);
                 } // if
                 filteredList.add((T) o);
             } else {
@@ -401,8 +401,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
             result = getBean(cls, kind, internalId);
             if (result instanceof BeanFactoryAware) {
-                BeanFactoryAware bfa = (BeanFactoryAware) result;
-                bfa.setBeanFactory(this);
+                ((BeanFactoryAware) result).setBeanFactory(this);
             } // if
             if (activateCaching) {
                 cache.put(id, result);

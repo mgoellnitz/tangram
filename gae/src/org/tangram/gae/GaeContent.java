@@ -122,6 +122,11 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
      */
     @Deprecated
     protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
+        // TODO: This is only needed vor very old repositories with verbatim ID-Strings instead of references.
+        if (id==null) {
+            return null;
+        } // if
+        id = (id.indexOf(':')<0) ? id = postprocessPlainId(id) : id;
         return gaeBeanFactory.getBean(cls, id);
     } // getContent()
 
@@ -138,6 +143,7 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
         if (ids!=null) {
             result = new ArrayList<T>(ids.size());
             for (String id : ids) {
+                id = (id.indexOf(':')<0) ? id = postprocessPlainId(id) : id;
                 result.add(gaeBeanFactory.getBean(cls, id));
             } // for
         } // if

@@ -18,6 +18,7 @@
  */
 package org.tangram.gae;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
+import org.tangram.jdo.JdoContent;
 
 
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
-    private static final Logger lOG = LoggerFactory.getLogger(GaeBeanFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GaeBeanFactory.class);
 
     private boolean useHdrDatastore = true;
 
@@ -71,12 +73,28 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     @Override
     protected Object getObjectId(String internalId, Class<? extends Content> kindClass, String kind) {
         long numericId = Long.parseLong(internalId);
-        if (lOG.isDebugEnabled()) {
-            lOG.debug("getObjectId() kind="+kind);
-            lOG.debug("getObjectId() numericId="+numericId);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getObjectId() kind="+kind);
+            LOG.debug("getObjectId() numericId="+numericId);
         } // if
         return KeyFactory.createKey(kind, numericId);
     } // getObjectId()
+
+
+    /**
+     * TODO: This whole method is only needed vor very old repositories with verbatim ID-Strings instead of references.
+     */
+    @Override
+    public JdoContent getBean(String id) {
+        if (id==null) {
+            return null;
+        } // if
+        if (id.indexOf(':')<0) {
+            Key key = KeyFactory.stringToKey(id);
+            id = key.getKind()+":"+key.getId();
+        } // if
+        return super.getBean(id);
+    } // getBean()
 
 
     @Override

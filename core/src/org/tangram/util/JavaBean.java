@@ -114,7 +114,7 @@ public class JavaBean {
             try {
                 writeMethod.invoke(delegate, value);
             } catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException ex) {
-                LOG.error("set()", ex);
+                LOG.error("set("+name+")", ex);
             } // try/catch
         } // if
     } // set()
