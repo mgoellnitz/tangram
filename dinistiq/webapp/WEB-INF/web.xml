@@ -21,9 +21,9 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
   
-  <!-- Default web.xml from the dinistiq overlay -->
+  <!-- Default from the dinistiq overlay / underlying -->
   
-  <display-name>Tangram Web Application for dinistiq</display-name>
+  <display-name>Tangram Web Application using dinistiq</display-name>
 
   <!-- basic dinistiq web setup -->
   <listener>
@@ -32,7 +32,6 @@
   <context-param>
     <param-name>dinistiq.packages</param-name>
     <param-value>
-      dinistiq,
       org.tangram.components
     </param-value>
   </context-param>
@@ -48,6 +47,7 @@
 
   <!-- TODO: Character Encoding Filter -->
 
+  <!-- example of static expiration rules depending on extensions -->
   <filter>
     <filter-name>expiryFilter</filter-name>
     <filter-class>org.tangram.util.ExpirationHeaderFilter</filter-class>
@@ -85,7 +85,7 @@
     <init-param>
       <param-name>free.urls</param-name>
       <param-value>
-        /tangram/s/stats
+        /s/stats
       </param-value>
     </init-param>
     <!-- add this to generically protect the whole application
