@@ -39,7 +39,7 @@ public abstract class AbstractProtection extends GaeContent implements Protectio
     private String protectionKey;
 
     @Join
-    private List<Content> protectedContents;
+    private List<GaeContent> protectedContents;
 
 
     public Text getDescription() {
@@ -64,17 +64,16 @@ public abstract class AbstractProtection extends GaeContent implements Protectio
 
 
     @Override
-    public List<Content> getProtectedContents() {
+    public List<GaeContent> getProtectedContents() {
         try {
-            final List<Content> result = protectedContents;
-            return result;
+            return protectedContents;
         } catch (Exception e) {
             return Collections.emptyList();
         } // try/catch
     } // getProtectedContents()
 
 
-    public void setProtectedContents(List<Content> protectedContents) {
+    public void setProtectedContents(List<GaeContent> protectedContents) {
         this.protectedContents = protectedContents;
     }
 

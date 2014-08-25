@@ -96,6 +96,7 @@ public class ProtectionHook implements ControllerHook {
 
     /**
      * Returns if a given protected content is protected by a given protection instance.
+     *
      * @param protectedContent content potentially protected by p
      * @param p proection instance to check content against
      * @return true if the given content is protected by the instance p
@@ -106,15 +107,16 @@ public class ProtectionHook implements ControllerHook {
         List<? extends Content> path = protectedContent.getProtectionPath();
 
         try {
-            if (p.getProtectedContents()!=null) {
-                for (Content protectedTopic : p.getProtectedContents()) {
-                    if (path.contains(protectedTopic)) {
+            final List<? extends Content> protectedContents = p.getProtectedContents();
+            if (protectedContents!=null) {
+                for (Content content : protectedContents) {
+                    if (path.contains(content)) {
                         result = true;
                     } // if
                 } // for
             } // if
         } catch (Exception e) {
-            LOG.error("isProtectedBy()", e);
+            LOG.error("isProtectedBy("+protectedContent.getId()+") "+p.getId(), e);
         } // try/catch
 
         return result;

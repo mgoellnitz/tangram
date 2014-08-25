@@ -35,7 +35,7 @@ public interface Protection extends ProtectedContent {
      * Protections point to the contents they protect.
      * Not the other way around.
      */
-    List<Content> getProtectedContents();
+    List<? extends Content> getProtectedContents();
 
 
     /**

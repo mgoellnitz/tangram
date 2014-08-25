@@ -18,7 +18,6 @@
  */
 package org.tangram.components;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -214,7 +213,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     } // callAction()
 
 
-    private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws Exception {
         ViewContext result = null;
         if (resultDescriptor!=null) {
             if (LOG.isInfoEnabled()) {
@@ -230,7 +229,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
                     } // try/catch
                 } else {
-                    result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
+                    Map<String, Object> model = createModel(resultDescriptor, request, response);
+                    result = viewContextFactory.createViewContext(model, resultDescriptor.view);
                 } // if
             } // if
         } // if
@@ -367,20 +367,16 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     LOG.debug("handleRequest() found bean "+descriptor.bean);
                 } // if
 
-                Map<String, Object> model = createModel(descriptor, request, response);
-                if (descriptor.action==null) {
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("handleRequest() handing over to view "+descriptor.view);
-                    } // if
-                    return viewContextFactory.createViewContext(model, descriptor.view);
-                } else {
+                // Map<String, Object> model = createModel(descriptor, request, response);
+                TargetDescriptor resultDescriptor = descriptor;
+                if (descriptor.action!=null) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("handleRequest() trying to call action "+descriptor.action);
                     } // if
                     Method method = linkFactoryAggregator.findMethod(linkHandler, descriptor.action);
-                    TargetDescriptor resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);
+                    resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);
                     if (resultDescriptor==null) {
-                        for (Object value : model.values()) {
+                        for (Object value : createModel(descriptor, request, response).values()) {
                             // This has to be checked because of special null values in context like $null
                             // if the link is already set don't try to call other methods
                             if ((value!=null)&&(resultDescriptor==null)) {
@@ -389,8 +385,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                             } // if
                         } // for
                     } // if
-                    return handleResultDescriptor(resultDescriptor, request, response);
                 } // if
+                return handleResultDescriptor(resultDescriptor, request, response);
             } // if
         } // for
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
