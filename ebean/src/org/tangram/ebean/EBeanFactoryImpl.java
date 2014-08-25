@@ -22,11 +22,13 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.config.ServerConfig;
+import groovy.lang.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
 import javax.persistence.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,8 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.util.ClassResolver;
 
 
+@Named("beanFactory")
+@Singleton
 public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements MutableBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(EBeanFactoryImpl.class);

@@ -111,8 +111,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
         Object oid = getObjectId(internalId, kindClass, kind);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
         } // if
         return (T) manager.getObjectById(kindClass, oid);
     } // getBean()

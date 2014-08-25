@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -44,6 +46,8 @@ import org.tangram.util.ClassResolver;
 /**
  * Generic BeanFactory implementation for use with Java Persistence API implementations.
  */
+@Named("beanFactory")
+@Singleton
 public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements MutableBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(JpaBeanFactoryImpl.class);
@@ -57,6 +61,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     protected List<Class<? extends Content>> allClasses = null;
 
     private Map<Object, Object> configOverrides = null;
+
+
+    public JpaBeanFactoryImpl() {
+        LOG.error("() XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+    } // JpaBeanFactoryImpl()
 
 
     protected void setEntityManagerFactory(EntityManagerFactory factory) {

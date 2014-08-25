@@ -22,6 +22,8 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
@@ -29,6 +31,8 @@ import org.tangram.jdo.AbstractJdoBeanFactory;
 import org.tangram.jdo.JdoContent;
 
 
+@Named("beanFactory")
+@Singleton
 public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(GaeBeanFactory.class);
@@ -82,7 +86,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
 
     /**
-     * TODO: This whole method is only needed vor very old repositories with verbatim ID-Strings instead of references.
+     * TODO: This whole method is only needed for very old repositories with verbatim ID-Strings instead of references.
      */
     @Override
     public JdoContent getBean(String id) {

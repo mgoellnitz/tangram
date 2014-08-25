@@ -18,10 +18,14 @@
  */
 package org.tangram.nucleus;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.tangram.content.Content;
 import org.tangram.jdo.AbstractJdoBeanFactory;
 
 
+@Named("beanFactory")
+@Singleton
 public class NucleusBeanFactory extends AbstractJdoBeanFactory {
 
     @Override
