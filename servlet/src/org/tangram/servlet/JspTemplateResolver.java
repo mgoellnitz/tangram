@@ -46,9 +46,6 @@ public class JspTemplateResolver extends AbstractInternalResourceTemplateResolve
 
     @Override
     protected String checkResourceExists(String url) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("checkResourceExists() url="+url);
-        } // if
         return checkJspExists(getPrefix()+url+getSuffix());
     } // checkResourceExists()
 

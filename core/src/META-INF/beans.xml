@@ -30,6 +30,7 @@
     <exclude name="org.tangram.view.DynamicViewContextFactory"/>
     <exclude name="org.tangram.view.DefaultViewContextFactory"/>
     <exclude name="org.tangram.security.GenericLoginSupport"/>
+    <exclude name="org.tangram.controller.UniqueHostHook"/>
   </scan>
   
 </beans>

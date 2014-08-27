@@ -78,8 +78,8 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
 
     protected String checkJspExists(String url) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("checkJspExists("+url+")");
+        if (LOG.isInfoEnabled()) {
+            LOG.info("checkJspExists("+url+")");
         } // if
         String resourcePrefix = "/META-INF/resources";
         final URL resource = getClass().getResource(resourcePrefix+url);

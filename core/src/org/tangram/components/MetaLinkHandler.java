@@ -115,19 +115,15 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     public Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
-        try {
-            for (ControllerHook controllerHook : controllerHooks) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("createModel() "+controllerHook.getClass().getName());
-                } // if
-                boolean result = controllerHook.intercept(descriptor, model, request, response);
-                if (result) {
-                    return null;
-                } // if
-            } // for
-        } catch (Exception e) {
-            return viewContextFactory.createModel(e, request, response);
-        } // try/catch
+        for (ControllerHook controllerHook : controllerHooks) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("createModel() "+controllerHook.getClass().getName());
+            } // if
+            boolean result = controllerHook.intercept(descriptor, model, request, response);
+            if (result) {
+                return null;
+            } // if
+        } // for
         return model;
     } // createModel()
 
