@@ -47,18 +47,18 @@ public class EditingHandlerTest {
 
         };
 
-        EditingHandler editingHandler = new EditingHandler();
+        EditingHandler handler = new EditingHandler();
 
-        for (String action : EditingHandler.PARAMETER_ACTIONS) {
-            Link link = editingHandler.createLink(null, null, c, action, null);
-            Assert.assertNotNull("generation of "+action+" action link failed", link);
-            Assert.assertEquals("generation of "+action+" action link with strange result", "/"+action, link.getUrl());
+        for (String a : EditingHandler.PARAMETER_ACTIONS) {
+            Link link = a.equals("edit") ? handler.createLink(null, null, c, null, a): handler.createLink(null, null, c, a, null);
+            Assert.assertNotNull("generation of "+a+" action link failed", link);
+            Assert.assertEquals("generation of "+a+" action link with strange result", "/"+a, link.getUrl());
         } // for
 
-        for (String action : EditingHandler.ID_URL_ACTIONS) {
-            Link link = editingHandler.createLink(null, null, c, action, null);
-            Assert.assertNotNull("generation of "+action+" action link failed", link);
-            Assert.assertEquals("generation of "+action+" action link with strange result", "/"+action+"/id_"+DUMMY_ID, link.getUrl());
+        for (String a : EditingHandler.ID_URL_ACTIONS) {
+            Link link = handler.createLink(null, null, c, a, null);
+            Assert.assertNotNull("generation of "+a+" action link failed", link);
+            Assert.assertEquals("generation of "+a+" action link with strange result", "/"+a+"/id_"+DUMMY_ID, link.getUrl());
         } // for
     } // testUrlGeneration()
 

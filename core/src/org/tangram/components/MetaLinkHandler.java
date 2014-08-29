@@ -100,8 +100,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     private Map<Pattern, Object> atHandlers;
 
-    private final Map<Object, Collection<String>> customViews = new HashMap<Object, Collection<String>>();
-
 
     /**
      * creates a model and also calls any registered controller hooks.
@@ -211,23 +209,21 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     private ViewContext handleResultDescriptor(TargetDescriptor resultDescriptor, HttpServletRequest request, HttpServletResponse response) throws Exception {
         ViewContext result = null;
-        if (resultDescriptor!=null) {
+        if ((resultDescriptor!=null)&&(resultDescriptor!=TargetDescriptor.DONE)) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("handleResultDescriptor() received link "+resultDescriptor);
             } // if
-            if (resultDescriptor!=TargetDescriptor.DONE) {
-                if (resultDescriptor.action!=null) {
-                    try {
-                        Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
-                        response.sendRedirect(link.getUrl());
-                    } catch (Exception e) {
-                        LOG.error("handleResultDescriptor()", e);
-                        result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
-                    } // try/catch
-                } else {
-                    Map<String, Object> model = createModel(resultDescriptor, request, response);
-                    result = viewContextFactory.createViewContext(model, resultDescriptor.view);
-                } // if
+            if (resultDescriptor.action!=null) {
+                try {
+                    Link link = linkFactoryAggregator.createLink(request, response, resultDescriptor.bean, resultDescriptor.action, resultDescriptor.view);
+                    response.sendRedirect(link.getUrl());
+                } catch (Exception e) {
+                    LOG.error("handleResultDescriptor()", e);
+                    result = viewContextFactory.createViewContext(resultDescriptor.bean, resultDescriptor.view, request, response);
+                } // try/catch
+            } else {
+                Map<String, Object> model = createModel(resultDescriptor, request, response);
+                result = viewContextFactory.createViewContext(model, resultDescriptor.view);
             } // if
         } // if
         return result;
@@ -278,15 +274,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         atHandlers.putAll(staticAtHandlers);
         handlers = new HashMap<String, LinkHandler>();
         handlers.putAll(staticLinkHandlers);
-        // remove current custom views from view provider
-        for (Object key : customViews.keySet()) {
-            for (String view : customViews.get(key)) {
-                linkFactoryAggregator.getCustomLinkViews().remove(view);
-            } // for
-        } // for
-        if (LOG.isInfoEnabled()) {
-            LOG.info("reset() custom views "+linkFactoryAggregator.getCustomLinkViews());
-        } // if
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
                 String annotation = entry.getKey();
@@ -302,15 +289,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     if (linkHandler instanceof BeanFactoryAware) {
                         ((BeanFactoryAware) linkHandler).setBeanFactory(beanFactory);
                     } // if
-                    Collection<String> schemeCustomViews = linkHandler.getCustomViews();
-                    customViews.put(linkHandler, schemeCustomViews);
-                    linkFactoryAggregator.getCustomLinkViews().addAll(schemeCustomViews);
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("reset() adding custom views "+schemeCustomViews);
-                    } // if
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("reset() custom views "+linkFactoryAggregator.getCustomLinkViews());
-                    } // if
                     handlers.put(annotation, linkHandler);
                 } else {
                     if (LOG.isDebugEnabled()) {
@@ -324,9 +302,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                 } // if
             } // try/catch
         } // for
-        if (LOG.isInfoEnabled()) {
-            LOG.info("reset() custom views "+linkFactoryAggregator.getCustomLinkViews());
-        } // if
     } // reset()
 
 

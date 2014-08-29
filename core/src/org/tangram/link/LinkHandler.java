@@ -18,7 +18,6 @@
  */
 package org.tangram.link;
 
-import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 import org.tangram.view.TargetDescriptor;
 
@@ -31,14 +30,6 @@ import org.tangram.view.TargetDescriptor;
  *
  */
 public interface LinkHandler extends LinkFactory {
-
-    /**
-     * return all view's names the underlying implementation wants to handle itself
-     *
-     * @return collection of view names
-     */
-    Collection<String> getCustomViews();
-
 
     /**
      * return the id of the object to be show, null otherwise
