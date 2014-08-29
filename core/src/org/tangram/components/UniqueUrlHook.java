@@ -24,6 +24,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.controller.ControllerHook;
@@ -61,7 +62,8 @@ public class UniqueUrlHook implements ControllerHook {
             // String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8");
             // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8");
             String decodedUrl = link.getUrl();
-            String requestURI = request.getRequestURI();
+            final String queryString = request.getQueryString();
+            String requestURI = request.getRequestURI()+(StringUtils.isBlank(queryString)?"":"?"+queryString);
             if ( !decodedUrl.equals(requestURI)) {
                 if (LOG.isInfoEnabled()) {
                     LOG.info("render() sending redirect for "+requestURI+" to "+decodedUrl);
