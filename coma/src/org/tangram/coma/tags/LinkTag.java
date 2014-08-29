@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -20,6 +20,7 @@ package org.tangram.coma.tags;
 
 import java.io.IOException;
 import java.io.Serializable;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
+
 
 public class LinkTag implements Tag, Serializable {
 
@@ -93,9 +95,10 @@ public class LinkTag implements Tag, Serializable {
     @Override
     public int doEndTag() throws JspException {
         try {
-            HttpServletRequest request = (HttpServletRequest)pageContext.getRequest();
-            HttpServletResponse response = (HttpServletResponse)pageContext.getResponse();
-            LinkFactoryAggregator builder = (LinkFactoryAggregator)(pageContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR));
+            HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+            HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+            ServletContext servletContext = pageContext.getServletContext();
+            LinkFactoryAggregator builder = (LinkFactoryAggregator) servletContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("doEndTag() "+target+" "+view);
             } // if
