@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.coma;
+package org.tangram.components.coma;
 
 import java.io.IOException;
 import javax.annotation.PostConstruct;
@@ -30,9 +30,11 @@ import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
+import org.tangram.coma.ComaBeanPopulator;
+import org.tangram.coma.ComaBlob;
+import org.tangram.coma.ComaContent;
 import org.tangram.controller.RenderingBase;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.view.TargetDescriptor;
 
@@ -54,13 +56,6 @@ public class ComaHandler extends RenderingBase {
 
     @Inject
     private LinkHandlerRegistry linkHandlerRegistry;
-
-
-    @Inject
-    public void setLinkFactoryAggregator(LinkFactoryAggregator linkFactoryAggregator) {
-        // Automagically avoid default view to be handled by default URL mimik.
-        linkFactoryAggregator.getCustomLinkViews().add("NULL");
-    } // setLinkFactoryAggregator()
 
 
     @LinkAction("/content/(.*)")

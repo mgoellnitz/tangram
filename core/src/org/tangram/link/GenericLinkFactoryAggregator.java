@@ -21,8 +21,9 @@ package org.tangram.link;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
@@ -57,11 +58,9 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     @Inject
     private Statistics statistics;
 
-    private HashSet<String> customLinkViews = new HashSet<String>();
-
     private String dispatcherPath = "";
 
-    private List<LinkFactory> handlers = new ArrayList<LinkFactory>();
+    private List<LinkFactory> factories = new ArrayList<LinkFactory>();
 
     /**
      * method classname#methodname to method cache
@@ -69,11 +68,6 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     private Map<String, Method> cache = new HashMap<String, Method>();
 
     private String prefix = null;
-
-
-    public HashSet<String> getCustomLinkViews() {
-        return customLinkViews;
-    }
 
 
     public String getDispatcherPath() {
@@ -94,14 +88,22 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
 
     @Override
-    public void registerFactory(LinkFactory handler) {
-        handlers.add(handler);
+    public void registerFactory(LinkFactory factory) {
+        factories.add(factory);
+        Collections.sort(factories, new Comparator<LinkFactory>() {
+
+            @Override
+            public int compare(LinkFactory o1, LinkFactory o2) {
+                return (o2 instanceof InternalLinkFactory) ? -1 : 1;
+            } // compare()
+
+        });
     } // registerFactory()
 
 
     @Override
     public void unregisterFactory(LinkFactory factory) {
-        handlers.remove(factory);
+        factories.remove(factory);
     } // unregisterFactory()
 
 
@@ -136,11 +138,14 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         if (bean==null) {
             throw new RuntimeException("No bean issued for link generation in action "+action+" for view "+view);
         } // if
-        for (LinkFactory handler : handlers) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("createLink() "+factories);
+        } // if
+        for (LinkFactory factory : factories) {
             long startTime = System.currentTimeMillis();
-            Link result = handler.createLink(request, response, bean, action, view);
+            Link result = factory.createLink(request, response, bean, action, view);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("createLink() "+handler.getClass().getName()+" -> "+result+" ["+bean.getClass().getSimpleName()+"]");
+                LOG.debug("createLink() "+factory.getClass().getName()+" -> "+result+" ["+bean.getClass().getSimpleName()+"]");
             } // if
             if (result!=null) {
                 postProcessResult(result, request);
@@ -152,9 +157,12 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     } // createLink()
 
 
+    /*
+     * TODO: Perhaps move to MetaLinkHandler
+     */
     @Override
-    public Link createLink(Collection<? extends LinkFactory> handlers, HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
-        for (LinkFactory factory : handlers) {
+    public Link createLink(Collection<? extends LinkFactory> factories, HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
+        for (LinkFactory factory : factories) {
             Link result = factory.createLink(request, response, bean, action, view);
             if (result!=null) {
                 return result;

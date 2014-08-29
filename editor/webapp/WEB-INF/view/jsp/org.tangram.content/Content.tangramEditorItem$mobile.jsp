@@ -6,6 +6,6 @@
 %><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><span class="cms_editor_title"><cms:include bean="${self}" view="name"/></span>
 <br/>${self.id} <fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
-<br/><a href="<cms:link bean="${self}" action="edit" />"><fmt:message key="label.edit" bundle="${msg}"/></a> 
+<br/><a href="<cms:link bean="${self}" view="edit" />"><fmt:message key="label.edit" bundle="${msg}"/></a> 
 <c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false" />><fmt:message key="label.webview" bundle="${msg}"/></a></c:if>
 <br/>

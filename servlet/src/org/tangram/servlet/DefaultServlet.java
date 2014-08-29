@@ -29,13 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.Constants;
+import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.RenderingBase;
+import org.tangram.link.InternalLinkFactory;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
+import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -45,7 +46,7 @@ import org.tangram.view.ViewUtilities;
 /**
  * Servlet and component implementation of the same url mapping as the spring default controller.
  */
-public class DefaultServlet extends HttpServlet implements LinkFactory {
+public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultServlet.class);
 
@@ -58,7 +59,8 @@ public class DefaultServlet extends HttpServlet implements LinkFactory {
     @Inject
     protected ViewUtilities viewUtilities;
 
-    private LinkFactoryAggregator linkFactory;
+    @Inject
+    private MetaLinkHandler metaLinkHandler;
 
     /**
      * URL part pattern to match ID and VIEW based calls
@@ -76,25 +78,17 @@ public class DefaultServlet extends HttpServlet implements LinkFactory {
     }
 
 
-    public LinkFactoryAggregator getLinkFactory() {
-        return linkFactory;
-    }
-
-
     // do autowiring here so the registration can be done automagically
     @Inject
     public void setLinkFactory(LinkFactoryAggregator linkFactory) {
-        this.linkFactory = linkFactory;
-        this.linkFactory.registerFactory(this);
+        linkFactory.registerFactory(this);
     }
 
 
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
-            if (!linkFactory.getCustomLinkViews().contains(view==null ? Constants.DEFAULT_VIEW : view)) {
-                return RenderingBase.createDefaultLink(bean, action, view);
-            } // if
+            return RenderingBase.createDefaultLink(bean, action, view);
         } // if
         return null;
     } // createLink()
@@ -135,18 +129,7 @@ public class DefaultServlet extends HttpServlet implements LinkFactory {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository. (Tangram Default Servlet)");
                 return;
             } // if
-            if (linkFactory.getCustomLinkViews().contains(view==null ? Constants.DEFAULT_VIEW : view)) {
-                try {
-                    Link redirectLink = getLinkFactory().createLink(request, response, content, null, view);
-                    response.setHeader("Location", redirectLink.getUrl());
-                    response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                } catch (Exception e) {
-                    LOG.error("doGet() cannot redirect", e);
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "custom view required.");
-                } // try/catch
-                return;
-            } // if
-            Map<String, Object> model = viewContextFactory.createModel(content, request, response);
+            Map<String, Object> model = metaLinkHandler.createModel(new TargetDescriptor(content, view, null), request, response);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("doGet() model="+model);
             } // if

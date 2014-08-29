@@ -52,8 +52,6 @@ import org.tangram.content.Content;
 import org.tangram.controller.RenderingBase;
 import org.tangram.editor.AppEngineXStream;
 import org.tangram.link.Link;
-import org.tangram.link.LinkFactory;
-import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
@@ -73,7 +71,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 @Singleton
 @LinkHandler
-public class EditingHandler extends RenderingBase implements LinkFactory {
+public class EditingHandler extends RenderingBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(EditingHandler.class);
 
@@ -134,13 +132,6 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
     private ViewUtilities viewUtilities;
 
     private boolean deleteMethodEnabled;
-
-
-    @Inject
-    public void setLinkFactoryAggregator(LinkFactoryAggregator linkFactoryAggregator) {
-        // Automagically set edit view
-        linkFactoryAggregator.getCustomLinkViews().add("edit");
-    } // setLinkFactoryAggregator()
 
 
     public void setDeleteMethodEnabled(boolean deleteMethodEnabled) {
@@ -596,6 +587,10 @@ public class EditingHandler extends RenderingBase implements LinkFactory {
 
 
     private String getUrl(Object bean, String action, String view) {
+        if ("edit".equals(view)) {
+            action = view;
+            view = null;
+        } // if
         if (ID_URL_ACTIONS.contains(action)) {
             return "/"+action+"/id_"+((Content) bean).getId();
         } else {
