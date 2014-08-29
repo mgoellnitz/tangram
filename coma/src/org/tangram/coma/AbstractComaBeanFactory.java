@@ -44,6 +44,11 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractComaBeanFactory.class);
 
+    /**
+     * desribe which type are derived from which others - via documenttype definitions
+     */
+    private Map<String, String> parents = new HashMap<String, String>();
+
     private Connection dbConnection;
 
     private String dbUrl;
@@ -55,6 +60,16 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     private String dbPassword;
 
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+
+    public Map<String, String> getParents() {
+        return parents;
+    }
+
+
+    public void setParents(Map<String, String> parents) {
+        this.parents = parents;
+    }
 
 
     public String getDbUrl() {
@@ -137,12 +152,13 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     public List<Content> listBeansOfExactClass(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
         List<Content> result = new ArrayList<Content>();
         String typeName = cls.getSimpleName();
-        Set<String> ids = listIds(typeName, optionalQuery, orderProperty, ascending);
-        for (String id : ids) {
-            result.add(getBean(id));
-        } // for
+        if (parents.keySet().contains(typeName)) {
+            for (String id : listIds(typeName, optionalQuery, orderProperty, ascending)) {
+                result.add(getBean(id));
+            } // for
+        } // if
         return result;
-    } // listBeans()
+    } // listBeansOfExactClass()
 
 
     @Override
@@ -186,7 +202,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         } // if
         String query = null;
         try {
-            query = "SELECT * FROM "+type.toLowerCase()+" WHERE id_ = "+id+" ORDER BY version_ DESC";
+            query = "SELECT * FROM "+type+" WHERE id_ = "+id+" ORDER BY version_ DESC";
             Statement s = dbConnection.createStatement();
             ResultSet resultSet = s.executeQuery(query);
             if (resultSet.next()) {
@@ -214,7 +230,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
                 // select links
                 s = dbConnection.createStatement();
-                query = "SELECT * FROM linklists WHERE sourcedocument = "+id+" AND sourceversion = "+version
+                query = "SELECT * FROM LinkLists WHERE sourcedocument = "+id+" AND sourceversion = "+version
                         +" ORDER BY propertyname ASC, linkindex ASC";
                 resultSet = s.executeQuery(query);
                 Map<String, List<String>> linkLists = new HashMap<String, List<String>>();
@@ -238,14 +254,14 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
                 // select blobs
                 s = dbConnection.createStatement();
-                query = "SELECT * FROM blobs WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
+                query = "SELECT * FROM Blobs WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
                 resultSet = s.executeQuery(query);
                 while (resultSet.next()) {
                     String propertyName = resultSet.getString("propertyname");
                     int blobId = resultSet.getInt("target");
 
                     Statement st = dbConnection.createStatement();
-                    query = "SELECT * FROM blobdata WHERE id = "+blobId;
+                    query = "SELECT * FROM BlobData WHERE id = "+blobId;
                     ResultSet blobSet = st.executeQuery(query);
                     if (blobSet.next()) {
                         String mimeType = blobSet.getString("mimetype");
@@ -260,7 +276,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
                 // select xml
                 s = dbConnection.createStatement();
-                query = "SELECT * FROM texts WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
+                query = "SELECT * FROM Texts WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
                 resultSet = s.executeQuery(query);
                 while (resultSet.next()) {
                     String propertyName = resultSet.getString("propertyname");
@@ -268,7 +284,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     // int segment = resultSet.getInt("segment");
 
                     Statement st = dbConnection.createStatement();
-                    query = "SELECT * FROM sgmltext WHERE id = "+target;
+                    query = "SELECT * FROM SgmlText WHERE id = "+target;
                     ResultSet textSet = st.executeQuery(query);
                     StringBuilder text = new StringBuilder(256);
                     while (textSet.next()) {
@@ -283,7 +299,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     } // if
 
                     Statement sd = dbConnection.createStatement();
-                    query = "SELECT * FROM sgmldata WHERE id = "+target;
+                    query = "SELECT * FROM SgmlData WHERE id = "+target;
                     ResultSet dataSet = sd.executeQuery(query);
                     StringBuilder data = new StringBuilder(256);
                     while (dataSet.next()) {
@@ -317,7 +333,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         String type = null;
         try {
             Statement s = dbConnection.createStatement();
-            String query = "SELECT * FROM resources WHERE id_ = '"+id+"'";
+            String query = "SELECT * FROM Resources WHERE id_ = '"+id+"'";
             ResultSet resultSet = s.executeQuery(query);
             if (resultSet.next()) {
                 type = resultSet.getString("documenttype_");
@@ -360,7 +376,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         Set<String> ids = new HashSet<String>();
         String query = null;
         try {
-            query = "SELECT id_ FROM resources WHERE documenttype_ = '"+typeName+"' ";
+            query = "SELECT id_ FROM Resources WHERE documenttype_ = '"+typeName+"' ";
             if (optionalQuery!=null) {
                 query += optionalQuery;
             } // if
@@ -384,7 +400,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                 } // if
             } // while
         } catch (SQLException se) {
-            LOG.error("getListBeans() "+query, se);
+            LOG.error("listIds() "+query, se);
         } // try/catch
         return ids;
     } // listIds()
