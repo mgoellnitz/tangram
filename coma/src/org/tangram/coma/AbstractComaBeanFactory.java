@@ -409,7 +409,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     public String getChildId(String name, String parentId) {
         String query = null;
         try {
-            query = "SELECT * FROM resources WHERE folderid_ = "+parentId+" AND name_ = '"+name+"'";
+            query = "SELECT * FROM Resources WHERE folderid_ = "+parentId+" AND name_ = '"+name+"'";
             Statement s = dbConnection.createStatement();
             ResultSet resultSet = s.executeQuery(query);
             String id = null;
@@ -439,7 +439,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         String query = null;
         try {
             Statement s = dbConnection.createStatement();
-            query = "SELECT * FROM resources WHERE folderid_ = "+parentId;
+            query = "SELECT * FROM Resources WHERE folderid_ = "+parentId;
             if (type!=null) {
                 query += " AND documenttype_ = '"+type+"'";
             } // if
@@ -492,7 +492,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         Set<String> result = new HashSet<String>();
         String query = null;
         try {
-            query = "SELECT * FROM linklists WHERE targetdocument = "+targetId;
+            query = "SELECT * FROM LinkLists WHERE targetdocument = "+targetId;
             if (property!=null) {
                 query += " AND propertyname = '"+property+"'";
             } // if
