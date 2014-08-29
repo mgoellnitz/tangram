@@ -105,7 +105,7 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
 
     @Override
-    public int compareTo(T o) {
+    public int compareTo(TemplateResolver<T> o) {
         return 1;
     } // compareTo()
 

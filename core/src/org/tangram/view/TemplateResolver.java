@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Instances resolve templates according to a given view name and the type of one item from the model.
  */
-public interface TemplateResolver<T extends Object> extends Comparable<T> {
+public interface TemplateResolver<T extends Object> extends Comparable<TemplateResolver<T>> {
 
     /**
      *

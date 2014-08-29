@@ -93,7 +93,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
 
 
     @Override
-    public int compareTo(T o) {
+    public int compareTo(TemplateResolver<T> o) {
         return -1;
     } // compareTo()
 
