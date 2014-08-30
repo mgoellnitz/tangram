@@ -1,6 +1,8 @@
 Tangram Dynamic Extendable Web Applications
 ===========================================
 
+[![Build Status](https://buildhive.cloudbees.com/job/mgoellnitz/job/tangram/badge/icon)](https://buildhive.cloudbees.com/job/mgoellnitz/job/tangram/)
+
 Tangram is a framework for the object oriented web rendering of java beans. 
 It comes with limited CMS functionality by using Java Data Object (JDO) or 
 Java Persistence API (JPA) implementations as data sources and presenting 
@@ -88,18 +90,32 @@ gradle eclipse
 Changes 0.9
 ===========
 
-0.9 is a code cleanup and refactoring version to get a starting point for other backend and platform solutions. 
+0.9 is a code cleanup and refactoring version to get a starting point for other 
+backend and platform solutions. 
 
-Users of relational database systems will have to get rid of their tangram-rdbms dependencies for library and web archives. Everything that's needed moved to the mere library dependecy nucleus for all datanucleus based scenarios, all other parts moved to core or jdo layer respectively. So an rdbms project will need the tanram-nucleus library compile dependency and the tangram-jdo war dependency instead of tangram-rdbms in both cases in the past.
+Users of relational database systems will have to get rid of their tangram-rdbms 
+dependencies for library and web archives. Everything that's needed moved to the 
+mere library dependecy nucleus for all datanucleus based scenarios, all other 
+parts moved to core or jdo layer respectively. So an rdbms project will need the 
+tanram-nucleus library compile dependency and the tangram-jdo war dependency 
+instead of tangram-rdbms in both cases in the past.
 
-The security aspects have now been renamed from 'solution' to 'feature' which might result in a inheritance change and template renaming. 
+The security aspects have now been renamed from 'solution' to 'feature' which 
+might result in a inheritance change and template renaming. 
 
 The MimedBlob stuff now also is called a 'feature' and moved to the core package.
 
 TangramServlet resides in a spring package - you will have to change your web.xml
 
-The code level now is lifted to Java 7 since the problems with the datanucleus enhancer seem to have vanished
+The code level now is lifted to Java 7 since the problems with the datanucleus 
+enhancer seem to have vanished
 
-The editor is an independent module and can - through the middle layer of mutable contents - be used for jpa and jdo base layers. Only the GAE flavour integrates this directory. For all other scenarios application will have to ad those extra two dependencies to switch on the generic editor.
+The editor is an independent module and can - through the middle layer of mutable 
+contents - be used for jpa and jdo base layers. Only the GAE flavour integrates 
+this directory. For all other scenarios application will have to ad those extra 
+two dependencies to switch on the generic editor.
 
-An ftp module has been added to support IDE synchronisation of codes in the repository. It's in an early stage but seems to be working at least for netbeans quite well. Create a Code resource with annotaion users.properties, mimetpe text/plain and user=passwords tuples inside.
+An ftp module has been added to support IDE synchronisation of codes in the 
+repository. It's in an early stage but seems to be working at least for netbeans 
+quite well. Create a Code resource with annotaion users.properties, mimetpe 
+text/plain and user=passwords tuples inside.
