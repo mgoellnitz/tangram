@@ -20,6 +20,8 @@ apply from: '../commons.gradle'
 
 apply plugin: 'war'
 
+def release = project.hasProperty('release') ? ("$release" == "true") : false 
+
 // needed for building jars and wars in the same project
 configurations {
   libs 
@@ -28,20 +30,6 @@ configurations {
 artifacts {
   libs jar
   archives war
-}
-
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
-      artifact sourcesJar 
-      artifact javadocJar 
-      artifact war {
-        classifier 'war'
-        extension 'war'
-      }
-    }
-  }
 }
 
 // avoid gradles default mimik to fiddle around with this directory
@@ -68,5 +56,18 @@ war {
   excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**' ]
 }
 
-// just for debugging purposes
-// war.doLast { ant.unzip(src: war.archivePath, dest: "$buildDir/war") }
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+      if (release) {
+        artifact sourcesJar 
+        artifact javadocJar 
+      }
+      artifact war {
+        classifier 'war'
+        extension 'war'
+      }
+    }
+  }
+}

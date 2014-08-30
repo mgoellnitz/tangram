@@ -21,20 +21,13 @@ import org.gradle.api.artifacts.ModuleDependency
 
 apply from: '../commons.gradle'
 
+def release = project.hasProperty('release') ? ("$release" == "true") : false 
+
 // Since this is just a lib we need this "providedCompile" stuff explicitly here
 configurations {
   libs 
   providedCompile
 }
-
-/* TODO: try to add only the webapp stuff to the WEB-INF
-jar {
-  include {
-    from 'webapp'
-    into 'destination'
-  }
-}
-*/
 
 // right now this is only necessary for the libs
 // http://forums.gradle.org/gradle/topics/exclude_not_set_in_generated_pom_maven_publish
@@ -42,8 +35,10 @@ publishing {
   publications {
     mavenJava(MavenPublication) {
       from components.java
-      artifact sourcesJar 
-      artifact javadocJar 
+      if (release) {
+        artifact sourcesJar 
+        artifact javadocJar 
+      }
       configurations[JavaPlugin.RUNTIME_CONFIGURATION_NAME].allDependencies.findAll {  
         it instanceof ModuleDependency && !it.excludeRules.isEmpty()  
       }.each { ModuleDependency dep ->  
