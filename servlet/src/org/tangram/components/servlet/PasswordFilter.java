@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.Filter;
@@ -68,7 +67,6 @@ public class PasswordFilter implements Filter {
     private Set<String> adminUsers = new HashSet<String>();
 
 
-    @Inject
     public void setLoginSupport(LoginSupport loginSupport) {
         PasswordFilter.loginSupport = loginSupport;
     }

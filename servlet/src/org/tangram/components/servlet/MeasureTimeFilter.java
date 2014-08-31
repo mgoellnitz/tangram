@@ -21,7 +21,6 @@ package org.tangram.components.servlet;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.Filter;
@@ -58,7 +57,6 @@ public class MeasureTimeFilter implements Filter {
     private Set<String> freeUrls = new HashSet<String>();
 
 
-    @Inject
     public static void setStatistics(Statistics statistics) {
         MeasureTimeFilter.statistics = statistics;
     }
