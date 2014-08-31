@@ -209,7 +209,10 @@ public class ServletViewUtilities implements ViewUtilities {
                         } // if
                         final String contentType = responseWrapper.getContentType();
                         final String characterEncodingSuffix = "; charset="+responseWrapper.getCharacterEncoding();
-                        String contentHeader = (contentType.startsWith("text")&&(contentType.indexOf(';')<0)) ? contentType+characterEncodingSuffix : contentType;
+                        if (LOG.isWarnEnabled()) {
+                            LOG.warn("render() original content type "+contentType);
+                        } // if
+                        String contentHeader = ((contentType!=null)&&contentType.startsWith("text")&&(contentType.indexOf(';')<0)) ? contentType+characterEncodingSuffix : contentType;
                         response.setHeader("Content-Type", contentHeader);
                         responseWrapper.setHeader("Content-Type", contentHeader);
                         for (Map.Entry<String, String> entry : responseWrapper.getHeaders().entrySet()) {
