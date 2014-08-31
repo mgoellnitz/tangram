@@ -43,14 +43,14 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
     @Inject
     private CodeResourceCache codeResourceCache;
 
-    private final Collection<String> supportedContenTypes;
+    private final Collection<String> supportedCtontenTypes;
 
 
     public AbstractRepositoryTemplateResolver() {
         super(false, ".");
-        supportedContenTypes = new HashSet<String>();
-        supportedContenTypes.add("text/html");
-        supportedContenTypes.add("text/xml");
+        supportedCtontenTypes = new HashSet<String>();
+        supportedCtontenTypes.add("text/html");
+        supportedCtontenTypes.add("text/xml");
     } // AbstractRepositoryTemplateResolver()
 
 
@@ -71,7 +71,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
      */
     protected CodeResource resolveTemplate(String path, Locale locale) throws Exception {
         CodeResource template = null;
-        for (String type : supportedContenTypes) {
+        for (String type : supportedCtontenTypes) {
             if (template==null) {
                 template = codeResourceCache.get(type, path);
             } // if

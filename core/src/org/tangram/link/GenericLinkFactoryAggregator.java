@@ -58,7 +58,7 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     @Inject
     private Statistics statistics;
 
-    private String dispatcherPath = "";
+    private String dispatcherPath = "/s";
 
     private List<LinkFactory> factories = new ArrayList<LinkFactory>();
 
