@@ -79,7 +79,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 } // for
                 return result;
             } else if (o instanceof Boolean) {
-                return ""+o;
+                return o.toString();
             } else if (o instanceof Content) {
                 return ((Content) o).getId();
             } else if (o instanceof Date) {
@@ -149,8 +149,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
      */
     private Matcher createIdMatcher(String idString) {
         Pattern p = Pattern.compile(Constants.ID_PATTERN);
-        Matcher m = p.matcher(idString);
-        return m;
+        return p.matcher(idString);
     } // createidMatcher()
 
 
@@ -168,10 +167,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 LOG.warn("getReferenceValue() we should have checked for selection via description template");
             } // if
             value = getObjectViaDescription(cls, valueString.trim(), request);
-            if (value!=null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("getReferenceValue() found a value from description "+value);
-                } // if
+            if ((value!=null)&&(LOG.isInfoEnabled())) {
+                LOG.info("getReferenceValue() found a value from description "+value);
             } // if
         } // if
         return value;
@@ -179,15 +176,15 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
 
     public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
-        Object value = null;
         if (valueString==null) {
             return null;
         } // if
+        Object value = null;
         if (LOG.isDebugEnabled()) {
             LOG.debug("getStorableObject() required type is "+cls.getName());
         } // if
         if (cls==String.class) {
-            value = StringUtils.isNotBlank(valueString) ? ""+valueString : null;
+            value = StringUtils.isNotBlank(valueString) ? valueString : null;
         } else if (cls==Date.class) {
             try {
                 value = dateFormat.parseObject(valueString);
@@ -212,7 +209,6 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                     LOG.debug("getStorableObject() idString="+idString);
                 } // if
                 if (StringUtils.isNotBlank(idString)) {
-                    Object o = null;
                     Matcher m = createIdMatcher(idString);
                     if (m.find()) {
                         idString = m.group(1);
@@ -220,7 +216,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                             LOG.info("getStorableObject() pattern match result "+idString);
                         } // if
                         final Content bean = beanFactory.getBean(idString);
-                        if ((bean!=null) && ((client == null) || (!bean.getId().equals(client.getId())))) {
+                        if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
                             elements.add(bean);
                         } // if
                     } else {
@@ -236,11 +232,10 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             @SuppressWarnings("unchecked")
             Class<? extends Content> cc = (Class<? extends Content>) cls;
             Content referenceValue = getReferenceValue(cc, request, valueString);
-            value = (client != null) && client.equals(referenceValue) ? null : referenceValue;
+            value = (client!=null)&&client.equals(referenceValue) ? null : referenceValue;
         } // if
         return value;
     } // getStorableObject()
-
 
 
     public abstract boolean isBlobType(Class<?> cls);

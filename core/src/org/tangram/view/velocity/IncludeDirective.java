@@ -68,7 +68,7 @@ public class IncludeDirective extends Directive {
         Map<String, Object> model = viewUtilities.getViewContextFactory().createModel(bean, request, response);
         Object[] keys = context.getKeys();
         for (Object key : keys) {
-            String k = ""+key;
+            String k = key.toString();
             if (!model.containsKey(k)) {
                 model.put(k, context.get(k));
             } // if
