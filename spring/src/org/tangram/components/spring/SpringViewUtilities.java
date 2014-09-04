@@ -25,14 +25,12 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
@@ -50,7 +48,7 @@ import org.tangram.view.ViewUtilities;
  */
 @Named("viewUtilities")
 @Singleton
-public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
+public class SpringViewUtilities implements ViewUtilities {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpringViewUtilities.class);
 
@@ -59,8 +57,6 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
 
     @Inject
     private ViewHandler viewHandler;
-
-    private ServletContext servletContext;
 
     /**
      * Value to be used if there is not view in hash tables and the like where the use of null would not indicate
@@ -79,12 +75,6 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
         }
 
     };
-
-
-    @Inject
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
 
 
     @Override
@@ -118,7 +108,7 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
     } // createModelAndView()
 
 
-    public void render(Writer out, Map<String, Object> model, String view) throws IOException {
+    public void render(Writer writer, Map<String, Object> model, String view) throws IOException {
         ServletRequest request = (ServletRequest) model.get(Constants.ATTRIBUTE_REQUEST);
         ServletResponse response = (ServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
 
@@ -138,8 +128,8 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
                 effectiveView = viewHandler.resolveView(viewName, mav.getModel(), Locale.getDefault(), request);
             } // if
 
-            if (out!=null) {
-                out.flush();
+            if (writer!=null) {
+                writer.flush();
             } // if
             if (LOG.isDebugEnabled()) {
                 LOG.debug("render() model="+mav.getModel());
@@ -148,16 +138,16 @@ public class SpringViewUtilities implements ViewUtilities, ServletContextAware {
             effectiveView.render(mav.getModel(), (HttpServletRequest) request, (HttpServletResponse) response);
         } catch (Exception e) {
             LOG.error("render() #"+view, e);
-            if (out!=null) {
-                out.write(e.getLocalizedMessage());
+            if (writer!=null) {
+                writer.write(e.getLocalizedMessage());
             } // if
         } // try/catch
     } // render()
 
 
     @Override
-    public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
-        render(out, viewContextFactory.createModel(bean, request, response), view);
+    public void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
+        render(writer, viewContextFactory.createModel(bean, request, response), view);
     } // render()
 
 } // SpringViewUtilities

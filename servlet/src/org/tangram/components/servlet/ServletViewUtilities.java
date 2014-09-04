@@ -33,7 +33,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -71,13 +70,10 @@ public class ServletViewUtilities implements ViewUtilities {
     @Inject
     private CodeResourceCache codeResourceCache;
 
-    @Inject
-    private ServletContext servletContext;
-
     @SuppressWarnings("rawtypes")
     private List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
 
-    private VelocityEngine velocityEngine;
+    private final VelocityEngine velocityEngine;
 
     private long uploadFileMaxSize = 500000;
 
@@ -88,7 +84,7 @@ public class ServletViewUtilities implements ViewUtilities {
         } // if
         Properties velocityProperties = new Properties();
         try {
-            velocityProperties.load(this.getClass().getClassLoader().getResourceAsStream("tangram/velocity/velocity.properties"));
+            velocityProperties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("tangram/velocity/velocity.properties"));
         } catch (IOException ex) {
             LOG.error("()", ex);
         } // try/catch
@@ -132,10 +128,8 @@ public class ServletViewUtilities implements ViewUtilities {
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void render(Writer out, Map<String, Object> model, String view) throws IOException {
+    public void render(Writer writer, Map<String, Object> model, String view) throws IOException {
         view = (view==null) ? Constants.DEFAULT_VIEW : view;
-        HttpServletRequest request = (HttpServletRequest) model.get(Constants.ATTRIBUTE_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
         String template = null;
         if (LOG.isDebugEnabled()) {
             LOG.debug("render() resolvers="+resolvers);
@@ -155,6 +149,8 @@ public class ServletViewUtilities implements ViewUtilities {
         if (template==null) {
             throw new IOException("no view "+view+" found for model "+model);
         } // if
+        HttpServletRequest request = (HttpServletRequest) model.get(Constants.ATTRIBUTE_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
         if (ID_PATTRN.matcher(template).matches()) {
             // Velocity:
             if (LOG.isDebugEnabled()) {
@@ -167,10 +163,10 @@ public class ServletViewUtilities implements ViewUtilities {
                 } // if
                 response.setContentType(codeResource.getMimeType());
                 response.setCharacterEncoding("UTF-8");
-                if (out==null) {
+                if (writer==null) {
                     response.getWriter().flush();
                 } else {
-                    out.flush();
+                    writer.flush();
                 } // if
                 VelocityContext context = new VelocityContext(model);
                 if (!context.containsKey(Constants.ATTRIBUTE_VIEW_UTILITIES)) {
@@ -191,18 +187,18 @@ public class ServletViewUtilities implements ViewUtilities {
                         request.setAttribute(key, model.get(key));
                     } // for
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("render("+template+") writer "+out);
+                        LOG.debug("render("+template+") writer "+writer);
                     } // if
                     ResponseWrapper responseWrapper = null;
-                    if (out==null) {
+                    if (writer==null) {
                         responseWrapper = new ResponseWrapper(response);
                         response = responseWrapper;
                     } else {
                         response.getWriter().flush();
-                        out.flush();
+                        writer.flush();
                     } // if
                     requestDispatcher.include(request, response);
-                    if (out==null) {
+                    if (writer==null) {
                         if (LOG.isDebugEnabled()) {
                             LOG.debug("render("+template+") setting content type for "+responseWrapper.getContentType());
                             LOG.debug("render() setting character encoding for "+responseWrapper.getCharacterEncoding());
@@ -232,8 +228,8 @@ public class ServletViewUtilities implements ViewUtilities {
 
 
     @Override
-    public void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
-        render(out, viewContextFactory.createModel(bean, request, response), view);
+    public void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
+        render(writer, viewContextFactory.createModel(bean, request, response), view);
     } // render()
 
 } // ServletViewUtilities

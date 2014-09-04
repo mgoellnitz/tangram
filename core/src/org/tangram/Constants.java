@@ -40,10 +40,15 @@ public final class Constants {
 
     private static final Logger LOG = LoggerFactory.getLogger(Constants.class);
 
+    /**
+     * Overall version descriptor of the system calculated below.
+     */
+    public static final String VERSION;
+
     public static final String THIS = "self";
 
     /**
-     * Default date format string for http headers and the like
+     * Default date format string for http headers and the like.
      */
     public static final String DEFAULT_DATE_FORMAT = "kk:mm:ss dd.MM.yyyy zzz";
 
@@ -54,12 +59,12 @@ public final class Constants {
 
 
     /**
-     * Pattern to find IDs in (rich/long) text
+     * Pattern to find IDs in (rich/long) text.
      */
     public final static Pattern TEXT_ID_PATTERN = Pattern.compile("http://[a-zA-Z0-9:]*\"");
 
     /**
-     * name of the default view if value null cannot be used
+     * name of the default view if value null cannot be used.
      */
     public static final String DEFAULT_VIEW = "NULL";
 
@@ -117,8 +122,8 @@ public final class Constants {
      */
     public static final String ATTRIBUTE_LOGOUT_URL = "logoutUrl";
 
-    /*
-     * name of the request attribute to take a currently valid login from.
+    /**
+     * Name of the request attribute to take a currently valid login from.
      */
     public static final String ATTRIBUTE_LOGIN_URL = "loginUrl";
 
@@ -135,18 +140,19 @@ public final class Constants {
     public static final String ATTRIBUTE_PROTECTION = "protection";
 
     /**
-     *
+     * Name of the request attribute telling if this is a stage or a live system.
+     * Rarely used.
      */
     public static final String ATTRIBUTE_LIVE_SYSTEM = "tangramLiveSystem";
 
     /**
-     * name of the request attribute holding the currently logged in tangram user
+     * Name of the request attribute holding the currently logged in tangram user.
      */
     public static final String ATTRIBUTE_USER = "tangramUser";
 
     /**
      * name of the request attribute to indicate if the currently logged in tangram user
-     * is considered a tangram admin by system configuration
+     * is considered a tangram admin by system configuration.
      */
     public static final String ATTRIBUTE_ADMIN_USER = "tangramAdminUser";
 
@@ -196,12 +202,12 @@ public final class Constants {
 
     static {
         try {
-            Enumeration<URL> en = Constants.class.getClassLoader().getResources(PREFIX);
+            Enumeration<URL> en = Thread.currentThread().getContextClassLoader().getResources(PREFIX);
             while (en.hasMoreElements()) {
                 URL metaInf = en.nextElement();
                 for (String s : getResourceListing(metaInf, PREFIX, SUFFIX)) {
                     Properties p = new Properties();
-                    p.load(Constants.class.getClassLoader().getResourceAsStream(s));
+                    p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(s));
                     VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH),
                             p.getProperty(Constants.PROPERTY_VERSION_BUILD));
                 } // for
@@ -211,17 +217,15 @@ public final class Constants {
         } // try/catch
         StringBuilder versionBuilder = new StringBuilder(128);
         versionBuilder.append(VERSION_MAJOR);
-        versionBuilder.append(".");
+        versionBuilder.append('.');
         versionBuilder.append(VERSION_MINOR);
         for (String key : VERSIONS.keySet()) {
-            versionBuilder.append(".");
+            versionBuilder.append('.');
             versionBuilder.append(key);
             versionBuilder.append(VERSIONS.get(key));
         } // for
         VERSION = versionBuilder.toString();
     } // static
-
-    public static final String VERSION;
 
 
     /**

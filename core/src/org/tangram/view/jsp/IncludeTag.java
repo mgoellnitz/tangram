@@ -85,21 +85,21 @@ public class IncludeTag implements Tag, Serializable {
     }
 
 
-    public static void render(ServletContext context, ServletRequest request, ServletResponse resp, Writer out, Object bean, String view) {
+    public static void render(ServletContext context, ServletRequest req, ServletResponse resp, Writer writer, Object bean, String view) {
         if (bean==null) {
             return;
         } // if
-        Object oldSelf = request.getAttribute(org.tangram.Constants.THIS);
+        Object oldSelf = req.getAttribute(Constants.THIS);
         try {
-            request.setAttribute(org.tangram.Constants.THIS, bean);
+            req.setAttribute(Constants.THIS, bean);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("render() bean="+bean.getClass().getName()+" #"+view);
             } // if
-            ((ViewUtilities)(context.getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES))).render(out, bean, view, request, resp);
+            ((ViewUtilities)(context.getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES))).render(writer, bean, view, req, resp);
         } catch (Exception e) {
             LOG.error("render() bean="+bean.getClass().getName()+" #"+view, e);
         } // try/catch
-        request.setAttribute(org.tangram.Constants.THIS, oldSelf);
+        req.setAttribute(Constants.THIS, oldSelf);
     } // render()
 
 

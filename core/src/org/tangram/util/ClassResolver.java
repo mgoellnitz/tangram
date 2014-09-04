@@ -52,7 +52,7 @@ public class ClassResolver {
     private void addPathsForPackage(Set<String> urls, String packageName) {
         String packagePath = packageName.replace('.', '/');
         try {
-            Enumeration<URL> urlEnumeration = this.getClass().getClassLoader().getResources(packagePath);
+            Enumeration<URL> urlEnumeration = Thread.currentThread().getContextClassLoader().getResources(packagePath);
             while (urlEnumeration.hasMoreElements()) {
                 String url = urlEnumeration.nextElement().toString();
                 int idx = url.indexOf('!');

@@ -142,25 +142,23 @@ public class LinkTag implements Tag, Serializable {
     } // doStartTag()
 
 
-    public static void render(LinkFactoryAggregator builder, HttpServletRequest request, HttpServletResponse response, Writer out, Object bean, String action, String view, boolean isHref,
-                              boolean isTarget, boolean isHandlers) {
+    public static void render(LinkFactoryAggregator builder, HttpServletRequest req, HttpServletResponse resp, Writer writer, Object bean, String action, String view, boolean isHref,
+            boolean isTarget, boolean isHandlers) {
         try {
-            Link link = builder.createLink(request, response, bean, action, view);
+            Link link = builder.createLink(req, resp, bean, action, view);
             if (isHref) {
-                out.write("href=\"");
+                writer.write("href=\"");
             } // if
-            out.write(link.getUrl());
+            writer.write(link.getUrl());
             if (isHref) {
-                out.write("\" ");
+                writer.write("\" ");
             } // if
-            if (isTarget) {
-                if (link.getTarget()!=null) {
-                    out.write("target=\""+link.getTarget()+"\" ");
-                } // if
+            if (isTarget&&(link.getTarget()!=null)) {
+                writer.write("target=\""+link.getTarget()+"\" ");
             } // if
             if (isHandlers) {
                 for (Map.Entry<String, String> entry : link.getHandlers().entrySet()) {
-                    out.write(entry.getKey()+"=\""+entry.getValue()+"\" ");
+                    writer.write(entry.getKey()+"=\""+entry.getValue()+"\" ");
                 } // for
             } // if
         } catch (IOException ioe) {
@@ -175,7 +173,7 @@ public class LinkTag implements Tag, Serializable {
         HttpServletRequest request = (HttpServletRequest) (context.getRequest());
         HttpServletResponse response = (HttpServletResponse) (context.getResponse());
         final ServletContext servletContext = context.getServletContext();
-        LinkFactoryAggregator builder = (LinkFactoryAggregator)servletContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
+        LinkFactoryAggregator builder = (LinkFactoryAggregator) servletContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
         render(builder, request, response, out, getBean(), getAction(), getView(), isHref(), isTarget(), isHandlers());
         return EVAL_PAGE;
     } // doEndTag()
