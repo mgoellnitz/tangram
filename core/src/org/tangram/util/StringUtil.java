@@ -25,7 +25,10 @@ import org.apache.commons.lang.StringUtils;
 /**
  *  Generic String utility functions not found elsewhere in the libraries we are using.
  */
-public class StringUtil {
+public final class StringUtil {
+    
+    private StringUtil() {
+    }
 
     /**
      * Split a String - say servlet init parameter - at each ',' and trim the result.
@@ -37,7 +40,7 @@ public class StringUtil {
      * @return set of string taken from the input parameter
      */
     public static Set<String> stringSetFromParameterString(String parameter) {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         if (StringUtils.isNotBlank(parameter)) {
             String[] parts = parameter.split(",");
             for (String part : parts) {

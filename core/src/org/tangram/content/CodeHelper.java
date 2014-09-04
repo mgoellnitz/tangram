@@ -23,10 +23,12 @@ import java.util.Set;
 /**
  * Constant string to be used as keys for the session store of an ftp session.
  */
-public class CodeHelper {
+public final class CodeHelper {
 
-    private static final Set<String> EXTENSION_TO_CUT = new HashSet<String>();
+    private static final Set<String> EXTENSION_TO_CUT = new HashSet<>();
 
+    private CodeHelper() {
+    }
 
     /**
      * a set of ignorable extensions. Tweaked for use with NetBeans FTP uploader
