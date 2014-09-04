@@ -33,7 +33,7 @@ import org.tangram.annotate.LinkPart;
 import org.tangram.coma.ComaBeanPopulator;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
-import org.tangram.controller.RenderingBase;
+import org.tangram.controller.AbstractRenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.view.TargetDescriptor;
@@ -46,7 +46,7 @@ import org.tangram.view.TargetDescriptor;
  */
 @Named
 @LinkHandler
-public class ComaHandler extends RenderingBase {
+public class ComaHandler extends AbstractRenderingBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 

@@ -49,7 +49,7 @@ import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
-import org.tangram.controller.RenderingBase;
+import org.tangram.controller.AbstractRenderingBase;
 import org.tangram.editor.AppEngineXStream;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
@@ -71,7 +71,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 @Singleton
 @LinkHandler
-public class EditingHandler extends RenderingBase {
+public class EditingHandler extends AbstractRenderingBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(EditingHandler.class);
 
@@ -90,18 +90,31 @@ public class EditingHandler extends RenderingBase {
     /**
      * writable properties which should not be altered by the upper layers or persisted
      */
-    public static Set<String> SYSTEM_PROPERTIES;
+    public static final Set<String> SYSTEM_PROPERTIES;
 
     /**
      * editing actions triggered by URLs containing the obect's ID.
      */
-    public static Collection<String> ID_URL_ACTIONS = new ArrayList<String>();
+    public static final Collection<String> ID_URL_ACTIONS = new ArrayList<String>();
 
     /**
      * editing actions triggered only by parameters passed in http post requests.
      */
-    public static Collection<String> PARAMETER_ACTIONS = new ArrayList<String>();
+    public static final Collection<String> PARAMETER_ACTIONS = new ArrayList<String>();
 
+    @Inject
+    private LinkHandlerRegistry registry;
+
+    @Inject
+    private PropertyConverter propertyConverter;
+
+    @Inject
+    private ClassRepository classRepository;
+
+    @Inject
+    private ViewUtilities viewUtilities;
+
+    private boolean deleteMethodEnabled;
 
     static {
         SYSTEM_PROPERTIES = new HashSet<String>();
@@ -118,20 +131,6 @@ public class EditingHandler extends RenderingBase {
         PARAMETER_ACTIONS.add("link");
         PARAMETER_ACTIONS.add("list");
     } // static
-
-    @Inject
-    private LinkHandlerRegistry registry;
-
-    @Inject
-    private PropertyConverter propertyConverter;
-
-    @Inject
-    private ClassRepository classRepository;
-
-    @Inject
-    private ViewUtilities viewUtilities;
-
-    private boolean deleteMethodEnabled;
 
 
     public void setDeleteMethodEnabled(boolean deleteMethodEnabled) {
@@ -177,7 +176,7 @@ public class EditingHandler extends RenderingBase {
                         msg.append(": ");
                         for (String value : values) {
                             msg.append(value);
-                            msg.append(" ");
+                            msg.append(' ');
                         } // for
                         LOG.info(msg.toString());
                     } // if
@@ -214,7 +213,7 @@ public class EditingHandler extends RenderingBase {
                     } // if
                 } // if
             } catch (Exception e) {
-                throw new Exception("Cannot set value for "+key);
+                throw new Exception("Cannot set value for "+key, e);
             } // try/catch
         } // for
 
@@ -533,7 +532,7 @@ public class EditingHandler extends RenderingBase {
 
 
     @SuppressWarnings("unchecked")
-    private TargetDescriptor doImport(Reader input, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private TargetDescriptor doImport(Reader input, HttpServletRequest request) throws Exception {
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not execute action");
         } // if
@@ -565,15 +564,15 @@ public class EditingHandler extends RenderingBase {
 
 
     @LinkAction("/import-text")
-    public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return doImport(new StringReader(xmltext), request, response);
+    public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request) throws Exception {
+        return doImport(new StringReader(xmltext), request);
     } // contentImport()
 
 
     @LinkAction("/import")
-    public TargetDescriptor contentImport(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public TargetDescriptor contentImport(HttpServletRequest request) throws Exception {
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
-        return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request, response);
+        return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request);
     } // contentImport()
 
 

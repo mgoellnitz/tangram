@@ -22,8 +22,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
@@ -42,9 +40,7 @@ import org.tangram.view.ViewContextFactory;
  * in the future.
  *
  */
-public abstract class RenderingBase implements LinkFactory {
-
-    private static final Logger LOG = LoggerFactory.getLogger(RenderingBase.class);
+public abstract class AbstractRenderingBase implements LinkFactory {
 
     @Inject
     protected BeanFactory beanFactory;
@@ -106,4 +102,4 @@ public abstract class RenderingBase implements LinkFactory {
     @Override
     public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
-} // RenderingBase
+} // AbstractRenderingBase

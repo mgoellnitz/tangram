@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
-import org.tangram.controller.RenderingBase;
+import org.tangram.controller.AbstractRenderingBase;
 import org.tangram.link.InternalLinkFactory;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
@@ -88,7 +88,7 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
-            return RenderingBase.createDefaultLink(bean, action, view);
+            return AbstractRenderingBase.createDefaultLink(bean, action, view);
         } // if
         return null;
     } // createLink()

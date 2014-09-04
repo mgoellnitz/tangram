@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.tangram.content.Content;
-import org.tangram.controller.RenderingBase;
+import org.tangram.controller.AbstractRenderingBase;
 import org.tangram.link.InternalLinkFactory;
 import org.tangram.link.Link;
 import org.tangram.view.TargetDescriptor;
@@ -45,7 +45,7 @@ import org.tangram.view.ViewContext;
  * view layers of the framework.
  */
 @Controller
-public class DefaultController extends RenderingBase implements InternalLinkFactory {
+public class DefaultController extends AbstractRenderingBase implements InternalLinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultController.class);
 
@@ -86,7 +86,7 @@ public class DefaultController extends RenderingBase implements InternalLinkFact
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         if (bean instanceof Content) {
-            return RenderingBase.createDefaultLink(bean, action, view);
+            return AbstractRenderingBase.createDefaultLink(bean, action, view);
         } // if
         return null;
     } // createLink()
