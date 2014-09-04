@@ -87,6 +87,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     /**
      * Override the default id when obtaining the persistence factory.
+     *
      * @param factoryName
      */
     public void setFactoryName(String factoryName) {
@@ -214,7 +215,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             } // if
             for (T o : results) {
                 if (o instanceof BeanFactoryAware) {
-                    ((BeanFactoryAware)o).setBeanFactory(this);
+                    ((BeanFactoryAware) o).setBeanFactory(this);
                 } // if
                 result.add(o);
             } // for
@@ -224,11 +225,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         } // try/catch/finally
         return result;
     } // listBeansOfExactClass()
-
-
-    private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+queryString;
-    } // getCacheKey()
 
 
     /**
@@ -285,10 +281,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         Set<Class<? extends Content>> classSet = new HashSet<Class<? extends Content>>();
         if (classes!=null) {
             for (Class<? extends Content> cls : classes) {
-                if (JdoContent.class.isAssignableFrom(cls)) {
-                    if (cls.getAnnotation(PersistenceCapable.class)!=null) {
-                        classSet.add(cls);
-                    } // if
+                if ((JdoContent.class.isAssignableFrom(cls))&&(cls.getAnnotation(PersistenceCapable.class)!=null)) {
+                    classSet.add(cls);
                 } // if
             } // for
         } // if
@@ -308,9 +302,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @PostConstruct
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() bean factory is using "+getClass().getClassLoader().getClass().getName());
-        } // if
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
         if (LOG.isInfoEnabled()) {
             LOG.info("afterPropertiesSet() using overrides for persistence manager factory: "+overrides);

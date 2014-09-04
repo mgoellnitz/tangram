@@ -54,7 +54,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     @Inject
     protected PersistentRestartCache startupCache;
 
-    private Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<Class<? extends Content>, List<BeanListener>>();
+    private final Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<>();
 
     private Set<String> basePackages;
 

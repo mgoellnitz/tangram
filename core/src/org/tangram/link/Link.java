@@ -34,7 +34,7 @@ public class Link {
 
     private String target;
 
-    private Map<String, String> handlers = new HashMap<String, String>();
+    private final Map<String, String> handlers = new HashMap<String, String>();
 
 
     public Link() {

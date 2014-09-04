@@ -64,6 +64,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     public JpaBeanFactoryImpl() {
+        // TODO: remove this marker again.
         LOG.error("() XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     } // JpaBeanFactoryImpl()
 
@@ -144,7 +145,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     @Override
     public void beginTransaction() {
         if (!manager.getTransaction().isActive()) {
-            manager.getTransaction().begin();;
+            manager.getTransaction().begin();
         } // if
     } // beginTransaction()
 
@@ -152,7 +153,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     @Override
     public void commitTransaction() {
         if (manager.getTransaction().isActive()) {
-            manager.getTransaction().commit();;
+            manager.getTransaction().commit();
         } // if
     } // commitTransaction()
 
@@ -160,7 +161,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     @Override
     public void rollbackTransaction() {
         if (manager.getTransaction().isActive()) {
-            manager.getTransaction().rollback();;
+            manager.getTransaction().rollback();
         } // if
     } // rollbackTransaction()
 
@@ -307,7 +308,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         classList.append(getBaseClass().getName());
         for (Class<? extends Content> c : getAllClasses()) {
             if (!c.getName().equals(getBaseClass().getName())) {
-                classList.append(";");
+                classList.append(';');
                 classList.append(c.getName());
             } // if
         } // for

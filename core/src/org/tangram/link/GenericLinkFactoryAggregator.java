@@ -60,12 +60,12 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
 
     private String dispatcherPath = "/s";
 
-    private List<LinkFactory> factories = new ArrayList<LinkFactory>();
+    private final List<LinkFactory> factories = new ArrayList<>();
 
     /**
      * method classname#methodname to method cache
      */
-    private Map<String, Method> cache = new HashMap<String, Method>();
+    private final Map<String, Method> cache = new HashMap<>();
 
     private String prefix = null;
 

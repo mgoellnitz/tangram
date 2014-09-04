@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -31,13 +31,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.tangram.Constants;
 
+
 @PersistenceCapable
 public class OpenIDProtection extends AbstractProtection {
 
     @NotPersistent
-    private UserService userService = UserServiceFactory.getUserService();
+    private final UserService userService = UserServiceFactory.getUserService();
+
+    private String allowedUsers;
 
     private static final Map<String, String> OPEN_ID_PROVIDERS;
+
+
     static {
         OPEN_ID_PROVIDERS = new HashMap<String, String>();
         OPEN_ID_PROVIDERS.put("Google", "https://www.google.com/accounts/o8/id");
@@ -46,8 +51,6 @@ public class OpenIDProtection extends AbstractProtection {
         OPEN_ID_PROVIDERS.put("AOL", "aol.com");
         OPEN_ID_PROVIDERS.put("MyOpenID", "myopenid.com");
     }
-
-    private String allowedUsers;
 
 
     public String getAllowedUsers() {
@@ -89,7 +92,7 @@ public class OpenIDProtection extends AbstractProtection {
     private boolean isValidUser(HttpServletRequest request, User user) {
         return (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)!=null)
                 ||((user.getFederatedIdentity()!=null)&&(StringUtils.isNotBlank(allowedUsers) ? allowedUsers.indexOf(user.getNickname())>=0
-                        : true));
+                : true));
     } // isValidUser()
 
 
@@ -110,8 +113,7 @@ public class OpenIDProtection extends AbstractProtection {
     public String getLoginUrl(HttpServletRequest request, String providerName) {
         String providerUrl = getProviders().get(providerName);
         String tangramUrl = ""+request.getAttribute("tangramURL");
-        String result = userService.createLoginURL(tangramUrl, null, providerUrl, new java.util.HashSet<String>());
-        return result;
+        return userService.createLoginURL(tangramUrl, null, providerUrl, new java.util.HashSet<String>());
     } // getLoginUrl();
 
 } // OpenIDProtection

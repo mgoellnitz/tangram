@@ -54,7 +54,7 @@ public class MeasureTimeFilter implements Filter {
 
     private static Statistics statistics;
 
-    private Set<String> freeUrls = new HashSet<String>();
+    private final Set<String> freeUrls = new HashSet<>();
 
 
     public static void setStatistics(Statistics statistics) {

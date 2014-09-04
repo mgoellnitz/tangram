@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
 public class GoogleProtection extends AbstractProtection {
 
     @NotPersistent
-    private UserService userService = UserServiceFactory.getUserService();
+    private final UserService userService = UserServiceFactory.getUserService();
 
     private String allowedUsers;
 
@@ -55,7 +55,7 @@ public class GoogleProtection extends AbstractProtection {
     /**
      * check auth domain if on live syetem
      */
-    private boolean isValidDomain(User user, HttpServletRequest request) {
+    private boolean isValidDomain(User user) {
         return user.getAuthDomain().equals("gmail.com");
     } // isValidDomain()
 
@@ -68,14 +68,14 @@ public class GoogleProtection extends AbstractProtection {
     @Override
     public boolean isContentVisible(HttpServletRequest request) throws Exception {
         User user = UserServiceFactory.getUserService().getCurrentUser();
-        return user==null ? false : (isValidDomain(user, request)&&isValidUser(user));
+        return user==null ? false : (isValidDomain(user)&&isValidUser(user));
     } // isTopicVisible()
 
 
     @Override
     public boolean needsAuthorization(HttpServletRequest request) {
         User user = UserServiceFactory.getUserService().getCurrentUser();
-        return user==null||( !isValidDomain(user, request));
+        return user==null||( !isValidDomain(user));
     } // needsAuthorization()
 
 

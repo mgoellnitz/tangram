@@ -50,13 +50,13 @@ public class ExpirationHeaderFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExpirationHeaderFilter.class);
 
-    private Map<String, Long> extensionTimes = new HashMap<String, Long>();
+    private Map<String, Long> extensionTimes = new HashMap<>();
 
-    private DateFormat formatter;
+    private final DateFormat formatter;
 
-    private String startTimeString;
+    private final String startTimeString;
 
-    private String startTimeHeader;
+    private final String startTimeHeader;
 
 
     public ExpirationHeaderFilter() {

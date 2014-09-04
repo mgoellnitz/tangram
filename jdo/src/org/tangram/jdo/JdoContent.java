@@ -20,15 +20,11 @@ package org.tangram.jdo;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.annotations.NotPersistent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 
 
 
 public abstract class JdoContent implements Content {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JdoContent.class);
 
     @NotPersistent
     private String id;

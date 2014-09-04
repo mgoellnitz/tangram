@@ -29,10 +29,6 @@ import org.tangram.PersistentRestartCache;
  */
 public class DummyRestartCache implements PersistentRestartCache {
 
-    public DummyRestartCache() {
-    } // DummyCacheAdapter()
-
-
     @Override
     public <T> T get(String key, Class<T> c) {
         return null;

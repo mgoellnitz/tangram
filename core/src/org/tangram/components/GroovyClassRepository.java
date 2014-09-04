@@ -65,9 +65,9 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
 
     private Map<String, byte[]> byteCodes = null;
 
-    private Map<String, String> compilationErrors = new HashMap<String, String>();
+    private Map<String, String> compilationErrors = new HashMap<>();
 
-    private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
+    private final List<BeanListener> attachedListeners = new ArrayList<>();
 
     private GroovyClassLoader classLoader;
 
@@ -79,12 +79,12 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
             byteCodes = null;
         } // if
         classLoader = new GroovyClassLoader();
-        classes = new HashMap<String, Class<? extends Object>>();
+        classes = new HashMap<>();
         if (byteCodes==null) {
-            compilationErrors = new HashMap<String, String>();
-            byteCodes = new HashMap<String, byte[]>();
+            compilationErrors = new HashMap<>();
+            byteCodes = new HashMap<>();
 
-            Map<String, String> codes = new HashMap<String, String>();
+            Map<String, String> codes = new HashMap<>();
             Map<String, CodeResource> typeCache = codeCache.getTypeCache("application/x-groovy");
             for (CodeResource resource : typeCache.values()) {
                 String annotation = resource.getAnnotation();
@@ -98,7 +98,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                     if (!Character.isLowerCase(suffix.charAt(0))) {
                         try {
                             codes.put(annotation, resource.getCodeText());
-                        } catch (Throwable e) {
+                        } catch (Exception e) {
                             LOG.error("fillClasses()", e);
                         } // try/catch
                     } // if
@@ -106,7 +106,8 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
             } // for
 
             int i = Constants.RIP_CORD_COUNT;
-            while (i-->0&&codes.size()>byteCodes.size()) {
+            while ((i>0)&&codes.size()>byteCodes.size()) {
+                i--;
                 for (Map.Entry<String, String> code : codes.entrySet()) {
                     try {
                         if (LOG.isInfoEnabled()) {

@@ -40,7 +40,7 @@ public interface ViewUtilities {
      *
      * @return view context factory instance
      */
-    public ViewContextFactory getViewContextFactory();
+    ViewContextFactory getViewContextFactory();
 
 
     /**
@@ -63,7 +63,7 @@ public interface ViewUtilities {
      * @param view
      * @throws IOException
      */
-    void render(Writer out, Map<String, Object> model, String view) throws IOException;
+    void render(Writer writer, Map<String, Object> model, String view) throws IOException;
 
 
     /**
@@ -76,6 +76,6 @@ public interface ViewUtilities {
      * @param response
      * @throws IOException
      */
-    void render(Writer out, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException;
+    void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException;
 
 } // ViewUtilities

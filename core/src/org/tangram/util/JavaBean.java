@@ -41,9 +41,9 @@ public class JavaBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaBean.class);
 
-    private Object delegate;
+    private final Object delegate;
 
-    private Map<String, PropertyDescriptor> descriptors = new HashMap<String, PropertyDescriptor>();
+    private final Map<String, PropertyDescriptor> descriptors = new HashMap<>();
 
 
     public static PropertyDescriptor[] getPropertyDescriptors(Class<? extends Object> cls) throws IntrospectionException {
@@ -98,7 +98,7 @@ public class JavaBean {
      * @return true of the given property has a read method
      */
     public boolean isReadable(String name) {
-        return (descriptors.containsKey(name)) && (descriptors.get(name).getReadMethod()!=null);
+        return descriptors.containsKey(name)&&descriptors.get(name).getReadMethod()!=null;
     } // isReadable()
 
 
@@ -127,7 +127,7 @@ public class JavaBean {
      * @return true if the given property has a write method
      */
     public boolean isWritable(String name) {
-        return (descriptors.containsKey(name)) && (descriptors.get(name).getWriteMethod()!=null);
+        return descriptors.containsKey(name)&&descriptors.get(name).getWriteMethod()!=null;
     } // isWritable()
 
 

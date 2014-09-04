@@ -19,8 +19,6 @@ package org.tangram.ebean;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 
 
@@ -31,8 +29,6 @@ import org.tangram.content.Content;
  */
 @Entity
 public abstract class EContent implements Content {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EContent.class);
 
     @Id
     @GeneratedValue

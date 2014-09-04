@@ -42,7 +42,7 @@ public class PassFtpCommandHandler extends PassCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(PassFtpCommandHandler.class);
 
-    private CodeResourceCache codeResourceCache;
+    private final CodeResourceCache codeResourceCache;
 
 
     public PassFtpCommandHandler(CodeResourceCache codeResourceCache) {

@@ -34,7 +34,7 @@ import org.tangram.view.TargetDescriptor;
 
 
 /**
- * Handler implementation to view the contents of the statistics instance of event counters and calculated average.
+ * Handler implementation to view the contents of the stats instance of event counters and calculated average.
  */
 @Named
 @Singleton
@@ -53,14 +53,14 @@ public class StatisticsHandler {
 
 
     @LinkAction("/stats")
-    public TargetDescriptor statistics(HttpServletRequest request, HttpServletResponse response) {
+    public TargetDescriptor stats(HttpServletRequest request, HttpServletResponse response) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("statistics()");
         } // if
         response.setContentType("text/html");
         response.setCharacterEncoding("utf-8");
         return new TargetDescriptor(statistics, null, null);
-    } // statistics()
+    } // stats()
 
 
     @PostConstruct

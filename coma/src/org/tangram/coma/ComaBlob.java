@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,15 +23,15 @@ import org.tangram.feature.blob.MimedBlob;
 
 public class ComaBlob implements MimedBlob {
 
-    String contentId;
+    private final String contentId;
 
-    String propertyName;
+    private final String propertyName;
 
-    String mimeType;
+    private final String mimeType;
 
-    long len;
+    private final long len;
 
-    byte[] bytes;
+    private byte[] bytes;
 
 
     public ComaBlob(String contentId, String propertyName, String mimeType, long len, byte[] data) {

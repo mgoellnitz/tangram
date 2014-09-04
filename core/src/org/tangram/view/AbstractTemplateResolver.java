@@ -42,18 +42,18 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
     /**
      * replace brackets [] in array type names with _array in class names for resolution.
      */
-    private boolean suppressBrackets = true;
+    private final boolean suppressBrackets;
 
     /**
      * String to use as a separator between package name and class name for resolution.
      */
-    private String packageSeparator = "/";
+    private final String packageSeparator;
 
     private String name = getClass().getSimpleName();
 
     private boolean activateCaching = true;
 
-    private Map<String, T> cache = new HashMap<String, T>();
+    private final Map<String, T> cache = new HashMap<>();
 
     @Inject
     private Statistics statistics;

@@ -44,14 +44,14 @@ public class ListFtpCommandHandler extends ListCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ListFtpCommandHandler.class);
 
-    private CodeResourceCache codeResourceCache;
-
     private final static String[] MONTHS = {"Jan", "Feb", "Mar", "Apr", "May",
         "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     private final static String FILE_PREFIX = "-rw-r--r--   1 tangram tangram ";
 
     private final static String DIR_PREFIX = "drwxr-xr-x   1 tangram tangram ";
+
+    private final CodeResourceCache codeResourceCache;
 
 
     public ListFtpCommandHandler(CodeResourceCache codeResourceCache) {

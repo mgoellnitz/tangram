@@ -36,16 +36,17 @@ public final class Utils {
 
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
+    private static String uriPrefix = null;
+
     public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
-    public static final DateFormat HTTP_HEADER_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+    public static final DateFormat HTTP_HEADER_DATE_FORMAT;
 
 
-    {
+    static {
+        HTTP_HEADER_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
         HTTP_HEADER_DATE_FORMAT.setTimeZone(GMT);
     }
-
-    private static String uriPrefix = null;
 
 
     /**

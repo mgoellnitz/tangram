@@ -65,18 +65,10 @@ public class TangramFtpServer extends AbstractFtpServer {
 
     private final Map<String, AbstractTrackingCommandHandler> commands = new HashMap<>();
 
-    private MutableBeanFactory beanFactory;
-
-    private CodeResourceCache codeResourceCache;
-
-
     /**
      * Create a new instance. Initialize the default command handlers and reply text ResourceBundle.
      */
     public TangramFtpServer(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache) {
-        this.beanFactory = beanFactory;
-        this.codeResourceCache = codeResourceCache;
-
         PwdFtpCommandHandler pwdCommandHandler = new PwdFtpCommandHandler();
 
         // Initialize the default CommandHandler mappings
@@ -103,7 +95,7 @@ public class TangramFtpServer extends AbstractFtpServer {
         commands.put(CommandNames.QUIT, new QuitCommandHandler());
         commands.put(CommandNames.RMD, new RmdCommandHandler());
         commands.put(CommandNames.RNFR, new RnfrFtpCommandHandler(codeResourceCache));
-        commands.put(CommandNames.RNTO, new RntoFtpCommandHandler(beanFactory, codeResourceCache));
+        commands.put(CommandNames.RNTO, new RntoFtpCommandHandler(beanFactory));
         commands.put(CommandNames.STAT, new StatCommandHandler());
         commands.put(CommandNames.STOR, new StorFtpCommandHandler(beanFactory, codeResourceCache));
         commands.put(CommandNames.STOU, new StouCommandHandler());
@@ -127,11 +119,11 @@ public class TangramFtpServer extends AbstractFtpServer {
 
 
     @Override
-    public void finalize() throws Throwable {
-        super.finalize();
+    protected void finalize() throws Throwable {
         for (String key : commands.keySet()) {
             LOG.info(key+": "+commands.get(key).numberOfInvocations());
         } // for
+        super.finalize();
     } // finalize()
 
 } // TangramFtpServer

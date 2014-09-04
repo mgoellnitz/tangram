@@ -64,7 +64,7 @@ public class CodeResourceCache implements BeanListener {
 
     private long lastResetTime;
 
-    private List<BeanListener> attachedListeners = new ArrayList<BeanListener>();
+    private final List<BeanListener> attachedListeners = new ArrayList<>();
 
     private Map<String, Map<String, CodeResource>> resourceCache;
 

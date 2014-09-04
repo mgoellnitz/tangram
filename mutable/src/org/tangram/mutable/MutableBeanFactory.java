@@ -30,25 +30,25 @@ public interface MutableBeanFactory extends BeanFactory {
     /**
      *  Returns the root class of all content classes handled by the implementing instance - may be null;
      */
-    public Class<? extends Content> getBaseClass();
+    Class<? extends Content> getBaseClass();
 
 
     /**
      * Starts a transaction which must subsequently be committed or rolled back.
      */
-    public void beginTransaction();
+    void beginTransaction();
 
 
     /**
      * Commits a transaction previously opened with beginTransaction()
      */
-    public void commitTransaction();
+    void commitTransaction();
 
 
     /**
      * Undo the changes initiated by all the commands issued after the last beginTransaction call.
      */
-    public void rollbackTransaction();
+    void rollbackTransaction();
 
 
     /**
@@ -99,7 +99,7 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * @return collection of content classes
      */
-    public Collection<Class<? extends Content>> getClasses();
+    Collection<Class<? extends Content>> getClasses();
 
 
     /**
@@ -108,7 +108,7 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * @return collection of content classes
      */
-    public Collection<Class<? extends Content>> getAllClasses();
+    Collection<Class<? extends Content>> getAllClasses();
 
 
     /**

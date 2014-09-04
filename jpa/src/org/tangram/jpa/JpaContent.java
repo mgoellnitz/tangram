@@ -24,16 +24,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class JpaContent implements Content {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JpaContent.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)

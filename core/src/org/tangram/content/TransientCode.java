@@ -32,13 +32,13 @@ public class TransientCode implements CodeResource, Serializable {
 
     private static final long serialVersionUID = -4573161886986101943L;
 
-    private String annotation;
+    private final String annotation;
 
-    private String mimeType;
+    private final String mimeType;
 
-    private String id;
+    private final String id;
 
-    private String codeText;
+    private final String codeText;
 
 
     public TransientCode(String annotation, String mimeType, String id, String codeText) {

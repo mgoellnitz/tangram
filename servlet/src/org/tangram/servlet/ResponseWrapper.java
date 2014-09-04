@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,9 +32,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
-    String contentType;
+    private String contentType;
 
-    Map<String, String> headers = new HashMap<String, String>();
+    private final Map<String, String> headers = new HashMap<>();
 
 
     public ResponseWrapper(HttpServletResponse delegate) {

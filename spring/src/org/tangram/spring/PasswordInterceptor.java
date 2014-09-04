@@ -52,11 +52,11 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
     @Inject
     private LoginSupport loginSupport;
 
-    private Set<String> freeUrls = new HashSet<String>();
+    private Set<String> freeUrls = new HashSet<>();
 
-    private Set<String> allowedUsers = new HashSet<String>();
+    private Set<String> allowedUsers = new HashSet<>();
 
-    private Set<String> adminUsers = new HashSet<String>();
+    private Set<String> adminUsers = new HashSet<>();
 
 
     public Set<String> getFreeUrls() {
@@ -105,10 +105,8 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
 
             Principal principal = request.getUserPrincipal();
             if (liveSystem) {
-                if (principal!=null) {
-                    if (adminUsers.contains(principal.getName())) {
-                        request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
-                    } // if
+                if ((principal!=null)&&(adminUsers.contains(principal.getName()))) {
+                    request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                 } // if
             } else {
                 if (principal!=null) {

@@ -33,9 +33,9 @@ import org.tangram.monitor.Statistics;
 @Singleton
 public class SimpleStatistics implements Statistics {
 
-    private Map<String, Long> counter = new HashMap<String, Long>();
+    private final Map<String, Long> counter = new HashMap<>();
 
-    private Date startTime;
+    private final Date startTime;
 
 
     public SimpleStatistics() {

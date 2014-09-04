@@ -38,9 +38,9 @@ public class StorFtpCommandHandler extends StorCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(StorFtpCommandHandler.class);
 
-    private MutableBeanFactory beanFactory;
+    private final MutableBeanFactory beanFactory;
 
-    private CodeResourceCache codeResourceCache;
+    private final CodeResourceCache codeResourceCache;
 
 
     public StorFtpCommandHandler(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache) {
@@ -56,21 +56,19 @@ public class StorFtpCommandHandler extends StorCommandHandler {
         String dir = SessionHelper.getCwd(session);
         String filename = invocationRecord.getString(PATHNAME_KEY);
 
-        if (!filename.startsWith("//netbeans-timestampdiff")) {
-            if (dir.length()>0) {
-                dir = SessionHelper.getDirectoy(session);
-                String mimetype = CodeHelper.getMimetype(dir);
-                String annotation = CodeHelper.getAnnotation(filename);
-                CodeResource lookup = codeResourceCache.getTypeCache(mimetype).get(annotation);
-                // This hopefully is one really just one class efectively
-                final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
-                MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
-                beanFactory.beginTransaction();
-                code.setAnnotation(annotation);
-                code.setCode(new String(data, "UTF-8").toCharArray());
-                code.setMimeType(mimetype);
-                beanFactory.persist(code);
-            } // if
+        if ((!filename.startsWith("//netbeans-timestampdiff"))&&(dir.length()>0)) {
+            dir = SessionHelper.getDirectoy(session);
+            String mimetype = CodeHelper.getMimetype(dir);
+            String annotation = CodeHelper.getAnnotation(filename);
+            CodeResource lookup = codeResourceCache.getTypeCache(mimetype).get(annotation);
+            // This hopefully is one really just one class efectively
+            final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
+            MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
+            beanFactory.beginTransaction();
+            code.setAnnotation(annotation);
+            code.setCode(new String(data, "UTF-8").toCharArray());
+            code.setMimeType(mimetype);
+            beanFactory.persist(code);
         } // if
 
         if (LOG.isInfoEnabled()) {

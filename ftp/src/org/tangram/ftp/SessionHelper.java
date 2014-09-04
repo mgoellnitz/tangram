@@ -24,13 +24,16 @@ import org.mockftpserver.core.session.Session;
  * Constants to be used as keys for the session store of an ftp session and some static helper methods.
  *
  */
-public class SessionHelper {
+public final class SessionHelper {
 
     public static final String CURRENT_DIR = "tangram.working.dir";
 
     public static final String RENAME_ID = "tangram.id.to.rename";
 
     public static final String USER = "tangram.user.name";
+    
+    private SessionHelper() {
+    }
 
 
     /**

@@ -41,7 +41,7 @@ public class RnfrFtpCommandHandler extends RnfrCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RnfrFtpCommandHandler.class);
 
-    private CodeResourceCache codeResourceCache;
+    private final CodeResourceCache codeResourceCache;
 
 
     public RnfrFtpCommandHandler(CodeResourceCache cache) {

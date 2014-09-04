@@ -30,8 +30,6 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
@@ -48,9 +46,6 @@ import org.tangram.view.TargetDescriptor;
 @Singleton
 @LinkHandler
 public class CodeExporter {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CodeExporter.class);
-
 
     @Inject
     private LinkHandlerRegistry registry;

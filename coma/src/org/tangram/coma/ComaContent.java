@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,28 +9,27 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.coma;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.tangram.content.Content;
 
 public class ComaContent implements Content, Map<String, Object> {
 
-    private String id;
+    private final String id;
 
-    private String documentType;
+    private final String documentType;
 
-    private Map<String, Object> properties = new HashMap<String, Object>();
+    private final Map<String, Object> properties;
 
 
     public ComaContent(String id, String type, Map<String, Object> properties) {

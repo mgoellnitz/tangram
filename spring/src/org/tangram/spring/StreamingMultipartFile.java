@@ -29,11 +29,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class StreamingMultipartFile implements MultipartFile {
 
-    private FileItemStream item;
+    private final FileItemStream item;
 
-    private long size = -1;
+    private final long size = -1;
 
-    byte[] bytes;
+    private byte[] bytes;
 
 
     public StreamingMultipartFile(FileItemStream item) throws IOException {

@@ -41,7 +41,7 @@ public class RetrFtpCommandHandler extends RetrCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RetrFtpCommandHandler.class);
 
-    private CodeResourceCache codeResourceCache;
+    private final CodeResourceCache codeResourceCache;
 
 
     public RetrFtpCommandHandler(CodeResourceCache codeResourceCache) {

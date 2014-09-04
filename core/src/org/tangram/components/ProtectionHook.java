@@ -71,10 +71,8 @@ public class ProtectionHook implements ControllerHook {
             if (protections.size()>0) {
                 result = new HashMap<String, Protection>();
                 for (Protection prot : protections) {
-                    if (StringUtils.isNotBlank(prot.getProtectionKey())) {
-                        if (isProtectedBy(content, prot)) {
-                            result.put(prot.getProtectionKey(), prot);
-                        } // if
+                    if ((StringUtils.isNotBlank(prot.getProtectionKey()))&&(isProtectedBy(content, prot))) {
+                        result.put(prot.getProtectionKey(), prot);
                     } // if
                 } // for
             } // if
@@ -125,7 +123,7 @@ public class ProtectionHook implements ControllerHook {
 
     @Override
     public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+            HttpServletResponse response) throws Exception {
         Protection protection = null;
         String loginResult = null;
         if (descriptor.bean instanceof ProtectedContent) {

@@ -61,7 +61,7 @@ public interface PropertyConverter {
      * @param cls
      * @return true if cls is considered a blob representation
      */
-    public abstract boolean isBlobType(Class<?> cls);
+    boolean isBlobType(Class<?> cls);
 
 
     /**
@@ -70,7 +70,7 @@ public interface PropertyConverter {
      * @param o
      * @return blob's size
      */
-    public abstract long getBlobLength(Object o);
+    long getBlobLength(Object o);
 
 
     /**
@@ -79,7 +79,7 @@ public interface PropertyConverter {
      * @param cls
      * @return true if cls is considered a text representation
      */
-    public abstract boolean isTextType(Class<?> cls);
+    boolean isTextType(Class<?> cls);
 
 
     /**
@@ -88,6 +88,6 @@ public interface PropertyConverter {
      * @param octets bytes for the blob
      * @return object resembling the byte[]
      */
-    public abstract Object createBlob(byte[] octets);
+    Object createBlob(byte[] octets);
 
 } // PropertyConverter

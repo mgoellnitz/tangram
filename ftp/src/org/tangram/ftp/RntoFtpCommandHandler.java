@@ -24,7 +24,6 @@ import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RntoCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
@@ -41,14 +40,11 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RntoFtpCommandHandler.class);
 
-    private MutableBeanFactory beanFactory;
-
-    private CodeResourceCache codeResourceCache;
+    private final MutableBeanFactory beanFactory;
 
 
-    public RntoFtpCommandHandler(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache) {
+    public RntoFtpCommandHandler(MutableBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
-        this.codeResourceCache = codeResourceCache;
     }
 
 
