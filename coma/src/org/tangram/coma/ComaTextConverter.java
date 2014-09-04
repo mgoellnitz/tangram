@@ -27,42 +27,42 @@ import java.io.IOException;
  */
 public final class ComaTextConverter {
 
-    private static byte[] hexValues = new byte['g'];
+    private static final byte[] HEX_VALUES = new byte['g'];
 
-    static {
-        hexValues['0'] = 0;
-        hexValues['1'] = 1;
-        hexValues['2'] = 2;
-        hexValues['3'] = 3;
-        hexValues['4'] = 4;
-        hexValues['5'] = 5;
-        hexValues['6'] = 6;
-        hexValues['7'] = 7;
-        hexValues['8'] = 8;
-        hexValues['9'] = 9;
-        hexValues['A'] = 10;
-        hexValues['B'] = 11;
-        hexValues['C'] = 12;
-        hexValues['D'] = 13;
-        hexValues['E'] = 14;
-        hexValues['F'] = 15;
-        hexValues['a'] = 10;
-        hexValues['b'] = 11;
-        hexValues['c'] = 12;
-        hexValues['d'] = 13;
-        hexValues['e'] = 14;
-        hexValues['f'] = 15;
-    }
+    private final StringBuilder dataBuilder;
 
-    private StringBuilder dataBuilder;
+    private final StringBuilder textBuilder;
 
-    private StringBuilder textBuilder;
-
-    private StringBuilder resultBuilder;
+    private final StringBuilder resultBuilder;
 
     private int dataPosition;
 
     private int textPosition;
+
+    static {
+        HEX_VALUES['0'] = 0;
+        HEX_VALUES['1'] = 1;
+        HEX_VALUES['2'] = 2;
+        HEX_VALUES['3'] = 3;
+        HEX_VALUES['4'] = 4;
+        HEX_VALUES['5'] = 5;
+        HEX_VALUES['6'] = 6;
+        HEX_VALUES['7'] = 7;
+        HEX_VALUES['8'] = 8;
+        HEX_VALUES['9'] = 9;
+        HEX_VALUES['A'] = 10;
+        HEX_VALUES['B'] = 11;
+        HEX_VALUES['C'] = 12;
+        HEX_VALUES['D'] = 13;
+        HEX_VALUES['E'] = 14;
+        HEX_VALUES['F'] = 15;
+        HEX_VALUES['a'] = 10;
+        HEX_VALUES['b'] = 11;
+        HEX_VALUES['c'] = 12;
+        HEX_VALUES['d'] = 13;
+        HEX_VALUES['e'] = 14;
+        HEX_VALUES['f'] = 15;
+    }
 
 
     private ComaTextConverter(StringBuilder text, StringBuilder data) {
@@ -75,7 +75,7 @@ public final class ComaTextConverter {
 
 
     private int readHex(StringBuilder buf, int pos) throws IndexOutOfBoundsException {
-        return ((hexValues[buf.charAt(pos)]<<12)+(hexValues[buf.charAt(pos+1)]<<8)+(hexValues[buf.charAt(pos+2)]<<4)+hexValues[buf
+        return ((HEX_VALUES[buf.charAt(pos)]<<12)+(HEX_VALUES[buf.charAt(pos+1)]<<8)+(HEX_VALUES[buf.charAt(pos+2)]<<4)+HEX_VALUES[buf
                 .charAt(pos+3)]);
     } // readHex()
 
@@ -117,34 +117,38 @@ public final class ComaTextConverter {
         resultBuilder.append("<");
         resultBuilder.append(name);
         while (true) {
-            if (dataPosition>=dataBuilder.length())
+            if (dataPosition>=dataBuilder.length()) {
                 return;
+            } // if
             char flag = dataBuilder.charAt(dataPosition);
-            if (flag!='a')
+            if (flag!='a') {
                 break;
+            } // if
 
             dataPosition++ ;
             String attributeName = getStringFromData();
-            if (attributeName==null)
+            if (attributeName==null) {
                 return;
+            } // if
 
             String attributeValue = getStringFromData();
-            if (attributeValue==null)
+            if (attributeValue==null) {
                 return;
+            } // if
 
             boolean hasValue = (attributeValue.length()>0);
             if (hasValue) {
                 attributeValue = attributeValue.substring(0, attributeValue.length()-1);
             } // if
-            resultBuilder.append(" ");
+            resultBuilder.append(' ');
             resultBuilder.append(attributeName);
             if (hasValue) {
                 resultBuilder.append("=\"");
                 resultBuilder.append(attributeValue);
-                resultBuilder.append("\"");
+                resultBuilder.append('\"');
             } // if
         } // while - attribute loop
-        resultBuilder.append(">");
+        resultBuilder.append('>');
     } // issueElementStart()
 
 
@@ -153,7 +157,7 @@ public final class ComaTextConverter {
         if (name!=null) {
             resultBuilder.append("</");
             resultBuilder.append(name);
-            resultBuilder.append(">");
+            resultBuilder.append('>');
         } // if
     } // issueElementEnd()
 

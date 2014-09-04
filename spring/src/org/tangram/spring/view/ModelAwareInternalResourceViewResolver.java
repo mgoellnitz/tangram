@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.View;
@@ -41,8 +39,6 @@ import org.tangram.view.AbstractInternalResourceTemplateResolver;
  * does the real work.
  */
 public class ModelAwareInternalResourceViewResolver extends AbstractInternalResourceTemplateResolver<View> implements ServletContextAware, ModelAwareViewResolver {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ModelAwareInternalResourceViewResolver.class);
 
     private int order = Integer.MAX_VALUE;
 

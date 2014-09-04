@@ -35,15 +35,13 @@ public class BufferResponse implements HttpServletResponse {
     private static final Logger LOG = LoggerFactory.getLogger(BufferResponse.class);
 
 
-    int bufferSize = 256;
+    private int bufferSize = 256;
 
-    ByteArrayOutputStream out;
+    private ByteArrayOutputStream out;
 
     private ServletOutputStream stream;
 
     private PrintWriter writer;
-
-    private int size;
 
     private String contentType = "text/html";
 
@@ -107,7 +105,6 @@ public class BufferResponse implements HttpServletResponse {
         if (LOG.isDebugEnabled()) {
             LOG.debug("setContentLength("+len+")");
         }
-        size = len;
     }
 
 

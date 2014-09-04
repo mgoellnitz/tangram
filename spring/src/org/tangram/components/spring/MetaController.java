@@ -21,8 +21,6 @@ package org.tangram.components.spring;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
@@ -33,8 +31,6 @@ import org.tangram.view.ViewContextFactory;
 
 @Controller
 public class MetaController extends AbstractController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MetaController.class);
 
     @Inject
     protected ViewContextFactory viewContextFactory;

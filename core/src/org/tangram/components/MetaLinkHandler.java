@@ -83,20 +83,20 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Collection<ControllerHook> controllerHooks = new HashSet<ControllerHook>();
+    private final Collection<ControllerHook> controllerHooks = new HashSet<>();
 
     @Inject
     private PropertyConverter propertyConverter;
 
-    private final Map<String, LinkHandler> staticLinkHandlers = new HashMap<String, LinkHandler>();
+    private final Map<String, LinkHandler> staticLinkHandlers = new HashMap<>();
 
     private Map<String, LinkHandler> handlers;
 
-    private final Map<Pattern, Method> staticMethods = new HashMap<Pattern, Method>();
+    private final Map<Pattern, Method> staticMethods = new HashMap<>();
 
     private Map<Pattern, Method> methods;
 
-    private final Map<Pattern, Object> staticAtHandlers = new HashMap<Pattern, Object>();
+    private final Map<Pattern, Object> staticAtHandlers = new HashMap<>();
 
     private Map<Pattern, Object> atHandlers;
 
@@ -127,7 +127,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
 
     private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Matcher matcher, Method method, TargetDescriptor descriptor,
-                                        Object target) throws Throwable, IllegalAccessException {
+            Object target) throws Throwable, IllegalAccessException {
         TargetDescriptor result = null;
         if (LOG.isDebugEnabled()) {
             LOG.debug("callAction() "+method+"@"+target);
@@ -248,17 +248,15 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     if (!TargetDescriptor.class.equals(m.getReturnType())) {
                         linkAction = null;
                     } // if
-                    if (linkAction!=null) {
-                        if (StringUtils.isNotBlank(linkAction.value())) {
-                            Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
-                            } // if
-                            staticMethods.put(pathPattern, m);
-                            methods.put(pathPattern, m);
-                            staticAtHandlers.put(pathPattern, handler);
-                            atHandlers.put(pathPattern, handler);
+                    if ((linkAction!=null)&&(StringUtils.isNotBlank(linkAction.value()))) {
+                        Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
+                        if (LOG.isInfoEnabled()) {
+                            LOG.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
                         } // if
+                        staticMethods.put(pathPattern, m);
+                        methods.put(pathPattern, m);
+                        staticAtHandlers.put(pathPattern, handler);
+                        atHandlers.put(pathPattern, handler);
                     } // if
                 } // for
             } // if
@@ -268,11 +266,11 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     @Override
     public void reset() {
-        methods = new HashMap<Pattern, Method>();
+        methods = new HashMap<>();
         methods.putAll(staticMethods);
-        atHandlers = new HashMap<Pattern, Object>();
+        atHandlers = new HashMap<>();
         atHandlers.putAll(staticAtHandlers);
-        handlers = new HashMap<String, LinkHandler>();
+        handlers = new HashMap<>();
         handlers.putAll(staticLinkHandlers);
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
@@ -295,7 +293,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         LOG.debug("reset() "+clazz.getName()+" is not a LinkScheme");
                     } // if
                 } // if
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 // who cares
                 if (LOG.isErrorEnabled()) {
                     LOG.error("reset()", e);
