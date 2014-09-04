@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 import org.tangram.view.AbstractPropertyConverter;
+
 
 /**
  * Property converter dealing with special blob and text types of the Google App Engine.
@@ -44,10 +45,8 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
     @Override
     public long getBlobLength(Object o) {
         long result = 0;
-        if (o!=null) {
-            if (isBlobType(o.getClass())) {
-                result = ((Blob)o).getBytes().length;
-            } // if
+        if ((o!=null)&&(isBlobType(o.getClass()))) {
+            result = ((Blob) o).getBytes().length;
         } // if
         return result;
     } // getBlobLength()
@@ -68,10 +67,10 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
     @Override
     public String getEditString(Object o) {
         if (o instanceof Text) {
-            return StringEscapeUtils.escapeHtml(((Text)o).getValue());
+            return StringEscapeUtils.escapeHtml(((Text) o).getValue());
         } else {
             if (o instanceof char[]) {
-                return new String((char[])o);
+                return new String((char[]) o);
             } else {
                 return super.getEditString(o);
             } // if
@@ -81,7 +80,7 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
 
     /**
      * Only handle special GAE specific cases like Text and Blob.
-     * 
+     *
      * The rest is delegated to the super class implementation.
      */
     @Override

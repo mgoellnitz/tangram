@@ -40,7 +40,6 @@ public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplate
 
     private int order = Integer.MAX_VALUE;
 
-
     private ViewResolver delegate;
 
 
@@ -76,13 +75,11 @@ public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplate
         if (template!=null) {
             result = delegate.resolveViewName(template.getId(), locale);
             // Set default encoding to UTF-8 for any view
-            if (result!=null) {
-                if (result instanceof VelocityView) {
-                    VelocityView v = (VelocityView) result;
-                    v.addStaticAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, viewUtilities);
-                    v.setContentType(template.getMimeType()+";charset=UTF-8");
-                    v.setEncoding("UTF-8");
-                } // if
+            if ((result!=null)&&(result instanceof VelocityView)) {
+                VelocityView v = (VelocityView) result;
+                v.addStaticAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, viewUtilities);
+                v.setContentType(template.getMimeType()+";charset=UTF-8");
+                v.setEncoding("UTF-8");
             } // if
         } // if
         return result;
