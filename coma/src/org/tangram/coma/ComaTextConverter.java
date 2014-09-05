@@ -114,7 +114,7 @@ public final class ComaTextConverter {
             return;
         } // if
 
-        resultBuilder.append("<");
+        resultBuilder.append('<');
         resultBuilder.append(name);
         while (true) {
             if (dataPosition>=dataBuilder.length()) {

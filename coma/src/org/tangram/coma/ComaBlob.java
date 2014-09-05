@@ -31,7 +31,7 @@ public class ComaBlob implements MimedBlob {
 
     private final long len;
 
-    private byte[] bytes;
+    private final byte[] bytes;
 
 
     public ComaBlob(String contentId, String propertyName, String mimeType, long len, byte[] data) {
