@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import org.tangram.ebean.Code;
 import org.tangram.ebean.test.content.BaseClass;
@@ -85,7 +86,7 @@ public class EbeanContentTest extends BaseContentTest {
     @Test
     public void test0IsEnhanced() {
         Method[] methods = Code.class.getMethods();
-        testIsCodeRewrite(methods, "_ebean");
+        Assert.assertTrue("Classes not enhanced", checkMethodPrefixOccurs(methods, "_ebean"));
     } // test0IsEnhanced()
 
 } // EbeanContentTest

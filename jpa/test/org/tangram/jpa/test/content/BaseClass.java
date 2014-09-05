@@ -34,10 +34,10 @@ import org.tangram.mutable.test.content.BaseInterface;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class BaseClass extends JpaContent implements BaseInterface {
 
-    String title;
+    private String title;
 
     @OneToMany
-    List<BaseClass> peers;
+    private List<BaseClass> peers;
 
 
     public String getTitle() {

@@ -27,7 +27,7 @@ import org.tangram.link.Link;
 
 public class EditingHandlerTest {
 
-    private final String DUMMY_ID = "pling:plong";
+    private static final String DUMMY_ID = "pling:plong";
 
 
     @Test
@@ -50,7 +50,7 @@ public class EditingHandlerTest {
         EditingHandler handler = new EditingHandler();
 
         for (String a : EditingHandler.PARAMETER_ACTIONS) {
-            Link link = a.equals("edit") ? handler.createLink(null, null, c, null, a): handler.createLink(null, null, c, a, null);
+            Link link = "edit".equals(a) ? handler.createLink(null, null, c, null, a): handler.createLink(null, null, c, a, null);
             Assert.assertNotNull("generation of "+a+" action link failed", link);
             Assert.assertEquals("generation of "+a+" action link with strange result", "/"+a, link.getUrl());
         } // for

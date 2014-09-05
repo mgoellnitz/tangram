@@ -2,6 +2,7 @@ package org.tangram.nucleus.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -51,8 +52,7 @@ public class NucleusContentTest extends BaseContentTest {
 
     @Test
     public void test0IsEnhanced() {
-        System.out.println("test0IsEnhanced()");
-        testIsCodeRewrite(NucleusContent.class.getMethods(), "jdo");
+        Assert.assertTrue("Classes not enhanced", checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "jdo"));
     } // test1IsEnhanced()
 
 } // NucleusContentTest

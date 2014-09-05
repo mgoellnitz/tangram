@@ -32,7 +32,7 @@ import org.tangram.mutable.test.content.SubInterface;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class SubClass extends BaseClass implements SubInterface {
 
-    String subtitle;
+    private String subtitle;
 
 
     public String getSubtitle() {

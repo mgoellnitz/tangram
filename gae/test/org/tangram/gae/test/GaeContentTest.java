@@ -12,7 +12,6 @@ public class GaeContentTest {
         Method[] methods = PasswordProtection.class.getMethods();
         boolean flag = false;
         for (Method method : methods) {
-            System.out.println(""+method.getName());
             if (method.getName().startsWith("jdo")) {
                 flag = true;
             } // if

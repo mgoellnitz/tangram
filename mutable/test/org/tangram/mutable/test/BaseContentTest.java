@@ -38,15 +38,23 @@ import org.tangram.mutable.test.content.SubInterface;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class BaseContentTest {
 
-    protected void testIsCodeRewrite(Method[] methods, String prefix) {
+    /**
+     * Check if any of the method's names starts with a given prefix.
+     * 
+     * All byte-code transformers create such schematic methods.
+     * 
+     * @param methods
+     * @param prefix 
+     */
+    protected boolean checkMethodPrefixOccurs(Method[] methods, String prefix) {
         boolean flag = false;
         for (Method method : methods) {
             if (method.getName().startsWith(prefix)) {
                 flag = true;
             } // if
         } // for
-        Assert.assertTrue("Classes not enhanced - output unusable", flag);
-    } // testIsCodeRewrite()
+        return flag;
+    } // checkMethodPrefixOccurs()
 
 
     protected Map<String, Object> getBeansForContentCreate() {
@@ -73,17 +81,14 @@ public abstract class BaseContentTest {
 
     @Test
     public void test1CreateTestContent() throws Exception {
-        System.out.println("test1CreateTestContent()");
         Set<String> packages = new HashSet<String>();
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCreate());
         Assert.assertNotNull("need test dinistiq instance", dinistiq);
         MutableBeanFactory beanFactory = dinistiq.findTypedBean(MutableBeanFactory.class);
         Assert.assertNotNull("need factory for beans", beanFactory);
-        System.out.println("beanFactory: "+beanFactory);
         SubInterface beanA = createSubBean(beanFactory);
         Assert.assertNotNull("could not create bean", beanA);
-        System.out.println("beanA.getId(): "+beanA.getId());
         beanFactory.persist(beanA);
         beanFactory.commitTransaction();
         BaseInterface beanB = createBaseBean(beanFactory);
@@ -96,14 +101,12 @@ public abstract class BaseContentTest {
 
     @Test
     public void test2Components() throws Exception {
-        System.out.println("test2Components()");
         Set<String> packages = new HashSet<String>();
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
         Assert.assertNotNull("need test dinistiq instance", dinistiq);
         MutableBeanFactory beanFactory = dinistiq.findTypedBean(MutableBeanFactory.class);
         Assert.assertNotNull("need factory for beans", beanFactory);
-        System.out.println("beanFactory: "+beanFactory);
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals("we have prepared a fixed number of beans", 2, allBeans.size());
         List<SubInterface> subBeans = beanFactory.listBeans(SubInterface.class);

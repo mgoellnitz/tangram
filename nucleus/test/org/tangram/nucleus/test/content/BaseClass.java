@@ -30,10 +30,10 @@ import org.tangram.nucleus.NucleusContent;
 @PersistenceCapable
 public class BaseClass extends NucleusContent implements BaseInterface {
 
-    String title;
+    private String title;
 
     @Join
-    List<BaseClass> peers;
+    private List<BaseClass> peers;
 
 
     public String getTitle() {

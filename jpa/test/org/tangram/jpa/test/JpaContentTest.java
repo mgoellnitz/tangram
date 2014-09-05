@@ -33,7 +33,7 @@ import org.tangram.mutable.test.content.SubInterface;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JpaContentTest extends BaseContentTest {
 
-    {
+    static {
         org.apache.openjpa.enhance.InstrumentationFactory.setDynamicallyInstallAgent(false);
     }
 

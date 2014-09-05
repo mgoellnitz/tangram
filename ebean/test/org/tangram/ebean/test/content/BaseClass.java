@@ -29,9 +29,9 @@ import org.tangram.mutable.test.content.BaseInterface;
 @Entity
 public class BaseClass extends EContent implements BaseInterface {
 
-    String title;
+    private String title;
 
-    List<? extends BaseClass> peers;
+    private List<? extends BaseClass> peers;
 
 
     public String getTitle() {
