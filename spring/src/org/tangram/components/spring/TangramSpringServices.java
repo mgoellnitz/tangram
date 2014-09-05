@@ -100,7 +100,10 @@ public class TangramSpringServices implements ApplicationContextAware {
                 LOG.info("createWrapper() conversion service "+wrapper.getConversionService());
             } // if
         } catch (Exception e) {
-            // conversion services are still optional for some time
+            // This is not an error since conversion services are optional.
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("createWrapper()", e);
+            } // if
         } // try/catch
         return wrapper;
     } // createWrapper()

@@ -30,6 +30,8 @@ import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
@@ -39,6 +41,8 @@ import org.tangram.jdo.JdoContent;
 @PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
 public abstract class GaeContent extends JdoContent implements BeanFactoryAware {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GaeContent.class);
 
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     @PrimaryKey
@@ -62,7 +66,7 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
             Key key = KeyFactory.stringToKey(result);
             result = key.getKind()+":"+key.getId();
         } catch (Exception e) {
-            // never mind
+            LOG.error("postprocessPlainId()", e);
         } // try/catch
         return result;
     } // postprocessPlainId()

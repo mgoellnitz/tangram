@@ -239,6 +239,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * Be aware of different class loaders - like with groovy based classes.
      *
      * @param className fully qualified name of the class
+     * @return resulting class or null if not possible (should never happen...)
      */
     @SuppressWarnings("unchecked")
     protected Class<? extends Content> getClassForName(String className) {
@@ -252,7 +253,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             try {
                 result = (Class<? extends Content>) Class.forName(className);
             } catch (ClassNotFoundException cnfe) {
-                //
+                LOG.error("getClassForName()", cnfe);
             } // try/catch
         } // if
         return result;
@@ -531,7 +532,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             if (modelClasses==null) {
                 modelClasses = new ArrayList<Class<? extends Content>>();
                 for (Class<? extends Content> cls : getAllClasses()) {
-                    if (!((cls.getModifiers()&Modifier.ABSTRACT)==Modifier.ABSTRACT)) {
+                    if ((cls.getModifiers()&Modifier.ABSTRACT)==0) {
                         modelClasses.add(cls);
                     } // if
                 } // for

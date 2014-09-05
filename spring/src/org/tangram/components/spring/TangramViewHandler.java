@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -27,6 +27,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.servlet.ServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -37,8 +39,11 @@ import org.springframework.web.servlet.View;
 import org.tangram.spring.view.ModelAwareViewResolver;
 import org.tangram.spring.view.ViewHandler;
 
+
 @Named("viewHandler")
 public class TangramViewHandler implements ViewHandler, ApplicationContextAware {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TangramViewHandler.class);
 
     private ApplicationContext applicationContext;
 
@@ -77,7 +82,7 @@ public class TangramViewHandler implements ViewHandler, ApplicationContextAware 
             // Find all ViewResolvers in the ApplicationContext, including ancestor contexts.
             Map<String, ModelAwareViewResolver> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(context,
                     ModelAwareViewResolver.class, true, false);
-            if ( !matchingBeans.isEmpty()) {
+            if (!matchingBeans.isEmpty()) {
                 this.modelAwareViewResolvers = new ArrayList<ModelAwareViewResolver>(matchingBeans.values());
                 // We keep ViewResolvers in sorted order.
                 OrderComparator.sort(this.modelAwareViewResolvers);
@@ -86,8 +91,11 @@ public class TangramViewHandler implements ViewHandler, ApplicationContextAware 
             try {
                 ModelAwareViewResolver vr = context.getBean(DispatcherServlet.VIEW_RESOLVER_BEAN_NAME, ModelAwareViewResolver.class);
                 this.modelAwareViewResolvers = Collections.singletonList(vr);
-            } catch (NoSuchBeanDefinitionException ex) {
+            } catch (NoSuchBeanDefinitionException e) {
                 // Ignore, we'll add a default ViewResolver later.
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("initViewResolvers()", e);
+                } // if
             } // try/catch
         } // if
     } // initViewResolvers()
