@@ -230,38 +230,82 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     } // handleResultDescriptor()
 
 
-    @Override
-    public void registerLinkHandler(Object handler) {
+    /**
+     * Register a potential at handler.
+     *
+     * @param handlerClass
+     * @param handler
+     * @param immutable true if called by static java classes, false for classes from repository
+     * @throws SecurityException
+     */
+    private void registerAtHandler(Class<? extends Object> handlerClass, Object handler, boolean immutable) throws SecurityException {
+        if (handlerClass.getAnnotation(org.tangram.annotate.LinkHandler.class)!=null) {
+            for (Method m : handlerClass.getMethods()) {
+                LinkAction linkAction = m.getAnnotation(LinkAction.class);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("registerLinkHandler("+handlerClass.getName()+") linkAction="+linkAction);
+                    LOG.debug("registerLinkHandler() "+m.getName()+" :"+m.getReturnType());
+                } // if
+                if (!TargetDescriptor.class.equals(m.getReturnType())) {
+                    linkAction = null;
+                } // if
+                if ((linkAction!=null)&&(StringUtils.isNotBlank(linkAction.value()))) {
+                    Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
+                    } // if
+                    methods.put(pathPattern, m);
+                    atHandlers.put(pathPattern, handler);
+                    if (immutable) {
+                        staticMethods.put(pathPattern, m);
+                        staticAtHandlers.put(pathPattern, handler);
+                    } // if
+                } // if
+            } // if
+        } // if
+    } // registerAtHandler()
+
+
+    private void registerInterfaceHandler(LinkHandler handler, boolean immutable) {
+        handlers.put(handler.getClass().getName(), handler);
+        if (immutable) {
+            staticLinkHandlers.put(handler.getClass().getName(), handler);
+        } // if
+    } // registerInterfaceHandler()
+
+
+    private void registerLinkHandler(Object handler, boolean immutable) {
+        if (handler instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) handler).setBeanFactory(beanFactory);
+        } // if
         if (handler instanceof LinkHandler) {
+            registerInterfaceHandler(null, immutable);
             LinkHandler linkHandler = (LinkHandler) handler;
             staticLinkHandlers.put(handler.getClass().getName(), linkHandler);
             handlers.put(handler.getClass().getName(), linkHandler);
         } else {
             Class<? extends Object> handlerClass = handler.getClass();
-            if (handlerClass.getAnnotation(org.tangram.annotate.LinkHandler.class)!=null) {
-                for (Method m : handlerClass.getMethods()) {
-                    LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("registerLinkHandler("+handlerClass.getName()+") linkAction="+linkAction);
-                        LOG.debug("registerLinkHandler() "+m.getName()+" :"+m.getReturnType());
-                    } // if
-                    if (!TargetDescriptor.class.equals(m.getReturnType())) {
-                        linkAction = null;
-                    } // if
-                    if ((linkAction!=null)&&(StringUtils.isNotBlank(linkAction.value()))) {
-                        Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("registerLinkHandler() registering "+pathPattern+" for "+m.getName()+"@"+handler);
-                        } // if
-                        staticMethods.put(pathPattern, m);
-                        methods.put(pathPattern, m);
-                        staticAtHandlers.put(pathPattern, handler);
-                        atHandlers.put(pathPattern, handler);
-                    } // if
-                } // for
-            } // if
+            registerAtHandler(handlerClass, handler, immutable);
         } // if
     } // registerLinkHandler()
+
+
+    @Override
+    public void registerLinkHandler(Object handler) {
+        registerLinkHandler(handler, true);
+    } // registerLinkHandler()
+
+
+    private <T extends Object> T createInstance(Class<T> clazz) throws InstantiationException, IllegalAccessException {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("createInstance() "+clazz.getName()+" is marked @LinkHandler");
+        } // if
+        T instance = clazz.newInstance();
+        if (LOG.isInfoEnabled()) {
+            LOG.info("createInstance() "+clazz.getName()+" instanciated");
+        } // if
+        return instance;
+    } // createInstance()
 
 
     @Override
@@ -272,32 +316,18 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         atHandlers.putAll(staticAtHandlers);
         handlers = new HashMap<>();
         handlers.putAll(staticLinkHandlers);
+        for (Map.Entry<String, Class<Object>> entry : classRepository.getAnnotated(org.tangram.annotate.LinkHandler.class).entrySet()) {
+            try {
+                registerLinkHandler(createInstance(entry.getValue()), false);
+            } catch (Exception e) {
+                LOG.error("reset()", e);
+            } // try/catch
+        } // for
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
-                String annotation = entry.getKey();
-                Class<LinkHandler> clazz = entry.getValue();
-                if (LinkHandler.class.isAssignableFrom(clazz)) {
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("reset() "+clazz.getName()+" is a LinkScheme");
-                    } // if
-                    LinkHandler linkHandler = clazz.newInstance();
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("reset() "+clazz.getName()+" instanciated");
-                    } // if
-                    if (linkHandler instanceof BeanFactoryAware) {
-                        ((BeanFactoryAware) linkHandler).setBeanFactory(beanFactory);
-                    } // if
-                    handlers.put(annotation, linkHandler);
-                } else {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("reset() "+clazz.getName()+" is not a LinkScheme");
-                    } // if
-                } // if
+                registerLinkHandler(createInstance(entry.getValue()), false);
             } catch (Exception e) {
-                // who cares
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("reset()", e);
-                } // if
+                LOG.error("reset()", e);
             } // try/catch
         } // for
     } // reset()

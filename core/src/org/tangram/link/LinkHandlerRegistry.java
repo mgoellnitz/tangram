@@ -27,11 +27,15 @@ package org.tangram.link;
 public interface LinkHandlerRegistry {
 
     /**
+     * Register a statically implemented link handler instance with the base system.
+     * 
      * Handlers to be registered need not implement the LinkHandler interface but might be annotated as
      * being a LinkHandler.
      *
      * In the later case some @LinkAction at some methods must be present for the handler to
      * be in effect.
+     * 
+     * Do not use this call when implementing handler in the repository. These get detected automatically.
      *
      * @param handler instance implementing the link handler interfaces or with the link handler annotation
      */
