@@ -44,7 +44,7 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
 
 
     public Set<Content> getChildrenWithType(String parentId, String type) {
-        Set<Content> result = new HashSet<Content>();
+        Set<Content> result = new HashSet<>();
         for (String id : getChildrenWithTypeIds(parentId, type)) {
             result.add(getBean(id));
         } // for
@@ -60,7 +60,7 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
             LOG.info("getChildren() "+startFolderId);
         } // if
         Set<String> resultIds = getChildrenIds(startFolderId, pattern);
-        Set<Content> results = new HashSet<Content>();
+        Set<Content> results = new HashSet<>();
         for (String id : resultIds) {
             results.add(getBean(id));
         } // for

@@ -19,6 +19,7 @@
 package org.tangram.components.coma;
 
 import java.io.IOException;
+import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,9 +51,8 @@ public class ComaHandler extends AbstractRenderingBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 
-    // @Autowired(required = false)
     @Inject
-    private ComaBeanPopulator populator;
+    private Collection<ComaBeanPopulator> populators;
 
     @Inject
     private LinkHandlerRegistry linkHandlerRegistry;
@@ -60,7 +60,7 @@ public class ComaHandler extends AbstractRenderingBase {
 
     @LinkAction("/content/(.*)")
     public TargetDescriptor render(@LinkPart(1) String id, @ActionParameter(value = "view") String view, HttpServletRequest request,
-                                   HttpServletResponse response) {
+            HttpServletResponse response) {
         if (LOG.isInfoEnabled()) {
             LOG.info("render() id="+id);
             LOG.info("render() view="+view);
@@ -77,7 +77,8 @@ public class ComaHandler extends AbstractRenderingBase {
                 return new TargetDescriptor(ioe, null, null);
             } // try/catch
         } // if
-        if (populator!=null) {
+
+        for (ComaBeanPopulator populator : populators) {
             populator.populate(content);
         } // if
         return new TargetDescriptor(content, view, null);
@@ -86,7 +87,7 @@ public class ComaHandler extends AbstractRenderingBase {
 
     @LinkAction("/contentblob/(.*)/(.*)/(.*)")
     public TargetDescriptor renderBlob(@LinkPart(1) String id, @LinkPart(2) String property, @LinkPart(3) String propertyId,
-                                       @ActionParameter("view") String view, HttpServletRequest request, HttpServletResponse response) {
+            @ActionParameter("view") String view, HttpServletRequest request, HttpServletResponse response) {
         if (LOG.isInfoEnabled()) {
             LOG.info("render() id="+id);
             LOG.info("render() property="+id);
@@ -104,7 +105,7 @@ public class ComaHandler extends AbstractRenderingBase {
                 return new TargetDescriptor(ioe, null, null);
             } // try/catch
         } // if
-        if (populator!=null) {
+        for (ComaBeanPopulator populator : populators) {
             populator.populate(content);
         } // if
 
