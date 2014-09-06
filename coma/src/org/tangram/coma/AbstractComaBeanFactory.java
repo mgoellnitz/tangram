@@ -47,7 +47,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     /**
      * desribe which type are derived from which others - via documenttype definitions
      */
-    private Map<String, String> parents = new HashMap<String, String>();
+    private Map<String, String> parents = new HashMap<>();
 
     private Connection dbConnection;
 
@@ -59,7 +59,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
     private String dbPassword;
 
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
 
     public Map<String, String> getParents() {
@@ -150,7 +150,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public List<Content> listBeansOfExactClass(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
-        List<Content> result = new ArrayList<Content>();
+        List<Content> result = new ArrayList<>();
         String typeName = cls.getSimpleName();
         if (parents.keySet().contains(typeName)) {
             for (String id : listIds(typeName, optionalQuery, orderProperty, ascending)) {
@@ -171,7 +171,6 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     /**
      * supporting methods for implementing CM style access to content *
      */
-
     /**
      * Create a transient blob object from content instance.
      *
@@ -200,127 +199,130 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             // it's most likely a folder
             return properties;
         } // if
-        String query = null;
-        try {
-            query = "SELECT * FROM "+type+" WHERE id_ = "+id+" ORDER BY version_ DESC";
-            Statement s = dbConnection.createStatement();
-            ResultSet resultSet = s.executeQuery(query);
-            if (resultSet.next()) {
-                int contentId = resultSet.getInt("id_");
-                int version = resultSet.getInt("version_");
+        String query = "SELECT * FROM "+type+" WHERE id_ = "+id+" ORDER BY version_ DESC";
+        try (Statement baseStatement = dbConnection.createStatement(); ResultSet baseSet = baseStatement.executeQuery(query)) {
+            if (baseSet.next()) {
+                int contentId = baseSet.getInt("id_");
+                int version = baseSet.getInt("version_");
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("getProperties() "+contentId+"/"+version+": "+type);
                 } // if
 
-                ResultSetMetaData metaData = resultSet.getMetaData();
+                ResultSetMetaData metaData = baseSet.getMetaData();
                 for (int i = 1; i<=metaData.getColumnCount(); i++) {
                     String columnName = metaData.getColumnName(i);
-                    // if ( !columnName.endsWith("_")) {
-                    Object value = resultSet.getObject(i);
+                    Object value = baseSet.getObject(i);
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("getProperties() property "+columnName+" = "+value);
                     } // if
                     properties.put(columnName, value);
-                    // } else {
-                    // if (LOG.isDebugEnabled()) {
-                    // LOG.debug("getProperties() implicit property "+columnName);
-                    // } // if
-                    // } // if
                 } // for
 
                 // select links
-                s = dbConnection.createStatement();
                 query = "SELECT * FROM LinkLists WHERE sourcedocument = "+id+" AND sourceversion = "+version
                         +" ORDER BY propertyname ASC, linkindex ASC";
-                resultSet = s.executeQuery(query);
-                Map<String, List<String>> linkLists = new HashMap<String, List<String>>();
-                while (resultSet.next()) {
-                    String propertyName = resultSet.getString("propertyname");
-                    String targetId = resultSet.getString("targetdocument");
-                    int linkIndex = resultSet.getInt("linkindex");
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getProperties() "+propertyName+"["+linkIndex+"] "+targetId);
-                    } // if
-                    List<String> ids = linkLists.get(propertyName);
-                    if (ids==null) {
-                        ids = new ArrayList<String>();
-                        linkLists.put(propertyName, ids);
-                    } // if
-                    ids.add(linkIndex, targetId);
-                } // while
+                Map<String, List<String>> linkLists = new HashMap<>();
+                try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        String propertyName = resultSet.getString("propertyname");
+                        String targetId = resultSet.getString("targetdocument");
+                        int linkIndex = resultSet.getInt("linkindex");
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("getProperties() "+propertyName+"["+linkIndex+"] "+targetId);
+                        } // if
+                        List<String> ids = linkLists.get(propertyName);
+                        if (ids==null) {
+                            ids = new ArrayList<String>();
+                            linkLists.put(propertyName, ids);
+                        } // if
+                        ids.add(linkIndex, targetId);
+                    } // while
+                } catch (SQLException se) {
+                    LOG.error("getProperties() "+query, se);
+                } // try/catch
                 for (Entry<String, List<String>> entry : linkLists.entrySet()) {
                     properties.put(entry.getKey(), new LazyContentList(factory, entry.getValue()));
                 } // for
 
                 // select blobs
-                s = dbConnection.createStatement();
                 query = "SELECT * FROM Blobs WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
-                resultSet = s.executeQuery(query);
-                while (resultSet.next()) {
-                    String propertyName = resultSet.getString("propertyname");
-                    int blobId = resultSet.getInt("target");
+                try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        String propertyName = resultSet.getString("propertyname");
+                        int blobId = resultSet.getInt("target");
 
-                    Statement st = dbConnection.createStatement();
-                    query = "SELECT * FROM BlobData WHERE id = "+blobId;
-                    ResultSet blobSet = st.executeQuery(query);
-                    if (blobSet.next()) {
-                        String mimeType = blobSet.getString("mimetype");
-                        byte[] data = blobSet.getBytes("data");
-                        long len = blobSet.getLong("len");
-                        properties.put(propertyName, createBlob(id, propertyName, mimeType, len, data));
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("getProperties() "+propertyName+" blob bytes "+data.length+" ("+len+")");
-                        } // if
-                    } // if
-                } // while
+                        query = "SELECT * FROM BlobData WHERE id = "+blobId;
+                        try (Statement st = dbConnection.createStatement(); ResultSet blobSet = st.executeQuery(query)) {
+                            if (blobSet.next()) {
+                                String mimeType = blobSet.getString("mimetype");
+                                byte[] data = blobSet.getBytes("data");
+                                long len = blobSet.getLong("len");
+                                properties.put(propertyName, createBlob(id, propertyName, mimeType, len, data));
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("getProperties() "+propertyName+" blob bytes "+data.length+" ("+len+")");
+                                } // if
+                            } // if
+                        } catch (SQLException se) {
+                            LOG.error("getProperties() "+query, se);
+                        } // try/catch
+                    } // while
+                } catch (SQLException se) {
+                    LOG.error("getProperties() "+query, se);
+                } // try/catch
 
                 // select xml
-                s = dbConnection.createStatement();
                 query = "SELECT * FROM Texts WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
-                resultSet = s.executeQuery(query);
-                while (resultSet.next()) {
-                    String propertyName = resultSet.getString("propertyname");
-                    int target = resultSet.getInt("target");
-                    // int segment = resultSet.getInt("segment");
+                try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
+                    while (resultSet.next()) {
+                        String propertyName = resultSet.getString("propertyname");
+                        int target = resultSet.getInt("target");
+                        // int segment = resultSet.getInt("segment");
 
-                    Statement st = dbConnection.createStatement();
-                    query = "SELECT * FROM SgmlText WHERE id = "+target;
-                    ResultSet textSet = st.executeQuery(query);
-                    StringBuilder text = new StringBuilder(256);
-                    while (textSet.next()) {
-                        String xmlText = textSet.getString("text");
-                        text.append(xmlText);
+                        StringBuilder text = new StringBuilder(256);
+                        query = "SELECT * FROM SgmlText WHERE id = "+target;
+                        try (Statement st = dbConnection.createStatement(); ResultSet textSet = st.executeQuery(query)) {
+                            while (textSet.next()) {
+                                String xmlText = textSet.getString("text");
+                                text.append(xmlText);
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("getBean() "+propertyName+" "+textSet.getInt("id")+" "+textSet.getInt("segmentno")+" "+xmlText);
+                                } // if
+                            } // if
+                        } catch (SQLException se) {
+                            LOG.error("getProperties() "+query, se);
+                        } // try/catch
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("getBean() "+propertyName+" "+textSet.getInt("id")+" "+textSet.getInt("segmentno")+" "+xmlText);
+                            LOG.debug("getProperties() "+propertyName+" text="+text.toString());
                         } // if
-                    } // if
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getProperties() "+propertyName+" text="+text.toString());
-                    } // if
 
-                    Statement sd = dbConnection.createStatement();
-                    query = "SELECT * FROM SgmlData WHERE id = "+target;
-                    ResultSet dataSet = sd.executeQuery(query);
-                    StringBuilder data = new StringBuilder(256);
-                    while (dataSet.next()) {
-                        String xmlData = dataSet.getString("data");
-                        data.append(xmlData);
+                        query = "SELECT * FROM SgmlData WHERE id = "+target;
+                        StringBuilder data = new StringBuilder(256);
+                        try (Statement sd = dbConnection.createStatement(); ResultSet dataSet = sd.executeQuery(query)) {
+                            while (dataSet.next()) {
+                                String xmlData = dataSet.getString("data");
+                                data.append(xmlData);
+                                if (LOG.isDebugEnabled()) {
+                                    LOG.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "+dataSet.getInt("segmentno")+" "
+                                            +xmlData);
+                                } // if
+                            } // if
+                        } catch (SQLException se) {
+                            LOG.error("getProperties() "+query, se);
+                        } // try/catch
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("getProperties() "+propertyName+" "+dataSet.getInt("id")+" "+dataSet.getInt("segmentno")+" "
-                                    +xmlData);
+                            LOG.debug("getProperties() "+propertyName+" data="+data.toString());
                         } // if
-                    } // if
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getProperties() "+propertyName+" data="+data.toString());
-                    } // if
 
-                    try {
-                        properties.put(propertyName, ComaTextConverter.convert(text, data));
-                    } catch (Exception e) {
-                        LOG.error("getProperties() ignoring richtext", e);
-                        properties.put(propertyName, text.toString());
-                    } // try/catch
-                } // while
+                        try {
+                            properties.put(propertyName, ComaTextConverter.convert(text, data));
+                        } catch (Exception e) {
+                            LOG.error("getProperties() ignoring richtext", e);
+                            properties.put(propertyName, text.toString());
+                        } // try/catch
+                    } // while
+                } catch (SQLException se) {
+                    LOG.error("getProperties() "+query, se);
+                } // try/catch
             } // if
         } catch (SQLException se) {
             LOG.error("getProperties() "+query, se);
@@ -331,10 +333,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
     public String getType(String id) {
         String type = null;
-        try {
-            Statement s = dbConnection.createStatement();
-            String query = "SELECT * FROM Resources WHERE id_ = '"+id+"'";
-            ResultSet resultSet = s.executeQuery(query);
+        String query = "SELECT * FROM Resources WHERE id_ = '"+id+"'";
+        try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             if (resultSet.next()) {
                 type = resultSet.getString("documenttype_");
                 if (LOG.isDebugEnabled()) {
@@ -373,23 +373,20 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     public Set<String> listIds(String typeName, String optionalQuery, String orderProperty, Boolean ascending) {
-        Set<String> ids = new HashSet<String>();
-        String query = null;
-        try {
-            query = "SELECT id_ FROM Resources WHERE documenttype_ = '"+typeName+"' ";
-            if (optionalQuery!=null) {
-                query += optionalQuery;
+        Set<String> ids = new HashSet<>();
+        String query = "SELECT id_ FROM Resources WHERE documenttype_ = '"+typeName+"' ";
+        if (optionalQuery!=null) {
+            query += optionalQuery;
+        } // if
+        if (orderProperty!=null) {
+            String asc = "ASC";
+            if (ascending!=null) {
+                asc = ascending ? "ASC" : "DESC";
             } // if
-            if (orderProperty!=null) {
-                String asc = "ASC";
-                if (ascending!=null) {
-                    asc = ascending ? "ASC" : "DESC";
-                } // if
-                String order = orderProperty+" "+asc;
-                query += " ORDER BY "+order;
-            } // if
-            Statement s = dbConnection.createStatement();
-            ResultSet resultSet = s.executeQuery(query);
+            String order = orderProperty+" "+asc;
+            query += " ORDER BY "+order;
+        } // if
+        try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             while (resultSet.next()) {
                 if (LOG.isInfoEnabled()) {
                     int contentId = resultSet.getInt("id_");
@@ -407,23 +404,19 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     public String getChildId(String name, String parentId) {
-        String query = null;
-        try {
-            query = "SELECT * FROM Resources WHERE folderid_ = "+parentId+" AND name_ = '"+name+"'";
-            Statement s = dbConnection.createStatement();
-            ResultSet resultSet = s.executeQuery(query);
-            String id = null;
+        String id = null;
+        String query = "SELECT * FROM Resources WHERE folderid_ = "+parentId+" AND name_ = '"+name+"'";
+        try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             if (resultSet.next()) {
                 id = ""+resultSet.getInt("id_");
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("getChildId() "+parentId+"/"+name+": "+id);
                 } // if
             } // if
-            return id;
         } catch (SQLException se) {
             LOG.error("getChildId() "+query, se);
         } // try/catch
-        return null;
+        return id;
     } // getChildId()
 
 
@@ -435,18 +428,14 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         if (pattern!=null) {
             p = Pattern.compile(pattern);
         } // if
-        Set<String> result = new HashSet<String>();
-        String query = null;
-        try {
-            Statement s = dbConnection.createStatement();
-            query = "SELECT * FROM Resources WHERE folderid_ = "+parentId;
-            if (type!=null) {
-                query += " AND documenttype_ = '"+type+"'";
-            } // if
-            ResultSet resultSet = s.executeQuery(query);
-            String id = null;
+        Set<String> result = new HashSet<>();
+        String query = "SELECT * FROM Resources WHERE folderid_ = "+parentId;
+        if (type!=null) {
+            query += " AND documenttype_ = '"+type+"'";
+        } // if
+        try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             while (resultSet.next()) {
-                id = ""+resultSet.getInt("id_");
+                String id = ""+resultSet.getInt("id_");
                 String name = resultSet.getString("name_");
                 if (LOG.isInfoEnabled()) {
                     LOG.info("getChildrenIds() "+parentId+"/"+name+": "+id);
@@ -489,15 +478,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         if (LOG.isInfoEnabled()) {
             LOG.info("getReferrerIds() parentId="+targetId+" type="+type+" property="+property);
         } // if
-        Set<String> result = new HashSet<String>();
-        String query = null;
-        try {
-            query = "SELECT * FROM LinkLists WHERE targetdocument = "+targetId;
-            if (property!=null) {
-                query += " AND propertyname = '"+property+"'";
-            } // if
-            Statement s = dbConnection.createStatement();
-            ResultSet resultSet = s.executeQuery(query);
+        Set<String> result = new HashSet<>();
+        String query = "SELECT * FROM LinkLists WHERE targetdocument = "+targetId;
+        if (property!=null) {
+            query += " AND propertyname = '"+property+"'";
+        } // if
+        try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             while (resultSet.next()) {
                 String sourceid = ""+resultSet.getInt("sourcedocument");
                 String sourceversion = ""+resultSet.getInt("sourceversion");

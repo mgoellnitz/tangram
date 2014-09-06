@@ -63,8 +63,10 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      // groupId 'tangram'
-      // artifactId 'gradle-plugin'
+      if (gradle.gradleVersion != '1.6') {
+        groupId 'tangram'
+        artifactId 'gradle-plugin'
+      }
       version '1.0-SNAPSHOT'
       from components.java
       artifact sourcesJar
