@@ -139,4 +139,10 @@ public class ComaContent implements Content, Map<String, Object> {
         return getId().compareTo(c.getId());
     } // compareTo()
 
+
+    @Override
+    public String toString() {
+        return getId()+" :"+getDocumentType();
+    } // toString()
+
 } // ComaContent

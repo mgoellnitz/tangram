@@ -18,6 +18,7 @@
  */
 package org.tangram.view.jsp;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
 import javax.servlet.ServletContext;
@@ -93,11 +94,11 @@ public class IncludeTag implements Tag, Serializable {
         try {
             req.setAttribute(Constants.THIS, bean);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("render() bean="+bean.getClass().getName()+" #"+view);
+                LOG.debug("render() bean="+bean+" :"+bean.getClass().getSimpleName()+" #"+view);
             } // if
             ((ViewUtilities)(context.getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES))).render(writer, bean, view, req, resp);
-        } catch (Exception e) {
-            LOG.error("render() bean="+bean.getClass().getName()+" #"+view, e);
+        } catch (IOException e) {
+            LOG.error("render() bean="+bean+" :"+bean.getClass().getSimpleName()+" #"+view, e);
         } // try/catch
         req.setAttribute(Constants.THIS, oldSelf);
     } // render()
