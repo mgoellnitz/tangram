@@ -40,6 +40,9 @@ public class TangramSpringServices implements ApplicationContextAware {
 
     private static ConversionService conversionService = null;
 
+    private static class ConversionServiceHolder {
+        public static final ConversionService INSTANCE = getBeanFromContext(ConversionService.class);
+    }
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
@@ -76,10 +79,7 @@ public class TangramSpringServices implements ApplicationContextAware {
      * this more or less is an implementation of @Autowired(required=false).
      */
     public static ConversionService getConversionService() {
-        if (conversionService==null) {
-            conversionService = getBeanFromContext(ConversionService.class);
-        } // if
-        return conversionService;
+        return ConversionServiceHolder.INSTANCE;
     } // getConversionService()
 
 
