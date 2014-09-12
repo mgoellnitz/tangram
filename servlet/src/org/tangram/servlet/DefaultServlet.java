@@ -62,6 +62,8 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
     @Inject
     private MetaLinkHandler metaLinkHandler;
 
+    private int prefixLength;
+
     /**
      * URL part pattern to match ID and VIEW based calls
      */
@@ -96,7 +98,7 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String uri = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
+        String uri = request.getRequestURI().substring(prefixLength);
         String view = null;
         String id = null;
         if (LOG.isInfoEnabled()) {
@@ -144,5 +146,11 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
             viewUtilities.render(null, context.getModel(), context.getViewName());
         } // try/catch
     } // doGet()
+
+
+    @Override
+    public void init() throws ServletException {
+        prefixLength = Utils.getUriPrefix(getServletContext()).length();
+    } // init()
 
 } // DefaultServlet

@@ -36,8 +36,6 @@ public final class Utils {
 
     private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
-    private static String uriPrefix = null;
-
     public static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
     public static final DateFormat HTTP_HEADER_DATE_FORMAT;
@@ -101,20 +99,16 @@ public final class Utils {
 
 
     public static String getUriPrefix(ServletContext context) {
-        if (uriPrefix==null) {
-            String contextPath = context.getContextPath();
-            uriPrefix = (contextPath.length()==1) ? "" : contextPath;
-        } // if
-        return uriPrefix;
+        String contextPath = context.getContextPath();
+        contextPath = (contextPath.length()==1) ? "" : contextPath;
+        return contextPath;
     } // getUriPrefix()
 
 
     public static String getUriPrefix(HttpServletRequest request) {
-        if (uriPrefix==null) {
-            String contextPath = request.getContextPath();
-            uriPrefix = (contextPath.length()==1) ? "" : contextPath;
-        } // if
-        return uriPrefix;
+        String contextPath = request.getContextPath();
+        contextPath = (contextPath.length()==1) ? "" : contextPath;
+        return contextPath;
     } // getUriPrefix()
 
 
