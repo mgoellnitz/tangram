@@ -20,7 +20,6 @@ package org.tangram.link;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -154,21 +153,6 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
             } // if
         } // for
         throw new RuntimeException("Cannot create link for "+bean+" in action "+action+" for view "+view);
-    } // createLink()
-
-
-    /*
-     * TODO: Perhaps move to MetaLinkHandler
-     */
-    @Override
-    public Link createLink(Collection<? extends LinkFactory> factories, HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
-        for (LinkFactory factory : factories) {
-            Link result = factory.createLink(request, response, bean, action, view);
-            if (result!=null) {
-                return result;
-            } // if
-        } // for
-        return null;
     } // createLink()
 
 

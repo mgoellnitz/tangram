@@ -19,7 +19,6 @@
 package org.tangram.link;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -53,22 +52,6 @@ public interface LinkFactoryAggregator {
      * @return link instance for the given parameters
      */
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
-
-
-    /**
-     * Creates a link for the given parameters using the given set of link handler instances.
-     *
-     * Ignores the internally registered set of implementations.
-     *
-     * @param handlers
-     * @param request
-     * @param response
-     * @param bean
-     * @param action
-     * @param view
-     * @return link instance for the given parameters
-     */
-    Link createLink(Collection<? extends LinkFactory> handlers, HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
 
 
     /**

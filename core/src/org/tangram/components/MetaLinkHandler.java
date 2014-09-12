@@ -394,7 +394,13 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
-        return linkFactoryAggregator.createLink(handlers.values(), request, response, bean, action, view);
+        for (LinkFactory factory : handlers.values()) {
+            Link result = factory.createLink(request, response, bean, action, view);
+            if (result!=null) {
+                return result;
+            } // if
+        } // for
+        return null;
     } // createLink()
 
 
