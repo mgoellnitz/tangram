@@ -57,13 +57,17 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
 
     /**
-     * set cross group transactions only to true on HDR data stores.
-     *
-     * So projects which actually don't use it can still run in the same setup.
+     * Return Google App Engine specific factory overrides.
+     * 
+     * This version is as opposed to other bean factory implementations only configurable by one
+     * parameter - useHdrDatastore - which is most likely set to true for applications using JDO 3 and up. 
+     * In this case cross group transactions are enabled.
+     * 
+     * @return map used as a parameter when creating the PersisteneManager instance
      */
     @Override
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
-        Map<Object, Object> result = new HashMap<Object, Object>();
+        Map<Object, Object> result = new HashMap<>();
         if (isUseHdrDatastore()) {
             result.put("datanucleus.appengine.datastoreEnableXGTransactions", Boolean.TRUE);
         } // if
@@ -72,11 +76,16 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
 
     /**
-     * we had to override the whole getBeans, so this one should never be called.
+     * Use Google App Engine specific key factory generate the internal object id for us.
+     * 
+     * @param id numeric id part of the object to create the object id for
+     * @param kindClass extected JdoContent subtype for the object with the given id
+     * @param kind kind part of the id of the object to create and object id for
+     * @return implementation specific id object resembling the type and numeric id part of the given object's id
      */
     @Override
-    protected Object getObjectId(String internalId, Class<? extends Content> kindClass, String kind) {
-        long numericId = Long.parseLong(internalId);
+    protected Object getObjectId(String id, Class<? extends Content> kindClass, String kind) {
+        long numericId = Long.parseLong(id);
         if (LOG.isDebugEnabled()) {
             LOG.debug("getObjectId() kind="+kind);
             LOG.debug("getObjectId() numericId="+numericId);
@@ -86,7 +95,13 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
 
     /**
-     * TODO: This whole method is only needed for very old repositories with verbatim ID-Strings instead of references.
+     * Overridden version dealing with and old optional Google App Engine Specific ID format.
+     * 
+     * This whole method is only needed for very old repositories with verbatim ID-Strings instead of 
+     * "Type:Number" references.
+     * 
+     * @param id id in type:number format or long GAE specific version
+     * @return bean referred to by id or null if id was null
      */
     @Override
     public JdoContent getBean(String id) {

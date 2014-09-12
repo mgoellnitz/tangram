@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -121,16 +121,18 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
     /**
      * Legacy helper to store IDs as references.
      *
-     * @param id
+     * @param <T> JdoContent subtype
+     * @param cls JdoContent subtype the requested content is expected to have
+     * @param id id of the content to obtain
      * @return content for the given ID
      */
     @Deprecated
     protected <T extends JdoContent> T getContent(Class<T> cls, String id) {
-        // TODO: This is only needed vor very old repositories with verbatim ID-Strings instead of references.
+        // This is only needed vor very old repositories with verbatim Google App Engine ID-Strings instead of references.
         if (id==null) {
             return null;
         } // if
-        id = (id.indexOf(':')<0) ? id = postprocessPlainId(id) : id;
+        id = (id.indexOf(':')<0) ? postprocessPlainId(id) : id;
         return gaeBeanFactory.getBean(cls, id);
     } // getContent()
 
