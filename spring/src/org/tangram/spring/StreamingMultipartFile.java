@@ -33,12 +33,12 @@ public class StreamingMultipartFile implements MultipartFile {
 
     private final long size = -1;
 
-    private byte[] bytes;
+    private final byte[] bytes;
 
 
     public StreamingMultipartFile(FileItemStream item) throws IOException {
         this.item = item;
-        getBytes();
+        bytes = IOUtils.toByteArray(item.openStream());
     } // StreamingMultipartFile()
 
 
@@ -72,7 +72,7 @@ public class StreamingMultipartFile implements MultipartFile {
             try {
                 return getBytes().length;
             } catch (IOException e) {
-                throw new MultipartException("Something went wrong here");
+                throw new MultipartException("Something went wrong here", e);
             } // try/catch
         } // if
         return size;
@@ -81,9 +81,6 @@ public class StreamingMultipartFile implements MultipartFile {
 
     @Override
     public byte[] getBytes() throws IOException {
-        if (bytes==null) {
-            bytes = IOUtils.toByteArray(item.openStream());
-        } // if
         return bytes;
     } // getBytes()
 

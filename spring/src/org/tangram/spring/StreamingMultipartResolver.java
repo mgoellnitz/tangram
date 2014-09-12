@@ -148,7 +148,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
 
                             @Override
                             public void transferTo(File file) throws IOException, IllegalStateException {
-                                throw new UnsupportedOperationException("NYI");
+                                throw new UnsupportedOperationException("NYI", e);
                             }
                         };
                         multipartFiles.add(name, file);
