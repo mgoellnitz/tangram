@@ -45,6 +45,18 @@ dependencies {
 
 compileTestJava.dependsOn ':tangram-mutable:test'
 
+// For Java EE environments
+task jeeJar(type: Jar, dependsOn: jar) {
+  classifier = 'jee'
+  from "$buildDir/classes/main"
+  from "$buildDir/resources/main"
+  // We need to exlude the beans.xml here and use the one from the application to control the JPA details
+  exclude "META-INF/beans.xml"
+  exclude "dinistiq/**"
+  from "jee"
+  rename ('.*-jee.xml', 'beans.xml')
+}
+
 // For EcliseLink
 task eclipselinkJar(type: Jar, dependsOn: jar) {
   classifier = 'eclipselink'
@@ -106,6 +118,7 @@ publishing {
         }
       }
 
+      artifact jeeJar
       artifact eclipselinkJar
       artifact nucleusJar
       artifact openjpaJar

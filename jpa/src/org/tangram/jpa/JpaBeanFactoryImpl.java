@@ -63,12 +63,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     private Map<Object, Object> configOverrides = null;
 
 
-    public JpaBeanFactoryImpl() {
-        // TODO: remove this marker again.
-        LOG.error("() XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-    } // JpaBeanFactoryImpl()
-
-
     protected void setEntityManagerFactory(EntityManagerFactory factory) {
         managerFactory = factory;
     } // setEntityManagerFactory()
