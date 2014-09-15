@@ -148,13 +148,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<Content> listBeansOfExactClass(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
-        List<Content> result = new ArrayList<>();
+    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
+        List<T> result = new ArrayList<>();
         String typeName = cls.getSimpleName();
         if (parents.keySet().contains(typeName)) {
             for (String id : listIds(typeName, optionalQuery, orderProperty, ascending)) {
-                result.add(getBean(id));
+                result.add(convert(cls, getBean(id)));
             } // for
         } // if
         return result;
@@ -162,8 +161,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public List<Content> listBeans(Class cls, String optionalQuery, String orderProperty, Boolean ascending) {
+    public <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
         return listBeansOfExactClass(cls, optionalQuery, orderProperty, ascending);
     } // listBeans()
 
@@ -194,7 +192,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
      * @return map mapping the property names to their respective values
      */
     public Map<String, Object> getProperties(BeanFactory factory, String type, String id) {
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         if ((type==null)||(type.length()==0)) {
             // it's most likely a folder
             return properties;
@@ -485,17 +483,22 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         } // if
         try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             while (resultSet.next()) {
-                String sourceid = ""+resultSet.getInt("sourcedocument");
-                String sourceversion = ""+resultSet.getInt("sourceversion");
+                String sourceId = ""+resultSet.getInt("sourcedocument");
+                String sourceVersion = ""+resultSet.getInt("sourceversion");
                 if (LOG.isInfoEnabled()) {
-                    LOG.info("getReferrerIds() "+sourceid+"/"+sourceversion+"#"+property+" -> "+targetId);
+                    LOG.info("getReferrerIds() "+sourceId+"/"+sourceVersion+"#"+property+" -> "+targetId);
                 } // if
-                // TODO: check for latest version
-                if (!result.contains(sourceid)) {
-                    result.add(sourceid);
+                // Check for latest version referencing the object
+                final String sourceType = getType(sourceId);
+                final Map<String, Object> properties = getProperties(this, sourceType, sourceId);
+                Object version = properties.get("version_");
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("getReferrerIds() version="+version+" :"+(version!=null ? version.getClass().getName() : "null"));
+                } // if
+                if ((!result.contains(sourceId)) && sourceVersion.equals(version.toString())) {
+                    result.add(sourceId);
                 } // if
             } // if
-            return result;
         } catch (SQLException se) {
             LOG.error("getReferrerIds() "+query, se);
         } // try/catch

@@ -19,6 +19,7 @@
 package org.tangram.editor;
 
 import com.thoughtworks.xstream.XStream;
+import static com.thoughtworks.xstream.XStream.PRIORITY_NORMAL;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.basic.BigDecimalConverter;
 import com.thoughtworks.xstream.converters.basic.BigIntegerConverter;
@@ -80,7 +81,6 @@ public class AppEngineXStream extends XStream {
 
     private class AppEngineSerializableConverter extends SerializableConverter {
 
-
         public AppEngineSerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
             super(mapper, reflectionProvider, classLoaderReference);
         }
@@ -122,6 +122,17 @@ public class AppEngineXStream extends XStream {
     } // AppEngineXStream()
 
 
+    /**
+     * Small helper method to keep areas with suppressed warnings small.
+     *
+     * @param reflectionConverter
+     */
+    @SuppressWarnings("deprecation")
+    private void addSelfStreamingInstanceChecker(ReflectionConverter reflectionConverter) {
+        registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
+    } // addSelfStreamingInstanceChecker()
+
+
     @Override
     protected void setupConverters() {
         Mapper mapper = getMapper();
@@ -129,7 +140,7 @@ public class AppEngineXStream extends XStream {
         ClassLoader classLoader = getClassLoader();
         ClassLoaderReference reference = new ClassLoaderReference(classLoader);
 
-        final ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
+        ReflectionConverter reflectionConverter = new ReflectionConverter(mapper, reflectionProvider);
         registerConverter(reflectionConverter, PRIORITY_VERY_LOW);
 
         registerConverter(new AppEngineSerializableConverter(mapper, reflectionProvider, reference), PRIORITY_LOW);
@@ -177,7 +188,7 @@ public class AppEngineXStream extends XStream {
         registerConverter(new EnumSetConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new EnumMapConverter(mapper), PRIORITY_NORMAL);
 
-        registerConverter(new SelfStreamingInstanceChecker(reflectionConverter, this), PRIORITY_NORMAL);
+        addSelfStreamingInstanceChecker(reflectionConverter);
     } // setupConverters()
 
 } // AppEngineXStream

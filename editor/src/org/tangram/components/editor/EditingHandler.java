@@ -95,12 +95,12 @@ public class EditingHandler extends AbstractRenderingBase {
     /**
      * editing actions triggered by URLs containing the obect's ID.
      */
-    public static final Collection<String> ID_URL_ACTIONS = new ArrayList<String>();
+    public static final Collection<String> ID_URL_ACTIONS = new ArrayList<>();
 
     /**
      * editing actions triggered only by parameters passed in http post requests.
      */
-    public static final Collection<String> PARAMETER_ACTIONS = new ArrayList<String>();
+    public static final Collection<String> PARAMETER_ACTIONS = new ArrayList<>();
 
     @Inject
     private LinkHandlerRegistry registry;
@@ -116,8 +116,9 @@ public class EditingHandler extends AbstractRenderingBase {
 
     private boolean deleteMethodEnabled;
 
+
     static {
-        SYSTEM_PROPERTIES = new HashSet<String>();
+        SYSTEM_PROPERTIES = new HashSet<>();
         // The groovy compiler seems to use this
         SYSTEM_PROPERTIES.add("metaClass");
         SYSTEM_PROPERTIES.add("manager");
@@ -155,7 +156,7 @@ public class EditingHandler extends AbstractRenderingBase {
         } // if
         Content bean = beanFactory.getBean(Content.class, id);
         JavaBean wrapper = new JavaBean(bean);
-        Map<String, Object> newValues = new HashMap<String, Object>();
+        Map<String, Object> newValues = new HashMap<>();
         // List<String> deleteValues = new ArrayList<String>();
 
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
@@ -288,14 +289,13 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/create")
     public TargetDescriptor create(@ActionParameter(PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
-                                   HttpServletResponse response) throws Exception {
+            HttpServletResponse response) throws Exception {
         if (LOG.isInfoEnabled()) {
             LOG.info("create() creating new instance of type "+typeName);
         } // if
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not edit");
         } // if
-        @SuppressWarnings("unchecked")
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
         if (getMutableBeanFactory().persist(content)) {
@@ -310,9 +310,8 @@ public class EditingHandler extends AbstractRenderingBase {
 
 
     @LinkAction("/list")
-    @SuppressWarnings("unchecked")
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
-                                 HttpServletRequest request, HttpServletResponse response) {
+            HttpServletRequest request, HttpServletResponse response) {
         if (LOG.isInfoEnabled()) {
             LOG.info("list() listing instances of type '"+typeName+"'");
         } // if
@@ -413,15 +412,14 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/link")
     public TargetDescriptor link(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
-                                 @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
-                                 HttpServletRequest request, HttpServletResponse response) throws Exception {
+            @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (LOG.isInfoEnabled()) {
             LOG.info("link() creating new instance of type "+typeName);
         } // if
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not edit");
         } // if
-        @SuppressWarnings("unchecked")
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
         if (getMutableBeanFactory().persist(content)) {
@@ -436,8 +434,7 @@ public class EditingHandler extends AbstractRenderingBase {
             JavaBean wrapper = new JavaBean(bean);
 
             Object listObject = wrapper.get(propertyName);
-            @SuppressWarnings("unchecked")
-            List<Object> list = (List<Object>) listObject;
+            List<Content> list = convertList(listObject);
             list.add(content);
 
             wrapper.set(propertyName, list);
@@ -472,7 +469,6 @@ public class EditingHandler extends AbstractRenderingBase {
 
 
     @LinkAction("/export")
-    @SuppressWarnings("rawtypes")
     public TargetDescriptor contentExport(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not execute action");
@@ -513,7 +509,7 @@ public class EditingHandler extends AbstractRenderingBase {
             xstream.omitField(c, "userServices");
             xstream.alias(c.getSimpleName(), c);
         } // for
-        Collection<Content> allContent = new ArrayList<Content>();
+        Collection<Content> allContent = new ArrayList<>();
         for (Class<? extends Content> c : classes) {
             try {
                 allContent.addAll(beanFactory.listBeansOfExactClass(c));
@@ -531,7 +527,18 @@ public class EditingHandler extends AbstractRenderingBase {
     } // contentExport()
 
 
+    /**
+     * Small helper method to heep areas with suppressed warnings small.
+     *
+     * @param contents
+     * @return
+     */
     @SuppressWarnings("unchecked")
+    private List<Content> convertList(Object contents) {
+        return (List<Content>) contents;
+    } // convertList()
+
+
     private TargetDescriptor doImport(Reader input, HttpServletRequest request) throws Exception {
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not execute action");
@@ -549,7 +556,7 @@ public class EditingHandler extends AbstractRenderingBase {
             LOG.info("read() "+contents);
         } // if
         if (contents instanceof List) {
-            List<? extends Content> list = (List<? extends Content>) contents;
+            List<? extends Content> list = convertList(contents);
             for (Content o : list) {
                 if (LOG.isInfoEnabled()) {
                     LOG.info("read() "+o);
@@ -588,7 +595,6 @@ public class EditingHandler extends AbstractRenderingBase {
     private String getUrl(Object bean, String action, String view) {
         if ("edit".equals(view)) {
             action = view;
-            view = null;
         } // if
         if (ID_URL_ACTIONS.contains(action)) {
             return "/"+action+"/id_"+((Content) bean).getId();

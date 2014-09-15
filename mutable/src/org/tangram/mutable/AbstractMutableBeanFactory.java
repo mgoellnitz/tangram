@@ -37,6 +37,7 @@ import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.monitor.Statistics;
+import org.tangram.util.ClassResolver;
 
 
 /**
@@ -67,11 +68,11 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     protected Map<String, Class<? extends Content>> tableNameMapping = null;
 
-    protected Map<String, Content> cache = new HashMap<String, Content>();
+    protected Map<String, Content> cache = new HashMap<>();
 
     private boolean activateCaching = false;
 
-    protected Map<String, List<String>> queryCache = new HashMap<String, List<String>>();
+    protected Map<String, List<String>> queryCache = new HashMap<>();
 
     private boolean activateQueryCaching = false;
 
@@ -242,16 +243,16 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @return resulting class or null if not possible (should never happen...)
      */
     @SuppressWarnings("unchecked")
-    protected Class<? extends Content> getClassForName(String className) {
-        Class<? extends Content> result = null;
+    protected <T extends Content> Class<T> getClassForName(String className) {
+        Class<T> result = null;
         for (Class<? extends Content> c : getClasses()) {
             if (c.getName().equals(className)) {
-                result = c;
+                result = (Class<T>) c;
             } // if
         } // for
         if (result==null) {
             try {
-                result = (Class<? extends Content>) Class.forName(className);
+                result = ClassResolver.loadClass(className);
             } catch (ClassNotFoundException cnfe) {
                 LOG.error("getClassForName()", cnfe);
             } // try/catch
@@ -268,13 +269,12 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * @param key
      * @return Class for the given key or null if the key does not map to any class
      */
-    @SuppressWarnings("unchecked")
     protected <T extends Content> Class<T> getKeyClass(String key) {
         String className = key.split(":")[0];
         if (LOG.isDebugEnabled()) {
             LOG.debug("getKeyClass() "+className);
         } // if
-        return (Class<T>) getClassForName(className);
+        return getClassForName(className);
     } // getKeyClass()
 
 
@@ -287,7 +287,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
         } // if
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
-            Collection<String> removeKeys = new HashSet<String>();
+            Collection<String> removeKeys = new HashSet<>();
             for (Object keyObject : queryCache.keySet()) {
                 String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
@@ -338,7 +338,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
         synchronized (attachedListeners) {
             List<BeanListener> listeners = attachedListeners.get(cls);
             if (listeners==null) {
-                listeners = new ArrayList<BeanListener>();
+                listeners = new ArrayList<>();
                 attachedListeners.put(cls, listeners);
             } // if
             listeners.add(listener);
@@ -419,7 +419,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     protected List<Class<? extends Content>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
-        List<Class<? extends Content>> result = new ArrayList<Class<? extends Content>>();
+        List<Class<? extends Content>> result = new ArrayList<>();
 
         for (Class<? extends Content> c : getClasses()) {
             if (baseClass.isAssignableFrom(c)) {
@@ -439,7 +439,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     @Override
     public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
         if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<Class<? extends Content>, List<Class<? extends Content>>>();
+            implementingClassesMap = new HashMap<>();
 
             // Add the very basic root classes directly here - they won't get auto detected otherwise
             implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
@@ -462,7 +462,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
-        List<Class<T>> result = new ArrayList<Class<T>>();
+        List<Class<T>> result = new ArrayList<>();
         for (Class<? extends Content> c : getImplementingClassesMap().get(baseClass)) {
             result.add((Class<T>) c);
         } // for
@@ -490,7 +490,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                     LOG.info("listBeans() found in cache "+idList);
                 } // if
                 // old style
-                result = new ArrayList<T>(idList.size());
+                result = new ArrayList<>(idList.size());
                 for (String id : idList) {
                     result.add(getBean(cls, id));
                 } // for
@@ -500,7 +500,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
         } // if
         if (result==null) {
-            result = new ArrayList<T>();
+            result = new ArrayList<>();
             for (Class<? extends Content> cx : getClasses()) {
                 if (cls.isAssignableFrom(cx)) {
                     @SuppressWarnings("unchecked")
@@ -510,7 +510,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 } // if
             } // for
             if (isActivateQueryCaching()) {
-                List<String> idList = new ArrayList<String>(result.size());
+                List<String> idList = new ArrayList<>(result.size());
                 for (T content : result) {
                     idList.add(content.getId());
                 } // for
@@ -530,7 +530,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {
             if (modelClasses==null) {
-                modelClasses = new ArrayList<Class<? extends Content>>();
+                modelClasses = new ArrayList<>();
                 for (Class<? extends Content> cls : getAllClasses()) {
                     if ((cls.getModifiers()&Modifier.ABSTRACT)==0) {
                         modelClasses.add(cls);
@@ -545,7 +545,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
                 };
                 Collections.sort(modelClasses, comp);
-                tableNameMapping = new HashMap<String, Class<? extends Content>>();
+                tableNameMapping = new HashMap<>();
                 for (Class<? extends Content> mc : modelClasses) {
                     tableNameMapping.put(mc.getSimpleName(), mc);
                 } // for

@@ -25,9 +25,9 @@ import java.util.Map;
 
 public abstract class AbstractRequestParameterAccess implements RequestParameterAccess {
 
-    protected Map<String, byte[]> blobs = new HashMap<String, byte[]>();
+    protected Map<String, byte[]> blobs = new HashMap<>();
 
-    protected Map<String, String> originalNames = new HashMap<String, String>();
+    protected Map<String, String> originalNames = new HashMap<>();
 
     protected Map<String, String[]> parameterMap = new HashMap<>();
 

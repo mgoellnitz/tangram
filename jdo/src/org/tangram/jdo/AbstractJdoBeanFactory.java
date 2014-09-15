@@ -99,7 +99,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
-    @SuppressWarnings("unchecked")
     protected <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
         if (modelClasses==null) {
             getClasses();
@@ -115,7 +114,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
         if (LOG.isDebugEnabled()) {
             LOG.debug("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
         } // if
-        return (T) manager.getObjectById(kindClass, oid);
+        return convert(cls, manager.getObjectById(kindClass, oid));
     } // getBean()
 
 
@@ -190,7 +189,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<T>();
         try {
@@ -209,7 +207,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
             } // if
-            List<T> results = (List<T>) query.execute();
+            @SuppressWarnings("unchecked")
+            List<T> results = (List<T>)query.execute();
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
             } // if
@@ -235,16 +234,16 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      * @return collection with all classes
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends Content>>();
+                allClasses = new ArrayList<>();
                 try {
+                    @SuppressWarnings("unchecked")
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
-                        classNames = new ArrayList<String>();
+                        classNames = new ArrayList<>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JdoContent.class, PersistenceCapable.class)) {
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() * "+cls.getName());
@@ -259,7 +258,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
-                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
+                            Class<? extends Content> cls = ClassResolver.loadClass(beanClassName);
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -278,7 +277,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     @Override
     public void setAdditionalClasses(Collection<Class<? extends Content>> classes) {
-        Set<Class<? extends Content>> classSet = new HashSet<Class<? extends Content>>();
+        Set<Class<? extends Content>> classSet = new HashSet<>();
         if (classes!=null) {
             for (Class<? extends Content> cls : classes) {
                 if ((JdoContent.class.isAssignableFrom(cls))&&(cls.getAnnotation(PersistenceCapable.class)!=null)) {

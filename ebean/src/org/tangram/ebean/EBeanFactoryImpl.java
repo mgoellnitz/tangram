@@ -64,7 +64,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
         if (modelClasses==null) {
             getClasses();
@@ -79,7 +78,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
         if (LOG.isInfoEnabled()) {
             LOG.info("getBean() "+kindClass.getName()+":"+internalId);
         } // if
-        return (T) server.find(kindClass, getId(internalId, kindClass));
+        return convert(cls, server.find(kindClass, getId(internalId, kindClass)));
     } // getBean()
 
 
@@ -146,9 +145,8 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         try {
             String shortTypeName = cls.getSimpleName();
             com.avaje.ebean.Query<T> query = server.find(cls);
@@ -161,6 +159,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName+(queryString==null ? "" : " with condition "+queryString));
             } // if
+            @SuppressWarnings("unchecked")
             List<T> results = query.findList();
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
@@ -175,16 +174,16 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends Content>>();
+                allClasses = new ArrayList<>();
                 try {
+                    @SuppressWarnings("unchecked")
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
-                        classNames = new ArrayList<String>();
+                        classNames = new ArrayList<>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(EContent.class, Entity.class)) {
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() * "+cls.getName());
@@ -199,6 +198,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
+                            @SuppressWarnings("unchecked")
                             Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() # "+cls.getName());
@@ -216,7 +216,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
 
     @PostConstruct
-    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         for (Class<? extends Content> c : getAllClasses()) {
             if (LOG.isInfoEnabled()) {
@@ -230,6 +229,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
             LOG.info("afterPropertiesSet() DDL: "+serverConfig.isDdlGenerate()+"/"+serverConfig.isDdlRun());
         } // if
 
+        @SuppressWarnings("unchecked")
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;

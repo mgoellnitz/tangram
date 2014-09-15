@@ -111,7 +111,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
-    @SuppressWarnings("unchecked")
     protected <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
         if (modelClasses==null) {
             getClasses();
@@ -126,7 +125,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         if (LOG.isInfoEnabled()) {
             LOG.info("getBean() "+kindClass.getName()+":"+internalId);
         } // if
-        return (T) manager.find(kindClass, getPrimaryKey(internalId, kindClass));
+        return convert(cls, manager.find(kindClass, getPrimaryKey(internalId, kindClass)));
     } // getBean()
 
 
@@ -179,7 +178,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<T>();
         try {
@@ -195,6 +193,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
                 LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
+    @SuppressWarnings("unchecked")
             List<Object> results = query.getResultList();
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
@@ -209,16 +208,16 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public Collection<Class<? extends Content>> getAllClasses() {
         synchronized (this) {
             if (allClasses==null) {
-                allClasses = new ArrayList<Class<? extends Content>>();
+                allClasses = new ArrayList<>();
                 try {
+    @SuppressWarnings("unchecked")
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
-                        classNames = new ArrayList<String>();
+                        classNames = new ArrayList<>();
                         for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class)) {
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() * "+cls.getName());
@@ -233,7 +232,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
-                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
+                            Class<? extends Content> cls = ClassResolver.loadClass(beanClassName);
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() # "+cls.getName());
                             } // if
@@ -268,7 +267,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         // calibrate classes discovered by annotation with classes found by manager
         Metamodel metamodel = manager.getMetamodel();
         if (metamodel!=null) {
-            allClasses = new ArrayList<Class<? extends Content>>();
+            allClasses = new ArrayList<>();
             modelClasses = null;
             Set<EntityType<?>> entities = metamodel.getEntities();
             for (EntityType<?> entity : entities) {
@@ -290,7 +289,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @PostConstruct
-    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
         if (LOG.isInfoEnabled()) {

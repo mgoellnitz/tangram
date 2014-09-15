@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 
-@SuppressWarnings("unchecked")
 public class ComaBeanFactory extends AbstractComaBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaBeanFactory.class);

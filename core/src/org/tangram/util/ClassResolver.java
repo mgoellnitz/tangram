@@ -154,14 +154,27 @@ public class ClassResolver {
 
 
     /**
+     * Helper method to keep areas with suppressed warnings small.
+     * 
+     * @param <T>
+     * @param className
+     * @return
+     * @throws ClassNotFoundException 
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Object> Class<T> loadClass(String className) throws ClassNotFoundException {
+        return (Class<T>) Class.forName(className);
+    } // loadClass()
+
+
+    /**
      * Get classes from underlying packages satisfying the given annotation and superclass which are no interfaces.
      */
     public <T extends Object> Set<Class<T>> getSubclasses(Class<T> c) {
-        Set<Class<T>> result = new HashSet<Class<T>>();
+        Set<Class<T>> result = new HashSet<>();
         for (String className : classNames) {
             try {
-                @SuppressWarnings("unchecked")
-                Class<T> cls = (Class<T>) Class.forName(className);
+                Class<T> cls = loadClass(className);
                 if ((!cls.isInterface())&&c.isAssignableFrom(cls)&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
                     result.add(cls);
                 } // if
@@ -178,11 +191,10 @@ public class ClassResolver {
      * Interfaces are excluded.
      */
     public <T extends Object> Set<Class<T>> getAnnotatedSubclasses(Class<T> c, Class<? extends Annotation> annotation) {
-        Set<Class<T>> result = new HashSet<Class<T>>();
+        Set<Class<T>> result = new HashSet<>();
         for (String className : classNames) {
             try {
-                @SuppressWarnings("unchecked")
-                Class<T> cls = (Class<T>) Class.forName(className);
+                Class<T> cls = loadClass(className);
                 if ((cls.getAnnotation(annotation)!=null)&&c.isAssignableFrom(cls)&&(!cls.isInterface())) {
                     result.add(cls);
                 } // if

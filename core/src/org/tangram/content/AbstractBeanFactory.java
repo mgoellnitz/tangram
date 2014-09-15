@@ -24,6 +24,18 @@ import java.util.List;
 
 public abstract class AbstractBeanFactory implements BeanFactory {
 
+    /**
+     * small helper method to keep areas with suppressed warnings small.
+     *
+     * @param <T>
+     * @param bean
+     */
+    @SuppressWarnings("unchecked")
+    protected final <T extends Object> T convert(Class<? extends T> cls, Object bean) {
+        return (T) bean;
+    } // convert()
+
+
     @Override
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls) {
         return listBeansOfExactClass(cls, null, null, null);
