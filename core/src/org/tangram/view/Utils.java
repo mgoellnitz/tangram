@@ -56,6 +56,9 @@ public final class Utils {
      */
     public static void setPrimaryBrowserLanguageForJstl(HttpServletRequest request) {
         String acceptLanguageHeader = request.getHeader("Accept-Language");
+        if (acceptLanguageHeader == null) {
+            return;
+        } // if
         String[] acceptLanguages = acceptLanguageHeader.split(",");
         if (acceptLanguages.length>0) {
             String[] acceptLanguage = acceptLanguages[0].split(";");
