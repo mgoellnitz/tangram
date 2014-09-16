@@ -278,8 +278,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             ((BeanFactoryAware) handler).setBeanFactory(beanFactory);
         } // if
         if (handler instanceof LinkHandler) {
-            registerInterfaceHandler(null, immutable);
             LinkHandler linkHandler = (LinkHandler) handler;
+            registerInterfaceHandler(linkHandler, immutable);
             staticLinkHandlers.put(handler.getClass().getName(), linkHandler);
             handlers.put(handler.getClass().getName(), linkHandler);
         } else {
@@ -318,14 +318,14 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         for (Map.Entry<String, Class<Object>> entry : classRepository.getAnnotated(org.tangram.annotate.LinkHandler.class).entrySet()) {
             try {
                 registerLinkHandler(createInstance(entry.getValue()), false);
-            } catch (Exception e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 LOG.error("reset()", e);
             } // try/catch
         } // for
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
                 registerLinkHandler(createInstance(entry.getValue()), false);
-            } catch (Exception e) {
+            } catch (IllegalAccessException | InstantiationException e) {
                 LOG.error("reset()", e);
             } // try/catch
         } // for
