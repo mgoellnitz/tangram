@@ -81,11 +81,11 @@ public abstract class BaseContentTest {
 
     @Test
     public void test1CreateTestContent() throws Exception {
-        Set<String> packages = new HashSet<String>();
+        Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCreate());
         Assert.assertNotNull("need test dinistiq instance", dinistiq);
-        MutableBeanFactory beanFactory = dinistiq.findTypedBean(MutableBeanFactory.class);
+        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
         Assert.assertNotNull("need factory for beans", beanFactory);
         SubInterface beanA = createSubBean(beanFactory);
         Assert.assertNotNull("could not create bean", beanA);
@@ -101,11 +101,11 @@ public abstract class BaseContentTest {
 
     @Test
     public void test2Components() throws Exception {
-        Set<String> packages = new HashSet<String>();
+        Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
         Assert.assertNotNull("need test dinistiq instance", dinistiq);
-        MutableBeanFactory beanFactory = dinistiq.findTypedBean(MutableBeanFactory.class);
+        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
         Assert.assertNotNull("need factory for beans", beanFactory);
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals("we have prepared a fixed number of beans", 2, allBeans.size());

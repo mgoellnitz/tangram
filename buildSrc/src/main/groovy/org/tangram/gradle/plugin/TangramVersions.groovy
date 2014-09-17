@@ -38,7 +38,7 @@ public class TangramVersions {
   String xstream = '1.4.7'
   String tomcat = '7.0.54'
   
-  String dinistiq = '0.2'
+  String dinistiq = '0.3-SNAPSHOT'
   String shiro = '1.2.3'
 
   String springframework = '4.0.6.RELEASE'
@@ -66,6 +66,6 @@ public class TangramVersions {
   String ebean = '4.1.1'
   String ebean_agent = '4.1.4'
 
-  String appengine = '1.9.10'
+  String appengine = '1.9.11'
   
 } // TangramVersions
