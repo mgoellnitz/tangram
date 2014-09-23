@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.mutable.MutableCode;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
 
@@ -116,5 +117,32 @@ public abstract class BaseContentTest {
         List<? extends Content> baseBeans = beanFactory.listBeansOfExactClass(getBaseClass());
         Assert.assertEquals("we have prepared a fixed number of base beans", 1, baseBeans.size());
     } // test2Components()
+
+
+    @Test
+    public void test3Code() throws Exception {
+        Set<String> packages = new HashSet<>();
+        packages.add("org.tangram.components");
+        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
+        Assert.assertNotNull("need test dinistiq instance", dinistiq);
+        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
+        Assert.assertNotNull("need factory for beans", beanFactory);
+        Assert.assertEquals("have four classes available", 4, beanFactory.getAllClasses().size());
+        Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
+        Assert.assertNotNull("we have a classes map", classesMap);
+        // Assert.assertEquals("implementing classes", Collections.emptySet(), classesMap.keySet());
+        Assert.assertNotNull("we have a code class", classesMap.get(MutableCode.class));
+        List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
+        Assert.assertEquals("We have one code class", 1, codeClasses.size());
+        Class<MutableCode> codeClass = codeClasses.get(0);
+        List<MutableCode> codes = beanFactory.listBeans(codeClass, null);
+        Assert.assertTrue("We have no code instances", codes.isEmpty());
+        MutableCode codeResource = beanFactory.createBean(codeClass);
+        codeResource.setAnnotation("scree");
+        codeResource.setMimeType("text/css");
+        beanFactory.persist(codeResource);
+        codes = beanFactory.listBeans(codeClass, null);
+        Assert.assertEquals("We have one code instance", 1, codes.size());
+    } // test3Code()
 
 } // BaseContentTest

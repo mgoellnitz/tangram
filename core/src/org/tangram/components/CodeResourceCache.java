@@ -89,14 +89,14 @@ public class CodeResourceCache implements BeanListener {
             List<CodeResource> datastoreResources = factory.listBeans(CodeResource.class);
 
             // Only use transient resources and cache them since we can't put persistable stuff in the startup cache
-            resources = new ArrayList<CodeResource>();
+            resources = new ArrayList<>();
             for (CodeResource resource : datastoreResources) {
                 resources.add(new TransientCode(resource));
             } // for
             startupCache.put(CODE_RESOURCE_CACHE_KEY, resources);
         } // if
-        resourceCache = new HashMap<String, Map<String, CodeResource>>(resources.size());
-        cache = new HashMap<String, CodeResource>(resourceCache.size());
+        resourceCache = new HashMap<>(resources.size());
+        cache = new HashMap<>(resourceCache.size());
         for (CodeResource resource : resources) {
             cache.put(resource.getId(), resource);
             String mimeType = resource.getMimeType();
@@ -104,7 +104,7 @@ public class CodeResourceCache implements BeanListener {
             if (StringUtils.isNotBlank(mimeType)) {
                 Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
                 if (typeCache==null) {
-                    typeCache = new HashMap<String, CodeResource>();
+                    typeCache = new HashMap<>();
                     resourceCache.put(mimeType, typeCache);
                 } // if
                 if (StringUtils.isNotEmpty(resource.getAnnotation())) {

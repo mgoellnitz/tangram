@@ -20,6 +20,7 @@ package org.tangram.view.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.tangram.content.Content;
 import org.tangram.view.GenericPropertyConverter;
 
 
@@ -28,7 +29,33 @@ public class GenericPropertyConverterTest {
     @Test
     public void testEditStrings() {
         GenericPropertyConverter c = new GenericPropertyConverter();
-        Assert.assertEquals("should be a readable true value", c.getEditString(Boolean.TRUE), "true");
+        Content content = new Content() {
+            public String getId() {
+                return "Test:123";
+            }
+
+
+            @Override
+            public int compareTo(Content o) {
+                return 0;
+            }
+        };
+        Assert.assertEquals("should be a readable true value", "true", c.getEditString(Boolean.TRUE));
+        Assert.assertEquals("should be a number value string", "Test:123", c.getEditString(content));
     } // testEditStrings()
+
+    @Test
+    public void testStorableObjects() {
+        GenericPropertyConverter c = new GenericPropertyConverter();
+        Assert.assertEquals("should be an interger value", 123, c.getStorableObject(null, "123", Integer.class, null));
+        Assert.assertEquals("should be string  value", "Hallo", c.getStorableObject(null, "Hallo", String.class, null));
+    } // testStorableObjects()
+
+    @Test
+    public void testTypeChecks() {
+        GenericPropertyConverter c = new GenericPropertyConverter();
+        Assert.assertTrue("should be recognized as blob tyoe", c.isBlobType(new byte[13].getClass()));
+        Assert.assertTrue("should be recognized as text tyoe", c.isTextType(new char[14].getClass()));
+    } // testStorableObjects()
 
 } // GenericPropertyConverterTest

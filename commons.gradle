@@ -18,9 +18,7 @@
  */
 version = '1.0-SNAPSHOT'
 
-apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'jacoco'
 apply plugin: 'maven-publish'
 apply plugin: 'tangram'
 
@@ -35,32 +33,6 @@ targetCompatibility = 1.7
 
 // Project specific default output directory
 eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/classes/main") }
-
-// our custom directory layout
-sourceSets {
-  main {
-    java { 
-      srcDir 'src'
-      exclude '**/*.properties'
-      exclude '**/*.xml'
-    }
-    resources { 
-      srcDir 'src'
-      exclude '**/*.java'
-    }
-  }
-  test {
-    java { 
-      srcDir 'test'
-      exclude '**/*.properties'
-      exclude '**/*.xml'
-    }
-    resources { 
-      srcDir 'test'
-      exclude '**/*.java'
-    }
-  }
-}
 
 // A place for a common checkstyle config file
 def checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
