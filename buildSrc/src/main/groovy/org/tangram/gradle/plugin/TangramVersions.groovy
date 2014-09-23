@@ -26,7 +26,7 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
-  String lombok = '1.14.4'
+  String lombok = '1.14.8'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
   String groovy = '2.3.6'
@@ -41,10 +41,10 @@ public class TangramVersions {
   String dinistiq = '0.3-SNAPSHOT'
   String shiro = '1.2.3'
 
-  String springframework = '4.0.6.RELEASE'
+  String springframework = '4.0.7.RELEASE'
   String springsecurity = '3.2.5.RELEASE'
   
-  String weld = '2.2.4.Final'
+  String weld = '2.2.5.Final'
   String openwebbeans = '1.2.6'
   
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
@@ -63,8 +63,8 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
   
-  String ebean = '4.1.1'
-  String ebean_agent = '4.1.4'
+  String ebean = '4.1.2' // Later versions fail
+  String ebean_agent = '4.1.6'
 
   String appengine = '1.9.11'
   
