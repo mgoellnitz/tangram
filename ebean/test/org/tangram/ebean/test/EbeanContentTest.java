@@ -80,6 +80,18 @@ public class EbeanContentTest extends BaseContentTest {
     } // setPeers()
 
 
+    @Override
+    protected int getNumberOfAllClasses() {
+        return 12;
+    }
+
+
+    @Override
+    protected int getNumberOfClasses() {
+        return 3;
+    }
+
+
     /**
      * From time to time we ran into the problem that classes didn't get enhanced correctly
      */

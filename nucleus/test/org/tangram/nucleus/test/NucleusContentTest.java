@@ -50,6 +50,18 @@ public class NucleusContentTest extends BaseContentTest {
     } // setPeers()
 
 
+    @Override
+    protected int getNumberOfAllClasses() {
+        return 14;
+    }
+
+
+    @Override
+    protected int getNumberOfClasses() {
+        return 3;
+    }
+
+
     @Test
     public void test0IsEnhanced() {
         Assert.assertTrue("Classes not enhanced", checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "jdo"));

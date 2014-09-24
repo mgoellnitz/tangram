@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -168,14 +167,14 @@ public class ClassResolver {
 
 
     /**
-     * Get classes from underlying packages satisfying the given annotation and superclass which are no interfaces.
+     * Get classes from underlying packages satisfying the given superclass.
      */
     public <T extends Object> Set<Class<T>> getSubclasses(Class<T> c) {
         Set<Class<T>> result = new HashSet<>();
         for (String className : classNames) {
             try {
                 Class<T> cls = loadClass(className);
-                if ((!cls.isInterface())&&c.isAssignableFrom(cls)&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
+                if (c.isAssignableFrom(cls)) {
                     result.add(cls);
                 } // if
             } catch (ClassNotFoundException e) {

@@ -35,8 +35,8 @@ import org.tangram.PersistentRestartCache;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
-import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
+import org.tangram.content.TransientCode;
 import org.tangram.monitor.Statistics;
 import org.tangram.util.ClassResolver;
 
@@ -444,9 +444,9 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
             // Add the very basic root classes directly here - they won't get auto detected otherwise
             implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
-            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
-            implementingClassesMap.put(CodeResource.class, getImplementingClassesForModelClass(CodeResource.class));
-            implementingClassesMap.put(MutableCode.class, getImplementingClassesForModelClass(MutableCode.class));
+//            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
+//            implementingClassesMap.put(CodeResource.class, getImplementingClassesForModelClass(CodeResource.class));
+//            implementingClassesMap.put(MutableCode.class, getImplementingClassesForModelClass(MutableCode.class));
             for (Class<? extends Content> c : getAllClasses()) {
                 implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
             } // for
@@ -535,7 +535,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             if (modelClasses==null) {
                 modelClasses = new ArrayList<>();
                 for (Class<? extends Content> cls : getAllClasses()) {
-                    if ((cls.getModifiers()&Modifier.ABSTRACT)==0) {
+                    if ((cls!=TransientCode.class)&&(!cls.isInterface())&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
                         modelClasses.add(cls);
                     } // if
                 } // for

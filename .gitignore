@@ -8,3 +8,4 @@
 /*/src/tangram/*-build.properties
 *.nb-gradl*
 /ebean/tangram-*.sql
+/build/

@@ -21,6 +21,7 @@ package org.tangram.jpa;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -33,11 +34,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
+import org.tangram.content.TransientCode;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.util.ClassResolver;
@@ -193,7 +193,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
                 LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
-    @SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             List<Object> results = query.getResultList();
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
@@ -213,17 +213,22 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
             if (allClasses==null) {
                 allClasses = new ArrayList<>();
                 try {
-    @SuppressWarnings("unchecked")
+                    @SuppressWarnings("unchecked")
                     List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<>();
-                        for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class)) {
+                        Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
+                        resolvedClasses.addAll(resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class));
+                        resolvedClasses.addAll(resolver.getSubclasses(Content.class));
+                        for (Class<? extends Content> cls : resolvedClasses) {
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() * "+cls.getName());
                             } // if
-                            classNames.add(cls.getName());
-                            allClasses.add(cls);
+                            if (!allClasses.contains(cls)) {
+                                classNames.add(cls.getName());
+                                allClasses.add(cls);
+                            } // if
                         } // for
                         if (LOG.isInfoEnabled()) {
                             LOG.info("getAllClasses() # class names "+classNames.size());
@@ -265,22 +270,22 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
             LOG.info("initFactory() manager: "+manager.getClass().getName());
         } // if
         // calibrate classes discovered by annotation with classes found by manager
-        Metamodel metamodel = manager.getMetamodel();
-        if (metamodel!=null) {
-            allClasses = new ArrayList<>();
-            modelClasses = null;
-            Set<EntityType<?>> entities = metamodel.getEntities();
-            for (EntityType<?> entity : entities) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("initFactory() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
-                } // if
-                allClasses.add((Class<? extends Content>) entity.getJavaType());
-            } // for
-        } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("initFactory() not meta model");
-            } // if
-        } // if
+//        Metamodel metamodel = manager.getMetamodel();
+//        if (metamodel!=null) {
+//            allClasses = new ArrayList<>();
+//            modelClasses = null;
+//            Set<EntityType<?>> entities = metamodel.getEntities();
+//            for (EntityType<?> entity : entities) {
+//                if (LOG.isInfoEnabled()) {
+//                    LOG.info("initFactory() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
+//                } // if
+//                allClasses.add((Class<? extends Content>) entity.getJavaType());
+//            } // for
+//        } else {
+//            if (LOG.isWarnEnabled()) {
+//                LOG.warn("initFactory() not meta model");
+//            } // if
+//        } // if
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
             queryCache = c;
@@ -299,7 +304,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         StringBuilder classList = new StringBuilder(256);
         classList.append(getBaseClass().getName());
         for (Class<? extends Content> c : getAllClasses()) {
-            if (!c.getName().equals(getBaseClass().getName())) {
+            if (!((c == TransientCode.class) || c.isInterface()) || c.getName().equals(getBaseClass().getName())) {
                 classList.append(';');
                 classList.append(c.getName());
             } // if

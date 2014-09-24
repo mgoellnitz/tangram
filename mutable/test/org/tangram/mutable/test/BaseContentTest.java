@@ -78,6 +78,13 @@ public abstract class BaseContentTest {
 
 
     protected abstract void setPeers(BaseInterface base, SubInterface sub);
+    
+    protected abstract int getNumberOfAllClasses();
+    
+    /**
+     * excluding interfafes and abstract classes.
+     */
+    protected abstract int getNumberOfClasses();
 
 
     @Test
@@ -88,6 +95,11 @@ public abstract class BaseContentTest {
         Assert.assertNotNull("need test dinistiq instance", dinistiq);
         MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
         Assert.assertNotNull("need factory for beans", beanFactory);
+        int numberOfAllClasses = getNumberOfAllClasses();
+        // Assert.assertEquals("List of classes as strings", "[interface org.tangram.feature.protection.Protection, interface org.tangram.feature.protection.ProtectedContent, interface org.tangram.mutable.test.content.SubInterface, interface org.tangram.mutable.MutableCode, interface org.tangram.content.CodeResource, class org.tangram.ebean.EContent, interface org.tangram.mutable.test.content.BaseInterface, class org.tangram.content.TransientCode, class org.tangram.ebean.Code, interface org.tangram.content.Content, class org.tangram.ebean.test.content.BaseClass, class org.tangram.ebean.test.content.SubClass]", beanFactory.getAllClasses().toString());
+        Assert.assertEquals("have "+numberOfAllClasses+" classes and interfaces available", numberOfAllClasses, beanFactory.getAllClasses().size());
+        int numberOfClasses = getNumberOfClasses();
+        Assert.assertEquals("have "+numberOfClasses+" non abstract model classes", numberOfClasses, beanFactory.getClasses().size());
         SubInterface beanA = createSubBean(beanFactory);
         Assert.assertNotNull("could not create bean", beanA);
         beanFactory.persist(beanA);
@@ -127,7 +139,6 @@ public abstract class BaseContentTest {
         Assert.assertNotNull("need test dinistiq instance", dinistiq);
         MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
         Assert.assertNotNull("need factory for beans", beanFactory);
-        Assert.assertEquals("have four classes available", 4, beanFactory.getAllClasses().size());
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
         Assert.assertNotNull("we have a classes map", classesMap);
         // Assert.assertEquals("implementing classes", Collections.emptySet(), classesMap.keySet());
@@ -138,11 +149,23 @@ public abstract class BaseContentTest {
         List<MutableCode> codes = beanFactory.listBeans(codeClass, null);
         Assert.assertTrue("We have no code instances", codes.isEmpty());
         MutableCode codeResource = beanFactory.createBean(codeClass);
-        codeResource.setAnnotation("scree");
+        codeResource.setAnnotation("screen");
         codeResource.setMimeType("text/css");
+        codeResource.setCode("// Empty css".toCharArray());
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals("We have one code instance", 1, codes.size());
+        Assert.assertEquals("Code must be equal to itself", 0, codes.get(0).compareTo(codes.get(0)));
+        Assert.assertEquals("Code text must match value set up above", "// Empty css", codes.get(0).getCodeText());
+        Assert.assertEquals("Code size must match", "// Empty css".length(), codes.get(0).getSize());
+        // Trigger groovy compiler
+        codeResource = beanFactory.createBean(codeClass);
+        codeResource.setAnnotation("org.tangram.example.Test");
+        codeResource.setMimeType("application/x-groovy");
+        codeResource.setCode("package org.tangram.example.Test; public class Test {}".toCharArray());
+        beanFactory.persist(codeResource);
+        codes = beanFactory.listBeans(codeClass, null);
+        Assert.assertEquals("We have one code instance", 2, codes.size());
     } // test3Code()
 
 } // BaseContentTest

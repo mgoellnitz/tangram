@@ -25,8 +25,10 @@ import com.avaje.ebean.config.ServerConfig;
 import groovy.lang.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.persistence.Entity;
@@ -184,12 +186,17 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<>();
-                        for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(EContent.class, Entity.class)) {
+                        Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
+                        resolvedClasses.addAll(resolver.getAnnotatedSubclasses(EContent.class, Entity.class));
+                        resolvedClasses.addAll(resolver.getSubclasses(Content.class));
+                        for (Class<? extends Content> cls : resolvedClasses) {
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() * "+cls.getName());
                             } // if
-                            classNames.add(cls.getName());
-                            allClasses.add(cls);
+                            if (!allClasses.contains(cls)) {
+                                classNames.add(cls.getName());
+                                allClasses.add(cls);
+                            } // if
                         } // for
                         if (LOG.isInfoEnabled()) {
                             LOG.info("getAllClasses() # class names "+classNames.size());

@@ -244,13 +244,17 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<>();
-                        for (Class<? extends Content> cls : resolver.getAnnotatedSubclasses(JdoContent.class, PersistenceCapable.class)) {
+                        Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
+                        resolvedClasses.addAll(resolver.getAnnotatedSubclasses(getBaseClass(), PersistenceCapable.class));
+                        resolvedClasses.addAll(resolver.getSubclasses(Content.class));
+                        for (Class<? extends Content> cls : resolvedClasses) {
                             if (LOG.isInfoEnabled()) {
                                 LOG.info("getAllClasses() * "+cls.getName());
                             } // if
-                            classNames.add(cls.getName());
-                            // table name mapping moved to getClasses()
-                            allClasses.add(cls);
+                            if (!allClasses.contains(cls)) {
+                                classNames.add(cls.getName());
+                                allClasses.add(cls);
+                            } // if
                         } // for
                         if (LOG.isInfoEnabled()) {
                             LOG.info("getAllClasses() # class names "+classNames.size());
