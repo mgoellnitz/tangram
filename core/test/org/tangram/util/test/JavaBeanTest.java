@@ -33,7 +33,7 @@ public class JavaBeanTest {
 
     private class TestBean {
 
-        String value;
+        private String value;
 
 
         public String getValue() {
