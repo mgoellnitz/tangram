@@ -95,7 +95,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
 
     private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title, ServletRequest request) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
 
         if (StringUtils.isNotBlank(title)) {
             List<T> beans = beanFactory.listBeans(c);
