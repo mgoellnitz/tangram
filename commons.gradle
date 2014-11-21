@@ -25,7 +25,7 @@ apply plugin: 'tangram'
 
 repositories {
   // for dinistiq
-  maven { url "http://repository-tangram.forge.cloudbees.com/snapshot" }
+  maven { url "https://raw.githubusercontent.com/mgoellnitz/artifacts/master" }
   mavenCentral()
 }
 

@@ -37,7 +37,7 @@ Maven Repositories
 
 Snapshots:
 
-http://repository-tangram.forge.cloudbees.com/snapshot
+https://raw.githubusercontent.com/mgoellnitz/artifacts/master
 
 Releases:
 
