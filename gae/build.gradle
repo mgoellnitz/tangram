@@ -31,6 +31,7 @@ dependencies {
   compile "com.google.appengine.orm:datanucleus-appengine:$versions.datanucleus_appengine"
 
   testCompile "junit:junit:$versions.junit"
+  testCompile "org.mockito:mockito-all:$versions.mockito"
   
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"

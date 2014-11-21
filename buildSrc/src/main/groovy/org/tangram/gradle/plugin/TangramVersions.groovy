@@ -35,6 +35,7 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String junit = '4.11'
+  String mockito = '1.10.8'
   String xstream = '1.4.7'
   String tomcat = '7.0.56'
   
