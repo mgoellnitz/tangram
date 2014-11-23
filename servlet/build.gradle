@@ -22,4 +22,9 @@ dependencies {
   compile project (':tangram-core')
   
   testCompile "junit:junit:$versions.junit"
+  testCompile "org.mockito:mockito-all:$versions.mockito"
+  // more or less a dummy for the various autoscanned and auto injected beans
+  testCompile project(':tangram-dinistiq')
+  // dinistiq logging at debug level through special log4j.properties
+  testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
 }
