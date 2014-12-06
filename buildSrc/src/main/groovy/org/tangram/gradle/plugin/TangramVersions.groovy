@@ -29,23 +29,23 @@ public class TangramVersions {
   String lombok = '1.14.8'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.3.7'
+  String groovy = '2.3.8'
   String velocity = '1.7'
   String slf4j = '1.7.7'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String junit = '4.11'
-  String mockito = '1.10.8'
+  String mockito = '1.10.8' // 1.10.14 available from jcenter()
   String xstream = '1.4.7'
   String tomcat = '7.0.56'
   
-  String dinistiq = '0.3-SNAPSHOT'
+  String dinistiq = '0.3'
   String shiro = '1.2.3'
 
   String springframework = '4.0.8.RELEASE'
   String springsecurity = '3.2.5.RELEASE'
   
-  String weld = '2.2.6.Final'
+  String weld = '2.2.7.Final'
   String openwebbeans = '1.2.6'
   
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
@@ -64,7 +64,7 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
   
-  String ebean = '4.1.2' // Later versions fail
+  String ebean = '4.1.2' // Later versions fail like the intended 4.4.1
   String ebean_agent = '4.1.6'
 
   String appengine = '1.9.15'
