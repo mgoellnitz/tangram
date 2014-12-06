@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2014 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,9 +16,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+import org.gradle.api.Project
 
 allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
+  // our custom directory layout
+  sourceSets {
+    main {
+      java { 
+        srcDir 'src'
+        exclude '**/*.properties'
+        exclude '**/*.xml'
+      }
+      resources { 
+        srcDir 'src'
+        exclude '**/*.java'
+      }
+    }
+    test {
+      java { 
+        srcDir 'test'
+        exclude '**/*.properties'
+        exclude '**/*.xml'
+      }
+      resources { 
+        srcDir 'test'
+        exclude '**/*.java'
+      }
+    }
+  }
+}
+
+repositories {
+  mavenCentral()
 }
 
 /**
@@ -46,4 +78,25 @@ public incrementBuildCounter(Project prj) {
   FileOutputStream fos = new FileOutputStream(filename)
   p.save(fos, " Tangram Build and System Information")
   fos.close()
-} // incrementBuildCounter()
+}
+
+task jacocoCombinedReport(type: JacocoReport) {
+  // Obtain execution data from subprojects
+  executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+  // Add all relevant sourcesets from the subprojects 
+  subprojects.each {
+    sourceSets it.sourceSets.main
+  }
+
+  reports {
+    xml.enabled true
+    html.enabled true
+    html.destination "${buildDir}/reports/jacoco"
+    csv.enabled false
+  }
+}
+
+jacocoCombinedReport.dependsOn {
+  subprojects*.test
+}
