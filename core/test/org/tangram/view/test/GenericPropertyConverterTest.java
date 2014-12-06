@@ -18,11 +18,15 @@
  */
 package org.tangram.view.test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
+import org.tangram.Constants;
 import org.tangram.content.Content;
 import org.tangram.view.GenericPropertyConverter;
 
@@ -49,7 +53,11 @@ public class GenericPropertyConverterTest {
         list.add("hello");
         list.add("test");
         Assert.assertEquals("should be a list value", "hello,test,", c.getEditString(list));
-        Assert.assertEquals("should be a date value", "13:45:30 01.07.2014 MESZ", c.getEditString(new Date(1404215130000L)));
+        // CI Server might use different locale - and this should be supported by the framework.
+        DateFormat format = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT, Locale.getDefault());
+        Date referenceDate = new Date(1404215130000L);
+        String referenceDateString = format.format(referenceDate);
+        Assert.assertEquals("should be a date value", referenceDateString, c.getEditString(referenceDate));
     } // testEditStrings()
 
 
