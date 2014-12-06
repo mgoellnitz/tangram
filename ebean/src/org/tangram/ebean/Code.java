@@ -39,7 +39,7 @@ public final class Code extends EContent implements MutableCode {
     private char[] code;
 
     @ManyToOne
-    private EContent codeOf; // For any item refering this code
+    private EContent codeOf; // For any item refering this code - NOPMD the ebean orm uses this
 
     @Override
     public String getAnnotation() {

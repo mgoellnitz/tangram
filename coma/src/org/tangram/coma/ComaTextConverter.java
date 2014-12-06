@@ -196,10 +196,8 @@ public final class ComaTextConverter {
      * @throws IOException
      */
     private String mergeBuilders() {
-        char flag = 'x';
-
         while (dataPosition<dataBuilder.length()) {
-            flag = dataBuilder.charAt(dataPosition++);
+            char flag = dataBuilder.charAt(dataPosition++);
             switch (flag) {
             case '(':
                 issueElementStart();

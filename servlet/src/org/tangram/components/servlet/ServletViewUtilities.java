@@ -176,7 +176,7 @@ public class ServletViewUtilities implements ViewUtilities {
                 // velocityEngine.getTemplate(template).merge(context, response.getWriter());
                 velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new StringReader(codeResource.getCodeText()));
             } catch (Exception ex) {
-                throw new IOException(ex.getCause());
+                throw new IOException(ex.getCause()); // NOPMD we want to lose parts of our stack!
             } // try/catch
         } else {
             // JSP:

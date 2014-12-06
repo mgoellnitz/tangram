@@ -69,8 +69,8 @@ public class GenericPropertyConverterTest {
     @Test
     public void testTypeChecks() {
         GenericPropertyConverter c = new GenericPropertyConverter();
-        Assert.assertTrue("should be recognized as blob tyoe", c.isBlobType(new byte[13].getClass()));
-        Assert.assertTrue("should be recognized as text tyoe", c.isTextType(new char[14].getClass()));
+        Assert.assertTrue("should be recognized as blob type", c.isBlobType(byte[].class));
+        Assert.assertTrue("should be recognized as text type", c.isTextType(char[].class));
     } // testStorableObjects()
 
 } // GenericPropertyConverterTest
