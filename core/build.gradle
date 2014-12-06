@@ -43,7 +43,8 @@ dependencies {
     exclude module: 'js'
   }
   
-  testCompile "junit:junit:$versions.junit"  
+  testCompile "junit:junit:$versions.junit"
+  testCompile "org.mockito:mockito-all:$versions.mockito"
   
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
