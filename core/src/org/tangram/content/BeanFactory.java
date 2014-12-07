@@ -49,6 +49,7 @@ public interface BeanFactory {
      * @param cls beans class to query for
      * @param optionalQuery query string specific to the underlying storage system
      * @param orderProperty name of a attribute of the bean to be used for ascending ordering
+     * @param ascending sort ascending or not (descending)
      * @return List of beans adhering the conditions - maybe empty but not null
      */
     <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending);
@@ -74,12 +75,20 @@ public interface BeanFactory {
 
     /**
      * List beans from the repository of an exact type. Does not take sublcasses into account.
+     * 
+     * @param cls Type requirement to be met.
+     * @param optionalQuery query according to the underlying storage layer - may be null
+     * @param orderProperty the resulting list may be ordered according to this property
+     * @return list of content elements of exactly the given type T.
      */
     <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending);
 
 
     /**
      * List beans from the repository of an exact type. Does not take sublcasses into account.
+     * 
+     * @param cls Type requirement to be met.
+     * @return list of content elements of exactly the given type T.
      */
     <T extends Content> List<T> listBeansOfExactClass(Class<T> cls);
 

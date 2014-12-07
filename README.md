@@ -49,7 +49,7 @@ HOW-TO
 To make all this work you need
 
 - Java 7 (Java 8 is untested)
-- Gradle 1.6 or later (Including 2.1)
+- Gradle 1.6 or later (Including 2.2)
 
 To make things easier for applications using this framework we provide a gradle plugin now.
 
