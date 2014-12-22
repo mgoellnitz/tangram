@@ -32,6 +32,7 @@ public class UtilsTest {
         try {
             urlPart = Utils.urlize("Hello dear user, we'd like to test some german umlauts like öäüßÖÄÜ - done.");
         } catch (UnsupportedEncodingException uee) {
+            Assert.fail("Unpectedtedly even the encoding of the test's text didn't work.");
         } // try/catchg
         Assert.assertNotNull("Encoding not supported", urlPart);
         Assert.assertEquals("Special characters and spaces should be transcoded", "hello-dear-user--we-d-like-to-test-some-german-umlauts-like-oeaeuessoeaeue-done.", urlPart);
