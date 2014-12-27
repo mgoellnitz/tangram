@@ -88,9 +88,7 @@ public class GaePropertyConverter extends AbstractPropertyConverter {
         Object result = super.getStorableObject(client, valueString, cls, request);
         if (result==null) {
             if (cls==Blob.class) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("getStorableObject() valueString="+valueString);
-                } // if
+                LOG.debug("getStorableObject() valueString={}", valueString);
             } else if (cls==Text.class) {
                 result = new Text(valueString);
             } else if (cls==char[].class) {

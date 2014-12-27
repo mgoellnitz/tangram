@@ -52,17 +52,12 @@ public class DefaultController extends AbstractRenderingBase implements Internal
 
     @RequestMapping(value = "/id_{id}/view_{view}")
     public ModelAndView render(@PathVariable("id") String id, @PathVariable("view") String view, HttpServletRequest request,
-                               HttpServletResponse response) {
+            HttpServletResponse response) {
         try {
             Utils.setPrimaryBrowserLanguageForJstl(request);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("render() id="+id);
-                LOG.debug("render() view="+view);
-            } // if
+            LOG.debug("render() id={} view={}", id, view);
             Content content = beanFactory.getBean(id);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("render() content="+content);
-            } // if
+            LOG.debug("render() content={}", content);
             if (content==null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
                 return null;

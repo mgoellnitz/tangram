@@ -50,15 +50,12 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
     @SuppressWarnings("unchecked")
     ServletRequestParameterAccess(HttpServletRequest request, long uploadFileMaxSize) {
         final String reqContentType = request.getContentType();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("() uploadFileMaxSize="+uploadFileMaxSize);
-            LOG.debug("() request.contentType="+reqContentType);
-        } // if
+        LOG.debug("() uploadFileMaxSize={} request.contentType={}", uploadFileMaxSize, reqContentType);
         if (StringUtils.isNotBlank(reqContentType)&&reqContentType.startsWith("multipart/form-data")) {
             ServletFileUpload upload = new ServletFileUpload();
             upload.setFileSizeMax(uploadFileMaxSize);
             try {
-                for (FileItemIterator itemIterator = upload.getItemIterator(request) ; itemIterator.hasNext() ;) {
+                for (FileItemIterator itemIterator = upload.getItemIterator(request); itemIterator.hasNext();) {
                     FileItemStream item = itemIterator.next();
                     String fieldName = item.getFieldName();
                     InputStream stream = item.openStream();
@@ -74,15 +71,11 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                             value = newValue;
                         } // if
                         value[i] = Streams.asString(stream, "UTF-8");
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("() request parameter "+fieldName+"='"+value[0]+"'");
-                        } // if
+                        LOG.debug("() request parameter {}='{}'", fieldName, value[0]);
                         parameterMap.put(item.getFieldName(), value);
                     } else {
                         try {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("() item "+item.getName()+" :"+item.getContentType());
-                            } // if
+                            LOG.debug("() item {} :{}", item.getName(), item.getContentType());
                             final byte[] bytes = IOUtils.toByteArray(stream);
                             if (bytes.length>0) {
                                 originalNames.put(fieldName, item.getName());

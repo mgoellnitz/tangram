@@ -122,9 +122,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         if (!(cls.isAssignableFrom(kindClass))) {
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getBean() "+kindClass.getName()+":"+internalId);
-        } // if
+        LOG.info("getBean() {}: {}", kindClass.getName(), internalId);
         return convert(cls, manager.find(kindClass, getPrimaryKey(internalId, kindClass)));
     } // getBean()
 
@@ -195,9 +193,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
             } // if
             @SuppressWarnings("unchecked")
             List<Object> results = query.getResultList();
-            if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
-            } // if
+            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             filterExactClass(cls, results, result);
             statistics.increase("list beans");
         } catch (Exception e) {
@@ -222,25 +218,19 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
                         resolvedClasses.addAll(resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class));
                         resolvedClasses.addAll(resolver.getSubclasses(Content.class));
                         for (Class<? extends Content> cls : resolvedClasses) {
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("getAllClasses() * "+cls.getName());
-                            } // if
+                            LOG.info("getAllClasses() * {}", cls.getName());
                             if (!allClasses.contains(cls)) {
                                 classNames.add(cls.getName());
                                 allClasses.add(cls);
                             } // if
                         } // for
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("getAllClasses() # class names "+classNames.size());
-                        } // if
+                        LOG.info("getAllClasses() # class names {}", classNames.size());
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
                             Class<? extends Content> cls = ClassResolver.loadClass(beanClassName);
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("getAllClasses() # "+cls.getName());
-                            } // if
+                            LOG.info("getAllClasses() # {}", cls.getName());
                             allClasses.add(cls);
                         } // for
                     } // if
@@ -265,10 +255,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
      */
     @SuppressWarnings("unchecked")
     protected void initFactory() {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("initFactory() manager factory: "+managerFactory.getClass().getName());
-            LOG.info("initFactory() manager: "+manager.getClass().getName());
-        } // if
+        LOG.info("initFactory() manager factory: {}", managerFactory.getClass().getName());
+        LOG.info("initFactory() manager: {}", manager.getClass().getName());
         // calibrate classes discovered by annotation with classes found by manager
 //        Metamodel metamodel = manager.getMetamodel();
 //        if (metamodel!=null) {
@@ -276,15 +264,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 //            modelClasses = null;
 //            Set<EntityType<?>> entities = metamodel.getEntities();
 //            for (EntityType<?> entity : entities) {
-//                if (LOG.isInfoEnabled()) {
-//                    LOG.info("initFactory() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
-//                } // if
+//                LOG.info("initFactory() discovered entity: "+entity.getName()+"/"+entity.getJavaType().getName());
 //                allClasses.add((Class<? extends Content>) entity.getJavaType());
 //            } // for
 //        } else {
-//            if (LOG.isWarnEnabled()) {
-//                LOG.warn("initFactory() not meta model");
-//            } // if
+//            LOG.warn("initFactory() not meta model");
 //        } // if
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {
@@ -296,15 +280,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     @PostConstruct
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() using overrides for entity manager factory: "+overrides);
-        } // if
+        LOG.info("afterPropertiesSet() using overrides for entity manager factory: {}", overrides);
 
         // OpenJPA specific class handling to be able to handle classes from the class repository
         StringBuilder classList = new StringBuilder(256);
         classList.append(getBaseClass().getName());
         for (Class<? extends Content> c : getAllClasses()) {
-            if (!((c == TransientCode.class) || c.isInterface()) || c.getName().equals(getBaseClass().getName())) {
+            if (!((c==TransientCode.class)||c.isInterface())||c.getName().equals(getBaseClass().getName())) {
                 classList.append(';');
                 classList.append(c.getName());
             } // if
@@ -312,9 +294,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         Properties properties = new Properties();
         properties.putAll(overrides);
         properties.put("openjpa.MetaDataFactory", "jpa(Types="+classList.toString()+")");
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() properties="+properties);
-        } // if
+        LOG.info("afterPropertiesSet() properties={}", properties);
 
         // initialize manager
         managerFactory = Persistence.createEntityManagerFactory(persistenceUnitName, properties);

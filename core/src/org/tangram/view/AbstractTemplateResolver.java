@@ -102,7 +102,6 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
     } // getFullViewName()
 
 
-
     protected abstract T resolveView(String path, Locale locale) throws Exception;
 
 
@@ -113,20 +112,14 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
         T result = null;
 
         String path = getFullViewName(view, packageName, simpleName);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("checkView("+getName()+") view="+view+"  path="+path);
-        } // if
+        LOG.info("checkView({}) view={}  path={}", getName(), view, path);
         try {
             result = resolveView(path, locale);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("checkView() resolved view "+result);
-            } // if
+            LOG.debug("checkView() resolved view {}", result);
             if (result!=null) {
                 result = checkResourceExists(result);
             } // if
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("checkView() result="+result);
-            } // if
+            LOG.debug("checkView() result={}", result);
         } catch (Exception e) {
             if ((e.getCause()!=null)&&(e.getCause().getClass().getName().indexOf("Parse")>=0)) {
                 throw (RuntimeException) (e.getCause());
@@ -165,9 +158,7 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
         if (view==null) {
             for (Object i : allInterfaces) {
                 Class<? extends Object> c = (Class<? extends Object>) i;
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("lookupView() type to check templates for "+c.getName());
-                } // if
+                LOG.debug("lookupView() type to check templates for {}", c.getName());
                 if (!(alreadyChecked.contains(c.getName()))) {
                     alreadyChecked.add(c.getName());
                     String interfacePackage = (c.getPackage()==null) ? "" : c.getPackage().getName();
@@ -184,9 +175,7 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
 
     @Override
     public T resolveTemplate(String viewName, Map<String, Object> model, Locale locale) throws IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("resolveTemplate("+getName()+") "+viewName);
-        } // if
+        LOG.debug("resolveTemplate({}) {}", getName(), viewName);
         Object content = model.get(Constants.THIS);
         if (content==null) {
             return null;
@@ -205,9 +194,7 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
         T view = lookupView(viewName, locale, content, key);
         T cacheView = view;
         if (view==null) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("resolveTemplate("+getName()+") no template found for "+content.getClass().getSimpleName());
-            } // if
+            LOG.info("resolveTemplate({}) no template found for {}", getName(), content.getClass().getSimpleName());
             cacheView = getNotFoundDummy();
         } // if
         if (activateCaching) {

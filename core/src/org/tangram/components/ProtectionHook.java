@@ -59,15 +59,13 @@ public class ProtectionHook implements ControllerHook {
         Map<String, Protection> result = Collections.emptyMap();
 
         if (content instanceof Protection) {
-            result = new HashMap<String, Protection>();
+            result = new HashMap<>();
             Protection prot = (Protection) content;
             result.put(prot.getProtectionKey(), prot);
         } else {
             List<Protection> protections = beanFactory.listBeans(Protection.class);
 
-            if (LOG.isInfoEnabled()) {
-                LOG.info("getRequiredProtections() total # of protections: "+protections.size());
-            } // if
+            LOG.info("getRequiredProtections() total # of protections: {}", protections.size());
             if (protections.size()>0) {
                 result = new HashMap<String, Protection>();
                 for (Protection prot : protections) {
@@ -129,31 +127,22 @@ public class ProtectionHook implements ControllerHook {
         if (descriptor.bean instanceof ProtectedContent) {
             ProtectedContent protectedContent = (ProtectedContent) (descriptor.bean);
             Map<String, Protection> protections = getRequiredProtections(protectedContent);
-
-            if (LOG.isInfoEnabled()) {
-                LOG.info("render() # of relevant protections: "+protections.size());
-            } // if
+            LOG.info("render() # of relevant protections: {}", protections.size());
 
             String protectionKey = request.getParameter(Constants.PARAMETER_PROTECTION_KEY);
             if ((protectionKey!=null)&&("POST".equals(request.getMethod()))) {
                 // handle login
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("render() handling login "+protectionKey+" for topic "+protectedContent.getId());
-                } // if
+                LOG.info("render() handling login {} for topic {}", protectionKey, protectedContent.getId());
                 loginResult = protections.get(protectionKey).handleLogin(request, response);
             } // if
 
             String necessaryProtectionKey = getFailingProtectionKey(request, protections);
             if (necessaryProtectionKey!=null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("render() topic "+protectedContent.getId()+" is not visible");
-                } // if
+                LOG.info("render() topic {} is not visible", protectedContent.getId());
 
                 for (Protection p : protections.values()) {
                     if (p.needsAuthorization(request)) {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("render() Protection specific authorization necessary: "+p.getProtectionKey());
-                        } // if
+                        LOG.info("render() Protection specific authorization necessary: {}", p.getProtectionKey());
                         protection = p;
                     } // if
                 } // for

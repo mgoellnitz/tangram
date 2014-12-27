@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -26,9 +26,11 @@ import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 
+
 public class ComaBeanFactory extends AbstractComaBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaBeanFactory.class);
+
 
     @Override
     public Object createBlob(String id, String propertyName, String mimeType, long len, byte[] data) {
@@ -47,17 +49,13 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
         for (String id : getChildrenWithTypeIds(parentId, type)) {
             result.add(getBean(id));
         } // for
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getChildrenWithType() size="+result.size());
-        } // if
+        LOG.debug("getChildrenWithType() size={}", result.size());
         return result;
     } // getChildrenWithType()
 
 
     public Set<Content> getChildren(String startFolderId, String pattern) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getChildren() "+startFolderId);
-        } // if
+        LOG.info("getChildren() {}", startFolderId);
         Set<String> resultIds = getChildrenIds(startFolderId, pattern);
         Set<Content> results = new HashSet<>();
         for (String id : resultIds) {

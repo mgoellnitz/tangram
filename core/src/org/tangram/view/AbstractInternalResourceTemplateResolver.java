@@ -78,16 +78,12 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
 
     protected String checkJspExists(String url) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("checkJspExists("+url+")");
-        } // if
+        LOG.info("checkJspExists({})", url);
         String resourcePrefix = "/META-INF/resources";
         final URL resource = getClass().getResource(resourcePrefix+url);
         if (resource==null) {
             File f = new File(filePathPrefix+url);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("checkJspExists() f="+f.getAbsolutePath());
-            } // if
+            LOG.debug("checkJspExists() f={}", f.getAbsolutePath());
             if (!(f.exists())) {
                 url = null;
             } // if

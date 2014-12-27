@@ -119,15 +119,11 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public void postProcessResult(Link result, HttpServletRequest request) {
         StringBuffer url = new StringBuffer(result.getUrl());
         int idx = url.indexOf("/");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("postProcessResult() "+idx+" ("+url+")");
-        } // if
+        LOG.debug("postProcessResult() {} ({})", idx, url);
         if (idx>=0) {
             url.insert(idx, getPrefix(request));
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("postProcessResult() "+idx+" ("+url+")");
-        } // if
+        LOG.debug("postProcessResult() {} ({})", idx, url);
         result.setUrl(url.toString());
     } // postProcessResult()
 
@@ -137,15 +133,11 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         if (bean==null) {
             throw new RuntimeException("No bean issued for link generation in action "+action+" for view "+view);
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createLink() "+factories);
-        } // if
+        LOG.debug("createLink() {}", factories);
         for (LinkFactory factory : factories) {
             long startTime = System.currentTimeMillis();
             Link result = factory.createLink(request, response, bean, action, view);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("createLink() "+factory.getClass().getName()+" -> "+result+" ["+bean.getClass().getSimpleName()+"]");
-            } // if
+            LOG.debug("createLink() {} -> {} [{}]", factory.getClass().getName(), result, bean.getClass().getSimpleName());
             if (result!=null) {
                 postProcessResult(result, request);
                 statistics.avg("generate url time", System.currentTimeMillis()-startTime);
@@ -160,9 +152,7 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public Method findMethod(Object target, String methodName) {
         Class<? extends Object> targetClass = target.getClass();
         String key = targetClass.getName()+"#"+methodName;
-        if (LOG.isInfoEnabled()) {
-            LOG.info("findMethod() trying to find "+key);
-        } // if
+        LOG.info("findMethod() trying to find {}", key);
         Method method = cache.get(key);
         if (method!=null) {
             return method==NULL_METHOD ? null : method;
@@ -170,15 +160,11 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
         for (Method m : targetClass.getMethods()) {
             if (m.getName().equals(methodName)) {
                 LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("findMethod() linkAction="+linkAction+"  method.getReturnType()="+m.getReturnType());
-                } // if
+                LOG.info("findMethod() linkAction={}  method.getReturnType()={}", linkAction, m.getReturnType());
                 if (!TargetDescriptor.class.equals(m.getReturnType())) {
                     linkAction = null;
                 } // if
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("findMethod() linkAction="+linkAction);
-                } // if
+                LOG.debug("findMethod() linkAction={}", linkAction);
                 if (linkAction!=null) {
                     method = m;
                 } // if

@@ -50,9 +50,7 @@ public class VelocityResourceLoader extends ResourceLoader {
         InputStream result = null; // new ByteArrayInputStream("Oops!".getBytes());
         if (!"VM_global_library.vm".equals(source)) {
             try {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("getResourceStream() "+source);
-                } // if
+                LOG.debug("getResourceStream() {}", source);
                 CodeResource t = codeResourceCache.get(source);
                 if (t!=null) {
                     result = t.getStream();
@@ -67,9 +65,7 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public void init(ExtendedProperties configuration) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("init() "+configuration);
-        } // if
+        LOG.info("init() {}", configuration);
     } // init()
 
 
@@ -85,9 +81,7 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public boolean resourceExists(String resourceName) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("resourceExists() "+resourceName);
-        } // if
+        LOG.info("resourceExists() {}", resourceName);
         return (codeResourceCache.get(resourceName)!=null);
     } // resourceExists()
 

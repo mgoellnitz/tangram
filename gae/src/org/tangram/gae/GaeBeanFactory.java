@@ -58,11 +58,11 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     /**
      * Return Google App Engine specific factory overrides.
-     * 
+     *
      * This version is as opposed to other bean factory implementations only configurable by one
-     * parameter - useHdrDatastore - which is most likely set to true for applications using JDO 3 and up. 
+     * parameter - useHdrDatastore - which is most likely set to true for applications using JDO 3 and up.
      * In this case cross group transactions are enabled.
-     * 
+     *
      * @return map used as a parameter when creating the PersisteneManager instance
      */
     @Override
@@ -77,7 +77,7 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
 
     /**
      * Use Google App Engine specific key factory generate the internal object id for us.
-     * 
+     *
      * @param id numeric id part of the object to create the object id for
      * @param kindClass extected JdoContent subtype for the object with the given id
      * @param kind kind part of the id of the object to create and object id for
@@ -86,20 +86,17 @@ public class GaeBeanFactory extends AbstractJdoBeanFactory {
     @Override
     protected Object getObjectId(String id, Class<? extends Content> kindClass, String kind) {
         long numericId = Long.parseLong(id);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getObjectId() kind="+kind);
-            LOG.debug("getObjectId() numericId="+numericId);
-        } // if
+        LOG.debug("getObjectId() kind={} numericId=", kind, numericId);
         return KeyFactory.createKey(kind, numericId);
     } // getObjectId()
 
 
     /**
      * Overridden version dealing with and old optional Google App Engine Specific ID format.
-     * 
-     * This whole method is only needed for very old repositories with verbatim ID-Strings instead of 
+     *
+     * This whole method is only needed for very old repositories with verbatim ID-Strings instead of
      * "Type:Number" references.
-     * 
+     *
      * @param id id in type:number format or long GAE specific version
      * @return bean referred to by id or null if id was null
      */

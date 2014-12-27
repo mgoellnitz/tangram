@@ -158,14 +158,10 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      */
     @Override
     public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() beginning transaction");
-        } // if
+        LOG.debug("createBean() beginning transaction");
         beginTransaction();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() creating new instance of "+cls.getName());
-        } // if
+        LOG.debug("createBean() creating new instance of {}", cls.getName());
         T bean = cls.newInstance();
 
         statistics.increase("create bean");
@@ -272,9 +268,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      */
     protected <T extends Content> Class<T> getKeyClass(String key) {
         String className = key.split(":")[0];
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getKeyClass() "+className);
-        } // if
+        LOG.debug("getKeyClass() {}", className);
         return getClassForName(className);
     } // getKeyClass()
 
@@ -283,9 +277,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     public void clearCacheFor(Class<? extends Content> cls) {
         statistics.increase("bean cache clear");
         cache.clear();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("clearCacheFor() "+cls.getName());
-        } // if
+        LOG.info("clearCacheFor() {}", cls.getName());
         try {
             // clear query cache first since listeners might want to use query to obtain fresh data
             Collection<String> removeKeys = new HashSet<>();
@@ -293,9 +285,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 String key = (String) keyObject;
                 Class<? extends Content> c = getKeyClass(key);
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("clearCacheFor("+key+") "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
+                LOG.debug("clearCacheFor({}) {}? {}", key, c.getSimpleName(), assignableFrom);
                 if (assignableFrom) {
                     removeKeys.add(key);
                 } // if
@@ -307,9 +297,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
             for (Class<? extends Content> c : getListeners().keySet()) {
                 boolean assignableFrom = c.isAssignableFrom(cls);
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("clearCacheFor() "+c.getSimpleName()+"? "+assignableFrom);
-                } // if
+                LOG.info("clearCacheFor() {}? {}", c.getSimpleName(), assignableFrom);
                 if (assignableFrom) {
                     List<BeanListener> listeners = getListeners().get(c);
                     if (LOG.isInfoEnabled()) {
@@ -344,9 +332,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
             listeners.add(listener);
         } // synchronized
-        if (LOG.isInfoEnabled()) {
-            LOG.info("addListener() "+cls.getSimpleName()+": "+attachedListeners.get(cls).size());
-        } // if
+        LOG.info("addListener() {}: {}", cls.getSimpleName(), attachedListeners.get(cls).size());
     } // addListener()
 
 
@@ -374,9 +360,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 } // if
                 filteredList.add((T) o);
             } else {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("filterExactClass() class name of instance "+o.getClass().getName());
-                } // if
+                LOG.warn("filterExactClass() class name of instance {}", o.getClass().getName());
             } // if
         } // for
     } // filterExactClass()
@@ -411,7 +395,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
         } catch (Exception e) {
             if (LOG.isWarnEnabled()) {
                 String simpleName = e.getClass().getSimpleName();
-                LOG.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
+                LOG.warn("getBean() object not found for id '{}' {}: {}", id, simpleName, e.getLocalizedMessage(), e);
             } // if
         } // try/catch/finally
         statistics.increase("get bean uncached");
@@ -489,9 +473,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             key = getCacheKey(cls, queryString, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("listBeans() found in cache "+idList);
-                } // if
+                LOG.info("listBeans() found in cache {}", idList);
                 // old style
                 result = new ArrayList<>(idList.size());
                 for (String id : idList) {
@@ -522,9 +504,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
             statistics.increase("query beans uncached");
         } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looked up "+result.size()+" raw entries");
-        } // if
+        LOG.info("listBeans() looked up {} raw entries", result.size());
         return result;
     } // listBeans()
 

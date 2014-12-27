@@ -67,9 +67,7 @@ public class ClassResolver {
                 if (!url.endsWith(".jar")) {
                     url = url.substring(0, url.length()-packagePath.length());
                 } //
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("addPathsForPackage() "+url);
-                } // if
+                LOG.info("addPathsForPackage() {}", url);
                 urls.add(url);
             } // while
         } catch (IOException e) {
@@ -86,9 +84,7 @@ public class ClassResolver {
      * @param name
      */
     private void checkClassAndAdd(Set<String> classNames, String name) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("checkClassAndAdd() name="+name);
-        } // if
+        LOG.debug("checkClassAndAdd() name={}", name);
         if (name.endsWith(".class")&&(name.indexOf('$')<0)) {
             name = name.replace(File.separatorChar, '/').replace('/', '.');
             String className = name.substring(0, name.length()-6);
@@ -104,14 +100,10 @@ public class ClassResolver {
 
 
     private void recurseSubDir(Set<String> classNames, File dir, int basePathLength) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("recurseSubDir() scanning "+dir.getAbsolutePath());
-        } // if
+        LOG.debug("recurseSubDir() scanning {}", dir.getAbsolutePath());
         for (File f : (dir.isDirectory() ? dir.listFiles() : new File[0])) {
             String fileName = f.getAbsolutePath().substring(basePathLength);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("recurseSubDir() fileName="+fileName);
-            } // if
+            LOG.debug("recurseSubDir() fileName={}", fileName);
             if ((fileName.endsWith(".class"))||(fileName.endsWith(".properties"))) {
                 checkClassAndAdd(classNames, fileName);
             } else {
@@ -130,9 +122,7 @@ public class ClassResolver {
         } // for
         for (String path : paths) {
             try {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("getClassNames() path="+path);
-                } // if
+                LOG.debug("getClassNames() path={}", path);
                 if (path.endsWith(".jar")) {
                     JarInputStream is = new JarInputStream(new FileInputStream(path));
                     for (JarEntry entry = is.getNextJarEntry(); entry!=null; entry = is.getNextJarEntry()) {
@@ -154,11 +144,11 @@ public class ClassResolver {
 
     /**
      * Helper method to keep areas with suppressed warnings small.
-     * 
+     *
      * @param <T>
      * @param className
      * @return
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     @SuppressWarnings("unchecked")
     public static <T extends Object> Class<T> loadClass(String className) throws ClassNotFoundException {

@@ -77,9 +77,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
         if (!(cls.isAssignableFrom(kindClass))) {
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getBean() "+kindClass.getName()+":"+internalId);
-        } // if
+        LOG.info("getBean() {}:{}", kindClass.getName(), internalId);
         return convert(cls, server.find(kindClass, getId(internalId, kindClass)));
     } // getBean()
 
@@ -163,9 +161,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
             } // if
             @SuppressWarnings("unchecked")
             List<T> results = query.findList();
-            if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
-            } // if
+            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             filterExactClass(cls, results, result);
             statistics.increase("list beans");
         } catch (Exception e) {
@@ -190,26 +186,20 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
                         resolvedClasses.addAll(resolver.getAnnotatedSubclasses(EContent.class, Entity.class));
                         resolvedClasses.addAll(resolver.getSubclasses(Content.class));
                         for (Class<? extends Content> cls : resolvedClasses) {
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("getAllClasses() * "+cls.getName());
-                            } // if
+                            LOG.info("getAllClasses() * {}", cls.getName());
                             if (!allClasses.contains(cls)) {
                                 classNames.add(cls.getName());
                                 allClasses.add(cls);
                             } // if
                         } // for
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("getAllClasses() # class names "+classNames.size());
-                        } // if
+                        LOG.info("getAllClasses() # class names {}", classNames.size());
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
                             @SuppressWarnings("unchecked")
                             Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("getAllClasses() # "+cls.getName());
-                            } // if
+                            LOG.info("getAllClasses() # {}", cls.getName());
                             allClasses.add(cls);
                         } // for
                     } // if
@@ -225,16 +215,12 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
     @PostConstruct
     public void afterPropertiesSet() {
         for (Class<? extends Content> c : getAllClasses()) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("afterPropertiesSet() class "+c.getName());
-            } // if
+            LOG.info("afterPropertiesSet() class {}", c.getName());
             serverConfig.addClass(c);
         } // for
         server = EbeanServerFactory.create(serverConfig);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() db platform: "+serverConfig.getDatabasePlatform());
-            LOG.info("afterPropertiesSet() DDL: "+serverConfig.isDdlGenerate()+"/"+serverConfig.isDdlRun());
-        } // if
+        LOG.info("afterPropertiesSet() db platform: {}", serverConfig.getDatabasePlatform());
+        LOG.info("afterPropertiesSet() DDL: {}/{}", serverConfig.isDdlGenerate(), serverConfig.isDdlRun());
 
         @SuppressWarnings("unchecked")
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -31,6 +31,7 @@ import org.tangram.controller.ControllerHook;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
+
 
 /**
  * Controller hook to check on every request if it is delivered through a unique URL and it gets redirected
@@ -63,11 +64,9 @@ public class UniqueUrlHook implements ControllerHook {
             // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8");
             String decodedUrl = link.getUrl();
             final String queryString = request.getQueryString();
-            String requestURI = request.getRequestURI()+(StringUtils.isBlank(queryString)?"":"?"+queryString);
-            if ( !decodedUrl.equals(requestURI)) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("render() sending redirect for "+requestURI+" to "+decodedUrl);
-                } // if
+            String requestURI = request.getRequestURI()+(StringUtils.isBlank(queryString) ? "" : "?"+queryString);
+            if (!decodedUrl.equals(requestURI)) {
+                LOG.info("render() sending redirect for {} to {}", requestURI, decodedUrl);
                 response.setHeader("Location", link.getUrl());
                 response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 return true;

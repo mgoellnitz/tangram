@@ -111,9 +111,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
     protected void processData(Command command, Session session, InvocationRecord invocationRecord) {
         String options = command.getParameter(0);
         String dir = SessionHelper.getCwd(session);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("handleCommand() listing directory with options "+options+" in directory "+dir);
-        } // if
+        LOG.info("handleCommand() listing directory with options {} in directory {}", options, dir);
 
         // TODO: make codes stored with real modification time
         String now = getUnixDate(codeResourceCache.getLastUpdate());
@@ -121,9 +119,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
         StringBuilder listing = new StringBuilder(256);
         Set<String> types = codeResourceCache.getTypes();
         if (dir.length()==1) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("handleCommand() root listing of all type directories");
-            } // if
+            LOG.info("handleCommand() root listing of all type directories");
             for (String type : types) {
                 String name = CodeHelper.getFolder(type);
                 String item = DIR_PREFIX+"1 "+now+" "+name+"\n";
@@ -131,9 +127,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
             } // for
         } else {
             dir = SessionHelper.getDirectoy(session);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("handleCommand() listing for directory "+dir);
-            } // if
+            LOG.info("handleCommand() listing for directory {}", dir);
             String type = CodeHelper.getMimetype(dir);
             if (types.contains(type)) {
                 String extension = CodeHelper.getExtension(type);

@@ -53,9 +53,7 @@ public class MetaServlet extends HttpServlet {
             } // if
         } catch (Throwable ex) {
             ViewContext context = viewUtilities.getViewContextFactory().createViewContext(ex, request, response);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("service() caught throwable "+context.getViewName()+"#"+context.getModel().keySet());
-            } // if
+            LOG.debug("service() caught throwable {}#{}", context.getViewName(), context.getModel().keySet());
             response.setContentType("text/html");
             response.setCharacterEncoding("utf-8");
             viewUtilities.render(null, context.getModel(), context.getViewName());

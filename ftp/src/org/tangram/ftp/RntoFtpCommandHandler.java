@@ -52,9 +52,7 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         String newName = command.getParameter(0);
         String id = (String) session.getAttribute(SessionHelper.RENAME_ID);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("handleCommand() renaming "+id+" to "+newName);
-        } // if
+        LOG.info("handleCommand() renaming {} to {}", id, newName);
         if (id!=null) {
             final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
             MutableCode code = beanFactory.getBean(codeClass, id);

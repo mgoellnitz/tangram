@@ -79,18 +79,14 @@ public class ServletViewUtilities implements ViewUtilities {
 
 
     public ServletViewUtilities() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("()");
-        } // if
+        LOG.debug("()");
         Properties velocityProperties = new Properties();
         try {
             velocityProperties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("tangram/velocity/velocity.properties"));
         } catch (IOException ex) {
             LOG.error("()", ex);
         } // try/catch
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("() velocityProperties="+velocityProperties);
-        } // if
+        LOG.debug("() velocityProperties={}", velocityProperties);
         velocityEngine = new VelocityEngine(velocityProperties);
     } // ServletViewUtilities()
 
@@ -131,21 +127,15 @@ public class ServletViewUtilities implements ViewUtilities {
     public void render(Writer writer, Map<String, Object> model, String view) throws IOException {
         view = (view==null) ? Constants.DEFAULT_VIEW : view;
         String template = null;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("render() resolvers="+resolvers);
-        } // if
+        LOG.debug("render() resolvers={}", resolvers);
         for (TemplateResolver<String> resolver : resolvers) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("render() resolver="+resolver);
-            } // if
+            LOG.debug("render() resolver={}", resolver);
             if (template==null) {
                 template = resolver.resolveTemplate(view, model, Locale.getDefault());
             } // if
         } // for
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("render() template="+template);
-        } // if
+        LOG.debug("render() template={}", template);
         if (template==null) {
             throw new IOException("no view "+view+" found for model "+model);
         } // if
@@ -153,14 +143,10 @@ public class ServletViewUtilities implements ViewUtilities {
         HttpServletResponse response = (HttpServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
         if (ID_PATTRN.matcher(template).matches()) {
             // Velocity:
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("render() Velocity template="+template);
-            } // if
+            LOG.debug("render() Velocity template={}", template);
             try {
                 CodeResource codeResource = codeResourceCache.get(template);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("render() setting content type from "+response.getContentType()+" to "+codeResource.getMimeType()+" on "+response.getClass().getName());
-                } // if
+                LOG.debug("render() setting content type from {} to {} on {}", response.getContentType(), codeResource.getMimeType(), response.getClass().getName());
                 response.setContentType(codeResource.getMimeType());
                 response.setCharacterEncoding("UTF-8");
                 if (writer==null) {
@@ -186,9 +172,7 @@ public class ServletViewUtilities implements ViewUtilities {
                     for (String key : model.keySet()) {
                         request.setAttribute(key, model.get(key));
                     } // for
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("render("+template+") writer "+writer);
-                    } // if
+                    LOG.debug("render({}) writer {}", template, writer);
                     ResponseWrapper responseWrapper = null;
                     if (writer==null) {
                         responseWrapper = new ResponseWrapper(response);
@@ -199,22 +183,16 @@ public class ServletViewUtilities implements ViewUtilities {
                     } // if
                     requestDispatcher.include(request, response);
                     if (writer==null) {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("render("+template+") setting content type for "+responseWrapper.getContentType());
-                            LOG.debug("render() setting character encoding for "+responseWrapper.getCharacterEncoding());
-                        } // if
+                        LOG.debug("render({}) setting content type for {}", template, responseWrapper.getContentType());
+                        LOG.debug("render() setting character encoding for {}", responseWrapper.getCharacterEncoding());
                         final String contentType = responseWrapper.getContentType();
                         final String characterEncodingSuffix = "; charset="+responseWrapper.getCharacterEncoding();
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("render() original content type "+contentType);
-                        } // if
+                        LOG.warn("render() original content type {}", contentType);
                         String contentHeader = ((contentType!=null)&&contentType.startsWith("text")&&(contentType.indexOf(';')<0)) ? contentType+characterEncodingSuffix : contentType;
                         response.setHeader("Content-Type", contentHeader);
                         responseWrapper.setHeader("Content-Type", contentHeader);
                         for (Map.Entry<String, String> entry : responseWrapper.getHeaders().entrySet()) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("render() setting header "+entry.getKey()+": "+entry.getValue());
-                            } // if
+                            LOG.debug("render() setting header {}: {}", entry.getKey(), entry.getValue());
                             response.setHeader(entry.getKey(), entry.getValue());
                         } // for
                     } // if

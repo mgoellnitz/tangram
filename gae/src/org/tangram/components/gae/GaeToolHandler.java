@@ -66,16 +66,14 @@ public class GaeToolHandler {
         query.setFilter(new Query.FilterPredicate("_expires", FilterOperator.LESS_THAN, new Long(System.currentTimeMillis())));
         PreparedQuery results = datastore.prepare(query);
         FetchOptions limit = FetchOptions.Builder.withLimit(10000);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("clearSessions() deleting "+results.countEntities(limit)+" sessions from data store");
-        } // if
+        LOG.info("clearSessions() deleting {} sessions from data store", results.countEntities(limit));
         for (Entity session : results.asIterable()) {
             datastore.delete(session.getKey());
         } // for
         if (LOG.isInfoEnabled()) {
             query = new Query("_ah_SESSION");
             results = datastore.prepare(query);
-            LOG.info("clearSessions() "+results.countEntities(limit)+" sessions still available");
+            LOG.info("clearSessions() {} sessions still available", results.countEntities(limit));
         } // if
 
         return new TargetDescriptor(statistics, null, null);

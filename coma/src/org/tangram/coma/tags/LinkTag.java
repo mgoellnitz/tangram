@@ -99,9 +99,7 @@ public class LinkTag implements Tag, Serializable {
             HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
             ServletContext servletContext = pageContext.getServletContext();
             LinkFactoryAggregator builder = (LinkFactoryAggregator) servletContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("doEndTag() "+target+" "+view);
-            } // if
+            LOG.debug("doEndTag() {} {}", target, view);
             Link link = builder.createLink(request, response, target, null, view);
             pageContext.getOut().write(link.getUrl());
         } catch (IOException ioe) {

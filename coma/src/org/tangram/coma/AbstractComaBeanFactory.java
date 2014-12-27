@@ -202,17 +202,13 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             if (baseSet.next()) {
                 int contentId = baseSet.getInt("id_");
                 int version = baseSet.getInt("version_");
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("getProperties() "+contentId+"/"+version+": "+type);
-                } // if
+                LOG.debug("getProperties() {}/{}: {}", contentId, version, type);
 
                 ResultSetMetaData metaData = baseSet.getMetaData();
                 for (int i = 1; i<=metaData.getColumnCount(); i++) {
                     String columnName = metaData.getColumnName(i);
                     Object value = baseSet.getObject(i);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getProperties() property "+columnName+" = "+value);
-                    } // if
+                    LOG.debug("getProperties() property {} = {}", columnName, value);
                     properties.put(columnName, value);
                 } // for
 
@@ -225,12 +221,10 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                         String propertyName = resultSet.getString("propertyname");
                         String targetId = resultSet.getString("targetdocument");
                         int linkIndex = resultSet.getInt("linkindex");
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("getProperties() "+propertyName+"["+linkIndex+"] "+targetId);
-                        } // if
+                        LOG.debug("getProperties() {}[{}] {}", propertyName, linkIndex, targetId);
                         List<String> ids = linkLists.get(propertyName);
                         if (ids==null) {
-                            ids = new ArrayList<String>();
+                            ids = new ArrayList<>();
                             linkLists.put(propertyName, ids);
                         } // if
                         ids.add(linkIndex, targetId);
@@ -256,9 +250,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                                 byte[] data = blobSet.getBytes("data");
                                 long len = blobSet.getLong("len");
                                 properties.put(propertyName, createBlob(id, propertyName, mimeType, len, data));
-                                if (LOG.isDebugEnabled()) {
-                                    LOG.debug("getProperties() "+propertyName+" blob bytes "+data.length+" ("+len+")");
-                                } // if
+                                LOG.debug("getProperties() {} blob bytes {} ({})", propertyName, data.length, len);
                             } // if
                         } catch (SQLException se) {
                             LOG.error("getProperties() "+query, se);
@@ -289,9 +281,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                         } catch (SQLException se) {
                             LOG.error("getProperties() "+query, se);
                         } // try/catch
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("getProperties() "+propertyName+" text="+text.toString());
-                        } // if
+                        LOG.debug("getProperties() {} text={}", propertyName, text.toString());
 
                         query = "SELECT * FROM SgmlData WHERE id = "+target;
                         StringBuilder data = new StringBuilder(256);
@@ -307,9 +297,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                         } catch (SQLException se) {
                             LOG.error("getProperties() "+query, se);
                         } // try/catch
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("getProperties() "+propertyName+" data="+data.toString());
-                        } // if
+                        LOG.debug("getProperties() "+propertyName+" data="+data.toString());
 
                         try {
                             properties.put(propertyName, ComaTextConverter.convert(text, data));
@@ -355,9 +343,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             String[] arcs = path.split("/");
             String currentFolder = "1"; // root
             for (String folder : arcs) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("getChildId() lookup up "+folder+" in id "+currentFolder);
-                } // if
+                LOG.info("getChildId() lookup up {} in id {}", folder, currentFolder);
                 if (folder.length()>0) {
                     currentFolder = getChildId(folder, currentFolder);
                 } // if
@@ -389,9 +375,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                 if (LOG.isInfoEnabled()) {
                     int contentId = resultSet.getInt("id_");
                     ids.add(""+contentId);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getBean() "+contentId);
-                    } // if
+                    LOG.debug("getBean() {}", contentId);
                 } // if
             } // while
         } catch (SQLException se) {
@@ -407,9 +391,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             if (resultSet.next()) {
                 id = ""+resultSet.getInt("id_");
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("getChildId() "+parentId+"/"+name+": "+id);
-                } // if
+                LOG.debug("getChildId() {}/{}: {}", parentId, name, id);
             } // if
         } catch (SQLException se) {
             LOG.error("getChildId() "+query, se);
@@ -419,9 +401,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     public Set<String> getChildrenIds(String parentId, String type, String pattern) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getChildrenIds() parentId="+parentId+" type="+type+" pattern="+pattern);
-        } // if
+        LOG.info("getChildrenIds() parentId={} type={} pattern={}", parentId, type, pattern);
         Pattern p = null;
         if (pattern!=null) {
             p = Pattern.compile(pattern);
@@ -435,16 +415,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             while (resultSet.next()) {
                 String id = ""+resultSet.getInt("id_");
                 String name = resultSet.getString("name_");
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("getChildrenIds() "+parentId+"/"+name+": "+id);
-                } // if
+                LOG.info("getChildrenIds() {}/{}: {}", parentId, name, id);
                 if (p==null) {
                     result.add(id);
                 } else {
                     if (p.matcher(name).matches()) {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("getChildrenIds() match!");
-                        } // if
+                        LOG.info("getChildrenIds() match!");
                         result.add(id);
                     } // if
                 } // if
@@ -473,9 +449,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     public Set<String> getReferrerIds(String targetId, String type, String property) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("getReferrerIds() parentId="+targetId+" type="+type+" property="+property);
-        } // if
+        LOG.info("getReferrerIds() targetId={} type={} property={}", targetId, type, property);
         Set<String> result = new HashSet<>();
         String query = "SELECT * FROM LinkLists WHERE targetdocument = "+targetId;
         if (property!=null) {
@@ -485,9 +459,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             while (resultSet.next()) {
                 String sourceId = ""+resultSet.getInt("sourcedocument");
                 String sourceVersion = ""+resultSet.getInt("sourceversion");
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("getReferrerIds() "+sourceId+"/"+sourceVersion+"#"+property+" -> "+targetId);
-                } // if
+                LOG.info("getReferrerIds() {}/{}/#{} -> {}", sourceId, sourceVersion, property, targetId);
                 // Check for latest version referencing the object
                 final String sourceType = getType(sourceId);
                 final Map<String, Object> properties = getProperties(this, sourceType, sourceId);
@@ -495,7 +467,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                 if (LOG.isInfoEnabled()) {
                     LOG.info("getReferrerIds() version="+version+" :"+(version!=null ? version.getClass().getName() : "null"));
                 } // if
-                if ((!result.contains(sourceId)) && sourceVersion.equals(version.toString())) {
+                if ((!result.contains(sourceId))&&sourceVersion.equals(version.toString())) {
                     result.add(sourceId);
                 } // if
             } // if

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -41,9 +41,7 @@ public class UserFtpCommandHandler extends UserCommandHandler {
     @Override
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         String user = command.getParameter(0);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("handleCommand() welcome to user "+user);
-        } // if
+        LOG.info("handleCommand() welcome to user {}", user);
         session.setAttribute(SessionHelper.USER, user);
         super.handleCommand(command, session, invocationRecord);
     } // handleCommand()

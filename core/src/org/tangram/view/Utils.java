@@ -56,7 +56,7 @@ public final class Utils {
      */
     public static void setPrimaryBrowserLanguageForJstl(HttpServletRequest request) {
         String acceptLanguageHeader = request.getHeader("Accept-Language");
-        if (acceptLanguageHeader == null) {
+        if (acceptLanguageHeader==null) {
             return;
         } // if
         String[] acceptLanguages = acceptLanguageHeader.split(",");
@@ -66,9 +66,7 @@ public final class Utils {
                 String language[] = acceptLanguage[0].split("-");
                 if (language.length>0) {
                     final String localeCode = language[0];
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("setPrimaryBrowserLanguageForJstl() setting request language "+localeCode);
-                    } // if
+                    LOG.info("setPrimaryBrowserLanguageForJstl() setting request language {}", localeCode);
                     Config.set(request, Config.FMT_LOCALE, new Locale(localeCode));
                 } // if
             } // if

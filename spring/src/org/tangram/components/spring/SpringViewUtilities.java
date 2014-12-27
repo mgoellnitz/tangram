@@ -115,9 +115,7 @@ public class SpringViewUtilities implements ViewUtilities {
         ViewContext vc = viewContextFactory.createViewContext(model, view);
         ModelAndView mav = SpringViewUtilities.createModelAndView(vc);
         View effectiveView = mav.getView();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("render() effectiveView="+effectiveView);
-        } // if
+        LOG.debug("render() effectiveView={}", effectiveView);
         try {
             if (effectiveView==null) {
                 String viewName = mav.getViewName();
@@ -131,10 +129,8 @@ public class SpringViewUtilities implements ViewUtilities {
             if (writer!=null) {
                 writer.flush();
             } // if
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("render() model="+mav.getModel());
-                LOG.debug("render("+mav.getViewName()+") effectiveView="+effectiveView);
-            } // if
+            LOG.debug("render() model={}", mav.getModel());
+            LOG.debug("render({}) effectiveView={}", mav.getViewName(), effectiveView);
             effectiveView.render(mav.getModel(), (HttpServletRequest) request, (HttpServletResponse) response);
         } catch (Exception e) {
             LOG.error("render() #"+view, e);

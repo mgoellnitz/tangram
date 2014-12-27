@@ -40,9 +40,12 @@ public class TangramSpringServices implements ApplicationContextAware {
 
     private static ConversionService conversionService = null;
 
+
     private static class ConversionServiceHolder {
+
         public static final ConversionService INSTANCE = getBeanFromContext(ConversionService.class);
     }
+
 
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
@@ -96,14 +99,10 @@ public class TangramSpringServices implements ApplicationContextAware {
             if (converter!=null) {
                 wrapper.setConversionService(converter);
             } // if
-            if (LOG.isInfoEnabled()) {
-                LOG.info("createWrapper() conversion service "+wrapper.getConversionService());
-            } // if
+            LOG.info("createWrapper() conversion service {}", wrapper.getConversionService());
         } catch (Exception e) {
             // This is not an error since conversion services are optional.
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("createWrapper()", e);
-            } // if
+            LOG.warn("createWrapper()", e);
         } // try/catch
         return wrapper;
     } // createWrapper()

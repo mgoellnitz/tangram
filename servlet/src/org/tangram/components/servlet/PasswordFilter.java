@@ -114,9 +114,7 @@ public class PasswordFilter implements Filter {
 
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("doFilter() detected URI "+thisURL);
-        } // if
+        LOG.debug("doFilter() detected URI {}", thisURL);
 
         if (!getFreeUrls().contains(thisURL)) {
             boolean liveSystem = loginSupport.isLiveSystem();
@@ -132,30 +130,22 @@ public class PasswordFilter implements Filter {
             } else {
                 if (principal!=null) {
                     String userName = principal.getName();
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("doFilter() checking for user: "+userName);
-                    } // if
+                    LOG.info("doFilter() checking for user: {}", userName);
                     loginSupport.storeLogoutURL(request, thisURL);
                     if (adminUsers.contains(userName)) {
                         request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
                     if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("preHandle() user not allowed to access page: "+userName);
-                        } // if
+                        LOG.warn("preHandle() user not allowed to access page: {}", userName);
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                     } // if
                 } else {
                     String loginURL = loginSupport.createLoginURL(thisURL);
                     if (allowedUsers.size()>0) {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("doFilter() no logged in user found");
-                        } // if
+                        LOG.info("doFilter() no logged in user found");
                         response.sendRedirect(loginURL);
                     } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("doFilter() system doesn't need login but perhaps application");
-                        } // if
+                        LOG.debug("doFilter() system doesn't need login but perhaps application");
                         request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
                     } // if
                 } // if
@@ -169,17 +159,11 @@ public class PasswordFilter implements Filter {
     @Override
     public void init(FilterConfig config) throws ServletException {
         freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
-        if (LOG.isInfoEnabled()) {
-            LOG.info("init() free urls "+freeUrls);
-        } // if
+        LOG.info("init() free urls {}", freeUrls);
         allowedUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("allowed.users")));
-        if (LOG.isInfoEnabled()) {
-            LOG.info("init() allowed users "+allowedUsers);
-        } // if
+        LOG.info("init() allowed users {}", allowedUsers);
         adminUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("admin.users")));
-        if (LOG.isInfoEnabled()) {
-            LOG.info("init() admin users "+adminUsers);
-        } // if
+        LOG.info("init() admin users {}", adminUsers);
     } // init()
 
 } // PasswordFilter

@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -52,15 +52,11 @@ public class RnfrFtpCommandHandler extends RnfrCommandHandler {
     @Override
     public void handleCommand(Command command, Session session, InvocationRecord invocationRecord) {
         for (String parameter : command.getParameters()) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("handleCommand() parameter "+parameter);
-            } // if
+            LOG.info("handleCommand() parameter {}", parameter);
         } // for
         String oldName = command.getParameter(0);
         String dir = SessionHelper.getDirectoy(session);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("handleCommand() renaming from "+oldName+" in directory "+dir);
-        } // if
+        LOG.info("handleCommand() renaming from {} in directory {}", oldName, dir);
         String mimetype = CodeHelper.getMimetype(dir);
         Map<String, CodeResource> typeCache = codeResourceCache.getTypeCache(mimetype);
         // directory exists?

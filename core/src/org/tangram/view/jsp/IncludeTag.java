@@ -93,10 +93,8 @@ public class IncludeTag implements Tag, Serializable {
         Object oldSelf = req.getAttribute(Constants.THIS);
         try {
             req.setAttribute(Constants.THIS, bean);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("render() bean="+bean+" :"+bean.getClass().getSimpleName()+" #"+view);
-            } // if
-            ((ViewUtilities)(context.getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES))).render(writer, bean, view, req, resp);
+            LOG.debug("render() bean={} :{} #{}", bean, bean.getClass().getSimpleName(), view);
+            ((ViewUtilities) (context.getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES))).render(writer, bean, view, req, resp);
         } catch (IOException e) {
             LOG.error("render() bean="+bean+" :"+bean.getClass().getSimpleName()+" #"+view, e);
         } // try/catch
@@ -112,9 +110,7 @@ public class IncludeTag implements Tag, Serializable {
 
     @Override
     public int doEndTag() throws JspException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("doEndTag("+Thread.currentThread().getId()+") view "+view);
-        } // if
+        LOG.debug("doEndTag({}) view {}", Thread.currentThread().getId(), view);
         render(pc.getServletContext(), pc.getRequest(), pc.getResponse(), pc.getOut(), bean, view);
         return EVAL_PAGE;
     } // doEndTag()

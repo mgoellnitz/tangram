@@ -65,14 +65,10 @@ public class ToolHandler {
             throw new Exception("User may not clear cache");
         } // if
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("clearCaches() clearing class specific caches");
-        } // if
+        LOG.info("clearCaches() clearing class specific caches");
         for (Class<? extends Content> c : beanFactory.getClasses()) {
             if (c.isInterface()||(c.getModifiers()&Modifier.ABSTRACT)>0) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("clearCaches() "+c.getSimpleName()+" may not have instances");
-                } // if
+                LOG.info("clearCaches() {} may not have instances", c.getSimpleName());
             } else {
                 beanFactory.clearCacheFor(c);
             } // if

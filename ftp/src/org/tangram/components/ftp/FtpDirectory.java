@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -52,14 +52,10 @@ public class FtpDirectory {
 
     @PostConstruct
     public void afterPropertiesSet() {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("() initializing with code cache "+codeResourceCache);
-        } // if
+        LOG.info("() initializing with code cache {}", codeResourceCache);
         if (beanFactory instanceof MutableBeanFactory) {
             ftpServerStub = new TangramFtpServer((MutableBeanFactory) beanFactory, codeResourceCache);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("() starting");
-            } // if
+            LOG.info("() starting");
             ftpServerStub.start();
         } else {
             LOG.error("afterPropertiesSet() no factory for mutable beans - not starting ftp service");

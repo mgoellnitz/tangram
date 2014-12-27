@@ -101,9 +101,7 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
         String uri = request.getRequestURI().substring(prefixLength);
         String view = null;
         String id = null;
-        if (LOG.isInfoEnabled()) {
-            LOG.info("doGet() uri="+uri);
-        } // if
+        LOG.info("doGet() uri={}", uri);
         Utils.setPrimaryBrowserLanguageForJstl(request);
         if (uri.indexOf("view")>0) {
             Pattern p = PATTERN_ID_VIEW;
@@ -120,25 +118,17 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
             } // if
         } // if
         try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("doGet() view="+view+" id="+id);
-            } // if
+            LOG.info("doGet() view={} id={}", view, id);
             Content content = beanFactory.getBean(id);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("doGet() content="+content);
-            } // if
+            LOG.debug("doGet() content={}", content);
             if (content==null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository. (Tangram Default Servlet)");
                 return;
             } // if
             Map<String, Object> model = metaLinkHandler.createModel(new TargetDescriptor(content, view, null), request, response);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("doGet() model="+model);
-            } // if
+            LOG.debug("doGet() model={}", model);
             viewUtilities.render(null, model, view);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("doGet() done "+response.getContentType()+" on "+response.getClass().getName());
-            } // if
+            LOG.debug("doGet() done {} on {}", response.getContentType(), response.getClass().getName());
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
             response.setContentType("text/html");

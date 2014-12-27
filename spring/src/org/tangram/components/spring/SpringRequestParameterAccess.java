@@ -53,19 +53,12 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
                 } // if
                 String key = entry.getKey();
                 String filename = entry.getValue().getName();
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("() size "+entry.getValue().getSize());
-                    LOG.info("() name "+filename);
-                } // if
+                LOG.info("() name {}", filename);
+                LOG.info("() size {}", entry.getValue().getSize());
                 final String originalFilename = entry.getValue().getOriginalFilename();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("() key "+key);
-                    LOG.debug("() original filename "+originalFilename);
-                } // if
+                LOG.debug("() key {} original filename {}", key, originalFilename);
                 if (filename.length()>0) {
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("multipart file "+key);
-                    } // if
+                    LOG.info("multipart file {}", key);
                     try {
                         originalNames.put(key, originalFilename);
                         blobs.put(key, entry.getValue().getBytes());

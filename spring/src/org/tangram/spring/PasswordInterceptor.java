@@ -93,9 +93,7 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("preHandle() detected URI "+thisURL);
-        } // if
+        LOG.debug("preHandle() detected URI {}", thisURL);
 
         if (!getFreeUrls().contains(thisURL)) {
             boolean liveSystem = loginSupport.isLiveSystem();
@@ -111,30 +109,22 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
             } else {
                 if (principal!=null) {
                     String userName = principal.getName();
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("preHandle() checking for user: "+userName);
-                    } // if
+                    LOG.info("preHandle() checking for user: {}", userName);
                     loginSupport.storeLogoutURL(request, thisURL);
                     if (adminUsers.contains(userName)) {
                         request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
                     } // if
                     if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("preHandle() user not allowed to access page: "+userName);
-                        } // if
+                        LOG.warn("preHandle() user not allowed to access page: {}", userName);
                         response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
                     } // if
                 } else {
                     String loginURL = loginSupport.createLoginURL(thisURL);
                     if (allowedUsers.size()>0) {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("preHandle() no logged in user found");
-                        } // if
+                        LOG.info("preHandle() no logged in user found");
                         response.sendRedirect(loginURL);
                     } else {
-                        if (LOG.isDebugEnabled()) {
-                            LOG.debug("preHandle() system doesn't need login but perhaps application");
-                        } // if
+                        LOG.debug("preHandle() system doesn't need login but perhaps application");
                         request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
                     } // if
                 } // if

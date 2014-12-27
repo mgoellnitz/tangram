@@ -61,14 +61,9 @@ public class ComaHandler extends AbstractRenderingBase {
     @LinkAction("/content/(.*)")
     public TargetDescriptor render(@LinkPart(1) String id, @ActionParameter(value = "view") String view, HttpServletRequest request,
             HttpServletResponse response) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("render() id="+id);
-            LOG.info("render() view="+view);
-        } // if
+        LOG.info("render() id={} view={}", id, view);
         ComaContent content = (ComaContent) beanFactory.getBean(id);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("render() content="+content);
-        } // if
+        LOG.info("render() content={}", content);
         if (content==null) {
             try {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
@@ -88,15 +83,9 @@ public class ComaHandler extends AbstractRenderingBase {
     @LinkAction("/contentblob/(.*)/(.*)/(.*)")
     public TargetDescriptor renderBlob(@LinkPart(1) String id, @LinkPart(2) String property, @LinkPart(3) String propertyId,
             @ActionParameter("view") String view, HttpServletRequest request, HttpServletResponse response) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("render() id="+id);
-            LOG.info("render() property="+id);
-            LOG.info("render() view="+view);
-        } // if
+        LOG.info("render() id={} property={} view={}", id, property, view);
         ComaContent content = (ComaContent) beanFactory.getBean(id);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("render() content="+content);
-        } // if
+        LOG.info("render() content={}", content);
         if (content==null) {
             try {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");

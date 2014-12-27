@@ -54,27 +54,19 @@ public class RetrFtpCommandHandler extends RetrCommandHandler {
         String filename = command.getParameter(0);
         byte[] data = new byte[0];
         try {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("processData() retrieving "+filename);
-            } // if
+            LOG.info("processData() retrieving {}", filename);
             String type = CodeHelper.getMimetype(SessionHelper.getDirectoy(session));
             String annotation = filename.substring(0, filename.lastIndexOf('.'));
             Map<String, CodeResource> cache = codeResourceCache.getTypeCache(type);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("processData() 'directory' for "+type+" is "+cache);
-            } // if
+            LOG.info("processData() 'directory' for {} is {}", type, cache);
             final String key = "text/plain".equals(type) ? filename : annotation;
             CodeResource code = cache.get(key);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("processData() code for "+key+" is "+code);
-            } // if
+            LOG.info("processData() code for {} is {}", key, code);
             data = code.getCodeText().getBytes("UTF-8");
         } catch (Exception e) {
             LOG.error("processData()", e);
         } // try/catch
-        if (LOG.isInfoEnabled()) {
-            LOG.info("processData() sending "+data.length+" bytes");
-        } // if
+        LOG.info("processData() sending {} bytes", data.length);
         session.sendData(data, data.length);
     } // processData()
 

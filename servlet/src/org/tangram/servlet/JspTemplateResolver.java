@@ -52,18 +52,14 @@ public class JspTemplateResolver extends AbstractInternalResourceTemplateResolve
 
     @Override
     protected String lookupView(String viewName, Locale locale, Object content, String key) throws IOException {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("lookupView() "+viewName+"#"+content);
-        } // if
+        LOG.info("lookupView() {}#{}", viewName, content);
         return super.lookupView(viewName, locale, content, key);
     } // lookupView()
 
 
     @Override
     protected String checkView(String view, String packageName, String simpleName, String key, Locale locale) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("checkView() "+view+"#"+packageName+"_"+simpleName);
-        } // if // if
+        LOG.info("checkView() {}#{}_{}", view, packageName, simpleName);
         return super.checkView(view, packageName, simpleName, key, locale);
     } // checkView()
 

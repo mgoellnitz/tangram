@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -96,20 +96,14 @@ public class ExpirationHeaderFilter implements Filter {
         if (idx>0) {
             String extension = uri.substring(idx+1);
             Long timeObject = getTimeObject(extension);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("doFilter("+uri+") extension="+extension+" timeObject="+timeObject);
-            } // if
+            LOG.debug("doFilter({}) extension={} timeObject={}", uri, extension, timeObject);
             if (timeObject!=null) {
                 long time = timeObject;
                 if (time>0) {
                     long expirationValue = System.currentTimeMillis()+time;
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("doFilter() expirationValue="+expirationValue);
-                    } // if
+                    LOG.debug("doFilter() expirationValue=", expirationValue);
                     String expires = formatter.format(new Date(expirationValue));
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("doFilter() expires="+expires);
-                    } // if
+                    LOG.debug("doFilter() expires={}", expires);
                     response.addHeader("Last-Modified", startTimeHeader);
                     response.addHeader("Etag", startTimeString+uri.hashCode()+"\"");
                     response.addHeader("Expires", expires);
@@ -124,21 +118,15 @@ public class ExpirationHeaderFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         String expiry = config.getInitParameter("expirations");
         if (expiry!=null) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("init() expiry: "+expiry);
-            } // if
+            LOG.info("init() expiry: {}", expiry);
             for (String exp : expiry.split(",")) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("init() exp: "+exp);
-                } // if
+                LOG.debug("init() exp: {}", exp);
                 exp = exp.trim();
                 String[] kvp = exp.split("=");
                 String mimeType = kvp[0];
                 String timeString = kvp[1];
                 long time = Long.parseLong(timeString)*1000;
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("init() time for "+mimeType+" is "+time);
-                } // if
+                LOG.info("init() time for {} is {}", mimeType, time);
                 extensionTimes.put(mimeType, time);
             } // for
         } // if

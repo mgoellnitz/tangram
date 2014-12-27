@@ -99,20 +99,14 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
         if (StringUtils.isNotBlank(title)) {
             List<T> beans = beanFactory.listBeans(c);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getObjectsViaDescription("+title+") checking "+beans);
-            } // if
+            LOG.debug("getObjectsViaDescription({}) checking {}", title, beans);
             for (T bean : beans) {
                 try {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getObjectsViaDescription() checking "+bean);
-                    } // if
+                    LOG.debug("getObjectsViaDescription() checking {}", bean);
                     BufferResponse r = new BufferResponse();
                     viewUtilties.render(r.getWriter(), bean, "description", request, r);
                     String description = r.getContents();
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getObjectsViaDescription("+description.indexOf(title)+") "+bean+" has description "+description);
-                    } // if
+                    LOG.debug("getObjectsViaDescription({}) {} has description {}", description.indexOf(title), bean, description);
                     if (description.indexOf(title)>=0) {
                         result.add(bean);
                     } // if
@@ -122,9 +116,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             } // for
         } // if
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getObjectsViaDescription("+title+") result="+result);
-        } // if
+        LOG.debug("getObjectsViaDescription({}) result={}", title, result);
         return result;
     } // getObjectsViaDescription()
 
@@ -158,17 +150,13 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         Matcher m = createIdMatcher(valueString);
         if (m.find()) {
             valueString = m.group(1);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("getReferenceValue() pattern match result "+valueString);
-            } // if
+            LOG.info("getReferenceValue() pattern match result {}", valueString);
             value = beanFactory.getBean(valueString);
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("getReferenceValue() we should have checked for selection via description template");
-            } // if
+            LOG.warn("getReferenceValue() we should have checked for selection via description template");
             value = getObjectViaDescription(cls, valueString.trim(), request);
-            if ((value!=null)&&(LOG.isInfoEnabled())) {
-                LOG.info("getReferenceValue() found a value from description "+value);
+            if (value!=null) {
+                LOG.info("getReferenceValue() found a value from description {}", value);
             } // if
         } // if
         return value;
@@ -180,9 +168,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             return null;
         } // if
         Object value = null;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getStorableObject() required type is "+cls.getName());
-        } // if
+        LOG.debug("getStorableObject() required type is {}", cls.getName());
         if (cls==String.class) {
             value = StringUtils.isNotBlank(valueString) ? valueString : null;
         } else if (cls==Date.class) {
@@ -198,23 +184,17 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         } else if (cls==Boolean.class) {
             value = Boolean.parseBoolean(valueString);
         } else if (cls==List.class) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getStorableObject() splitting "+valueString);
-            } // if
+            LOG.debug("getStorableObject() splitting {}", valueString);
             String[] idStrings = valueString.split(",");
             List<Object> elements = new ArrayList<Object>();
             for (String idString : idStrings) {
                 idString = idString.trim();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("getStorableObject() idString="+idString);
-                } // if
+                LOG.debug("getStorableObject() idString={}", idString);
                 if (StringUtils.isNotBlank(idString)) {
                     Matcher m = createIdMatcher(idString);
                     if (m.find()) {
                         idString = m.group(1);
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("getStorableObject() pattern match result "+idString);
-                        } // if
+                        LOG.info("getStorableObject() pattern match result {}", idString);
                         final Content bean = beanFactory.getBean(idString);
                         if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
                             elements.add(bean);

@@ -88,10 +88,10 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
     @Override
     @SuppressWarnings("unchecked")
     public void reset() {
-        definedViewShims = new HashMap<String, List<Constructor<Shim>>>();
-        definedBeanShims = new HashMap<String, List<Constructor<Shim>>>();
-        cachedViewShims = new HashMap<String, List<Constructor<Shim>>>();
-        cachedBeanShims = new HashMap<String, List<Constructor<Shim>>>();
+        definedViewShims = new HashMap<>();
+        definedBeanShims = new HashMap<>();
+        cachedViewShims = new HashMap<>();
+        cachedBeanShims = new HashMap<>();
 
         for (Class<Shim> c : classRepository.get(Shim.class).values()) {
             try {
@@ -100,38 +100,30 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
                 Class<Content> beanClass = (Class<Content>) (actualTypes[0]);
                 String className = c.getName();
                 if (ViewShim.class.isAssignableFrom(c)) {
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("reset() defining view shim "+className+" for "+beanClass.getName());
-                    } // if
+                    LOG.info("reset() defining view shim {} for {}", className, beanClass.getName());
                     defineViewShim(beanClass, c.getConstructor(HttpServletRequest.class, beanClass));
                 } else {
                     if (Shim.class.isAssignableFrom(c)) {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("reset() defining bean shim "+className+" for "+beanClass.getName());
-                        } // if
+                        LOG.info("reset() defining bean shim {} for {}", className, beanClass.getName());
                         defineBeanShim(beanClass, c.getConstructor(beanClass));
                     } // if
                 } // if
             } catch (Throwable e) {
                 // who cares
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("reset()", e);
-                } // if
+                LOG.error("reset()", e);
             } // try/catch
         } // for
     } // reset()
 
 
     private List<Constructor<Shim>> getShimsFor(Map<String, List<Constructor<Shim>>> definedShims,
-                                                Map<String, List<Constructor<Shim>>> cachedShims, Class<? extends Object> shimFor) {
+            Map<String, List<Constructor<Shim>>> cachedShims, Class<? extends Object> shimFor) {
         // try this first, since we hope to deal with data views most times
         List<Constructor<Shim>> result = cachedShims.get(shimFor.getName());
         if (result==null) {
-            result = new ArrayList<Constructor<Shim>>();
+            result = new ArrayList<>();
             cachedShims.put(shimFor.getName(), result);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getShimsFor() defining shims for "+shimFor.getName());
-            } // if
+            LOG.debug("getShimsFor() defining shims for {}", shimFor.getName());
             while (shimFor!=null) {
                 List<Constructor<Shim>> shims = definedShims.get(shimFor.getName());
                 if (shims!=null) {
@@ -141,7 +133,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
             } // if
             if (LOG.isDebugEnabled()) {
                 for (Constructor<Shim> sct : result) {
-                    LOG.debug("getShimsFor() - "+sct.getDeclaringClass().getSimpleName());
+                    LOG.debug("getShimsFor() - {}", sct.getDeclaringClass().getSimpleName());
                 } // for
             } // if
         } // if
@@ -150,24 +142,17 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
 
     public Map<String, Object> getShims(HttpServletRequest request, Object bean) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         try {
             Class<? extends Object> shimFor = bean.getClass();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("getShims() getting shims for "+shimFor.getName());
-            } // if
+            LOG.debug("getShims() getting shims for {}", shimFor.getName());
 
             List<Constructor<Shim>> viewShims = getShimsFor(definedViewShims, cachedViewShims, shimFor);
             for (Constructor<Shim> ct : viewShims) {
                 if (ct!=null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getShims() view shim for bean "+bean.getClass().getSimpleName()+" is "
-                                +ct.getDeclaringClass().getSimpleName());
-                    } // if
+                    LOG.debug("getShims() view  shim for bean {} is {}", bean.getClass().getSimpleName(), ct.getDeclaringClass().getSimpleName());
                     Shim result = ct.newInstance(request, bean);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getShims() storing shim as "+result.getAttributeName());
-                    } // if
+                    LOG.debug("getShims() storing shim as {}", result.getAttributeName());
                     resultMap.put(result.getAttributeName(), result);
                 } // if
             } // for
@@ -175,14 +160,9 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
             List<Constructor<Shim>> beanShims = getShimsFor(definedBeanShims, cachedBeanShims, shimFor);
             for (Constructor<Shim> ct : beanShims) {
                 if (ct!=null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getShims() shim for bean "+bean.getClass().getSimpleName()+" is "
-                                +ct.getDeclaringClass().getSimpleName());
-                    } // if
+                    LOG.debug("getShims() shim for bean {} is {}", bean.getClass().getSimpleName(), ct.getDeclaringClass().getSimpleName());
                     Shim result = ct.newInstance(bean);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("getShims() storing shim as "+result.getAttributeName());
-                    } // if
+                    LOG.debug("getShims() storing shim as {}", result.getAttributeName());
                     resultMap.put(result.getAttributeName(), result);
                 } // if
             } // for

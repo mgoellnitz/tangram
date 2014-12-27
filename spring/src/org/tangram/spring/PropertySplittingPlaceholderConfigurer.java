@@ -62,38 +62,30 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
      */
     private void storeUrlParts(String propertyValue, String propertyName, Properties props) {
         // split
-        if (propertyValue == null) {
+        if (propertyValue==null) {
             return;
         } // if
         int idx = propertyValue.indexOf("://");
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("storeUrlParts("+idx+") "+propertyValue);
-        } // if
+        LOG.debug("storeUrlParts({}) {}", idx, propertyValue);
         if ((idx>0)&&(propertyValue.length()>idx+5)) {
             // Might be a URL
             try {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("storeUrlParts() splitting "+propertyValue+"("+propertyName+")");
-                } // if
+                LOG.info("storeUrlParts() splitting {} ({})", propertyValue, propertyName);
                 String protocol = propertyValue.substring(0, idx);
                 if (StringUtils.isNotBlank(protocol)) {
                     props.setProperty(propertyName+".protocol", protocol);
                 } // if
                 idx += 3;
                 String host = propertyValue.substring(idx);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("storeUrlParts() host I: "+host);
-                } // if
+                LOG.debug("storeUrlParts() host I: {}", host);
                 String uri = "";
                 idx = host.indexOf('/');
                 if (idx>0) {
                     uri = host.substring(idx+1);
                     host = host.substring(0, idx);
                 } // if
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("storeUrlParts() host II: "+host);
-                    LOG.debug("storeUrlParts() uri: "+uri);
-                } // if
+                LOG.debug("storeUrlParts() host II: {}", host);
+                LOG.debug("storeUrlParts() uri: {}", uri);
                 if (StringUtils.isNotBlank(uri)) {
                     props.setProperty(propertyName+".uri", uri);
                 } // if
@@ -103,10 +95,8 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
                     username = host.substring(0, idx);
                     host = host.substring(idx+1);
                 } // if
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("storeUrlParts() host III: "+host);
-                    LOG.debug("storeUrlParts() username: "+username);
-                } // if
+                LOG.debug("storeUrlParts() host III: {}", host);
+                LOG.debug("storeUrlParts() username: {}", username);
                 idx = username.indexOf(':');
                 if (idx>0) {
                     String[] userinfos = username.split(":");
@@ -159,21 +149,15 @@ public class PropertySplittingPlaceholderConfigurer extends PropertyPlaceholderC
     protected String resolveSystemProperty(String key) {
         String result = super.resolveSystemProperty(key);
         if (result==null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("resolveSystemProperty() nothing found in system properties for "+key);
-            } // if
+            LOG.debug("resolveSystemProperty() nothing found in system properties for {}", key);
             int idx = key.lastIndexOf('.');
             if (idx>0) {
                 String baseKey = key.substring(0, idx);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("resolveSystemProperty() lookup for baseKey "+baseKey);
-                } // if
+                LOG.debug("resolveSystemProperty() lookup for baseKey {}", baseKey);
                 String value = super.resolveSystemProperty(baseKey);
                 storeUrlParts(value, baseKey, learnings);
                 result = learnings.getProperty(key);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("resolveSystemProperty() result "+baseKey+" is "+result);
-                } // if
+                LOG.debug("resolveSystemProperty() result {} is {}", baseKey, result);
             } // if
         } // if
         return result;

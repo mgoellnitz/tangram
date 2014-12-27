@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.jdo.JdoContent;
 
+
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.INCREMENT)
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
@@ -44,20 +45,19 @@ public abstract class NucleusContent extends JdoContent {
             LOG.debug("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
         } // if
         if (id instanceof OID) {
-            OID oid = (OID)id;
+            OID oid = (OID) id;
             String pcClass = oid.getPcClass();
             int idx = pcClass.lastIndexOf('.');
             pcClass = pcClass.substring(idx+1);
             return pcClass+":"+oid.getKeyValue();
         } else {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("postprocessPlainId() returning default '"+id+"'");
-            } // if
+            LOG.warn("postprocessPlainId() returning default '{}'", id);
             return ""+id;
         } // if
     } // postprocessPlainId()
 
-    /** utility helpers until we understand to do this natively in the datanucleus / mongoDB layer (or similar layers) **/
+
+    /** utility helpers until we understand to do this natively in the datanucleus / mongoDB layer (or similar layers) * */
 
     protected byte[] stringToByteArray(String data) {
         return data==null ? null : Base64.decode(data);

@@ -161,9 +161,7 @@ public class EditingHandler extends AbstractRenderingBase {
 
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
         Map<String, String[]> parameterMap = parameterAccess.getParameterMap();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("store() # parameters "+parameterMap.size()+" for "+request.getClass().getName());
-        } // if
+        LOG.debug("store() # parameters {} for {}", parameterMap.size(), request.getClass().getName());
         for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
             Entry<String, String[]> parameter = entry;
             String key = parameter.getKey();
@@ -185,15 +183,11 @@ public class EditingHandler extends AbstractRenderingBase {
                     Class<? extends Object> cls = wrapper.getType(key);
                     String valueString = values.length==1 ? values[0] : "";
                     Object value = propertyConverter.getStorableObject(bean, valueString, cls, request);
-                    if (LOG.isInfoEnabled()) {
-                        LOG.info("store() value="+value);
-                    } // if
+                    LOG.info("store() value={}", value);
                     if (!(Content.class.isAssignableFrom(cls)&&value==null)) {
                         newValues.put(key, value);
                     } else {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("store() not setting value");
-                        } // if
+                        LOG.info("store() not setting value");
                     } // if
                     if (Content.class.isAssignableFrom(cls)&&"".equals(valueString)) {
                         newValues.put(key, null);
@@ -232,11 +226,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (!getMutableBeanFactory().persist(bean)) {
             throw new Exception("Could not persist bean "+bean.getId());
         } // if
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("store() id="+id);
-        } // if
-
+        LOG.debug("store() id={}", id);
         if (e!=null) {
             throw e;
         } // if
@@ -260,9 +250,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (agent.indexOf("MIDP")>0) {
             variant = "$mobile";
         } // if
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getVariant() agent="+agent+" -> "+variant);
-        } // if
+        LOG.debug("getVariant() agent={} -> {}", agent, variant);
         return variant;
     } // getVariant()
 
@@ -290,19 +278,15 @@ public class EditingHandler extends AbstractRenderingBase {
     @LinkAction("/create")
     public TargetDescriptor create(@ActionParameter(PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("create() creating new instance of type "+typeName);
-        } // if
+        LOG.info("create() creating new instance of type {}", typeName);
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not edit");
         } // if
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
         if (getMutableBeanFactory().persist(content)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("create() content="+content);
-                LOG.debug("create() id="+content.getId());
-            } // if
+            LOG.debug("create() content={}", content);
+            LOG.debug("create() id={}", content.getId());
             return describeTarget(content);
         } // if
         throw new Exception("Cannot persist new "+typeName);
@@ -312,9 +296,7 @@ public class EditingHandler extends AbstractRenderingBase {
     @LinkAction("/list")
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
             HttpServletRequest request, HttpServletResponse response) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("list() listing instances of type '"+typeName+"'");
-        } // if
+        LOG.info("list() listing instances of type '{}'", typeName);
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new RuntimeException("User may not edit");
         } // if
@@ -360,9 +342,7 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/edit/id_(.*)")
     public TargetDescriptor edit(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("edit() editing "+id);
-        } // if
+        LOG.info("edit() editing {}", id);
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not edit");
         } // if
@@ -414,19 +394,15 @@ public class EditingHandler extends AbstractRenderingBase {
     public TargetDescriptor link(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
             @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("link() creating new instance of type "+typeName);
-        } // if
+        LOG.info("link() creating new instance of type {}", typeName);
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not edit");
         } // if
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
         if (getMutableBeanFactory().persist(content)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("link() content="+content);
-                LOG.debug("link() id="+content.getId());
-            } // if
+            LOG.debug("link() content={}", content);
+            LOG.debug("link() id={}", content.getId());
 
             // get bean here for update to avoid xg transactions where ever possible
             Content bean = getMutableBeanFactory().getBean(Content.class, id);
@@ -448,9 +424,7 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/delete/id_(.*)")
     public TargetDescriptor delete(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("delete() trying to delete instance "+id);
-        } // if
+        LOG.info("delete() trying to delete instance {}", id);
         if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
             throw new Exception("User may not edit");
         } // if
@@ -484,16 +458,12 @@ public class EditingHandler extends AbstractRenderingBase {
         while (oneClass.getSuperclass()!=Object.class) {
             oneClass = oneClass.getSuperclass();
         } // while
-        if (LOG.isInfoEnabled()) {
-            LOG.info("contentExport() root class to ignore fields in: "+oneClass.getName());
-        } // if
+        LOG.info("contentExport() root class to ignore fields in: {}", oneClass.getName());
         xstream.omitField(oneClass, "id");
         xstream.omitField(oneClass, "ebeanInternalId");
         final Class<? extends Content> baseClass = getMutableBeanFactory().getBaseClass();
         if (baseClass!=oneClass) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("contentExport() additional base class to ignore fields in: "+oneClass.getName());
-            } // if
+            LOG.info("contentExport() additional base class to ignore fields in: {}", oneClass.getName());
             xstream.omitField(baseClass, "id");
             xstream.omitField(baseClass, "beanFactory");
             xstream.omitField(baseClass, "gaeBeanFactory");
@@ -501,9 +471,7 @@ public class EditingHandler extends AbstractRenderingBase {
         } // if
 
         for (Class<? extends Content> c : classes) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("contentExport() aliasing and ignoring fields for "+c.getName());
-            } // if
+            LOG.info("contentExport() aliasing and ignoring fields for {}", c.getName());
             xstream.omitField(c, "beanFactory");
             xstream.omitField(c, "gaeBeanFactory");
             xstream.omitField(c, "userServices");
@@ -552,15 +520,11 @@ public class EditingHandler extends AbstractRenderingBase {
         } // for
 
         Object contents = xstream.fromXML(input);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("read() "+contents);
-        } // if
+        LOG.info("read() {}", contents);
         if (contents instanceof List) {
             List<? extends Content> list = convertList(contents);
             for (Content o : list) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("read() "+o);
-                } // if
+                LOG.info("read() {}", o);
                 getMutableBeanFactory().persistUncommitted(o);
             } // for
         } // if

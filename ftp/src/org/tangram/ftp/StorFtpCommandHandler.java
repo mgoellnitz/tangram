@@ -71,9 +71,7 @@ public class StorFtpCommandHandler extends StorCommandHandler {
             beanFactory.persist(code);
         } // if
 
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterProcessData() "+dir+" / "+filename+" ("+data.length+"b)");
-        } // if
+        LOG.info("afterProcessData() {} / {} ({}b)", dir, filename, data.length);
     } // afterProcessData()
 
 } // StorFtpCommandHandler

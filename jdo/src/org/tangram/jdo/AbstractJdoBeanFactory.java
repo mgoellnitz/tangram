@@ -111,9 +111,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
         Object oid = getObjectId(internalId, kindClass, kind);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getBean() "+kindClass.getName()+" "+internalId+" oid="+oid);
-        } // if
+        LOG.debug("getBean() {} {} oid={}", kindClass.getName(), internalId, oid);
         return convert(cls, manager.getObjectById(kindClass, oid));
     } // getBean()
 
@@ -173,14 +171,10 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
      */
     @Override
     public <T extends Content> T createBean(Class<T> cls) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() beginning transaction");
-        } // if
+        LOG.debug("createBean() beginning transaction");
         beginTransaction();
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("createBean() creating new instance of "+cls.getName());
-        } // if
+        LOG.debug("createBean() creating new instance of {}", cls.getName());
         T bean = manager.newInstance(cls);
 
         statistics.increase("create bean");
@@ -208,10 +202,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
             } // if
             @SuppressWarnings("unchecked")
-            List<T> results = (List<T>)query.execute();
-            if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looked up "+results.size()+" raw entries");
-            } // if
+            List<T> results = (List<T>) query.execute();
+            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             for (T o : results) {
                 if (o instanceof BeanFactoryAware) {
                     ((BeanFactoryAware) o).setBeanFactory(this);
@@ -248,24 +240,18 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                         resolvedClasses.addAll(resolver.getAnnotatedSubclasses(getBaseClass(), PersistenceCapable.class));
                         resolvedClasses.addAll(resolver.getSubclasses(Content.class));
                         for (Class<? extends Content> cls : resolvedClasses) {
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("getAllClasses() * "+cls.getName());
-                            } // if
+                            LOG.info("getAllClasses() * {}", cls.getName());
                             if (!allClasses.contains(cls)) {
                                 classNames.add(cls.getName());
                                 allClasses.add(cls);
                             } // if
                         } // for
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("getAllClasses() # class names "+classNames.size());
-                        } // if
+                        LOG.info("getAllClasses() # class names {}", classNames.size());
                         startupCache.put(getClassNamesCacheKey(), classNames);
                     } else {
                         for (String beanClassName : classNames) {
                             Class<? extends Content> cls = ClassResolver.loadClass(beanClassName);
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("getAllClasses() # "+cls.getName());
-                            } // if
+                            LOG.info("getAllClasses() # {}", cls.getName());
                             allClasses.add(cls);
                         } // for
                     } // if
@@ -306,18 +292,14 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
-        if (LOG.isInfoEnabled()) {
-            LOG.info("afterPropertiesSet() using overrides for persistence manager factory: "+overrides);
-        } // if
+        LOG.info("afterPropertiesSet() using overrides for persistence manager factory: {}", overrides);
         managerFactory = JDOHelper.getPersistenceManagerFactory(overrides, factoryName);
         manager = managerFactory.getPersistenceManager();
 
         // Just to prefill
         if (prefill) {
-            final Collection<Class<? extends Content>> theClasses = getClasses();
-            if (LOG.isInfoEnabled()) {
-                LOG.info("afterPropertiesSet() prefilling done for "+getBasePackages()+": "+theClasses);
-            } // if
+            Collection<Class<? extends Content>> theClasses = getClasses();
+            LOG.info("afterPropertiesSet() prefilling done for {}: {}", getBasePackages(), theClasses);
         } // if
         Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
         if (c!=null) {

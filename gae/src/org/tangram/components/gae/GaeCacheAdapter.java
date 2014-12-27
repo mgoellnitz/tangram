@@ -45,9 +45,7 @@ public class GaeCacheAdapter implements PersistentRestartCache {
         try {
             CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
             jsrCache = cacheFactory.createCache(Collections.emptyMap());
-            if (LOG.isInfoEnabled()) {
-                LOG.info("() jsrCache="+jsrCache);
-            } // if
+            LOG.info("() jsrCache={}", jsrCache);
         } catch (CacheException ce) {
             LOG.error("()", ce);
         } // try
@@ -57,9 +55,7 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
-        } // if
+        LOG.debug("get() jsrCache={} key={}: {} {}", jsrCache, key, jsrCache.containsKey(key), jsrCache.get(key));
         return jsrCache==null ? null : (T) jsrCache.get(key);
     } // get()
 
@@ -67,9 +63,7 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Type t) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("get() jsrCache="+jsrCache+" key="+key+": "+jsrCache.containsKey(key)+" "+jsrCache.get(key));
-        } // if
+        LOG.debug("get() jsrCache={} key={}: {} {}", jsrCache, key, jsrCache.containsKey(key), jsrCache.get(key));
         return jsrCache==null ? null : (T) jsrCache.get(key);
     } // get()
 
@@ -78,10 +72,8 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     public <T> void put(String key, T value) {
         if (jsrCache!=null) {
             jsrCache.put(key, value);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("put() "+jsrCache.get(key));
-            } // if
+            LOG.debug("put() {}", jsrCache.get(key));
         } // if
-    } // Put()
+    } // put()
 
 } // GaeCacheAdapter

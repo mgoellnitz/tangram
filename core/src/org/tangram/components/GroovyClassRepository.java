@@ -90,9 +90,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                 String annotation = resource.getAnnotation();
                 // Check for class name - must be with capital letter for last element
                 int idx = annotation.lastIndexOf('.')+1;
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("fillClasses() checking for class name "+annotation+" ("+idx+")");
-                } // if
+                LOG.info("fillClasses() checking for class name {} ({})", annotation, idx);
                 if (idx>0) {
                     String suffix = annotation.substring(idx);
                     if (!Character.isLowerCase(suffix.charAt(0))) {
@@ -110,9 +108,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                 i--;
                 for (Map.Entry<String, String> code : codes.entrySet()) {
                     try {
-                        if (LOG.isInfoEnabled()) {
-                            LOG.info("fillClasses() compiling "+code.getKey());
-                        } // if
+                        LOG.info("fillClasses() compiling {}", code.getKey());
                         CompilationUnit cu = new CompilationUnit(classLoader);
                         cu.addSource(code.getKey()+".groovy", code.getValue());
                         cu.compile(Phases.CLASS_GENERATION);
@@ -121,9 +117,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                             GroovyClass groovyClass = classList.get(0);
                             byteCodes.put(groovyClass.getName(), groovyClass.getBytes());
                             Class<? extends Object> clazz = classLoader.defineClass(groovyClass.getName(), groovyClass.getBytes());
-                            if (LOG.isInfoEnabled()) {
-                                LOG.info("fillClasses() defining "+clazz.getName());
-                            } // if
+                            LOG.info("fillClasses() defining {}"+clazz.getName());
                             classes.put(clazz.getName(), clazz);
                         } // if
                     } catch (CompilationFailedException cfe) {
@@ -137,23 +131,18 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
             startupCache.put(BYTECODE_CACHE_KEY, byteCodes);
         } else {
             for (Map.Entry<String, byte[]> byteCode : byteCodes.entrySet()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("fillClasses() defining "+byteCode.getKey());
-                } // if
+                LOG.debug("fillClasses() defining {}", byteCode.getKey());
                 Class<? extends Object> clazz = classLoader.defineClass(byteCode.getKey(), byteCode.getValue());
                 classes.put(clazz.getName(), clazz);
             } // if
         } // if
-        if (LOG.isInfoEnabled()) {
-            LOG.info("fillClasses() done");
-        } // if
+        LOG.info("fillClasses() done");
     } // fillClasses()
 
 
     public ClassLoader getClassLoader() {
         return classLoader;
     } // getClassLoader()
-
 
 
     public Set<String> get() {
@@ -204,20 +193,14 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     @Override
     public void overrideClass(String className, byte[] bytes) {
         if (get(className)!=null) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("overrideClass() overriding "+className);
-            } // if
+            LOG.info("overrideClass() overriding {}", className);
             byteCodes.put(className, bytes);
             classLoader = new GroovyClassLoader();
             for (String name : byteCodes.keySet()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("overrideClass() re-defining "+name);
-                } // if
+                LOG.debug("overrideClass() re-defining {}", name);
                 @SuppressWarnings("unchecked")
                 Class<? extends Object> clazz = classLoader.defineClass(name, byteCodes.get(name));
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("overrideClass() re-defining "+clazz.getName());
-                } // if
+                LOG.debug("overrideClass() re-defining {}", clazz.getName());
                 classes.put(clazz.getName(), clazz);
             } // for
         } // if

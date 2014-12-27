@@ -52,15 +52,11 @@ public class ClassRepositoryEnhancer implements BeanListener {
     @SuppressWarnings("unchecked")
     public void reset() {
         Map<String, Class<Content>> classes = classRepository.get(Content.class);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("reset() number of classes "+classes.size());
-        } // if
+        LOG.info("reset() number of classes {}", classes.size());
         Collection<Class<? extends Content>> modelClasses = new HashSet<Class<? extends Content>>();
         for (Class<Content> c : classes.values()) {
             if (c.getAnnotation(PersistenceCapable.class)!=null) {
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("reset() defining "+c.getName());
-                } // if
+                LOG.info("reset() defining {}", c.getName());
                 try {
                     DataNucleusEnhancer enhancer = new DataNucleusEnhancer();
                     enhancer.setVerbose(true);

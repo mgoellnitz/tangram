@@ -85,9 +85,7 @@ public class MeasureTimeFilter implements Filter {
     @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
         freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
-        if (LOG.isInfoEnabled()) {
-            LOG.info("init() free urls "+freeUrls);
-        } // if
+        LOG.info("init() free urls {}", freeUrls);
     } // init()
 
 } // MeasureTimeFilter

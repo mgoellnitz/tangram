@@ -55,7 +55,6 @@ public class CodeResourceCache implements BeanListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(CodeResourceCache.class);
 
-
     @Inject
     private PersistentRestartCache startupCache;
 
@@ -78,14 +77,10 @@ public class CodeResourceCache implements BeanListener {
         if (resourceCache==null) {
             // just started
             resources = startupCache.get(CODE_RESOURCE_CACHE_KEY, List.class);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("reset() cache: "+resources);
-            } // if
+            LOG.info("reset() cache: {}", resources);
         } // if
         if (resources==null) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("reset() obtaining all code resources");
-            } // if
+            LOG.info("reset() obtaining all code resources");
             List<CodeResource> datastoreResources = factory.listBeans(CodeResource.class);
 
             // Only use transient resources and cache them since we can't put persistable stuff in the startup cache
@@ -112,15 +107,11 @@ public class CodeResourceCache implements BeanListener {
                 } // if
             } // if
         } // for
-        if (LOG.isInfoEnabled()) {
-            LOG.info("reset() code resources obtained");
-        } // if
+        LOG.info("reset() code resources obtained");
         for (BeanListener listener : attachedListeners) {
             listener.reset();
         } // for
-        if (LOG.isInfoEnabled()) {
-            LOG.info("reset() listeners notified");
-        } // if
+        LOG.info("reset() listeners notified");
         lastResetTime = System.currentTimeMillis();
     } // reset()
 

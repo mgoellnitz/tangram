@@ -56,9 +56,7 @@ public class PassFtpCommandHandler extends PassCommandHandler {
         setReplyCode(ReplyCodes.PASS_LOG_IN_FAILED);
         if (user!=null) {
             String pass = command.getParameter(0);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("handleCommand() logging in with password "+pass);
-            } // if
+            LOG.info("handleCommand() logging in with password {}", pass);
             if (pass!=null) {
                 CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
                 Properties p = new Properties();

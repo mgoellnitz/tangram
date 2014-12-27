@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
+
 
 /**
  * Instances of this optional controller hook can be used to check if the content is delivered from a unique
@@ -54,11 +55,9 @@ public class UniqueHostHook implements ControllerHook {
     public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("intercept() serverName="+request.getServerName());
-        } // if
+        LOG.debug("intercept() serverName={}", request.getServerName());
         boolean isOnLocalhost = request.getServerName().equals("localhost");
-        if ( !(request.getServerName().equals(primaryDomain)||(isOnLocalhost))) {
+        if (!(request.getServerName().equals(primaryDomain)||(isOnLocalhost))) {
             Link redirectLink = linkFactoryAggregator.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
             response.setHeader("Location", "http://"+primaryDomain+redirectLink.getUrl());
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);

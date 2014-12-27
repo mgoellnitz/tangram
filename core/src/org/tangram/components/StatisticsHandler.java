@@ -54,9 +54,7 @@ public class StatisticsHandler {
 
     @LinkAction("/stats")
     public TargetDescriptor stats(HttpServletRequest request, HttpServletResponse response) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("statistics()");
-        } // if
+        LOG.debug("stats()");
         response.setContentType("text/html");
         response.setCharacterEncoding("utf-8");
         return new TargetDescriptor(statistics, null, null);
