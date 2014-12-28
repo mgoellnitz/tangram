@@ -297,7 +297,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                         } catch (SQLException se) {
                             LOG.error("getProperties() "+query, se);
                         } // try/catch
-                        LOG.debug("getProperties() "+propertyName+" data="+data.toString());
+                        LOG.debug("getProperties() {} data={}", propertyName, data.toString());
 
                         try {
                             properties.put(propertyName, ComaTextConverter.convert(text, data));

@@ -93,9 +93,7 @@ public class TangramViewHandler implements ViewHandler, ApplicationContextAware 
                 this.modelAwareViewResolvers = Collections.singletonList(vr);
             } catch (NoSuchBeanDefinitionException e) {
                 // Ignore, we'll add a default ViewResolver later.
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("initViewResolvers()", e);
-                } // if
+                LOG.warn("initViewResolvers()", e);
             } // try/catch
         } // if
     } // initViewResolvers()
