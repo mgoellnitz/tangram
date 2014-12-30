@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public final class ComaTextConverter {
 
-    private static final byte[] HEX_VALUES = new byte['g'];
+    private static final byte[] SEDEC = new byte['g'];
 
     private final StringBuilder dataBuilder;
 
@@ -39,29 +39,30 @@ public final class ComaTextConverter {
 
     private int textPosition;
 
+
     static {
-        HEX_VALUES['0'] = 0;
-        HEX_VALUES['1'] = 1;
-        HEX_VALUES['2'] = 2;
-        HEX_VALUES['3'] = 3;
-        HEX_VALUES['4'] = 4;
-        HEX_VALUES['5'] = 5;
-        HEX_VALUES['6'] = 6;
-        HEX_VALUES['7'] = 7;
-        HEX_VALUES['8'] = 8;
-        HEX_VALUES['9'] = 9;
-        HEX_VALUES['A'] = 10;
-        HEX_VALUES['B'] = 11;
-        HEX_VALUES['C'] = 12;
-        HEX_VALUES['D'] = 13;
-        HEX_VALUES['E'] = 14;
-        HEX_VALUES['F'] = 15;
-        HEX_VALUES['a'] = 10;
-        HEX_VALUES['b'] = 11;
-        HEX_VALUES['c'] = 12;
-        HEX_VALUES['d'] = 13;
-        HEX_VALUES['e'] = 14;
-        HEX_VALUES['f'] = 15;
+        SEDEC['0'] = 0;
+        SEDEC['1'] = 1;
+        SEDEC['2'] = 2;
+        SEDEC['3'] = 3;
+        SEDEC['4'] = 4;
+        SEDEC['5'] = 5;
+        SEDEC['6'] = 6;
+        SEDEC['7'] = 7;
+        SEDEC['8'] = 8;
+        SEDEC['9'] = 9;
+        SEDEC['A'] = 10;
+        SEDEC['B'] = 11;
+        SEDEC['C'] = 12;
+        SEDEC['D'] = 13;
+        SEDEC['E'] = 14;
+        SEDEC['F'] = 15;
+        SEDEC['a'] = 10;
+        SEDEC['b'] = 11;
+        SEDEC['c'] = 12;
+        SEDEC['d'] = 13;
+        SEDEC['e'] = 14;
+        SEDEC['f'] = 15;
     }
 
 
@@ -75,8 +76,7 @@ public final class ComaTextConverter {
 
 
     private int readHex(StringBuilder buf, int pos) throws IndexOutOfBoundsException {
-        return ((HEX_VALUES[buf.charAt(pos)]<<12)+(HEX_VALUES[buf.charAt(pos+1)]<<8)+(HEX_VALUES[buf.charAt(pos+2)]<<4)+HEX_VALUES[buf
-                .charAt(pos+3)]);
+        return ((SEDEC[buf.charAt(pos)]<<12)+(SEDEC[buf.charAt(pos+1)]<<8)+(SEDEC[buf.charAt(pos+2)]<<4)+SEDEC[buf.charAt(pos+3)]);
     } // readHex()
 
 
@@ -106,7 +106,7 @@ public final class ComaTextConverter {
 
 
     /**
-     * reads name and attributes of an element from markupBuffer
+     * reads name and attributes of an element from markup buffer
      */
     private void issueElementStart() {
         String name = getStringFromData();
@@ -125,7 +125,7 @@ public final class ComaTextConverter {
                 break;
             } // if
 
-            dataPosition++ ;
+            dataPosition++;
             String attributeName = getStringFromData();
             if (attributeName==null) {
                 return;
@@ -168,7 +168,7 @@ public final class ComaTextConverter {
     private void writeText() {
         int length = readStringLength();
         if (length<0) {
-            dataPosition-- ;
+            dataPosition--;
             return;
         } // if
         dataPosition += 4;
@@ -199,17 +199,17 @@ public final class ComaTextConverter {
         while (dataPosition<dataBuilder.length()) {
             char flag = dataBuilder.charAt(dataPosition++);
             switch (flag) {
-            case '(':
-                issueElementStart();
-                break;
-            case '-':
-                writeText();
-                break;
-            case ')':
-                issueElementEnd();
-                break;
-            default:
-                throw new RuntimeException("Unknown code ("+dataPosition+","+flag+")");
+                case '(':
+                    issueElementStart();
+                    break;
+                case '-':
+                    writeText();
+                    break;
+                case ')':
+                    issueElementEnd();
+                    break;
+                default:
+                    throw new RuntimeException("Unknown code ("+dataPosition+","+flag+")");
             } // switch
         } // while
         return resultBuilder.toString();
@@ -217,8 +217,7 @@ public final class ComaTextConverter {
 
 
     public static String convert(StringBuilder text, StringBuilder data) {
-        ComaTextConverter converter = new ComaTextConverter(text, data);
-        return converter.mergeBuilders();
+        return new ComaTextConverter(text, data).mergeBuilders();
     } // convert()
 
 } // ComaTextConverter
