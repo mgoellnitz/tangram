@@ -2,5 +2,5 @@
 %><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 %><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
 %><hr /><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
-<div class="cms_editor_footer">Tangram Object Presenter | &copy; 2010-2014 <c:if 
+<div class="cms_editor_footer">Tangram Object Presenter | &copy; 2010-2015 <c:if 
 test="${! empty logoutUrl}">| <a href="${logoutUrl}"><fmt:message key="label.logout" bundle="${msg}"/></a></c:if></div>

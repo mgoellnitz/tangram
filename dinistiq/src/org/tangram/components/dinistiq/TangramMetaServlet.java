@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,7 +38,7 @@ public class TangramMetaServlet extends MetaServlet implements RegisterableServl
 
     @Override
     public Set<String> getUriRegex() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         result.add("/.*");
         return result;
     } // getUriRegex()

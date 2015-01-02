@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,14 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.servlet;
+package org.tangram.servlet;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -51,22 +50,23 @@ import org.tangram.util.StringUtil;
  *
  * adminUsers same as allowedUsers (should be a subset of it if allowed users is not empty) but these users get
  * access to the administrational parts of tangram
+ * 
+ * This implementation supports configuration via injections, directly via web.xml, or a mix of both.
  */
-@Named
-@Singleton
 public class PasswordFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(PasswordFilter.class);
 
     private static LoginSupport loginSupport;
 
-    private Set<String> freeUrls = new HashSet<>();
+    protected Set<String> freeUrls = new HashSet<>();
 
-    private Set<String> allowedUsers = new HashSet<>();
+    protected Set<String> allowedUsers = new HashSet<>();
 
-    private Set<String> adminUsers = new HashSet<>();
+    protected Set<String> adminUsers = new HashSet<>();
 
 
+    @Inject
     public void setLoginSupport(LoginSupport loginSupport) {
         PasswordFilter.loginSupport = loginSupport;
     }
@@ -99,6 +99,7 @@ public class PasswordFilter implements Filter {
 
     public void setAdminUsers(Set<String> adminUsers) {
         this.adminUsers = adminUsers;
+        LOG.debug("setAdminUsers({}) admin users {}", this, adminUsers);
     }
 
 
@@ -114,7 +115,9 @@ public class PasswordFilter implements Filter {
 
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
-        LOG.debug("doFilter() detected URI {}", thisURL);
+        LOG.debug("doFilter({}) detected URI {}", this, thisURL);
+        LOG.debug("doFilter() allowed users {}", allowedUsers);
+        LOG.debug("doFilter() admin users {}", adminUsers);
 
         if (!getFreeUrls().contains(thisURL)) {
             boolean liveSystem = loginSupport.isLiveSystem();

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,13 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.components.servlet;
+package org.tangram.servlet;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -43,22 +41,26 @@ import org.tangram.util.StringUtil;
  * The result is calculated by means of the tangram statistics facility and a set of URLs to be ignored
  * can be filled with URIs if needed.
  *
- * The filter is instanciated as a DI component but the configuration is then held in static members.
- * So the separate instanciation from the web.xml get's the injected values.
+ * The filter can be instanciated as a DI component but the configuration is held in static members.
+ * So the separate instanciation from the web.xml get's the injected values and a mix of injection and static
+ * configuration is possible in any environment.
  */
-@Named
-@Singleton
 public class MeasureTimeFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MeasureTimeFilter.class);
 
     private static Statistics statistics;
 
-    private final Set<String> freeUrls = new HashSet<>();
+    private Set<String> freeUrls = new HashSet<>();
 
 
     public static void setStatistics(Statistics statistics) {
         MeasureTimeFilter.statistics = statistics;
+    }
+
+
+    public void setFreeUrls(Set<String> freeUrls) {
+        this.freeUrls = freeUrls;
     }
 
 
@@ -86,6 +88,7 @@ public class MeasureTimeFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
         LOG.info("init() free urls {}", freeUrls);
+        LOG.info("init() statistics instance {}", statistics);
     } // init()
 
 } // MeasureTimeFilter
