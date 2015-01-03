@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Set some static but configurable expiration times in HTTP headers.
  *
- * Quite simple but in many situation usable servlet filter to set some reasonable, cache-friendly and thus
+ * Quite simple but in many situations usable servlet filter to set some reasonable, cache-friendly and thus
  * user friendly default expiration headers, which might of course subsequently be overridden in the response.
  * Since we can't set header after we come back in the chain and content type is only known after that call,
  * we use extensions here and map them to times.
@@ -70,8 +70,13 @@ public class ExpirationHeaderFilter implements Filter {
 
     @Override
     public void destroy() {
-        extensionTimes = new HashMap<String, Long>();
+        extensionTimes = new HashMap<>();
     } // destroy()
+
+
+    public void addExpirationTime(String extension, long time) {
+        extensionTimes.put(extension, time);
+    } // addExpirationTime()
 
 
     private Long getTimeObject(String contentType) {
@@ -118,16 +123,16 @@ public class ExpirationHeaderFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         String expiry = config.getInitParameter("expirations");
         if (expiry!=null) {
-            LOG.info("init() expiry: {}", expiry);
+            LOG.info("init() expirations: {}", expiry);
             for (String exp : expiry.split(",")) {
                 LOG.debug("init() exp: {}", exp);
                 exp = exp.trim();
                 String[] kvp = exp.split("=");
-                String mimeType = kvp[0];
+                String extension = kvp[0];
                 String timeString = kvp[1];
                 long time = Long.parseLong(timeString)*1000;
-                LOG.info("init() time for {} is {}", mimeType, time);
-                extensionTimes.put(mimeType, time);
+                LOG.info("init() time for {} is {}", extension, time);
+                addExpirationTime(extension, time);
             } // for
         } // if
     } // init()
