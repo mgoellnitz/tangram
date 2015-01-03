@@ -111,7 +111,7 @@
   <!-- tangram measure time filter -->
   <filter>
     <filter-name>TangramMeasureTime</filter-name>
-    <filter-class>org.tangram.components.dinistiq.TangramMeasureTimeFilter</filter-class>
+    <filter-class>org.tangram.servlet.MeasureTimeFilter</filter-class>
     <init-param>
       <param-name>free.urls</param-name>
       <param-value>

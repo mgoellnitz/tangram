@@ -103,6 +103,11 @@ public final class Constants {
     public static final String ATTRIBUTE_VIEW_SETTINGS = "viewSettings";
 
     /**
+     * name of the application attribute to hold the view utilities instance.
+     */
+    public static final String ATTRIBUTE_STATISTICS = "statistics";
+
+    /**
      * name of the application attribute to hold the bean factory instance.
      */
     public static final String ATTRIBUTE_BEAN_FACTORY = "beanFactory";

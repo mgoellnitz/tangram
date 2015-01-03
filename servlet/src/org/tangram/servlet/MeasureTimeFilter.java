@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
 import org.tangram.util.StringUtil;
 
@@ -49,14 +51,9 @@ public class MeasureTimeFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(MeasureTimeFilter.class);
 
-    private static Statistics statistics;
+    private ServletContext context;
 
     private Set<String> freeUrls = new HashSet<>();
-
-
-    public static void setStatistics(Statistics statistics) {
-        MeasureTimeFilter.statistics = statistics;
-    }
 
 
     public void setFreeUrls(Set<String> freeUrls) {
@@ -78,17 +75,20 @@ public class MeasureTimeFilter implements Filter {
         request.setAttribute("start.time", startTime);
         chain.doFilter(request, response);
         if (!freeUrls.contains(thisURL)) {
+            Statistics statistics = (Statistics) context.getAttribute(Constants.ATTRIBUTE_STATISTICS);
+            LOG.debug("doFilter() statistics instance {}", statistics);
             statistics.avg("page render time", System.currentTimeMillis()-startTime);
         } // if
-    } // afterCompletion()
+    } // doFilter()
 
 
     @Override
     @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
+        context = config.getServletContext();
         freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
         LOG.info("init() free urls {}", freeUrls);
-        LOG.info("init() statistics instance {}", statistics);
+        LOG.info("init() context {}", context);
     } // init()
 
 } // MeasureTimeFilter
