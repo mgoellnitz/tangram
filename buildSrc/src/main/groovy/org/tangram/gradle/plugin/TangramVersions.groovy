@@ -1,6 +1,6 @@
 /*
  * 
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -47,6 +47,9 @@ public class TangramVersions {
   
   String weld = '2.2.7.Final'
   String openwebbeans = '1.2.6'
+  
+  String guice = '4.0-beta5'
+  String mycila_guice = '3.5.ga'
   
   String jdo_api = 'javax.jdo:jdo-api:3.0.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
