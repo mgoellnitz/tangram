@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -162,7 +162,7 @@ public class ServletViewUtilities implements ViewUtilities {
                 // velocityEngine.getTemplate(template).merge(context, response.getWriter());
                 velocityEngine.evaluate(context, response.getWriter(), "tangram-velocity", new StringReader(codeResource.getCodeText()));
             } catch (Exception ex) {
-                throw new IOException(ex.getCause()); // NOPMD we want to lose parts of our stack!
+                throw new IOException(ex.getCause()); // NOPMD we want to lose parts of our stack trace!
             } // try/catch
         } else {
             // JSP:

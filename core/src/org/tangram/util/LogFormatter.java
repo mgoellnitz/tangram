@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,6 +35,7 @@ public class LogFormatter extends Formatter {
 
     private final static MessageFormat DATE_FORMAT = new MessageFormat("{0,date} {0,time}");
 
+    @SuppressWarnings("PMD.SingularField") // this one should not be a local variable
     private final Object[] args = new Object[1];
 
 

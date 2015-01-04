@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -82,9 +82,9 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                                 blobs.put(fieldName, bytes);
                             } // if
                         } catch (IOException ex) {
-                            LOG.error("()", ex);
+                            LOG.error("()", ex);                             
                             if (ex.getCause() instanceof FileUploadBase.FileSizeLimitExceededException) {
-                                throw new RuntimeException(ex.getCause().getMessage());
+                                throw new RuntimeException(ex.getCause().getMessage()); // NOPMD we want to lose parts of our stack trace!
                             } // if
                         } // try/catch
                     } // if

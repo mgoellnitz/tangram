@@ -8,10 +8,10 @@ It comes with limited CMS functionality by using Java Data Object (JDO) or
 Java Persistence API (JPA) implementations as data sources and presenting 
 a more or less generic editor for that situation. JDO can be used in conjunction 
 with Google App Engine while JDO and JPA are tested with relational database 
-systems and MongoDB stand alone or on the Cloudbees and OpenShift plattforms.
+systems and MongoDB stand alone or on the OpenShift plattform.
 Additionally the use of CoreMedia CMS repositories as data source is possible.
 
-The emphasis of the latest work and releases is towards dynamic templating, 
+The emphasis of the latest work and releases is towards dynamic templating and 
 continous enhancement of web applications. As a result Object Oriented Templating 
 can not only be used with static JSP Files but also with Apache Velocity code placed 
 in the repository. Additionally the base bean classes can be dynamically extended 
@@ -27,21 +27,17 @@ http://qiqiaoban.blogspot.de/2012/12/on-fly-url-formate-dynamisch-anpassen.html
 
 http://qiqiaoban.blogspot.de/2012/12/nie-wieder-keinen-shim-mer.html
 
+The tangram components can be glued together with several dependency injection frameworks. 
+
 Examples are presented for JDO with RDBMS (hsqldb is used for the example contents), 
 JDO on Google App Engine, and CoreMedia CMS's most simple example application.
-
-More examples for cloud plattforms will presented some time in the near future.
 
 Maven Repositories
 ------------------
 
-Snapshots:
+Snapshots and Releases:
 
 https://raw.githubusercontent.com/mgoellnitz/artifacts/master
-
-Releases:
-
-http://my-amor.appspot.com/repository/
 
 HOW-TO
 ======
@@ -111,14 +107,32 @@ The MimedBlob stuff now also is called a 'feature' and moved to the core package
 TangramServlet resides in a spring package - you will have to change your web.xml
 
 The code level now is lifted to Java 7 since the problems with the datanucleus 
-enhancer seem to have vanished
+enhancer seem to have vanished.
 
 The editor is an independent module and can - through the middle layer of mutable 
 contents - be used for jpa and jdo base layers. Only the GAE flavour integrates 
-this directory. For all other scenarios application will have to ad those extra 
+this directly. For all other scenarios applications will have to add those extra 
 two dependencies to switch on the generic editor.
 
 An ftp module has been added to support IDE synchronisation of codes in the 
 repository. It's in an early stage but seems to be working at least for netbeans 
 quite well. Create a Code resource with annotaion users.properties, mimetpe 
 text/plain and user=passwords tuples inside.
+
+Changes 1.0
+===========
+
+The upcoming release focuses on the original term "tangram" again, which means 
+putting together existing peaces and combine them into a pretty shape.
+
+Tangram now provides choice for nearly any of the parts we put together:
+
+Storage Layer: JDO, JPA, Ebean
+
+Dependency Injction: Springframework, Dinistiq, Guice (CDI)
+
+Templating: JSP and Apache Velocity
+
+If you stick to the internal abstract "handler" and "action" scheme, you can even 
+change the underlying implementations at any time, while it abviously is possible
+to directly use e.g. guice modules or spring controllers.

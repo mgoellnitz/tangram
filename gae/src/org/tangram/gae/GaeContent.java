@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -47,6 +47,7 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     @PrimaryKey
     @Extension(vendorName = "datanucleus", key = "gae.encoded-pk", value = "true")
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private String id;
 
     @NotPersistent

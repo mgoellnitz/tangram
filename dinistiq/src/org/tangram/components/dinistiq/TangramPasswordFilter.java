@@ -26,9 +26,12 @@ import org.tangram.servlet.PasswordFilter;
 
 /**
  * This is exactly the same filter as in the base package except for the annotations.
+ * 
+ * This way the filter gets auto detected by class path scan.
  */
 @Named("passwordFilter")
 @Singleton
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public class TangramPasswordFilter extends PasswordFilter {
-    
+
 } // TangramPasswordFilter
