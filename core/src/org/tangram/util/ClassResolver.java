@@ -147,11 +147,11 @@ public class ClassResolver {
      *
      * @param <T>
      * @param className
-     * @return
+     * @return class instance for given class name
      * @throws ClassNotFoundException
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Object> Class<T> loadClass(String className) throws ClassNotFoundException {
+    public static final <T extends Object> Class<T> loadClass(String className) throws ClassNotFoundException {
         return (Class<T>) Class.forName(className);
     } // loadClass()
 

@@ -58,22 +58,22 @@ public interface ViewUtilities {
      * Render the given model with a named view to the given writer instaance.
      * Instances to an object oriented view lookup for the Constants.THIS part of the model map.
      *
-     * @param out
-     * @param model
-     * @param view
+     * @param writer (response or nested) writer
+     * @param model map of named objects resembling the model
+     * @param view view name to be used for rendering the model
      * @throws IOException
      */
     void render(Writer writer, Map<String, Object> model, String view) throws IOException;
 
 
     /**
-     * Just a short cut for createModel and a subsequent render()
+     * Just a short cut for createModel() and a subsequent render()
      *
-     * @param out
-     * @param bean
-     * @param view
-     * @param request
-     * @param response
+     * @param writer (response or nested) writer
+     * @param bean beans to render
+     * @param view view name to use for rendering
+     * @param request request to do rendering for
+     * @param response response used for rendering
      * @throws IOException
      */
     void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException;
