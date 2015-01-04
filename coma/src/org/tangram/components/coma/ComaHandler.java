@@ -23,6 +23,7 @@ import java.util.Collection;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ import org.tangram.view.TargetDescriptor;
  * This code still is more demo than the default link handler instance to use.
  */
 @Named
+@Singleton
 @LinkHandler
 public class ComaHandler extends AbstractRenderingBase {
 
