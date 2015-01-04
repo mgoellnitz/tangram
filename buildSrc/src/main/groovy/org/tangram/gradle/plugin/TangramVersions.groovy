@@ -37,15 +37,15 @@ public class TangramVersions {
   String junit = '4.11'
   String mockito = '1.10.8' // 1.10.14 available from jcenter()
   String xstream = '1.4.7'
-  String tomcat = '7.0.56'
+  String tomcat = '7.0.57'
   
   String dinistiq = '0.3'
   String shiro = '1.2.3'
 
-  String springframework = '4.0.8.RELEASE'
+  String springframework = '4.0.9.RELEASE'
   String springsecurity = '3.2.5.RELEASE'
   
-  String weld = '2.2.7.Final'
+  String weld = '2.2.8.Final'
   String openwebbeans = '1.2.6'
   
   String guice = '4.0-beta5'
