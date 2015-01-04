@@ -28,6 +28,9 @@ http://qiqiaoban.blogspot.de/2012/12/on-fly-url-formate-dynamisch-anpassen.html
 http://qiqiaoban.blogspot.de/2012/12/nie-wieder-keinen-shim-mer.html
 
 The tangram components can be glued together with several dependency injection frameworks. 
+Springframework, dinistiq, and Google Guice work out of the box. ("Out of the box"
+for Guice only holds true for JDO and JPA - for the CoreMedia Adaptor CoMA and EBean 
+some coding has to be done.) 
 
 Examples are presented for JDO with RDBMS (hsqldb is used for the example contents), 
 JDO on Google App Engine, and CoreMedia CMS's most simple example application.
