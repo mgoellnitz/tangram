@@ -81,23 +81,18 @@ public class DefaultTangramServletModule extends AbstractTangramModule {
                 LOG.error("createBeanFactory() cannot obtain bean factory", e);
             } // try/catch
         } // if
-        Properties configOverrides = new Properties();
-        try {
-            String overridesName = "guice/configOverrides.properties";
-            InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName);
-            configOverrides.load(resource);
-        } catch (IOException ex) {
-            LOG.error("configureServlets()", ex);
-        } // try/catch
-
         // Ugliest hack ever possible to invoke setConfigOverrides()
         for (Method method : beanFactory.getClass().getMethods()) {
             if (method.getName().equals("setConfigOverrides")) {
-                Object[] parameters = {configOverrides};
+                Properties configOverrides = new Properties();
                 try {
+                    String overridesName = "guice/configOverrides.properties";
+                    InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName);
+                    configOverrides.load(resource);
+                    Object[] parameters = {configOverrides};
                     method.invoke(beanFactory, parameters);
-                } catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException ex) {
-                    LOG.error("createBeanFactory()", ex);
+                } catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException|IOException ex) {
+                    LOG.error("configureServlets()", ex);
                 } // try/catch
             } // if
         } // for

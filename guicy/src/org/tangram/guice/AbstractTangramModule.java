@@ -268,6 +268,7 @@ public abstract class AbstractTangramModule extends ServletModule {
         @SuppressWarnings("rawtypes")
         Multibinder<TemplateResolver> resolverBinder = Multibinder.newSetBinder(binder(), TemplateResolver.class);
         resolverBinder.addBinding().toInstance(jspTemplateResolver);
+        resolverBinder.addBinding().toInstance(repositoryTemplateResolver);
 
         LOG.info("configureServlets() code exporter handler");
         CodeExporter codeExporter = new CodeExporter();
