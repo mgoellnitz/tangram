@@ -71,7 +71,7 @@ public class ServletViewUtilities implements ViewUtilities {
     private CodeResourceCache codeResourceCache;
 
     @SuppressWarnings("rawtypes")
-    private List<TemplateResolver> resolvers = new ArrayList<TemplateResolver>();
+    private List<TemplateResolver> resolvers = new ArrayList<>();
 
     private final VelocityEngine velocityEngine;
 

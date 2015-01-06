@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -53,7 +53,7 @@ public class ClassRepositoryEnhancer implements BeanListener {
     public void reset() {
         Map<String, Class<Content>> classes = classRepository.get(Content.class);
         LOG.info("reset() number of classes {}", classes.size());
-        Collection<Class<? extends Content>> modelClasses = new HashSet<Class<? extends Content>>();
+        Collection<Class<? extends Content>> modelClasses = new HashSet<>();
         for (Class<Content> c : classes.values()) {
             if (c.getAnnotation(PersistenceCapable.class)!=null) {
                 LOG.info("reset() defining {}", c.getName());

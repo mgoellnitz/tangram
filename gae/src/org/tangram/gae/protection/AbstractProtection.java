@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -80,7 +80,7 @@ public abstract class AbstractProtection extends GaeContent implements Protectio
 
     @Override
     public List<? extends Content> getProtectionPath() {
-        List<Content> result = new ArrayList<Content>();
+        List<Content> result = new ArrayList<>();
         result.add(this);
         return result;
     } // getProtectionPath()

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -130,7 +130,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
         if (method!=null) {
             descriptor.action = null;
-            List<Object> parameters = new ArrayList<Object>();
+            List<Object> parameters = new ArrayList<>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
             Class<? extends Object>[] parameterTypes = method.getParameterTypes();
             for (int typeIndex = 0; typeIndex<parameterTypes.length; typeIndex++) {

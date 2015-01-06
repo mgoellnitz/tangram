@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -186,7 +186,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
         } else if (cls==List.class) {
             LOG.debug("getStorableObject() splitting {}", valueString);
             String[] idStrings = valueString.split(",");
-            List<Object> elements = new ArrayList<Object>();
+            List<Object> elements = new ArrayList<>();
             for (String idString : idStrings) {
                 idString = idString.trim();
                 LOG.debug("getStorableObject() idString={}", idString);

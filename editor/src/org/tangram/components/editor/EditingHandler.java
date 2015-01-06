@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -157,7 +157,7 @@ public class EditingHandler extends AbstractRenderingBase {
         Content bean = beanFactory.getBean(Content.class, id);
         JavaBean wrapper = new JavaBean(bean);
         Map<String, Object> newValues = new HashMap<>();
-        // List<String> deleteValues = new ArrayList<String>();
+        // List<String> deleteValues = new ArrayList<>();
 
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
         Map<String, String[]> parameterMap = parameterAccess.getParameterMap();

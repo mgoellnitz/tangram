@@ -109,7 +109,7 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
      */
     @Deprecated
     protected List<String> getIds(List<? extends Content> contents) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (contents!=null) {
             for (Object o : contents) {
                 result.add(((Content) o).getId());
@@ -148,7 +148,7 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
     protected <T extends JdoContent> List<T> getContents(Class<T> cls, List<String> ids) {
         List<T> result = null;
         if (ids!=null) {
-            result = new ArrayList<T>(ids.size());
+            result = new ArrayList<>(ids.size());
             for (String id : ids) {
                 id = (id.indexOf(':')<0) ? id = postprocessPlainId(id) : id;
                 result.add(gaeBeanFactory.getBean(cls, id));

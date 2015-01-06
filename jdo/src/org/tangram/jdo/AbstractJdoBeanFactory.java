@@ -184,7 +184,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
     @Override
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         try {
             Extent<T> extent = manager.getExtent(cls, false);
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
@@ -193,7 +193,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 String order = orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
                 query.setOrdering(order);
             } // if
-            // TOOD: will be extended once we decide to introduce start/end
+            // TODO: will be extended once we decide to introduce start/end
             // if (end!=null) {
             // long from = start!=null ? start : 0;
             // query.setRange(from, end+1);

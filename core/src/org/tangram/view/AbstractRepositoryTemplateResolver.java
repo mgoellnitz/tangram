@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,7 +44,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
 
     public AbstractRepositoryTemplateResolver() {
         super(false, ".");
-        supportedCtontenTypes = new HashSet<String>();
+        supportedCtontenTypes = new HashSet<>();
         supportedCtontenTypes.add("text/html");
         supportedCtontenTypes.add("text/xml");
     } // AbstractRepositoryTemplateResolver()

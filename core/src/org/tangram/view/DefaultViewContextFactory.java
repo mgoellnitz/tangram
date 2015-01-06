@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,7 +45,7 @@ public class DefaultViewContextFactory implements ViewContextFactory {
 
     @Override
     public Map<String, Object> createModel(Object bean, ServletRequest request, ServletResponse response) {
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put(Constants.THIS, bean);
         model.put(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR, linkFactoryAggregator);
         model.put(Constants.ATTRIBUTE_REQUEST, request);

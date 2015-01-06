@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2009-2014
+ * Copyright 2009-2015
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -71,9 +71,9 @@ public class StreamingMultipartResolver implements MultipartResolver {
         ServletFileUpload upload = new ServletFileUpload();
         upload.setFileSizeMax(maxUploadSize);
         String encoding = determineEncoding(request);
-        Map<String, String[]> multipartParameters = new HashMap<String, String[]>();
-        MultiValueMap<String, MultipartFile> multipartFiles = new LinkedMultiValueMap<String, MultipartFile>();
-        Map<String, String> multipartFileContentTypes = new HashMap<String, String>();
+        Map<String, String[]> multipartParameters = new HashMap<>();
+        MultiValueMap<String, MultipartFile> multipartFiles = new LinkedMultiValueMap<>();
+        Map<String, String> multipartFileContentTypes = new HashMap<>();
 
         try {
             FileItemIterator iter = upload.getItemIterator(request);

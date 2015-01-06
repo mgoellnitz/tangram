@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -83,7 +83,7 @@ public class TangramViewHandler implements ViewHandler, ApplicationContextAware 
             Map<String, ModelAwareViewResolver> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(context,
                     ModelAwareViewResolver.class, true, false);
             if (!matchingBeans.isEmpty()) {
-                this.modelAwareViewResolvers = new ArrayList<ModelAwareViewResolver>(matchingBeans.values());
+                this.modelAwareViewResolvers = new ArrayList<>(matchingBeans.values());
                 // We keep ViewResolvers in sorted order.
                 OrderComparator.sort(this.modelAwareViewResolvers);
             } // if

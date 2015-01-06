@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -140,19 +140,22 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     } // fillClasses()
 
 
+    @Override
     public ClassLoader getClassLoader() {
         return classLoader;
     } // getClassLoader()
 
 
+    @Override
     public Set<String> get() {
         return classes.keySet();
     } // get()
 
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends Object> Map<String, Class<T>> get(Class<? extends T> cls) {
-        Map<String, Class<T>> result = new HashMap<String, Class<T>>();
+        Map<String, Class<T>> result = new HashMap<>();
         for (Map.Entry<String, Class<? extends Object>> entry : classes.entrySet()) {
             if (cls.isAssignableFrom(entry.getValue())) {
                 result.put(entry.getKey(), (Class<T>) entry.getValue());
@@ -162,9 +165,10 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     } // get()
 
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends Object> Map<String, Class<T>> getAnnotated(Class<? extends Annotation> cls) {
-        Map<String, Class<T>> result = new HashMap<String, Class<T>>();
+        Map<String, Class<T>> result = new HashMap<>();
         for (Map.Entry<String, Class<? extends Object>> entry : classes.entrySet()) {
             if (entry.getValue().getAnnotation(cls)!=null) {
                 result.put(entry.getKey(), (Class<T>) entry.getValue());
@@ -174,11 +178,13 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     } // getAnnotated()
 
 
+    @Override
     public Class<? extends Object> get(String className) {
         return classes.get(className);
     } // get()
 
 
+    @Override
     public byte[] getBytes(String className) {
         return byteCodes.get(className);
     } // getBytes()
@@ -213,11 +219,13 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
      * @see ClassRepository#getCompilationErrors()
      * @return map mapping code resource annotation to the error messages for the corresponding code.
      */
+    @Override
     public Map<String, String> getCompilationErrors() {
         return compilationErrors;
     }
 
 
+    @Override
     public void addListener(BeanListener listener) {
         synchronized (attachedListeners) {
             attachedListeners.add(listener);

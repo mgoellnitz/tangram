@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -68,7 +68,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
     private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<Content> beanClass, Constructor<Shim> shimClass) {
         List<Constructor<Shim>> shims = definedShims.get(beanClass.getName());
         if (shims==null) {
-            shims = new ArrayList<Constructor<Shim>>();
+            shims = new ArrayList<>();
             definedShims.put(beanClass.getName(), shims);
         } // if
         shims.add(shimClass);

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -177,7 +177,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
     @Override
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         try {
             if (orderProperty!=null) {
                 queryString += " order by "+orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");

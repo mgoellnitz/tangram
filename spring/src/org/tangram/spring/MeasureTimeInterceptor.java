@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,7 +35,7 @@ import org.tangram.monitor.Statistics;
  */
 public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
 
-    private Set<String> freeUrls = new HashSet<String>();
+    private Set<String> freeUrls = new HashSet<>();
 
     @Inject
     private Statistics statistics;

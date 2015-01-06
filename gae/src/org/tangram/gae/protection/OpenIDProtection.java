@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,7 +44,7 @@ public class OpenIDProtection extends AbstractProtection {
 
 
     static {
-        OPEN_ID_PROVIDERS = new HashMap<String, String>();
+        OPEN_ID_PROVIDERS = new HashMap<>();
         OPEN_ID_PROVIDERS.put("Google", "https://www.google.com/accounts/o8/id");
         OPEN_ID_PROVIDERS.put("Yahoo", "yahoo.com");
         OPEN_ID_PROVIDERS.put("MySpace", "myspace.com");

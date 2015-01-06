@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -169,7 +169,7 @@ public final class Constants {
 
     public static final String VERSION_MINOR = "0";
 
-    public static final Map<String, String> VERSIONS = new HashMap<String, String>();
+    public static final Map<String, String> VERSIONS = new HashMap<>();
 
     private static final String PREFIX = "tangram";
 
@@ -180,7 +180,7 @@ public final class Constants {
 
     private static Set<String> getResourceListing(URL pathUrl, String prefix, String suffix) throws URISyntaxException,
             IOException {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         if ("file".equals(pathUrl.getProtocol())) {
             for (String name : new File(pathUrl.toURI()).list()) {
                 if (name.endsWith(suffix)) {

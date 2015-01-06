@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -67,7 +67,7 @@ public class ProtectionHook implements ControllerHook {
 
             LOG.info("getRequiredProtections() total # of protections: {}", protections.size());
             if (protections.size()>0) {
-                result = new HashMap<String, Protection>();
+                result = new HashMap<>();
                 for (Protection prot : protections) {
                     if ((StringUtils.isNotBlank(prot.getProtectionKey()))&&(isProtectedBy(content, prot))) {
                         result.put(prot.getProtectionKey(), prot);
