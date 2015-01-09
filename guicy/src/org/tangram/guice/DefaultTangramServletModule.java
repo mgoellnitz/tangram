@@ -36,13 +36,10 @@ import org.tangram.controller.ControllerHook;
 import org.tangram.controller.UniqueHostHook;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableBeanFactory;
-import org.tangram.security.GenericLoginSupport;
 import org.tangram.security.LoginSupport;
 import org.tangram.servlet.MeasureTimeFilter;
 import org.tangram.servlet.PasswordFilter;
-import org.tangram.util.FileRestartCache;
 import org.tangram.util.StringUtil;
-import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.PropertyConverter;
 
 
@@ -59,8 +56,17 @@ public class DefaultTangramServletModule extends AbstractTangramModule {
 
 
     protected PersistentRestartCache createRestartCache() {
-        FileRestartCache persistentRestartCache = new FileRestartCache();
-        persistentRestartCache.setFilename(getConfigValue("cacheFilename", "tangram-guice-cache.ser"));
+        PersistentRestartCache persistentRestartCache = null;
+        String cacheClassName = getConfigValue("persistentRestartCache", "org.tangram.util.DummyRestartCache");
+        if (StringUtils.isNotBlank(cacheClassName)) {
+            LOG.info("createRestartCache() instanciating {}", cacheClassName);
+            try {
+                Class<?> forName = Class.forName(cacheClassName);
+                persistentRestartCache = (PersistentRestartCache) forName.getConstructors()[0].newInstance(new Object[0]);
+            } catch (Exception e) {
+                LOG.error("createRestartCache() cannot obtain bean factory", e);
+            } // try/catch
+        } // if
         return persistentRestartCache;
     } // createRestartCache()
 
@@ -100,6 +106,38 @@ public class DefaultTangramServletModule extends AbstractTangramModule {
     } // createBeanFactory()
 
 
+    protected LoginSupport createLoginSupport() {
+        LoginSupport loginSupport = null;
+        String loginSupportClassName = getConfigValue("loginSupport", "org.tangram.security.GenericLoginSupport");
+        if (StringUtils.isNotBlank(loginSupportClassName)) {
+            LOG.info("createLoginSupport() instanciating {}", loginSupportClassName);
+            try {
+                Class<?> forName = Class.forName(loginSupportClassName);
+                loginSupport = (LoginSupport) forName.getConstructors()[0].newInstance(new Object[0]);
+            } catch (Exception e) {
+                LOG.error("createLoginSupport() cannot obtain bean factory", e);
+            } // try/catch
+        } // if
+        return loginSupport;
+    } // createLoginSupport()
+
+
+    protected PropertyConverter createPropertyConverter() {
+        PropertyConverter propertyConverter = null;
+        String propertyConverterClassName = getConfigValue("propertyConverter", "org.tangram.view.GenericPropertyConverter");
+        if (StringUtils.isNotBlank(propertyConverterClassName)) {
+            LOG.info("createPropertyConverter() instanciating {}", propertyConverterClassName);
+            try {
+                Class<?> forName = Class.forName(propertyConverterClassName);
+                propertyConverter = (PropertyConverter) forName.getConstructors()[0].newInstance(new Object[0]);
+            } catch (Exception e) {
+                LOG.error("createPropertyConverter() cannot obtain bean factory", e);
+            } // try/catch
+        } // if
+        return propertyConverter;
+    } // createPropertyConverter()
+
+
     @Override
     protected void appendConfiguration(String dispatcherPath) {
         bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to("/shiro/login.jsp");
@@ -115,21 +153,19 @@ public class DefaultTangramServletModule extends AbstractTangramModule {
         hookBinder.addBinding().toInstance(protectionHook);
 
         LOG.info("configureServlets() property converter");
-        PropertyConverter propertyConverter = new GenericPropertyConverter();
-        bind(PropertyConverter.class).toInstance(propertyConverter);
+        bind(PropertyConverter.class).toInstance(createPropertyConverter());
 
         LOG.info("configureServlets() login support");
-        LoginSupport genericLoginSupport = new GenericLoginSupport();
-        bind(LoginSupport.class).toInstance(genericLoginSupport);
+        LoginSupport loginSupport = createLoginSupport();
+        bind(LoginSupport.class).toInstance(loginSupport);
 
         LOG.info("configureServlets() editing handler");
-        EditingHandler editing = new EditingHandler();
-        bind(EditingHandler.class).toInstance(editing);
+        bind(EditingHandler.class).toInstance(new EditingHandler());
 
         LOG.info("configureServlets() password filter");
         PasswordFilter passwordFilter = new PasswordFilter();
         passwordFilter.setAdminUsers(StringUtil.stringSetFromParameterString(getConfigValue("adminUsers", "")));
-        passwordFilter.setLoginSupport(genericLoginSupport);
+        passwordFilter.setLoginSupport(loginSupport);
         filter(dispatcherPath+"/*").through(passwordFilter);
 
         LOG.info("configureServlets() measure time filter");

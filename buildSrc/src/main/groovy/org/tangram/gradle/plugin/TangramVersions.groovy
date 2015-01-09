@@ -31,7 +31,7 @@ public class TangramVersions {
   String jsp_api = 'javax.servlet:jsp-api:2.0'
   String groovy = '2.3.8'
   String velocity = '1.7'
-  String slf4j = '1.7.7'
+  String slf4j = '1.7.9'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String junit = '4.11'
@@ -46,7 +46,7 @@ public class TangramVersions {
   String springsecurity = '3.2.5.RELEASE'
   
   String weld = '2.2.8.Final'
-  String openwebbeans = '1.2.6'
+  String openwebbeans = '1.5.0-SNAPSHOT'
   
   String guice = '4.0-beta5'
   String mycila_guice = '3.5.ga'

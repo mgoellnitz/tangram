@@ -121,9 +121,7 @@ public class PasswordFilter implements Filter {
 
         if (!getFreeUrls().contains(thisURL)) {
             boolean liveSystem = loginSupport.isLiveSystem();
-            if (liveSystem) {
-                request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, Boolean.TRUE);
-            } // if
+            request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, liveSystem);
 
             Principal principal = request.getUserPrincipal();
             if (liveSystem) {
