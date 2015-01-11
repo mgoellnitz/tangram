@@ -35,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.security.LoginSupport;
-import org.tangram.util.StringUtil;
+import org.tangram.util.SetupUtils;
 
 
 /**
@@ -99,7 +99,6 @@ public class PasswordFilter implements Filter {
 
     public void setAdminUsers(Set<String> adminUsers) {
         this.adminUsers = adminUsers;
-        LOG.debug("setAdminUsers({}) admin users {}", this, adminUsers);
     }
 
 
@@ -159,11 +158,11 @@ public class PasswordFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
-        freeUrls.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("free.urls")));
+        freeUrls.addAll(SetupUtils.stringSetFromParameterString(config.getInitParameter("free.urls")));
         LOG.info("init() free urls {}", freeUrls);
-        allowedUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("allowed.users")));
+        allowedUsers.addAll(SetupUtils.stringSetFromParameterString(config.getInitParameter("allowed.users")));
         LOG.info("init() allowed users {}", allowedUsers);
-        adminUsers.addAll(StringUtil.stringSetFromParameterString(config.getInitParameter("admin.users")));
+        adminUsers.addAll(SetupUtils.stringSetFromParameterString(config.getInitParameter("admin.users")));
         LOG.info("init() admin users {}", adminUsers);
     } // init()
 

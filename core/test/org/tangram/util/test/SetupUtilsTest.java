@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,20 +21,20 @@ package org.tangram.util.test;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
-import org.tangram.util.StringUtil;
+import org.tangram.util.SetupUtils;
 
 
-public class StringUtilTest {
+public class SetupUtilsTest {
 
     @Test
     public void testStringUtils() {
-        Set<String> stringSet = StringUtil.stringSetFromParameterString("hallo,this,is,a,test");
+        Set<String> stringSet = SetupUtils.stringSetFromParameterString("hallo,this,is,a,test");
         Assert.assertEquals("The set should contain five elements", stringSet.size(), (long) 5);
         Assert.assertTrue("The set should contain the string 'this'", stringSet.contains("this"));
-        Set<String> emptySet = StringUtil.stringSetFromParameterString("");
+        Set<String> emptySet = SetupUtils.stringSetFromParameterString("");
         Assert.assertNotNull("The set should exist despite the empty input", emptySet);
         Assert.assertTrue("The set should be empty the empty input", emptySet.isEmpty());
-        Assert.assertNotNull("The set should exist despite the null input", StringUtil.stringSetFromParameterString(null));
+        Assert.assertNotNull("The set should exist despite the null input", SetupUtils.stringSetFromParameterString(null));
     } // testStringUtils()
 
-} // StringUtilTest
+} // SetupUtilsTest

@@ -20,6 +20,7 @@ package org.tangram.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.mycila.guice.ext.closeable.CloseableModule;
@@ -27,7 +28,6 @@ import com.mycila.guice.ext.jsr250.Jsr250Module;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.guice.web.ShiroWebModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
 
     public static final String DISPATCHER_PATH = "tangram.dispatcher.path";
 
-    private ShiroWebModule shiroWebModule = null;
+    private Module shiroWebModule = null;
 
     private ServletModule servletModule = null;
 
@@ -57,12 +57,12 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
         ServletContext context = servletContextEvent.getServletContext();
         String webModuleClassName = context.getInitParameter(SHIRO_WEB_MODULE_CLASS);
         String dispatcherPath = context.getInitParameter(DISPATCHER_PATH);
-        dispatcherPath = dispatcherPath == null ? "/s" : dispatcherPath;
+        dispatcherPath = dispatcherPath==null ? "/s" : dispatcherPath;
         if (StringUtils.isNotBlank(webModuleClassName)) {
             try {
                 Class<?> forName = Class.forName(webModuleClassName);
                 Object[] args = {context, dispatcherPath};
-                shiroWebModule = (ShiroWebModule) forName.getConstructors()[0].newInstance(args);
+                shiroWebModule = (Module) forName.getConstructors()[0].newInstance(args);
             } catch (Exception e) {
                 LOG.error("contextInitialized() cannot obtain shiro web module", e);
             } // try/catch
@@ -78,7 +78,7 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
                 LOG.error("contextInitialized() cannot obtain servlet module", e);
             } // try/catch
         } // if
-        servletModule = servletModule==null ? new DefaultTangramServletModule() : servletModule;
+        servletModule = servletModule==null ? new TangramServletModule() : servletModule;
         LOG.info("contextInitialized() servlet module: {} :{}", servletModule, servletModuleClassName);
 
         super.contextInitialized(servletContextEvent);

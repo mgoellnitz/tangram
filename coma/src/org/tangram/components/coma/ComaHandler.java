@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,7 @@
 package org.tangram.components.coma;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -54,7 +54,7 @@ public class ComaHandler extends AbstractRenderingBase {
     private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 
     @Inject
-    private Collection<ComaBeanPopulator> populators;
+    private Set<ComaBeanPopulator> populators;
 
     @Inject
     private LinkHandlerRegistry linkHandlerRegistry;

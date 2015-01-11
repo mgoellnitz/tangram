@@ -20,7 +20,6 @@ apply from: '../lib.gradle'
 
 dependencies {
   compile project (':tangram-servlet')
-  compile project (':tangram-editor')
   compile "com.google.inject:guice:$versions.guice"
   compile "com.google.inject.extensions:guice-servlet:$versions.guice"
   compile "com.google.inject.extensions:guice-multibindings:$versions.guice"

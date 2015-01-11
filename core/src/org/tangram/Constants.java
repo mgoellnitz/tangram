@@ -18,22 +18,13 @@
  */
 package org.tangram;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.util.SetupUtils;
 
 
 public final class Constants {
@@ -56,7 +47,6 @@ public final class Constants {
      * Pattern string to find IDs in Strings
      */
     public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9]+)";
-
 
     /**
      * Pattern to find IDs in (rich/long) text.
@@ -178,45 +168,13 @@ public final class Constants {
     private static final int SUFFIX_LENGTH = SUFFIX.length();
 
 
-    private static Set<String> getResourceListing(URL pathUrl, String prefix, String suffix) throws URISyntaxException,
-            IOException {
-        Set<String> result = new HashSet<>();
-        if ("file".equals(pathUrl.getProtocol())) {
-            for (String name : new File(pathUrl.toURI()).list()) {
-                if (name.endsWith(suffix)) {
-                    result.add(prefix+"/"+name);
-                } // if
-            } // for
-        } // if
-
-        if ("jar".equals(pathUrl.getProtocol())) {
-            String jarPath = pathUrl.getPath().substring(5, pathUrl.getPath().indexOf("!")); // only the JAR file
-            JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
-            for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements();) {
-                String name = entries.nextElement().getName();
-                if (name.startsWith(prefix)&&name.endsWith(suffix)) {
-                    result.add(name);
-                } // if
-            } // for
-            jar.close();
-        } // if
-
-        return result;
-    } // getResourceListing()
-
-
     static {
         try {
-            Enumeration<URL> en = Thread.currentThread().getContextClassLoader().getResources(PREFIX);
-            while (en.hasMoreElements()) {
-                URL metaInf = en.nextElement();
-                for (String s : getResourceListing(metaInf, PREFIX, SUFFIX)) {
-                    Properties p = new Properties();
-                    p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(s));
-                    VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH),
-                            p.getProperty(Constants.PROPERTY_VERSION_BUILD));
-                } // for
-            } // while
+            for (String s : SetupUtils.getResourceListing(PREFIX, SUFFIX)) {
+                Properties p = new Properties();
+                p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(s));
+                VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH), p.getProperty(Constants.PROPERTY_VERSION_BUILD));
+            } // for
         } catch (Exception e) {
             LOG.error("{} error while reading all modules building properties", e);
         } // try/catch

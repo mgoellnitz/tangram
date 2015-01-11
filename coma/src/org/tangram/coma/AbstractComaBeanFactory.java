@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -482,13 +482,13 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     public void afterPropertiesSet() {
         try {
             Class.forName(dbDriver).newInstance();
-        } catch (ClassNotFoundException|InstantiationException|IllegalAccessException ex) {
-            LOG.error("afterPropertiesSet()", ex);
+        } catch (RuntimeException|ClassNotFoundException|InstantiationException|IllegalAccessException ex) {
+            LOG.error("afterPropertiesSet() error loading driver {} ({}) ", dbDriver, this, ex);
         } // try/catch
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        } catch (SQLException ex) {
-            LOG.error("afterPropertiesSet()", ex);
+        } catch (RuntimeException|SQLException ex) {
+            LOG.error("afterPropertiesSet() error getting connection to {} as {}", dbUrl, dbUser, ex);
         } // try/catch
     } // afterPropertiesSet()
 

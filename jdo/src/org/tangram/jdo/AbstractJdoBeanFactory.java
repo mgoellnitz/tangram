@@ -193,7 +193,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
                 String order = orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
                 query.setOrdering(order);
             } // if
-            // TODO: will be extended once we decide to introduce start/end
+            // Will be extended once we decide to introduce start/end
             // if (end!=null) {
             // long from = start!=null ? start : 0;
             // query.setRange(from, end+1);
