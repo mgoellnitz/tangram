@@ -380,6 +380,9 @@ public class EditingHandler extends AbstractRenderingBase {
                 note = "Hibernate Enhanced";
             } // if
         } // for
+        if (cls.getName().startsWith("org.apache.openjpa.enhance")) {
+            note = "OpenJPA Subclass";
+        } // if
         Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
         request.setAttribute("contentClass", cls);
         request.setAttribute("note", note);
