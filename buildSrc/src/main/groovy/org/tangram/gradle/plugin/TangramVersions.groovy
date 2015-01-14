@@ -29,17 +29,17 @@ public class TangramVersions {
   String lombok = '1.14.8'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.3.8'
+  String groovy = '2.3.9'
   String velocity = '1.7'
   String slf4j = '1.7.9'
   String log4j = '1.2.17'
   String yui = '2.4.7'
-  String junit = '4.11'
+  String junit = '4.12'
   String mockito = '1.10.8' // 1.10.14 available from jcenter()
   String xstream = '1.4.7'
   String tomcat = '7.0.57'
   
-  String dinistiq = '0.3'
+  String dinistiq = '0.4-SNAPSHOT'
   String shiro = '1.2.3'
 
   String springframework = '4.0.9.RELEASE'
@@ -56,7 +56,7 @@ public class TangramVersions {
   
   String openjpa = '2.3.0'
   String eclipselink = '2.5.2'
-  String hibernate = '4.3.7.Final'
+  String hibernate = '4.3.8.Final'
   
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
   String datanucleus = '3.1.3'
@@ -67,8 +67,8 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
   
-  String ebean = '4.1.2' // Later versions fail like the intended 4.4.1
-  String ebean_agent = '4.1.6'
+  String ebean = '4.1.2' // Later versions fail like the intended 4.5.2
+  String ebean_agent = '4.1.6' // (4.5.1)
 
   String appengine = '1.9.17'
   
