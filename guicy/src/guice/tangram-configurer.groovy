@@ -16,6 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import com.google.inject.name.Names;
+import com.google.inject.TypeLiteral;
+import java.lang.reflect.Type;
 import org.tangram.Constants
 import org.tangram.components.CodeExporter
 import org.tangram.components.CodeResourceCache
@@ -33,6 +36,7 @@ import org.tangram.servlet.DefaultServlet
 import org.tangram.servlet.JspTemplateResolver
 import org.tangram.servlet.MetaServlet
 import org.tangram.servlet.RepositoryTemplateResolver
+import org.tangram.util.SetupUtils
 import org.tangram.view.DynamicViewContextFactory
 import org.tangram.view.ViewContextFactory
 import org.tangram.view.ViewUtilities
@@ -40,6 +44,24 @@ import org.tangram.view.velocity.VelocityPatchBean
 
 log.info "starting"
 String dispatcherPath = config.getProperty("dispatcherPath", "/s")
+
+// TODO: unused stuff right now
+log.info("configuring user lists")
+Object stringSetVehicle = new Object() {
+  Set<String> stringSet
+};
+Type interimType = stringSetVehicle.getClass().getDeclaredField("stringSet").getGenericType()
+TypeLiteral stringSet = TypeLiteral.get(interimType)
+
+String admins = config.getProperty("adminUsers", "")
+Set<String> adminUsers = SetupUtils.stringSetFromParameterString(admins)
+module.bind(stringSet).annotatedWith(Names.named("adminUsers")).toInstance(adminUsers)
+String allowed = config.getProperty("allowedUsers", "")
+Set<String> allowedUsers = SetupUtils.stringSetFromParameterString(allowed)
+module.bind(stringSet).annotatedWith(Names.named("allowedUsers")).toInstance(allowedUsers)
+String free = config.getProperty("freeUrls", "")
+Set<String> freeUrls = SetupUtils.stringSetFromParameterString(free)
+module.bind(stringSet).annotatedWith(Names.named("freeUrls")).toInstance(freeUrls)
 
 log.info("configuring view settings")
 Map<String, Object> viewSettings = new HashMap<>()

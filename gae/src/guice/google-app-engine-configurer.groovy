@@ -49,16 +49,16 @@ module.bind(JdoBeanFactory.class).toInstance(beanFactory);
 
 log.info("configuring login support")
 LoginSupport loginSupport = new GaeLoginSupport()
-module.bind(LoginSupport.class).toInstance(loginSupport)
-
-PasswordFilter passwordFilter = new PasswordFilter()
-log.info("configureServlets() password filter {} for {}", passwordFilter, dispatcherPath)
 String admins = config.getProperty("adminUsers", "")
 Set<String> adminUsers = SetupUtils.stringSetFromParameterString(admins)
 String users = config.getProperty("allowedUsers", "")
 Set<String> allowedUsers = SetupUtils.stringSetFromParameterString(users)
-passwordFilter.setAdminUsers(adminUsers)
-passwordFilter.setAllowedUsers(allowedUsers)
+loginSupport.setAdminUsers(adminUsers)
+loginSupport.setAllowedUsers(allowedUsers)
+module.bind(LoginSupport.class).toInstance(loginSupport)
+
+PasswordFilter passwordFilter = new PasswordFilter()
+log.info("configureServlets() password filter {} for {}", passwordFilter, dispatcherPath)
 passwordFilter.setLoginSupport(loginSupport)
 module.filter(dispatcherPath+"/*").through(passwordFilter)
 
