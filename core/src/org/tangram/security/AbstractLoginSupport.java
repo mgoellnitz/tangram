@@ -24,8 +24,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,16 +50,10 @@ public abstract class AbstractLoginSupport implements LoginSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractLoginSupport.class);
 
-    @Inject
-    @Named
     protected Set<String> freeUrls = new HashSet<>();
 
-    @Inject
-    @Named
     protected Set<String> allowedUsers = new HashSet<>();
 
-    @Inject
-    @Named
     protected Set<String> adminUsers = new HashSet<>();
 
 
