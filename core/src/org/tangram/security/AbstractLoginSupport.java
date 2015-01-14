@@ -24,6 +24,8 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,10 +52,16 @@ public abstract class AbstractLoginSupport implements LoginSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractLoginSupport.class);
 
+    @Inject
+    @Named
     protected Set<String> freeUrls = new HashSet<>();
 
+    @Inject
+    @Named
     protected Set<String> allowedUsers = new HashSet<>();
 
+    @Inject
+    @Named
     protected Set<String> adminUsers = new HashSet<>();
 
 
@@ -89,8 +97,8 @@ public abstract class AbstractLoginSupport implements LoginSupport {
         String thisURL = request.getRequestURI();
         request.setAttribute("tangramURL", thisURL);
         LOG.debug("doFilter({}) detected URI {}", this, thisURL);
-        LOG.debug("doFilter() allowed users {}", allowedUsers);
-        LOG.debug("doFilter() admin users {}", adminUsers);
+        LOG.debug("doFilter() allowed users {} ({})", allowedUsers, allowedUsers.size());
+        LOG.debug("doFilter() admin users {} ({})", adminUsers, adminUsers.size());
         if (!freeUrls.contains(thisURL)) {
             boolean liveSystem = isLiveSystem();
             request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, liveSystem);
@@ -99,15 +107,15 @@ public abstract class AbstractLoginSupport implements LoginSupport {
             Enumeration<?> attributeNames = request.getAttributeNames();
             while (attributeNames.hasMoreElements()) {
                 String attributeName = ""+attributeNames.nextElement();
-                LOG.info("preHandle() attribute {}={}", attributeName, request.getAttribute(attributeName));
+                LOG.debug("preHandle() attribute {}={}", attributeName, request.getAttribute(attributeName));
             } // while
             Map<?, ?> parameterMap = request.getParameterMap();
             for (Object key : parameterMap.keySet()) {
-                LOG.info("preHandle() parameter {}={}", key, parameterMap.get(key));
+                LOG.debug("preHandle() parameter {}={}", key, parameterMap.get(key));
             } // for
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie : cookies) {
-                LOG.info("preHandle() cookie {} {} {} {}", cookie.getName(), cookie.getPath(), cookie.getDomain(), cookie.getValue());
+                LOG.debug("preHandle() cookie {} {} {} {}", cookie.getName(), cookie.getPath(), cookie.getDomain(), cookie.getValue());
             } // for
 
             Principal principal = request.getUserPrincipal();
