@@ -24,12 +24,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import org.tangram.Constants;
-import org.tangram.security.LoginSupport;
+import org.tangram.security.AbstractLoginSupport;
 
 
 @Named("loginSupport")
 @Singleton
-public class GaeLoginSupport implements LoginSupport {
+public class GaeLoginSupport extends AbstractLoginSupport {
 
     private String liveSuffix = "live";
 

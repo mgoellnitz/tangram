@@ -30,7 +30,7 @@ import org.tangram.view.Utils;
  *
  * Live system flag is a configuration switch, login URL is a static URL, Logout URLs are ignored.
  */
-public class GenericLoginSupport implements LoginSupport {
+public class GenericLoginSupport extends AbstractLoginSupport {
 
     // TODO: OpenWebBeans does not have this.
     @Inject

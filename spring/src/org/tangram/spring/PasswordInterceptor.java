@@ -18,16 +18,12 @@
  */
 package org.tangram.spring;
 
-import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.tangram.Constants;
 import org.tangram.security.LoginSupport;
 
 
@@ -52,85 +48,9 @@ public class PasswordInterceptor extends HandlerInterceptorAdapter {
     @Inject
     private LoginSupport loginSupport;
 
-    private Set<String> freeUrls = new HashSet<>();
-
-    private Set<String> allowedUsers = new HashSet<>();
-
-    private Set<String> adminUsers = new HashSet<>();
-
-
-    public Set<String> getFreeUrls() {
-        return freeUrls;
-    }
-
-
-    public void setFreeUrls(Set<String> freeUrls) {
-        this.freeUrls = freeUrls;
-    }
-
-
-    public Set<String> getAllowedUsers() {
-        return allowedUsers;
-    }
-
-
-    public void setAllowedUsers(Set<String> allowedUsers) {
-        this.allowedUsers = allowedUsers;
-    }
-
-
-    public Set<String> getAdminUsers() {
-        return adminUsers;
-    }
-
-
-    public void setAdminUsers(Set<String> adminUsers) {
-        this.adminUsers = adminUsers;
-    }
-
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String thisURL = request.getRequestURI();
-        request.setAttribute("tangramURL", thisURL);
-        LOG.debug("preHandle() detected URI {}", thisURL);
-
-        if (!getFreeUrls().contains(thisURL)) {
-            boolean liveSystem = loginSupport.isLiveSystem();
-            if (liveSystem) {
-                request.setAttribute(Constants.ATTRIBUTE_LIVE_SYSTEM, Boolean.TRUE);
-            } // if
-
-            Principal principal = request.getUserPrincipal();
-            if (liveSystem) {
-                if ((principal!=null)&&(adminUsers.contains(principal.getName()))) {
-                    request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
-                } // if
-            } else {
-                if (principal!=null) {
-                    String userName = principal.getName();
-                    LOG.info("preHandle() checking for user: {}", userName);
-                    loginSupport.storeLogoutURL(request, thisURL);
-                    if (adminUsers.contains(userName)) {
-                        request.setAttribute(Constants.ATTRIBUTE_ADMIN_USER, Boolean.TRUE);
-                    } // if
-                    if ((allowedUsers.size()>0)&&(!allowedUsers.contains(userName))) {
-                        LOG.warn("preHandle() user not allowed to access page: {}", userName);
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN, userName+" not allowed to view page");
-                    } // if
-                } else {
-                    String loginURL = loginSupport.createLoginURL(thisURL);
-                    if (allowedUsers.size()>0) {
-                        LOG.info("preHandle() no logged in user found");
-                        response.sendRedirect(loginURL);
-                    } else {
-                        LOG.debug("preHandle() system doesn't need login but perhaps application");
-                        request.setAttribute(Constants.ATTRIBUTE_LOGIN_URL, loginURL);
-                    } // if
-                } // if
-            } // if
-        } // if
-
+        loginSupport.handleRequest(request, response);
         return super.preHandle(request, response, handler);
     } // preHandle()
 

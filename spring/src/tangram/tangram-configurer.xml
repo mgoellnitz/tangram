@@ -76,11 +76,7 @@
     <property name="freeUrls" ref="freeUrls"/>
   </bean>
   
-  <bean id="passwordInterceptor" class="org.tangram.spring.PasswordInterceptor">
-    <property name="freeUrls" ref="freeUrls"/>
-    <property name="allowedUsers" ref="allowedUsers"/>
-    <property name="adminUsers" ref="adminUsers"/>
-  </bean>
+  <bean id="passwordInterceptor" class="org.tangram.spring.PasswordInterceptor" />
   
   <!-- 
        The common default list of interceptors for time measurement and login check.

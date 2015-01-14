@@ -18,7 +18,9 @@
  */
 package org.tangram.security;
 
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -52,5 +54,18 @@ public interface LoginSupport {
      * @return login URL encoding login and current url
      */
     String createLoginURL(String currentURL);
+
+
+    /**
+     * Handles the given request and issues login redirect and error results.
+     *
+     * Depends on a tangram base configuration for logins which at least are inteded for use
+     * in the editor component.
+     *
+     * @param request HttpServletRequest to handle
+     * @param response HttpServlerResponse assiciated with this request
+     * @throws IOException may occur on redirects or sending of responses
+     */
+    void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 } // LoginSupport
