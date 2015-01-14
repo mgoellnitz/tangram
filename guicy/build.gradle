@@ -23,6 +23,9 @@ dependencies {
   compile "com.google.inject:guice:$versions.guice"
   compile "com.google.inject.extensions:guice-servlet:$versions.guice"
   compile "com.google.inject.extensions:guice-multibindings:$versions.guice"
+  // Guice uses JUL - but this bridge is expensive and would
+  // interfere with a slf4j-jul logging as slf4j implementation.
+  // runtime "org.slf4j:jul-to-slf4j:$versions.slf4j"
   
   compile ("com.mycila.guice.extensions:mycila-guice-jsr250:$versions.mycila_guice") {
     exclude module: 'sisu-guice'
