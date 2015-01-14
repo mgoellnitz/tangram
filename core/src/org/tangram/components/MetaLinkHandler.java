@@ -22,10 +22,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
@@ -82,7 +82,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Collection<ControllerHook> controllerHooks;
+    private Set<ControllerHook> controllerHooks;
 
     @Inject
     private PropertyConverter propertyConverter;
@@ -126,7 +126,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private TargetDescriptor callAction(HttpServletRequest request, HttpServletResponse response, Matcher matcher, Method method, TargetDescriptor descriptor,
             Object target) throws Throwable, IllegalAccessException {
         TargetDescriptor result = null;
-        LOG.debug("callAction() {}@{}", method, target);
+        LOG.debug("callAction() {} @ {}", method, target);
 
         if (method!=null) {
             descriptor.action = null;

@@ -30,7 +30,6 @@ import groovy.lang.Script;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
@@ -72,19 +71,16 @@ public class TangramServletModule extends ServletModule {
 
     });
 
-    private final Set<ControllerHook> controllerHooks = new HashSet<>();
+    private Multibinder<ControllerHook> controllerHookBinder = null;
 
     private final Set<TemplateResolver<String>> templateResolvers = new HashSet<>();
-
-    private Multibinder<ControllerHook> hookBinder = null;
 
     @SuppressWarnings("rawtypes")
     private Multibinder<TemplateResolver> resolverBinder = null;
 
 
     public void addControllerHook(ControllerHook hook) {
-        controllerHooks.add(hook);
-        hookBinder.addBinding().toInstance(hook);
+        controllerHookBinder.addBinding().toInstance(hook);
     } // addControllerHook()
 
 
@@ -92,17 +88,6 @@ public class TangramServletModule extends ServletModule {
         templateResolvers.add(resolver);
         resolverBinder.addBinding().toInstance(resolver);
     } // addTemplateResolver()
-
-
-    /**
-     * Producer to find all controller hook instances in the system.
-     *
-     * @return collection of controller hooks
-     */
-    @Provides
-    public Collection<ControllerHook> getControllerHooks() {
-        return controllerHooks;
-    } // getControllerHooks()
 
 
     /**
@@ -116,13 +101,9 @@ public class TangramServletModule extends ServletModule {
     } // getTemplateResolvers()
 
 
-    private CompilerConfiguration getCompilerConfiguration() {
-        return new CompilerConfiguration();
-    }
-
-
     private GroovyShell createShell() {
-        return new GroovyShell(Thread.currentThread().getContextClassLoader(), new Binding(), getCompilerConfiguration());
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return new GroovyShell(classLoader, new Binding(), new CompilerConfiguration());
     }
 
 
@@ -141,7 +122,7 @@ public class TangramServletModule extends ServletModule {
         } // try/catch
         Names.bindProperties(binder(), configuration);
 
-        hookBinder = Multibinder.newSetBinder(binder(), ControllerHook.class);
+        controllerHookBinder = Multibinder.newSetBinder(binder(), ControllerHook.class);
         resolverBinder = Multibinder.newSetBinder(binder(), TemplateResolver.class);
 
         String dispatcherPath = getServletContext().getInitParameter(DefaultTangramContextListener.DISPATCHER_PATH);
