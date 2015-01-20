@@ -60,7 +60,7 @@ public class GenericPropertyConverterTest {
         Assert.assertEquals("should be a date value", referenceDateString, c.getEditString(referenceDate));
         List<Content> contentList = new ArrayList<>();
         contentList.add(content);
-        Assert.assertEquals("should be a list with just one content ID", "Test:123,", c.getEditString(list));
+        Assert.assertEquals("should be a list with just one content ID", "Test:123, ", c.getEditString(contentList));
     } // testEditStrings()
 
 
