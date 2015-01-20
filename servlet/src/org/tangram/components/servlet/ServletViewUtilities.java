@@ -169,8 +169,8 @@ public class ServletViewUtilities implements ViewUtilities {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher(template);
             if (requestDispatcher!=null) {
                 try {
-                    for (String key : model.keySet()) {
-                        request.setAttribute(key, model.get(key));
+                    for (Map.Entry<String, Object> e : model.entrySet()) {
+                        request.setAttribute(e.getKey(), e.getValue());
                     } // for
                     LOG.debug("render({}) writer {}", template, writer);
                     ResponseWrapper responseWrapper = null;

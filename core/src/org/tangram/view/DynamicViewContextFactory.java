@@ -178,8 +178,8 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
         Map<String, Object> model = super.createModel(bean, request, response);
 
         Map<String, Object> shims = getShims((HttpServletRequest) request, bean);
-        for (String key : shims.keySet()) {
-            model.put(key, shims.get(key));
+        for (Map.Entry<String, Object> e : shims.entrySet()) {
+            model.put(e.getKey(), e.getValue());
         } // for
 
         return model;

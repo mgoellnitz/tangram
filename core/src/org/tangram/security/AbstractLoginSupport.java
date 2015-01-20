@@ -102,8 +102,8 @@ public abstract class AbstractLoginSupport implements LoginSupport {
                 LOG.debug("preHandle() attribute {}={}", attributeName, request.getAttribute(attributeName));
             } // while
             Map<?, ?> parameterMap = request.getParameterMap();
-            for (Object key : parameterMap.keySet()) {
-                LOG.debug("preHandle() parameter {}={}", key, parameterMap.get(key));
+            for (Map.Entry<?,?> parameter : parameterMap.entrySet()) {
+                LOG.debug("preHandle() parameter {}={}", parameter.getKey(), parameter.getValue());
             } // for
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie : cookies) {

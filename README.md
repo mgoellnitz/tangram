@@ -2,6 +2,7 @@ Tangram Dynamic Extendable Web Applications
 ===========================================
 
 [![Build Status](https://api.travis-ci.org/mgoellnitz/tangram.svg?branch=master)](https://travis-ci.org/mgoellnitz/tangram)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/3981/badge.svg)](https://scan.coverity.com/projects/3981)
 
 Tangram is a framework for the object oriented web rendering of java beans. 
 It comes with limited CMS functionality by using Java Data Object (JDO) or 

@@ -215,11 +215,11 @@ public class EditingHandler extends AbstractRenderingBase {
         getMutableBeanFactory().beginTransaction();
         wrapper = new JavaBean(bean);
         Exception e = null;
-        for (String propertyName : newValues.keySet()) {
+        for (Map.Entry<String, Object> property : newValues.entrySet()) {
             try {
-                wrapper.set(propertyName, newValues.get(propertyName));
+                wrapper.set(property.getKey(), property.getValue());
             } catch (Exception ex) {
-                e = new Exception("Cannot set value for "+propertyName, ex);
+                e = new Exception("Cannot set value for "+property.getKey(), ex);
             } // try/catch
         } // for
 
