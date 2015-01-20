@@ -31,7 +31,6 @@ import org.tangram.servlet.PasswordFilter;
  */
 @Named("passwordFilter")
 @Singleton
-@SuppressWarnings("PMD.AtLeastOneConstructor")
 public class TangramPasswordFilter extends PasswordFilter {
 
 } // TangramPasswordFilter

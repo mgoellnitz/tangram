@@ -47,6 +47,17 @@ public class BasicShiroWebModule extends ShiroWebModule {
     } // BasicShiroWebModule()
 
 
+    /**
+     * Just add the AUTHC filter to the filter chain.
+     * this method just encapsules the suppress warning to have this section small.
+     * @param url url to add filter to the filter chain for.
+     */
+    @SuppressWarnings("unchecked")
+    private void addAuthcFilter(String url) {
+        addFilterChain(url, AUTHC);
+    } // addAuthcFilter()
+
+
     @Override
     protected void configureShiroWeb() {
         try {
@@ -57,7 +68,7 @@ public class BasicShiroWebModule extends ShiroWebModule {
         String[] urlPrefixes = {"/edit**", "/importer**", "/link**", "/list**", "/store**", "shiro/login.jsp"};
         for (String urlPrefix : urlPrefixes) {
             String url = urlPrefix.startsWith("/") ? dispatcherPath+urlPrefix : "/"+urlPrefix;
-            addFilterChain(url, AUTHC);
+            addAuthcFilter(url);
         } // for
     } // configureShiroWeb()
 

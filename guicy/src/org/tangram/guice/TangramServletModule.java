@@ -145,7 +145,7 @@ public class TangramServletModule extends ServletModule {
                 Script s = shell.parse(new GroovyCodeSource(resource));
                 s.setProperty("config", configuration);
                 s.setProperty("module", this);
-                s.setProperty("log", LoggerFactory.getLogger(name.replace('/', '.')));
+                s.setProperty("log", LoggerFactory.getLogger(name.replace('.', '_').replace('/', '.')));
                 s.run();
             } catch (IOException e) {
                 throw new Error("Failed to configure module via "+name, e);

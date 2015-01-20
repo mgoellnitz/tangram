@@ -21,8 +21,6 @@ package org.tangram.spring;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.tangram.security.LoginSupport;
 
@@ -42,8 +40,6 @@ import org.tangram.security.LoginSupport;
  * access to the administrational parts of tangram
  */
 public class PasswordInterceptor extends HandlerInterceptorAdapter {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PasswordInterceptor.class);
 
     @Inject
     private LoginSupport loginSupport;

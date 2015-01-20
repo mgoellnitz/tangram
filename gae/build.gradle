@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,4 +35,8 @@ dependencies {
   
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
+  // Just to keep the IDE calm about the servlet references in the groovy scripts
+  // for guicy, which are allowed to reference this since this is a dependency
+  // of the guicy module.
+  providedCompile project (':tangram-servlet')
 }
