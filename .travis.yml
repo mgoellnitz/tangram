@@ -1,1 +1,15 @@
 language: java
+
+env:
+  global:
+   - secure: "JbTE4UuYRyW9SZMP6T+FcGsXVzUWsWnp6vOiaxRW2HrAPaNZsS61tusT7UP8Gky0WDXJov98Yqk8+HgbudrZ0yu8zuc61G4vjddLmp1MNlCK7izp3Ryh5YzNFzoz3V8cilUvlkzYx7fOeO62ytpeXy1TLlHdkz9BVh9VOusfZ3o="
+
+addons:
+  coverity_scan:
+    project:
+      name: "mgoellnitz/tangram"
+      description: "Object Oriented Web Temaplating Framework"
+    build_command:   "gradle check"
+    build_command_prepend: "gradle clean"
+    notification_email: scan_notifications@example.com
+    branch_pattern: master
