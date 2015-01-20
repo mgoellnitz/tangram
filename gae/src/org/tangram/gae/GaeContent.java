@@ -141,6 +141,8 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
     /**
      * Legacy helper to store IDs as references.
      *
+     * @param <T> content sub type the elements of the list should have
+     * @param cls instance of T
      * @param ids list of ids to get contents for
      * @return list of contents for the given ids in the same order
      */
@@ -150,7 +152,7 @@ public abstract class GaeContent extends JdoContent implements BeanFactoryAware 
         if (ids!=null) {
             result = new ArrayList<>(ids.size());
             for (String id : ids) {
-                id = (id.indexOf(':')<0) ? id = postprocessPlainId(id) : id;
+                id = (id.indexOf(':')<0) ? postprocessPlainId(id) : id;
                 result.add(gaeBeanFactory.getBean(cls, id));
             } // for
         } // if

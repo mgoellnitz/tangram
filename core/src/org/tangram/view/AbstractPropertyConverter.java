@@ -68,16 +68,18 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 return "";
             } // if
             if (o instanceof List) {
-                String result = "";
+                StringBuilder result = new StringBuilder("");
                 List<? extends Object> list = (List<? extends Object>) o;
                 for (Object i : list) {
                     if (i instanceof Content) {
-                        result = result+((Content) i).getId()+", ";
+                        result.append(((Content) i).getId());
+                        result.append(", ");
                     } else {
-                        result = result+i+",";
+                        result.append(i);
+                        result.append(',');
                     } // if
                 } // for
-                return result;
+                return result.toString();
             } else if (o instanceof Boolean) {
                 return o.toString();
             } else if (o instanceof Content) {
