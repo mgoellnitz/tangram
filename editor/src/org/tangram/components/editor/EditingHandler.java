@@ -134,6 +134,52 @@ public class EditingHandler extends AbstractRenderingBase {
     } // static
 
 
+    /**
+     * Returns the class the developer modeled.
+     * This isn't necessarily the same class as the system uses.
+     *
+     * @param cls class of an ORM obtained object
+     * @return Class the developer implemented
+     */
+    public static Class<? extends Object> getDesignClass(Class<? extends Content> cls) {
+        return (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
+    } // getDesignClass()
+
+
+    /**
+     * Returns a string note about the ORM class state.
+     *
+     * @param cls
+     * @return note indicating the underlying ORM implementation and class modification state
+     * @throws SecurityException
+     */
+    public static String getOrmNote(Class<? extends Content> cls) throws SecurityException {
+        Method[] methods = cls.getMethods();
+        String note = "Plain";
+        for (Method method : methods) {
+            if (method.getName().startsWith("_ebean")) {
+                note = "EBean enhanced";
+            } // if
+            if (method.getName().startsWith("jdo")) {
+                note = "DataNucleus JDO/JPA Enhanced";
+            } // if
+            if (method.getName().startsWith("pc")) {
+                note = "OpenJPA Enhanced";
+            } // if
+            if (method.getName().startsWith("_persistence")) {
+                note = "EclipseLink Woven (Weaved)";
+            } // if
+            if (method.getName().startsWith("$$_hibernate")) {
+                note = "Hibernate Enhanced";
+            } // if
+        } // for
+        if (cls.getName().startsWith("org.apache.openjpa.enhance")) {
+            note = "OpenJPA Subclass";
+        } // if
+        return note;
+    } // getOrmNote()
+
+
     public void setDeleteMethodEnabled(boolean deleteMethodEnabled) {
         this.deleteMethodEnabled = deleteMethodEnabled;
     } // setDeleteMethodEnabled()
@@ -361,31 +407,10 @@ public class EditingHandler extends AbstractRenderingBase {
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
         request.setAttribute("prefix", Utils.getUriPrefix(request));
         Class<? extends Content> cls = content.getClass();
-        Method[] methods = cls.getMethods();
-        String note = "Plain";
-        for (Method method : methods) {
-            if (method.getName().startsWith("_ebean")) {
-                note = "EBean enhanced";
-            } // if
-            if (method.getName().startsWith("jdo")) {
-                note = "DataNucleus JDO/JPA Enhanced";
-            } // if
-            if (method.getName().startsWith("pc")) {
-                note = "OpenJPA Enhanced";
-            } // if
-            if (method.getName().startsWith("_persistence")) {
-                note = "EclipseLink Woven (Weaved)";
-            } // if
-            if (method.getName().startsWith("$$_hibernate")) {
-                note = "Hibernate Enhanced";
-            } // if
-        } // for
-        if (cls.getName().startsWith("org.apache.openjpa.enhance")) {
-            note = "OpenJPA Subclass";
-        } // if
-        Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
-        request.setAttribute("contentClass", cls);
+        String note = getOrmNote(cls);
+        Class<? extends Object> designClass = getDesignClass(cls);
         request.setAttribute("note", note);
+        request.setAttribute("contentClass", cls);
         request.setAttribute("designClass", designClass);
         request.setAttribute("designClassPackage", designClass.getPackage());
 
