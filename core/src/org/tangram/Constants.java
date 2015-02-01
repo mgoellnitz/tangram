@@ -192,7 +192,7 @@ public final class Constants {
 
 
     /**
-     * just to protect this stuff from being instantiated
+     * just to protect this stuff from being instantiated.
      */
     private Constants() {
     } // Constants()

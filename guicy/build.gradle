@@ -24,7 +24,8 @@ dependencies {
   compile "com.google.inject.extensions:guice-servlet:$versions.guice"
   compile "com.google.inject.extensions:guice-multibindings:$versions.guice"
   // Guice uses JUL - but this bridge is expensive and would
-  // interfere with a slf4j-jul logging as slf4j implementation.
+  // interfere with a slf4j-jul logging as slf4j implementation,
+  // so add this in your project directly if appropriate.
   // runtime "org.slf4j:jul-to-slf4j:$versions.slf4j"
   
   compile ("com.mycila.guice.extensions:mycila-guice-jsr250:$versions.mycila_guice") {
@@ -33,6 +34,9 @@ dependencies {
   
   compile "org.apache.shiro:shiro-web:$versions.shiro"
   compile "org.apache.shiro:shiro-guice:$versions.shiro"
-    
+  
   testCompile "junit:junit:$versions.junit"
+  
+  // Redundancy to keep groovy google guice init script compilation in netbeans calm.
+  providedCompile project (':tangram-servlet')
 }
