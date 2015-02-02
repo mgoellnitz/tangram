@@ -37,6 +37,8 @@ public class GaeCacheAdapter implements PersistentRestartCache {
 
     private static final Logger LOG = LoggerFactory.getLogger(GaeCacheAdapter.class);
 
+    // This is a false positibe with PMD
+    @SuppressWarnings("PMD.ImmutableField")
     private Map<String, Object> jsrCache = null;
 
 
