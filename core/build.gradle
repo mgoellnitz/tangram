@@ -45,6 +45,8 @@ dependencies {
   
   testCompile "junit:junit:$versions.junit"
   testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.springframework:spring-core:$versions.testspring"
+  testCompile "org.springframework:spring-test:$versions.testspring"
   
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"

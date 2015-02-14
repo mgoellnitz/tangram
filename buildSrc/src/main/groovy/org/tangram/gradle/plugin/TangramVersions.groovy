@@ -34,10 +34,13 @@ public class TangramVersions {
   String slf4j = '1.7.10'
   String log4j = '1.2.17'
   String yui = '2.4.7'
-  String junit = '4.12'
   String mockito = '1.10.8' // 1.10.14 available from jcenter()
   String xstream = '1.4.7'
   String tomcat = '7.0.57'
+  
+  // For testing purposes
+  String junit = '4.12'
+  String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
   
   String dinistiq = '0.4-SNAPSHOT'
   String shiro = '1.2.3'

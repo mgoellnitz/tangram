@@ -19,15 +19,19 @@
 package org.tangram.view.test;
 
 import java.io.UnsupportedEncodingException;
+import javax.servlet.ServletContext;
+import javax.servlet.jsp.jstl.core.Config;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.tangram.view.Utils;
 
 
 public class UtilsTest {
 
     @Test
-    public void testUtils() {
+    public void testUrlize() {
         String urlPart = null;
         try {
             urlPart = Utils.urlize("Hello dear user, we'd like to test some german umlauts like öäüßÖÄÜ - done.");
@@ -36,6 +40,18 @@ public class UtilsTest {
         } // try/catchg
         Assert.assertNotNull("Encoding not supported", urlPart);
         Assert.assertEquals("Special characters and spaces should be transcoded", "hello-dear-user--we-d-like-to-test-some-german-umlauts-like-oeaeuessoeaeue-done.", urlPart);
-    } // testUtils()
+    } // testUrlize()
+
+
+    @Test
+    public void testSetLocale() {
+        ServletContext context = Mockito.mock(ServletContext.class);
+        MockHttpServletRequest request = new MockHttpServletRequest(context);
+        request.addHeader("Accept-Language", "de-de,en");
+        Utils.setPrimaryBrowserLanguageForJstl(request);
+        Object locale = Config.get(request, Config.FMT_LOCALE);
+        Assert.assertNotNull("Could not find encoding", locale);
+        // Assert.assertEquals("Unexpected locale", Locale.GERMAN, locale);
+    } // testSetLocale()
 
 } // UtilsTest
