@@ -25,11 +25,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Named;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.tangram.content.Content;
+import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
 import org.tangram.mutable.test.content.BaseInterface;
@@ -162,10 +164,32 @@ public abstract class BaseContentTest {
         codeResource = beanFactory.createBean(codeClass);
         codeResource.setAnnotation("org.tangram.example.Test");
         codeResource.setMimeType("application/x-groovy");
-        codeResource.setCode("package org.tangram.example.Test; public class Test {}".toCharArray());
+        codeResource.setCode("package org.tangram.example; import javax.inject.Named; @Named public class Test {}".toCharArray());
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals("We have one code instance", 2, codes.size());
     } // test3Code()
+
+
+    @Test
+    public void test4ObtainCode() throws Exception {
+        Set<String> packages = new HashSet<>();
+        packages.add("org.tangram.components");
+        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
+        ClassRepository repository = dinistiq.findBean(ClassRepository.class);
+        Assert.assertNotNull("Could not find class repository", repository);
+        Map<String, Class<Object>> annotatedClasses = repository.getAnnotated(Named.class);
+        Assert.assertNotNull("Could not find annotated classes", annotatedClasses);
+        Assert.assertEquals("Expected one annotated class", 1, annotatedClasses.size());
+        byte[] classBytes = repository.getBytes("org.tangram.example.Test");
+        Assert.assertNotNull("Could not find class", classBytes);
+        Assert.assertEquals("Unexpected number of bytes for class found", 4869, classBytes.length);
+        repository.overrideClass("org.tangram.example.Test", classBytes);
+        byte[] emptyClassBytes = repository.getBytes("org.tangram.example.Test");
+        Assert.assertNotNull("Could not find class", emptyClassBytes);
+        Assert.assertEquals("Unexpected number of bytes for class found", 4869, emptyClassBytes.length);
+        Map<String, String> errors = repository.getCompilationErrors();
+        Assert.assertEquals("Expected no compilation errors", 0, errors.size());
+    } // test4ObtainCode()
 
 } // BaseContentTest
