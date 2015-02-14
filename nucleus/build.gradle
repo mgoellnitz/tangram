@@ -34,6 +34,8 @@ dependencies {
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-dinistiq')
   testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile "org.springframework:spring-core:$versions.testspring"
+  testCompile "org.springframework:spring-test:$versions.testspring"
   testCompile "org.datanucleus:datanucleus-rdbms:$versions.datanucleus"
   testCompile "$versions.jdo_api"
   testCompile "hsqldb:hsqldb:1.8.0.10"

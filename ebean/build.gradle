@@ -34,6 +34,8 @@ dependencies {
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-dinistiq')
   testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile "org.springframework:spring-core:$versions.testspring"
+  testCompile "org.springframework:spring-test:$versions.testspring"
   testCompile "com.h2database:h2:1.3.174"
 }
 

@@ -40,6 +40,8 @@ dependencies {
   testCompile project (':tangram-dinistiq')
   
   testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile "org.springframework:spring-core:$versions.testspring"
+  testCompile "org.springframework:spring-test:$versions.testspring"
   testCompile "hsqldb:hsqldb:1.8.0.10"
 }
 

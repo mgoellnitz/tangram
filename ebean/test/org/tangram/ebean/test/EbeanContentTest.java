@@ -20,7 +20,6 @@ package org.tangram.ebean.test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
@@ -38,7 +37,7 @@ public class EbeanContentTest extends BaseContentTest {
 
     @Override
     protected Map<String, Object> getBeansForContentCreate() {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = super.getBeansForContentCreate();
         result.put("ebeanDdlGenerate", Boolean.TRUE);
         result.put("ebeanDdlRun", Boolean.TRUE);
         return result;
@@ -47,7 +46,7 @@ public class EbeanContentTest extends BaseContentTest {
 
     @Override
     protected Map<String, Object> getBeansForContentCheck() {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = super.getBeansForContentCheck();
         result.put("ebeanDdlGenerate", Boolean.FALSE);
         result.put("ebeanDdlRun", Boolean.FALSE);
         return result;

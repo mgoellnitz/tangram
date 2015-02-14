@@ -20,7 +20,7 @@ package org.tangram.mutable.test;
 
 import dinistiq.Dinistiq;
 import java.lang.reflect.Method;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +61,24 @@ public abstract class BaseContentTest {
 
 
     protected Map<String, Object> getBeansForContentCreate() {
-        return Collections.emptyMap();
+        Map<String, Object> result = new HashMap<>();
+        org.springframework.mock.web.MockServletContext context = new org.springframework.mock.web.MockServletContext() {
+
+
+            @Override
+            public String getRealPath(String path) {
+                return "/x"+path;
+            }
+            
+        };
+        context.setContextPath("/");
+        result.put("servletContext", context);
+        return result;
     }
 
 
     protected Map<String, Object> getBeansForContentCheck() {
-        return Collections.emptyMap();
+        return getBeansForContentCreate();
     }
 
 
