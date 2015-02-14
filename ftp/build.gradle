@@ -24,4 +24,14 @@ dependencies {
   compile "org.mockftpserver:MockFtpServer:2.4"
 
   testCompile "junit:junit:$versions.junit"
+  // bean wire up for test cases is done via dinistiq
+  testCompile "dinistiq:dinistiq:$versions.dinistiq"
+  // dinistiq logging at debug level through special log4j.properties
+  testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
+  // more or less a dummy for the various autoscanned and auto injected beans
+  testCompile project (':tangram-dinistiq')
+  testCompile project (':tangram-jpa')
+  
+  testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile "hsqldb:hsqldb:1.8.0.10"
 }
