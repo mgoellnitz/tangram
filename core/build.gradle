@@ -44,6 +44,8 @@ dependencies {
   }
   
   testCompile "junit:junit:$versions.junit"
+  // logging at debug level through special log4j.properties for tests
+  testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
   testCompile "org.mockito:mockito-all:$versions.mockito"
   testCompile "org.springframework:spring-core:$versions.testspring"
   testCompile "org.springframework:spring-test:$versions.testspring"

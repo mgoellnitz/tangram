@@ -67,4 +67,13 @@ public class NucleusContentTest extends BaseContentTest {
         Assert.assertTrue("Classes not enhanced", checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "jdo"));
     } // test1IsEnhanced()
 
+
+    @Test
+    public void testStringConversion() throws Exception {
+        SubClass subBean = new SubClass();
+        String testString = "justateststringtouseforconversiontesting";
+        Assert.assertEquals("Nucleus specific conversion methods failed", testString, subBean.checkConversion(testString));
+        Assert.assertNull("Nucleus specific conversion methods failed", subBean.checkConversion(null));
+    } // testStringConversion()
+
 } // NucleusContentTest

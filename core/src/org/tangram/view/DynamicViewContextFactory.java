@@ -65,8 +65,9 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
     private Map<String, List<Constructor<Shim>>> cachedBeanShims;
 
 
-    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<Content> beanClass, Constructor<Shim> shimClass) {
+    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<? extends Content> beanClass, Constructor<Shim> shimClass) {
         List<Constructor<Shim>> shims = definedShims.get(beanClass.getName());
+        LOG.info("defineShim() defining shim {}: {}", beanClass.getSimpleName(), shimClass);
         if (shims==null) {
             shims = new ArrayList<>();
             definedShims.put(beanClass.getName(), shims);
@@ -75,12 +76,12 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
     } // defineShim()
 
 
-    private void defineViewShim(Class<Content> beanClass, Constructor<Shim> shimClass) {
+    protected void defineViewShim(Class<? extends Content> beanClass, Constructor<Shim> shimClass) {
         defineShim(definedViewShims, beanClass, shimClass);
     } // defineViewShim()
 
 
-    private void defineBeanShim(Class<Content> beanClass, Constructor<Shim> shimClass) {
+    protected void defineBeanShim(Class<? extends Content> beanClass, Constructor<Shim> shimClass) {
         defineShim(definedBeanShims, beanClass, shimClass);
     } // defineBeanShim()
 
@@ -93,26 +94,29 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
         cachedViewShims = new HashMap<>();
         cachedBeanShims = new HashMap<>();
 
-        for (Class<Shim> c : classRepository.get(Shim.class).values()) {
-            try {
-                ParameterizedType pt = ((ParameterizedType) c.getGenericSuperclass());
-                Type[] actualTypes = pt.getActualTypeArguments();
-                Class<Content> beanClass = (Class<Content>) (actualTypes[0]);
-                String className = c.getName();
-                if (ViewShim.class.isAssignableFrom(c)) {
-                    LOG.info("reset() defining view shim {} for {}", className, beanClass.getName());
-                    defineViewShim(beanClass, c.getConstructor(HttpServletRequest.class, beanClass));
-                } else {
-                    if (Shim.class.isAssignableFrom(c)) {
-                        LOG.info("reset() defining bean shim {} for {}", className, beanClass.getName());
-                        defineBeanShim(beanClass, c.getConstructor(beanClass));
+        // actually in real world scenarios this should always be true
+        if (classRepository!=null) {
+            for (Class<Shim> c : classRepository.get(Shim.class).values()) {
+                try {
+                    ParameterizedType pt = ((ParameterizedType) c.getGenericSuperclass());
+                    Type[] actualTypes = pt.getActualTypeArguments();
+                    Class<Content> beanClass = (Class<Content>) (actualTypes[0]);
+                    String className = c.getName();
+                    if (ViewShim.class.isAssignableFrom(c)) {
+                        LOG.info("reset() defining view shim {} for {}", className, beanClass.getName());
+                        defineViewShim(beanClass, c.getConstructor(HttpServletRequest.class, beanClass));
+                    } else {
+                        if (Shim.class.isAssignableFrom(c)) {
+                            LOG.info("reset() defining bean shim {} for {}", className, beanClass.getName());
+                            defineBeanShim(beanClass, c.getConstructor(beanClass));
+                        } // if
                     } // if
-                } // if
-            } catch (Throwable e) {
-                // who cares
-                LOG.error("reset()", e);
-            } // try/catch
-        } // for
+                } catch (Throwable e) {
+                    // who cares
+                    LOG.error("reset()", e);
+                } // try/catch
+            } // for
+        } // if
     } // reset()
 
 
@@ -150,7 +154,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
             List<Constructor<Shim>> viewShims = getShimsFor(definedViewShims, cachedViewShims, shimFor);
             for (Constructor<Shim> ct : viewShims) {
                 if (ct!=null) {
-                    LOG.debug("getShims() view  shim for bean {} is {}", bean.getClass().getSimpleName(), ct.getDeclaringClass().getSimpleName());
+                    LOG.debug("getShims() view shim for bean {} is {}", bean.getClass().getSimpleName(), ct.getDeclaringClass().getSimpleName());
                     Shim result = ct.newInstance(request, bean);
                     LOG.debug("getShims() storing shim as {}", result.getAttributeName());
                     resultMap.put(result.getAttributeName(), result);
@@ -191,8 +195,8 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
         // actually in real world scenarios this should always be true
         if (classRepository!=null) {
             classRepository.addListener(this);
-            reset();
         } // if
+        reset();
     } // afterPropertiesSet()
 
 } // DynamicViewContextFactory

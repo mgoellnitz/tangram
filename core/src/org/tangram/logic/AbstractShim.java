@@ -9,16 +9,17 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.logic;
 
 import org.tangram.content.Content;
+
 
 /**
  *
@@ -39,13 +40,13 @@ public abstract class AbstractShim<T extends Content> implements Shim {
 
 
     @Override
-	public String getAttributeName() {
+    public String getAttributeName() {
         return attributeName;
     } // getAttributeName()
 
 
     @Override
-	public String getId() {
+    public String getId() {
         return delegate.getId();
     } // getDelegate()
 

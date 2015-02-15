@@ -43,11 +43,11 @@ public abstract class BaseContentTest {
 
     /**
      * Check if any of the method's names starts with a given prefix.
-     * 
+     *
      * All byte-code transformers create such schematic methods.
-     * 
+     *
      * @param methods
-     * @param prefix 
+     * @param prefix
      */
     protected boolean checkMethodPrefixOccurs(Method[] methods, String prefix) {
         boolean flag = false;
@@ -64,12 +64,11 @@ public abstract class BaseContentTest {
         Map<String, Object> result = new HashMap<>();
         org.springframework.mock.web.MockServletContext context = new org.springframework.mock.web.MockServletContext() {
 
-
             @Override
             public String getRealPath(String path) {
                 return "/x"+path;
             }
-            
+
         };
         context.setContextPath("/");
         result.put("servletContext", context);
@@ -92,9 +91,11 @@ public abstract class BaseContentTest {
 
 
     protected abstract void setPeers(BaseInterface base, SubInterface sub);
-    
+
+
     protected abstract int getNumberOfAllClasses();
-    
+
+
     /**
      * excluding interfafes and abstract classes.
      */

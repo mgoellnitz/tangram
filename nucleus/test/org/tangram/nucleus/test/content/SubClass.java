@@ -21,6 +21,7 @@ package org.tangram.nucleus.test.content;
 import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.mutable.test.content.SubInterface;
 
+
 /**
  * Persistent bean sub class just for test purposes.
  */
@@ -30,13 +31,20 @@ public class SubClass extends BaseClass implements SubInterface {
     private String subtitle;
 
 
+    @Override
     public String getSubtitle() {
         return subtitle;
     }
 
 
+    @Override
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
     }
+
+
+    public String checkConversion(String s) {
+        return byteArraytoString(stringToByteArray(charArraytoString(stringToCharArray(s))));
+    } // checkConversions()
 
 } // SubClass
