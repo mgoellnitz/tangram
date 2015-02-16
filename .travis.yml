@@ -1,4 +1,4 @@
 language: java
 
 after_success:
-  - gradle jacocoCombinedReport coveralls  
+  - gradle jacocoTestReport jacocoCombinedReport coveralls  

@@ -47,6 +47,10 @@ allprojects {
       }
     }
   }
+  reports {
+    xml.enabled true
+    html.enabled true
+  }
 }
 
 // Code coverage reporting
