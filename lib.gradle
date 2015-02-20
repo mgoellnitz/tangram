@@ -18,6 +18,7 @@
  */
 import org.gradle.api.artifacts.ExcludeRule
 import org.gradle.api.artifacts.ModuleDependency
+import groovy.util.Node
 
 apply from: '../commons.gradle'
 
@@ -34,6 +35,28 @@ configurations {
 publishing {
   publications {
     mavenJava(MavenPublication) {
+      pom.withXml {
+        def pom = asNode()
+        def first = pom.children().get(0)
+        first.plus {
+          new Node(pom, 'name', 'Tangram')
+          new Node(pom, 'description', 'Object oriented templating and dynamic web development framework')
+          new Node(pom, 'url', 'https://github.com/mgoellnitz/tangram/')
+          def scm = new Node(pom, 'scm')
+          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('url', 'git@github.com:mgoellnitz/tangram.git')
+          scm
+          def license = new Node(pom, 'licenses').appendNode('license')
+          license.appendNode('name', 'LGPL-3.0')
+          license.appendNode('url', 'http://opensource.org/licenses/LGPL-3.0')
+          license
+        }
+        def developer = pom.appendNode('developers').appendNode('developer')
+        developer.appendNode('name', 'Martin Goellnitz')
+        developer.appendNode('organization', 'Provocon')
+        developer.appendNode('organizationUrl', 'http://www.provocon.de/')
+      }
       from components.java
       if (release) {
         artifact sourcesJar 
