@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,14 +18,9 @@
  */
 package org.tangram.jpa.test;
 
-import dinistiq.Dinistiq;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
@@ -71,27 +66,13 @@ public class JpaContentTest extends BaseContentTest {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 12;
+        return 15;
     }
 
 
     @Override
     protected int getNumberOfClasses() {
-        return 3;
+        return 4;
     }
-
-
-    @Test
-    public void test4CreateTestContent() throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCreate());
-        Assert.assertNotNull("need test dinistiq instance", dinistiq);
-        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
-        Assert.assertNotNull("need factory for beans", beanFactory);
-        // Assert.assertEquals("have twelve classes and interfaces available", 12, beanFactory.getAllClasses().size());
-        // Assert.assertEquals("implementing classes", Collections.emptySet(), beanFactory.getAllClasses());
-        Assert.assertEquals("have three non abstract model classes", 3, beanFactory.getClasses().size());
-    } // test4CreateTestContent()
 
 } // JpaContentTest
