@@ -21,6 +21,12 @@ li {
   margin-bottom: 4px;
 }
 
+.tangram_footer {
+  float: right;
+  width: 100%;
+  text-align: right;
+}
+
 .cms_editor_row {
   margin-bottom: 10px;
 }

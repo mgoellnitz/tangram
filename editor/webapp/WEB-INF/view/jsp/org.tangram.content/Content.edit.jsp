@@ -200,7 +200,7 @@ if (value instanceof Content) {
 </form>
 (${contentClass.name} ${note})<br/>
 <cms:include bean="${self}" view="tangramEditorClasses" />
-<cms:include bean="${self}" view="tangramEditorFooter" />
+<%@include file="../../../include/tangram-footer.jsp" %>
 <script type="text/javascript">
 window.focus();window.onkeydown=keydown;window.onkeypress=keypress;
 </script>

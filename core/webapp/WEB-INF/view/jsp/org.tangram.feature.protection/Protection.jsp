@@ -6,15 +6,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<title>Tangram - <cms:include bean="${self}" view="description"/>: ${self.class.simpleName}</title>
+<title>Tangram - <cms:include bean="${self}" view="description"/>: <%=request.getAttribute("self").getClass().getSimpleName()%></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="/editor/screen.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="/editor/print.css" type="text/css" media="print"/>
-<link rel="shortcut icon" href="/t/e/favicon.ico" />
+<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/screen.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/print.css" type="text/css" media="print"/>
+<link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/favicon.ico" />
 </head>
 <body>
 <div>
 <cms:include bean="${self}" view="login"/>
 </div>
+<%@include file="../../../include/tangram-footer.jsp" %>
 </body>
 </html>
