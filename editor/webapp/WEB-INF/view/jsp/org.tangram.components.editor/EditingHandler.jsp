@@ -8,12 +8,9 @@
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
   <head>
     <title>Tangram - Import / Export</title>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/screen.css" type="text/css" media="screen"/>
+    <%@include file="../../../include/head-elements.jsp" %>
     <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/screen.css" type="text/css" media="screen"/>
-    <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/print.css" type="text/css" media="print"/>
     <link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/editor/print.css" type="text/css" media="print"/>
-    <link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/favicon.ico" />
   </head>
   <body>
     <fmt:message key="text.export.prefix" bundle="${msg}"/> <a href="export"><fmt:message key="button.export" bundle="${msg}"/></a><fmt:message key="text.export.suffix" bundle="${msg}"/>

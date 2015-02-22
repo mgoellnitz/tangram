@@ -7,10 +7,7 @@
 <html>
 <head>
 <title>Tangram - <cms:include bean="${self}" view="description"/>: <%=request.getAttribute("self").getClass().getSimpleName()%></title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/screen.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="<%=Utils.getUriPrefix(request)%>/t/print.css" type="text/css" media="print"/>
-<link rel="shortcut icon" href="<%=Utils.getUriPrefix(request)%>/t/favicon.ico" />
+<%@include file="../../../include/head-elements.jsp" %>
 </head>
 <body>
 <div>

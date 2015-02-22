@@ -1,0 +1,17 @@
+.longversion {
+	visibility: hidden;
+	width: 0;
+	font-size: 0;
+}
+
+div.cms_editor_id_box {
+  margin-top: 3pt;
+  width: 305px;
+  border: 0px;
+}
+
+td.cms_editor_label_td {
+  vertical-align: top;
+  font-weight: normal;
+  width: 100px;
+}

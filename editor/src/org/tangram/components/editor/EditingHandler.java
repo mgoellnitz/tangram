@@ -281,26 +281,6 @@ public class EditingHandler extends AbstractRenderingBase {
     } // store()
 
 
-    private String getVariant(HttpServletRequest request) {
-        String agent = request.getHeader("user-agent");
-        String variant = "";
-        if (agent.indexOf("iPhone")>0) {
-            variant = "$mobile";
-        } // if
-        if (agent.indexOf("Android")>0) {
-            variant = "$mobile";
-        } // if
-        if (agent.indexOf("Pre/1.0")>0) {
-            variant = "$mobile";
-        } // if
-        if (agent.indexOf("MIDP")>0) {
-            variant = "$mobile";
-        } // if
-        LOG.debug("getVariant() agent={} -> {}", agent, variant);
-        return variant;
-    } // getVariant()
-
-
     /**
      * Load a class for a given type name.
      *
@@ -382,7 +362,7 @@ public class EditingHandler extends AbstractRenderingBase {
             request.setAttribute("designClass", designClass);
             request.setAttribute("designClassPackage", designClass.getPackage());
         } // if
-        return new TargetDescriptor(contents, "tangramEditorList"+getVariant(request), null);
+        return new TargetDescriptor(contents, "tangramEditorList", null);
     } // list()
 
 
@@ -414,7 +394,7 @@ public class EditingHandler extends AbstractRenderingBase {
         request.setAttribute("designClass", designClass);
         request.setAttribute("designClassPackage", designClass.getPackage());
 
-        return new TargetDescriptor(content, "edit"+getVariant(request), null);
+        return new TargetDescriptor(content, "edit", null);
     } // edit()
 
 

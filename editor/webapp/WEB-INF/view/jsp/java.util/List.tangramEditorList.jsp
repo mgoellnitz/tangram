@@ -7,17 +7,14 @@
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
 <title>Tangram - <fmt:message key="label.list" bundle="${msg}"/> ${designClass.name}</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="${prefix}/t/screen.css" type="text/css" media="screen" />
+<%@include file="../../../include/head-elements.jsp" %>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="${prefix}/t/print.css" type="text/css" media="print" />
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print" />
-<link rel="shortcut icon" href="${prefix}/t/favicon.ico" />
 <script type="text/javascript" src="${prefix}/editor/script.js">
 </script>
 </head>
 <body>
-<div class="cms_editor_row"><span class="cms_editor_label"><fmt:message key="label.listobjects" bundle="${msg}"/> | 
+  <div class="cms_editor_row"><span class="cms_editor_label"><span class="longversion"><fmt:message key="label.listobjects" bundle="${msg}"/> | </span>
 <fmt:message key="label.type" bundle="${msg}"/>: </span> ${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
 | <a href="#" onclick="window.close();">[ X ]</a></div>
 <div class="cms_editor_row">

@@ -10,22 +10,19 @@
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
 <title>Tangram - <cms:include bean="${self}" view="description"/>: ${designClass.simpleName}</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="${prefix}/t/screen.css" type="text/css" media="screen"/>
+<%@include file="../../../include/head-elements.jsp" %>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
-<link rel="stylesheet" href="${prefix}/t/print.css" type="text/css" media="print"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
-<link rel="shortcut icon" href="${prefix}/t/favicon.ico" />
 <script type="text/javascript" src="${prefix}/editor/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="${prefix}/editor/codemirror/js/codemirror.js"></script>
 <script type="text/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
-<div class="cms_editor_row"><span class="cms_editor_label">
+<div class="cms_editor_row"><span class="longversion"><span class="cms_editor_label">
 <fmt:message key="label.edit" bundle="${msg}"/></span> | 
 <fmt:message key="label.type" bundle="${msg}"/>: ${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
-| <span class="cms_editor_label">ID: </span>${self.id}
+| </span><span class="cms_editor_label">ID: </span>${self.id}
 <c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>><fmt:message key="label.webview" bundle="${msg}"/></a></c:if> 
 | <a href="#" onclick="window.close();">[ X ]</a> 
 &#160; &#160; <input type="submit" value="    <fmt:message key="button.save" bundle="${msg}"/>    " class="cms_editor_button"/>
