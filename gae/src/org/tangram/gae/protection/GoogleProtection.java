@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -83,4 +83,4 @@ public class GoogleProtection extends AbstractProtection {
         return userService.createLoginURL(""+request.getAttribute("tangramURL"));
     } // getLoginUrl();
 
-} // PasswordProtection
+} // GoogleProtection

@@ -225,14 +225,14 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         if (handlerClass.getAnnotation(org.tangram.annotate.LinkHandler.class)!=null) {
             for (Method m : handlerClass.getMethods()) {
                 LinkAction linkAction = m.getAnnotation(LinkAction.class);
-                LOG.debug("registerLinkHandler({}) linkAction={}", handlerClass.getName(), linkAction);
-                LOG.debug("registerLinkHandler() {} :{}", m.getName(), m.getReturnType());
+                LOG.debug("registerAtHandler({}) linkAction={}", handlerClass.getName(), linkAction);
+                LOG.debug("registerAtHandler() {} :{}", m.getName(), m.getReturnType());
                 if (!TargetDescriptor.class.equals(m.getReturnType())) {
                     linkAction = null;
                 } // if
                 if ((linkAction!=null)&&(StringUtils.isNotBlank(linkAction.value()))) {
                     Pattern pathPattern = Pattern.compile(linkAction.value().replace("/", "\\/"));
-                    LOG.info("registerLinkHandler() registering {} for {}@{}", pathPattern, m.getName(), handler);
+                    LOG.info("registerAtHandler() registering {} for {}@{}", pathPattern, m.getName(), handler);
                     methods.put(pathPattern, m);
                     atHandlers.put(pathPattern, handler);
                     if (immutable) {
