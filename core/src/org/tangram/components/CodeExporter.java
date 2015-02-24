@@ -20,6 +20,8 @@ package org.tangram.components;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -30,9 +32,9 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
+import org.tangram.authenctication.AuthorizationService;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 import org.tangram.link.LinkHandlerRegistry;
@@ -53,6 +55,20 @@ public class CodeExporter {
     @Inject
     private CodeResourceCache codeResourceCache;
 
+    @Inject
+    private AuthorizationService authenticationService;
+
+    private static final Set<String> MIME_TYPES = new HashSet<>();
+
+
+    static {
+        MIME_TYPES.add("text/xml");
+        MIME_TYPES.add("text/html");
+        MIME_TYPES.add("text/css");
+        MIME_TYPES.add("application/javascript");
+        MIME_TYPES.add("application/x-groovy");
+    }
+
 
     private String getFilename(CodeResource code) {
         return code.getAnnotation().replace(';', '_');
@@ -65,9 +81,7 @@ public class CodeExporter {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return null;
         } // if
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new IOException("User may not execute action");
-        } // if
+        authenticationService.redirectIfNotAdmin(request, response);
 
         long now = System.currentTimeMillis();
 
@@ -81,10 +95,10 @@ public class CodeExporter {
         Collection<CodeResource> codes = codeResourceCache.getCodes();
         for (CodeResource code : codes) {
             if (StringUtils.isNotBlank(code.getAnnotation())) {
-                String mimeType = CodeHelper.getNormalizedMimeType(code.getMimeType());
+                String mimeType = code.getMimeType();
                 String folder = CodeHelper.getFolder(mimeType);
                 String extension = CodeHelper.getExtension(mimeType);
-                if (mimeType.startsWith("text/")) {
+                if (MIME_TYPES.contains(mimeType)) {
                     byte[] bytes = code.getCodeText().getBytes("UTF-8");
                     ZipEntry ze = new ZipEntry(folder+"/"+getFilename(code)+extension);
                     ze.setTime(now);

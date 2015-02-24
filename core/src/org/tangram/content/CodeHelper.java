@@ -39,24 +39,6 @@ public final class CodeHelper {
     }
 
 
-    /**
-     * Avoid ambiguities with mimetypes for javascript and xml.
-     * Just for internal use.
-     */
-    public static String getNormalizedMimeType(String mimeType) {
-        if ("application/x-groovy".equals(mimeType)) {
-            mimeType = "text/groovy";
-        } // if
-        if ("application/xml".equals(mimeType)) {
-            mimeType = "text/xml";
-        } // if
-        if ("application/javascript".equals(mimeType)) {
-            mimeType = "text/javascript";
-        } // if
-        return mimeType;
-    } // getNormalizedMimeType()
-
-
     public static String getExtension(String mimeType) {
         if ("application/x-groovy".equals(mimeType)) {
             mimeType = "text/groovy";
@@ -66,6 +48,9 @@ public final class CodeHelper {
         } // if
         if ("text/xml".equals(mimeType)) {
             mimeType = "text/vtl";
+        } // if
+        if ("application/javascript".equals(mimeType)) {
+            mimeType = "text/js";
         } // if
         if ("text/javascript".equals(mimeType)) {
             mimeType = "text/js";
@@ -90,6 +75,9 @@ public final class CodeHelper {
         if ("text/xml".equals(mimeType)) {
             mimeType = "text/velocity-xml";
         } // if
+        if ("application/javascript".equals(mimeType)) {
+            mimeType = "text/js";
+        } // if
         if ("text/javascript".equals(mimeType)) {
             mimeType = "text/js";
         } // if
@@ -113,7 +101,7 @@ public final class CodeHelper {
             result = "text/css";
         } // if
         if ("js".equals(directoryName)) {
-            result = "text/javascript";
+            result = "application/javascript";
         } // if
         if ("groovy".equals(directoryName)) {
             result = "application/x-groovy";
