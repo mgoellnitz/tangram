@@ -60,6 +60,11 @@ import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 
 
+/**
+ * Meta handler to deal with all registered - static in java code or dynamic in the repository - link handlers.
+ *
+ * Calls methods associated with a given request and handles their results, redirects, or error conditions.
+ */
 @Named
 @Singleton
 public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanListener {
@@ -310,6 +315,10 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     public ViewContext handleRequest(HttpServletRequest request, HttpServletResponse response) throws Throwable {
         String url = request.getRequestURI().substring(linkFactoryAggregator.getPrefix(request).length());
+        int idx = url.indexOf(';');
+        if (idx>0) {
+            url = url.substring(0, idx);
+        } // if
         LOG.info("handleRequest() {}", url);
         Utils.setPrimaryBrowserLanguageForJstl(request);
         for (Map.Entry<Pattern, Method> entry : methods.entrySet()) {
