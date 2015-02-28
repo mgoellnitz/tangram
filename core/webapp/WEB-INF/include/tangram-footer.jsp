@@ -4,4 +4,4 @@
 %><hr /><fmt:setBundle basename="org.tangram.Messages" var="msg"/>
 <div class="tangram_footer">
 Tangram Object Presenter <span class="longversion"><%=org.tangram.Constants.VERSION%> </span>| &copy; 2010-2015 
-<c:if test="${! empty logoutUrl}">| <a href="${logoutUrl}"><fmt:message key="label.logout" bundle="${msg}"/></a></c:if></div>
+<c:if test="${! empty tangramLogoutUrl}">| <a href="${tangramLogoutUrl}"><fmt:message key="label.logout" bundle="${msg}"/></a></c:if></div>
