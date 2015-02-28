@@ -34,8 +34,8 @@ import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
-import org.tangram.feature.protection.ProtectedContent;
-import org.tangram.feature.protection.Protection;
+import org.tangram.protection.ProtectedContent;
+import org.tangram.protection.Protection;
 import org.tangram.view.TargetDescriptor;
 
 
@@ -158,6 +158,9 @@ public class ProtectionHook implements ControllerHook {
         } // if
 
         // save the results of our work for others - say templates - to use it
+        
+        // TODO: May be we should pass the authentication service here?
+        
         // Setting login protection object
         model.put(Constants.ATTRIBUTE_PROTECTION, protection);
         // Setting login result

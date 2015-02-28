@@ -26,7 +26,7 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import org.tangram.content.Content;
-import org.tangram.feature.protection.Protection;
+import org.tangram.protection.Protection;
 import org.tangram.gae.GaeContent;
 
 

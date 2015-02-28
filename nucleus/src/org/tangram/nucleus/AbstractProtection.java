@@ -29,7 +29,7 @@ import org.tangram.content.Content;
  * can be delivered by the framework.
  *
  */
-public abstract class AbstractProtection extends NucleusContent implements org.tangram.feature.protection.Protection {
+public abstract class AbstractProtection extends NucleusContent implements org.tangram.protection.Protection {
 
     /**
      * for compatibility reasons internally use String and map it to char[]

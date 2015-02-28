@@ -29,7 +29,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.tangram.Constants;
 
 
 @PersistenceCapable
@@ -89,24 +88,22 @@ public class OpenIDProtection extends AbstractProtection {
     } // handleLogin()
 
 
-    private boolean isValidUser(HttpServletRequest request, User user) {
-        return (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)!=null)
-                ||((user.getFederatedIdentity()!=null)&&(StringUtils.isNotBlank(allowedUsers) ? allowedUsers.indexOf(user.getNickname())>=0
-                : true));
+    private boolean isValidUser(User user) {
+        return ((user.getFederatedIdentity()!=null)&&(StringUtils.isNotBlank(allowedUsers) ? allowedUsers.indexOf(user.getNickname())>=0 : true));
     } // isValidUser()
 
 
     @Override
     public boolean isContentVisible(HttpServletRequest request) throws Exception {
         User user = userService.getCurrentUser();
-        return user!=null&&isValidUser(request, user);
+        return user!=null&&isValidUser(user);
     } // isTopicVisible()
 
 
     @Override
     public boolean needsAuthorization(HttpServletRequest request) {
         User user = UserServiceFactory.getUserService().getCurrentUser();
-        return user==null||(user.getFederatedIdentity()==null&&(request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null));
+        return (user==null)||(user.getFederatedIdentity()==null);
     } // needsAuthorization()
 
 

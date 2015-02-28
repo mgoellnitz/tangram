@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.feature.protection;
+package org.tangram.protection;
 
 
 /**

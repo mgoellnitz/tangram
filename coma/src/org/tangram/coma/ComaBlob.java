@@ -18,7 +18,7 @@
  */
 package org.tangram.coma;
 
-import org.tangram.feature.blob.MimedBlob;
+import org.tangram.content.blob.MimedBlob;
 
 
 public class ComaBlob implements MimedBlob {

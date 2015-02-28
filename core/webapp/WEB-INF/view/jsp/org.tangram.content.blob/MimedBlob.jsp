@@ -1,7 +1,7 @@
 <%@page isELIgnored="false" language="java" session="false"
 %><%@page import="java.util.Map,java.util.Calendar,java.text.DateFormat"
 %><%@page import="org.tangram.Constants,org.tangram.view.Utils"
-%><%@page import="org.tangram.feature.blob.MimedBlob"
+%><%@page import="org.tangram.content.blob.MimedBlob"
 %><% MimedBlob imageData = (MimedBlob)(request.getAttribute(Constants.THIS));
 String type = imageData.getMimeType();
 if ((type == null) || (type.length() == 0)) {

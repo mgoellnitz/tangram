@@ -26,7 +26,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import org.tangram.content.Content;
-import org.tangram.feature.protection.Protection;
+import org.tangram.protection.Protection;
 import org.tangram.jpa.JpaContent;
 
 

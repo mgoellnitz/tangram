@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2012-2013 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,22 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.feature.protection;
-
-import java.util.List;
-import org.tangram.content.Content;
+package org.tangram.content.blob;
 
 /**
- * Implementing classes are considered content protected by some implementation of the protection interface.
+ *
+ * Convenience interface to describe blobs with mimetypes to be output via HTTP in a common manner.
+ * 
+ * Instances of classes implementing this interface will be able to use the generic blob output mechanism with
+ * an expiry date in the future configured via the project's property file as image.cache.time in milliseconds
+ * which defaults to seven days (10080ms).
+ *
  */
-public interface ProtectedContent extends Content {
+public interface MimedBlob {
 
     /**
-     * Present a content hierarchy under which the protection of this content is calculated.
-     * 
-     * If any of the contents in the list is protected by some protection this content is considered protected
-     * by this protection instance.
+     * @return assiciated mime type of the underlaying data
      */
-    List<? extends Content> getProtectionPath();
+    String getMimeType();
 
-} // ProtectedContent()
+
+    /**
+     * @return return contents as bytes to be directly passed via http
+     */
+    byte[] getBytes();
+
+} // MimedBlob
