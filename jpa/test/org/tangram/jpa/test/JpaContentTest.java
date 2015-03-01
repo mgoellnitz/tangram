@@ -20,7 +20,9 @@ package org.tangram.jpa.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
@@ -74,5 +76,13 @@ public class JpaContentTest extends BaseContentTest {
     protected int getNumberOfClasses() {
         return 4;
     }
+    
+    /**
+     * Dummy test so that this test class contains at least one test.
+     */
+    @Test
+    public void testNothing() {
+        Assert.assertTrue(true);
+    } // testNothing()
 
 } // JpaContentTest
