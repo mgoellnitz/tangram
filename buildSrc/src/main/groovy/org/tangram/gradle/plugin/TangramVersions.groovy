@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -26,7 +26,7 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
-  String lombok = '1.14.8'
+  String lombok = '1.16.2'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
   String groovy = '2.3.9'
@@ -36,6 +36,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.8' // 1.10.14 available from jcenter()
   String xstream = '1.4.7'
+  String pac4j = '1.6.0'
   String tomcat = '7.0.57'
   
   // For testing purposes
@@ -45,8 +46,8 @@ public class TangramVersions {
   String dinistiq = '0.4-SNAPSHOT'
   String shiro = '1.2.3'
 
-  String springframework = '4.0.9.RELEASE'
-  String springsecurity = '3.2.5.RELEASE'
+  String springframework = '4.1.5.RELEASE'
+  // String springsecurity = '3.2.5.RELEASE'
   
   String weld = '2.2.9.Final'
   String openwebbeans = '1.2.6'
@@ -73,6 +74,6 @@ public class TangramVersions {
   String ebean = '4.1.2' // Later versions fail like the intended 4.5.2
   String ebean_agent = '4.1.6' // (4.5.1)
 
-  String appengine = '1.9.17'
+  String appengine = '1.9.18'
   
 } // TangramVersions

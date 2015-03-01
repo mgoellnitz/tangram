@@ -20,39 +20,49 @@ import com.google.inject.name.Names;
 import com.google.inject.TypeLiteral;
 import java.lang.reflect.Type;
 import org.tangram.Constants
+import org.tangram.authentication.AuthenticationService
 import org.tangram.components.CodeExporter
 import org.tangram.components.CodeResourceCache
+import org.tangram.components.GenericAuthorizationService
 import org.tangram.components.GroovyClassRepository
 import org.tangram.components.MetaLinkHandler
+import org.tangram.components.PacAuthenticationService
+import org.tangram.components.ProtectionHook
+import org.tangram.components.UniqueUrlHook
 import org.tangram.components.SimpleStatistics
+import org.tangram.components.SimpleAuthenticator
 import org.tangram.components.StatisticsHandler
 import org.tangram.components.servlet.ServletViewUtilities
+import org.tangram.controller.ControllerHook
 import org.tangram.link.GenericLinkFactoryAggregator
 import org.tangram.link.LinkFactoryAggregator
 import org.tangram.link.LinkHandlerRegistry
 import org.tangram.logic.ClassRepository
 import org.tangram.monitor.Statistics
+import org.tangram.protection.AuthorizationService
 import org.tangram.servlet.DefaultServlet
 import org.tangram.servlet.JspTemplateResolver
 import org.tangram.servlet.MetaServlet
+import org.tangram.servlet.PasswordFilter
 import org.tangram.servlet.RepositoryTemplateResolver
 import org.tangram.util.SetupUtils
 import org.tangram.view.DynamicViewContextFactory
 import org.tangram.view.ViewContextFactory
 import org.tangram.view.ViewUtilities
 import org.tangram.view.velocity.VelocityPatchBean
+import org.pac4j.http.client.BasicAuthClient
+import org.pac4j.http.client.FormClient
+import org.pac4j.http.credentials.UsernamePasswordAuthenticator
 
 log.info "starting"
 String dispatcherPath = config.getProperty("dispatcherPath", "/s")
 
-// TODO: unused stuff right now
-log.info("configuring user lists")
+log.info("configuring user lists, free urls and login providers")
 Object stringSetVehicle = new Object() {
   Set<String> stringSet
 };
 Type interimType = stringSetVehicle.getClass().getDeclaredField("stringSet").getGenericType()
 TypeLiteral stringSet = TypeLiteral.get(interimType)
-
 String admins = config.getProperty("adminUsers", "")
 Set<String> adminUsers = SetupUtils.stringSetFromParameterString(admins)
 module.bind(stringSet).annotatedWith(Names.named("adminUsers")).toInstance(adminUsers)
@@ -62,6 +72,9 @@ module.bind(stringSet).annotatedWith(Names.named("allowedUsers")).toInstance(all
 String free = config.getProperty("freeUrls", "")
 Set<String> freeUrls = SetupUtils.stringSetFromParameterString(free)
 module.bind(stringSet).annotatedWith(Names.named("freeUrls")).toInstance(freeUrls)
+String login = config.getProperty("loginProviders", "")
+Set<String> loginProviders = SetupUtils.stringSetFromParameterString(login)
+module.bind(stringSet).annotatedWith(Names.named("loginProviders")).toInstance(loginProviders)
 
 log.info("configuring view settings")
 Map<String, Object> viewSettings = new HashMap<>()
@@ -75,6 +88,36 @@ log.info("configuring statistics")
 Statistics statistics = new SimpleStatistics()
 module.getServletContext().setAttribute(Constants.ATTRIBUTE_STATISTICS, statistics)
 module.bind(Statistics.class).toInstance(statistics)
+
+log.info("configuring simple name password mapper")
+UsernamePasswordAuthenticator authenticator = new SimpleAuthenticator()
+module.bind(UsernamePasswordAuthenticator.class).toInstance(authenticator)
+
+log.info("configuring authentication clients")
+FormClient formClient = new FormClient()
+formClient.name='form'
+formClient.usernamePasswordAuthenticator = authenticator
+module.addClient(formClient)
+BasicAuthClient basicAuthClient = new BasicAuthClient()
+basicAuthClient.name='basic'
+basicAuthClient.usernamePasswordAuthenticator = authenticator
+module.addClient(basicAuthClient)
+
+log.info("configuring authentication")
+module.bind(AuthenticationService.class).toInstance(new PacAuthenticationService())
+
+log.info("configuring controller hooks")
+ControllerHook urlHook = new UniqueUrlHook()
+module.addControllerHook(urlHook)
+ControllerHook protectionHook = new ProtectionHook()
+module.addControllerHook(protectionHook)
+
+log.info("configureServlets() password filter {} for {}", PasswordFilter.class, dispatcherPath)
+module.filter(dispatcherPath+"/*").through(PasswordFilter.class)
+
+log.info("configuring authorization service")
+AuthorizationService authorizationService = new GenericAuthorizationService();
+module.bind(AuthorizationService.class).toInstance(authorizationService)
 
 log.info("configuring code resource cache")
 CodeResourceCache codeResourceCache = new CodeResourceCache()

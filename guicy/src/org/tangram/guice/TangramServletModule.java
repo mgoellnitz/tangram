@@ -19,7 +19,7 @@
 package org.tangram.guice;
 
 import com.google.inject.Key;
-import com.google.inject.Provides;
+import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
@@ -29,6 +29,7 @@ import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,6 +37,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.inject.Named;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.pac4j.core.client.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.controller.ControllerHook;
@@ -73,7 +75,7 @@ public class TangramServletModule extends ServletModule {
 
     private Multibinder<ControllerHook> controllerHookBinder = null;
 
-    private final Set<TemplateResolver<String>> templateResolvers = new HashSet<>();
+    private Multibinder<Client> clientBinder = null;
 
     @SuppressWarnings("rawtypes")
     private Multibinder<TemplateResolver> resolverBinder = null;
@@ -85,20 +87,28 @@ public class TangramServletModule extends ServletModule {
 
 
     public void addTemplateResolver(TemplateResolver<String> resolver) {
-        templateResolvers.add(resolver);
         resolverBinder.addBinding().toInstance(resolver);
     } // addTemplateResolver()
 
 
+    public void addClient(Client client) {
+        clientBinder.addBinding().toInstance(client);
+    } // addTemplateResolver()
+
+
     /**
-     * Producer to find all template resolver instances in the system.
+     * Obtain Type Literal descriptor for Map<String, String>.
      *
-     * @return collection of template resolvers
+     * @return type litaral instance
+     * @throws NoSuchFieldException should in fact not happen
      */
-    @Provides
-    public Set<TemplateResolver<String>> getTemplateResolvers() {
-        return templateResolvers;
-    } // getTemplateResolvers()
+    public TypeLiteral<?> getStringStringMap() throws NoSuchFieldException {
+        Object stringStringMapVehicle = new Object() {
+            Map<String, String> stringStringMap;
+        };
+        Type interimType = stringStringMapVehicle.getClass().getDeclaredField("stringStringMap").getGenericType();
+        return TypeLiteral.get(interimType);
+    } // getStringStringMap()
 
 
     private GroovyShell createShell() {
@@ -124,6 +134,7 @@ public class TangramServletModule extends ServletModule {
 
         controllerHookBinder = Multibinder.newSetBinder(binder(), ControllerHook.class);
         resolverBinder = Multibinder.newSetBinder(binder(), TemplateResolver.class);
+        clientBinder = Multibinder.newSetBinder(binder(), Client.class);
 
         String dispatcherPath = getServletContext().getInitParameter(DefaultTangramContextListener.DISPATCHER_PATH);
         dispatcherPath = dispatcherPath==null ? "/s" : dispatcherPath;

@@ -16,21 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-
-package org.tangram.components.dinistiq;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-import org.tangram.servlet.PasswordFilter;
+package org.tangram.authentication;
 
 
 /**
- * This is exactly the same filter as in the base package except for the annotations.
- * 
- * This way the filter gets auto detected by class path scan.
+ * Generic tangram user.
+ *
+ * Instance may be web users of the application or users of the tangram backends like the editor.
  */
-@Named("passwordFilter")
-@Singleton
-public class TangramPasswordFilter extends PasswordFilter {
+public interface User {
 
-} // TangramPasswordFilter
+    String getId();
+
+} // User()

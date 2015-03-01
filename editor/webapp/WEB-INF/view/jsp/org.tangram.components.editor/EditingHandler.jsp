@@ -29,7 +29,7 @@
     <br/>
     <form action="import-text" method="post">
       <fmt:message key="text.import.prefix" bundle="${msg}"/>
-      <textarea name="xmltext" cols="120" rows="80"></textarea>
+      <textarea name="xmltext" cols="160" rows="40"></textarea>
       <input name="submit" type="submit" value="  <fmt:message key="button.import" bundle="${msg}"/>  "/>.
       <fmt:message key="text.import.suffix" bundle="${msg}"/>
     </form>

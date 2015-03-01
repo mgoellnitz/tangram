@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,13 +27,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.content.Content;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.monitor.Statistics;
 import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.protection.AuthorizationService;
 import org.tangram.view.TargetDescriptor;
 
 
@@ -58,11 +58,14 @@ public class ToolHandler {
     @Inject
     private MutableBeanFactory beanFactory;
 
+    @Inject
+    private AuthorizationService authorizationService;
+
 
     @LinkAction("/clear/caches")
     public TargetDescriptor clearCaches(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (request.getParameter(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not clear cache");
+        if (!authorizationService.isAdminUser(request, response)) {
+            return authorizationService.getLoginTarget(request);
         } // if
 
         LOG.info("clearCaches() clearing class specific caches");

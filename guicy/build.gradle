@@ -32,9 +32,6 @@ dependencies {
     exclude module: 'sisu-guice'
   }
   
-  compile "org.apache.shiro:shiro-web:$versions.shiro"
-  compile "org.apache.shiro:shiro-guice:$versions.shiro"
-  
   testCompile "junit:junit:$versions.junit"
   
   // Redundancy to keep groovy google guice init script compilation in netbeans calm.

@@ -55,6 +55,7 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.protection.AuthorizationService;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
@@ -113,6 +114,9 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @Inject
     private ViewUtilities viewUtilities;
+
+    @Inject
+    private AuthorizationService authorizationService;
 
     private boolean deleteMethodEnabled;
 
@@ -197,9 +201,7 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/store/id_(.*)")
     public TargetDescriptor store(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not edit");
-        } // if
+        authorizationService.throwIfNotAdmin(request, response, "Store should not be called directly");
         Content bean = beanFactory.getBean(Content.class, id);
         JavaBean wrapper = new JavaBean(bean);
         Map<String, Object> newValues = new HashMap<>();
@@ -305,9 +307,7 @@ public class EditingHandler extends AbstractRenderingBase {
     public TargetDescriptor create(@ActionParameter(PARAMETER_CLASS_NAME) String typeName, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         LOG.info("create() creating new instance of type {}", typeName);
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not edit");
-        } // if
+        authorizationService.throwIfNotAdmin(request, response, "Create should not be called directly");
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
         if (getMutableBeanFactory().persist(content)) {
@@ -321,10 +321,10 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/list")
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
-            HttpServletRequest request, HttpServletResponse response) {
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("list() listing instances of type '{}'", typeName);
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new RuntimeException("User may not edit");
+        if (!authorizationService.isAdminUser(request, response)) {
+            return authorizationService.getLoginTarget(request);
         } // if
         Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
         Class<? extends Content> cls = null;
@@ -351,6 +351,7 @@ public class EditingHandler extends AbstractRenderingBase {
             } // try/catch
         } // if
         response.setContentType("text/html; charset=UTF-8");
+        request.setAttribute("editingHandler", this);
         request.setAttribute(Constants.THIS, contents);
         request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
         request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
@@ -369,8 +370,8 @@ public class EditingHandler extends AbstractRenderingBase {
     @LinkAction("/edit/id_(.*)")
     public TargetDescriptor edit(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("edit() editing {}", id);
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not edit");
+        if (!authorizationService.isAdminUser(request, response)) {
+            return authorizationService.getLoginTarget(request);
         } // if
         response.setContentType("text/html; charset=UTF-8");
         Content content = beanFactory.getBean(id);
@@ -382,6 +383,7 @@ public class EditingHandler extends AbstractRenderingBase {
             CodeResource code = (CodeResource) content;
             request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
         } // if
+        request.setAttribute("editingHandler", this);
         request.setAttribute("beanFactory", getMutableBeanFactory());
         request.setAttribute("propertyConverter", propertyConverter);
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
@@ -403,9 +405,7 @@ public class EditingHandler extends AbstractRenderingBase {
             @ActionParameter(PARAMETER_ID) String id, @ActionParameter(PARAMETER_PROPERTY) String propertyName,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("link() creating new instance of type {}", typeName);
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not edit");
-        } // if
+        authorizationService.throwIfNotAdmin(request, response, "Link should not be called directly");
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
         if (getMutableBeanFactory().persist(content)) {
@@ -433,9 +433,7 @@ public class EditingHandler extends AbstractRenderingBase {
     @LinkAction("/delete/id_(.*)")
     public TargetDescriptor delete(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("delete() trying to delete instance {}", id);
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not edit");
-        } // if
+        authorizationService.throwIfNotAdmin(request, response, "Delete should not be called directly");
         if (!deleteMethodEnabled) {
             throw new Exception("Object deletion not activated");
         } // if
@@ -452,8 +450,8 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/export")
     public TargetDescriptor contentExport(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not execute action");
+        if (!authorizationService.isAdminUser(request, response)) {
+            return authorizationService.getLoginTarget(request);
         } // if
         response.setContentType("text/xml");
         response.setCharacterEncoding("UTF-8");
@@ -515,10 +513,8 @@ public class EditingHandler extends AbstractRenderingBase {
     } // convertList()
 
 
-    private TargetDescriptor doImport(Reader input, HttpServletRequest request) throws Exception {
-        if (request.getAttribute(Constants.ATTRIBUTE_ADMIN_USER)==null) {
-            throw new Exception("User may not execute action");
-        } // if
+    private TargetDescriptor doImport(Reader input, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
 
         getMutableBeanFactory().beginTransaction();
         XStream xstream = new AppEngineXStream(new StaxDriver());
@@ -543,20 +539,23 @@ public class EditingHandler extends AbstractRenderingBase {
 
 
     @LinkAction("/import-text")
-    public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request) throws Exception {
-        return doImport(new StringReader(xmltext), request);
+    public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return doImport(new StringReader(xmltext), request, response);
     } // contentImport()
 
 
     @LinkAction("/import")
-    public TargetDescriptor contentImport(HttpServletRequest request) throws Exception {
+    public TargetDescriptor contentImport(HttpServletRequest request, HttpServletResponse response) throws Exception {
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
-        return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request);
+        return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request, response);
     } // contentImport()
 
 
     @LinkAction("/importer")
     public TargetDescriptor importer(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (!authorizationService.isAdminUser(request, response)) {
+            return authorizationService.getLoginTarget(request);
+        } // if
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
         response.setContentType("text/html");
         response.setCharacterEncoding("UTF-8");
@@ -571,7 +570,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (ID_URL_ACTIONS.contains(action)) {
             return "/"+action+"/id_"+((Content) bean).getId();
         } else {
-            return PARAMETER_ACTIONS.contains(action) ? "/"+action : null;
+            return PARAMETER_ACTIONS.contains(action) ? ((bean==this) ? "/"+action : null) : null;
         } // if
     } // getUrl()
 

@@ -20,7 +20,6 @@ package org.tangram.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.mycila.guice.ext.closeable.CloseableModule;
@@ -40,13 +39,9 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTangramContextListener.class);
 
-    public static final String SHIRO_WEB_MODULE_CLASS = "shiro.web.module.class";
-
     public static final String SERVLET_MODULE_CLASS = "servlet.module.class";
 
     public static final String DISPATCHER_PATH = "tangram.dispatcher.path";
-
-    private Module shiroWebModule = null;
 
     private ServletModule servletModule = null;
 
@@ -55,20 +50,6 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         LOG.info("contextInitialized()");
         ServletContext context = servletContextEvent.getServletContext();
-        String webModuleClassName = context.getInitParameter(SHIRO_WEB_MODULE_CLASS);
-        String dispatcherPath = context.getInitParameter(DISPATCHER_PATH);
-        dispatcherPath = dispatcherPath==null ? "/s" : dispatcherPath;
-        if (StringUtils.isNotBlank(webModuleClassName)) {
-            try {
-                Class<?> forName = Class.forName(webModuleClassName);
-                Object[] args = {context, dispatcherPath};
-                shiroWebModule = (Module) forName.getConstructors()[0].newInstance(args);
-            } catch (Exception e) {
-                LOG.error("contextInitialized() cannot obtain shiro web module", e);
-            } // try/catch
-        } // if
-        LOG.info("contextInitialized() shiro web module: {} :{}", shiroWebModule, webModuleClassName);
-
         String servletModuleClassName = context.getInitParameter(SERVLET_MODULE_CLASS);
         if (StringUtils.isNotBlank(servletModuleClassName)) {
             try {
@@ -88,13 +69,7 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
     @Override
     protected Injector getInjector() {
         LOG.info("getInjector()");
-        Injector injector;
-        if (shiroWebModule==null) {
-            injector = Guice.createInjector(new CloseableModule(), new Jsr250Module(), servletModule);
-        } else {
-            injector = Guice.createInjector(new CloseableModule(), new Jsr250Module(), shiroWebModule, BasicShiroWebModule.guiceFilterModule(), servletModule);
-        } // if
-        return injector;
+        return Guice.createInjector(new CloseableModule(), new Jsr250Module(), servletModule);
     } // getInjector()
 
 } // DefaultTangramContextListener

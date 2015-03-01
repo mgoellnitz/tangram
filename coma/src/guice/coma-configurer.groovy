@@ -19,8 +19,6 @@
 import org.tangram.PersistentRestartCache
 import org.tangram.components.coma.ComaHandler
 import org.tangram.view.PropertyConverter
-import org.tangram.security.GenericLoginSupport
-import org.tangram.security.LoginSupport
 import org.tangram.util.DummyRestartCache
 import org.tangram.view.GenericPropertyConverter
 
@@ -32,8 +30,8 @@ module.bind(PersistentRestartCache.class).toInstance(new DummyRestartCache())
 log.info "configuring property converter"
 module.bind(PropertyConverter.class).toInstance(new GenericPropertyConverter())
 
-log.info("configuring login support")
-module.bind(LoginSupport.class).toInstance(new GenericLoginSupport())
+log.info("configuring authentication service")
+// TODO
 
 log.info "configuring coma handler"
 module.bind(ComaHandler.class).toInstance(new ComaHandler())

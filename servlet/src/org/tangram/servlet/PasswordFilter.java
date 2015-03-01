@@ -20,6 +20,7 @@ package org.tangram.servlet;
 
 import java.io.IOException;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,36 +29,21 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tangram.security.LoginSupport;
+import org.tangram.protection.AuthorizationService;
 
 
 /**
- * Filter implementation to check if a user is logged, if we are a live system, or if we should use generic
- * password protection with users preconfigured in the application configuration.
- *
- * loginSupport helper instance to handle non-generic login stuff
- *
- * freeUrls any URL in this set will not be consired protected
- *
- * allowedUsers if not empty only these users are allowed to log in and view contents
- *
- * adminUsers same as allowedUsers (should be a subset of it if allowed users is not empty) but these users get
- * access to the administrational parts of tangram
- *
- * This implementation supports configuration via injections, directly via web.xml, or a mix of both.
+ * Filter implementation to integrate basic authorization checks from the authorization service.
  */
+@Singleton
 public class PasswordFilter implements Filter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PasswordFilter.class);
-
-    private static LoginSupport loginSupport;
+    private static AuthorizationService authorizationService;
 
 
     @Inject
-    public void setLoginSupport(LoginSupport loginSupport) {
-        PasswordFilter.loginSupport = loginSupport;
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        PasswordFilter.authorizationService = authorizationService;
     }
 
 
@@ -68,7 +54,7 @@ public class PasswordFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        loginSupport.handleRequest((HttpServletRequest) req, (HttpServletResponse) resp);
+        authorizationService.handleRequest((HttpServletRequest) req, (HttpServletResponse) resp);
         chain.doFilter(req, resp);
     } // afterCompletion()
 

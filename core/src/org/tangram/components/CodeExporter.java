@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
-import org.tangram.authenctication.AuthorizationService;
+import org.tangram.protection.AuthorizationService;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 import org.tangram.link.LinkHandlerRegistry;
@@ -56,7 +56,7 @@ public class CodeExporter {
     private CodeResourceCache codeResourceCache;
 
     @Inject
-    private AuthorizationService authenticationService;
+    private AuthorizationService authorizationService;
 
     private static final Set<String> MIME_TYPES = new HashSet<>();
 
@@ -81,7 +81,9 @@ public class CodeExporter {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return null;
         } // if
-        authenticationService.redirectIfNotAdmin(request, response);
+        if (!authorizationService.isAdminUser(request, response)) {
+            return authorizationService.getLoginTarget(request);
+        } // if
 
         long now = System.currentTimeMillis();
 

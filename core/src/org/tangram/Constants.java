@@ -113,16 +113,6 @@ public final class Constants {
     public static final String ATTRIBUTE_LINK_FACTORY_AGGREGATOR = "linkFactoryAggregator";
 
     /**
-     * name of the request attribute to take a currently valid logout url from.
-     */
-    public static final String ATTRIBUTE_LOGOUT_URL = "logoutUrl";
-
-    /**
-     * Name of the request attribute to take a currently valid login from.
-     */
-    public static final String ATTRIBUTE_LOGIN_URL = "loginUrl";
-
-    /**
      * name of the request attribute to take the result of a login attempt from.
      */
     public static final String ATTRIBUTE_LOGIN_RESULT = "loginResult";
@@ -135,21 +125,14 @@ public final class Constants {
     public static final String ATTRIBUTE_PROTECTION = "protection";
 
     /**
-     * Name of the request attribute telling if this is a stage or a live system.
-     * Rarely used.
+     * Name of the session attribute holding the last return url for logins etc.
      */
-    public static final String ATTRIBUTE_LIVE_SYSTEM = "tangramLiveSystem";
+    public static final String ATTRIBUTE_RETURN_URL = "tangram.return.url";
 
     /**
-     * Name of the request attribute holding the currently logged in tangram user.
+     * Name of the session attribute holding the currently logged in user.
      */
-    public static final String ATTRIBUTE_USER = "tangramUser";
-
-    /**
-     * name of the request attribute to indicate if the currently logged in tangram user
-     * is considered a tangram admin by system configuration.
-     */
-    public static final String ATTRIBUTE_ADMIN_USER = "tangramAdminUser";
+    public static final String ATTRIBUTE_USERS = "tangram.users";
 
     public static final String PROPERTY_VERSION_BUILD = "version.build";
 

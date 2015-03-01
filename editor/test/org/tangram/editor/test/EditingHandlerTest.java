@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,7 +50,7 @@ public class EditingHandlerTest {
         EditingHandler handler = new EditingHandler();
 
         for (String a : EditingHandler.PARAMETER_ACTIONS) {
-            Link link = "edit".equals(a) ? handler.createLink(null, null, c, null, a): handler.createLink(null, null, c, a, null);
+            Link link = handler.createLink(null, null, handler, a, null);
             Assert.assertNotNull("generation of "+a+" action link failed", link);
             Assert.assertEquals("generation of "+a+" action link with strange result", "/"+a, link.getUrl());
         } // for

@@ -30,6 +30,8 @@ dependencies {
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
   compile "com.google.appengine.orm:datanucleus-appengine:$versions.datanucleus_appengine"
 
+  compile "org.pac4j:pac4j-gae:$versions.pac4j"
+  
   testCompile "junit:junit:$versions.junit"
   testCompile "org.mockito:mockito-all:$versions.mockito"
   

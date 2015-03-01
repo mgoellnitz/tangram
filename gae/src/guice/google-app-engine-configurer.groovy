@@ -20,8 +20,6 @@ import org.tangram.Constants
 import org.tangram.util.SetupUtils
 import org.tangram.PersistentRestartCache
 import org.tangram.view.PropertyConverter
-import org.tangram.components.gae.GaeLoginSupport
-import org.tangram.security.LoginSupport
 import org.tangram.servlet.MeasureTimeFilter
 import org.tangram.servlet.PasswordFilter
 import org.tangram.content.BeanFactory
@@ -30,6 +28,7 @@ import org.tangram.jdo.JdoBeanFactory
 import org.tangram.gae.GaeBeanFactory
 import org.tangram.gae.GaePropertyConverter
 import org.tangram.components.gae.GaeCacheAdapter
+import org.pac4j.gae.client.GaeUserServiceClient
 
 log.info "starting"
 String dispatcherPath = config.getProperty("dispatcherPath", "/s")
@@ -42,25 +41,18 @@ module.bind(PropertyConverter.class).toInstance(new GaePropertyConverter())
 
 log.info "configuring bean factory"
 BeanFactory beanFactory = new GaeBeanFactory()
-module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory);
+module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
-module.bind(JdoBeanFactory.class).toInstance(beanFactory);
+module.bind(JdoBeanFactory.class).toInstance(beanFactory)
 
-log.info("configuring login support")
-LoginSupport loginSupport = new GaeLoginSupport()
-String admins = config.getProperty("adminUsers", "")
-Set<String> adminUsers = SetupUtils.stringSetFromParameterString(admins)
-String users = config.getProperty("allowedUsers", "")
-Set<String> allowedUsers = SetupUtils.stringSetFromParameterString(users)
-loginSupport.setAdminUsers(adminUsers)
-loginSupport.setAllowedUsers(allowedUsers)
-module.bind(LoginSupport.class).toInstance(loginSupport)
+log.info("configuring authentication service")
+GaeUserServiceClient gaeClient = new GaeUserServiceClient()
+gaeClient.name='gae'
+module.addClient(gaeClient)
 
-PasswordFilter passwordFilter = new PasswordFilter()
-log.info("configureServlets() password filter {} for {}", passwordFilter, dispatcherPath)
-passwordFilter.setLoginSupport(loginSupport)
-module.filter(dispatcherPath+"/*").through(passwordFilter)
+log.info("configureServlets() password filter {} for {}", PasswordFilter.class, dispatcherPath)
+module.filter(dispatcherPath+"/*").through(PasswordFilter.class)
 
 log.info("configureServlets() measure time filter for {}", dispatcherPath)
 module.filter(dispatcherPath+"/*").through(new MeasureTimeFilter())
