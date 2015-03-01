@@ -223,7 +223,10 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             LOG.info("callback() credentials: {}", credentials);
             UserProfile userProfile = client.getUserProfile(credentials, context);
             LOG.debug("callback() userProfile {}: {} ({})", userProfile.getId(), userProfile, request.getSession(false));
-            users.add(new GenericUser(client.getName(), userProfile.getId()));
+            GenericUser user = new GenericUser(client.getName(), userProfile.getId());
+            if (!users.contains(user))  {
+                users.add(user);
+            } // if
             LOG.info("callback({}) logged in users after callback {}", session.getId(), users);
         } catch (RequiresHttpAction|RuntimeException e) {
             LOG.warn("callback()", e);
