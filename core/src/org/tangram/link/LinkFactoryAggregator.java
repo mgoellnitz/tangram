@@ -35,10 +35,20 @@ public interface LinkFactoryAggregator {
     String getPrefix(HttpServletRequest request);
 
 
-    void registerFactory(LinkFactory handler);
+    /**
+     * Register a link handler factory to be used in aggregated link generation process.
+     * 
+     * @param factory factory instance to be registered
+     */
+    void registerFactory(LinkFactory factory);
 
 
-    void unregisterFactory(LinkFactory handler);
+    /**
+     * Unregister a previously registered link factory instance to be excluded from future aggregated link generation processes.
+     * 
+     * @param factory factory instance to be unregistered 
+     */
+    void unregisterFactory(LinkFactory factory);
 
 
     /**
@@ -63,4 +73,4 @@ public interface LinkFactoryAggregator {
      */
     Method findMethod(Object target, String methodName);
 
-} // LinkBuilder
+} // LinkFactoryAggregator
