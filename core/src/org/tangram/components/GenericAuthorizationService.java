@@ -159,7 +159,6 @@ public class GenericAuthorizationService implements AuthorizationService {
                 } // if
             } else {
                 if (closedSystem) {
-                    // TODO: But the login request needs to pass through!
                     LOG.info("handleRequest() no logged in user found while application is globally protected");
                     TargetDescriptor target = getLoginTarget(request);
                     Link loginLink = linkFactoryAggregator.createLink(request, response, target.getBean(), target.getAction(), target.getView());

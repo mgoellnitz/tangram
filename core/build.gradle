@@ -48,7 +48,6 @@ dependencies {
   compile "org.pac4j:pac4j-core:$versions.pac4j"
   compile "org.pac4j:pac4j-http:$versions.pac4j"
   compile "org.pac4j:pac4j-oauth:$versions.pac4j"
-  compile "org.pac4j:pac4j-openid:$versions.pac4j"
   
   testCompile "junit:junit:$versions.junit"
   // logging at debug level through special log4j.properties for tests
