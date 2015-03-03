@@ -19,6 +19,7 @@
 package org.tangram.authentication;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -28,14 +29,17 @@ import java.util.Objects;
  * this implementation can guarantee unique user ids throughout the system.
  */
 public class GenericUser implements User, Serializable {
-    
+
     private static final long serialVersionUID = 324847968531348468L;
 
     private final String id;
+    
+    private final Map<String, Object> properties;
 
 
-    public GenericUser(String provider, String username) {
+    public GenericUser(String provider, String username, Map<String, Object> attributes) {
         id = provider+":"+username;
+        properties = attributes;
     } // ()
 
 
@@ -43,6 +47,12 @@ public class GenericUser implements User, Serializable {
     public String getId() {
         return id;
     } // getId()
+
+
+    @Override
+    public Object getProperty(String name) {
+        return properties.get(name);
+    } // getProperty()
 
 
     @Override

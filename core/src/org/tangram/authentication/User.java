@@ -28,4 +28,7 @@ public interface User {
 
     String getId();
 
+
+    Object getProperty(String name);
+
 } // User()

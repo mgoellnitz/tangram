@@ -119,6 +119,7 @@ public class GenericAuthorizationService implements AuthorizationService {
         String thisURL = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         LOG.debug("handleRequest({}) detected URI {}", this, thisURL);
         LOG.debug("handleRequest() allowed users {} ({})", allowedUsers, allowedUsers.size());
+        LOG.debug("handleRequest() free urls {} ({})", freeUrls, freeUrls.size());
         if (!freeUrls.contains(thisURL)) {
             // TODO: Debug code for tangram-gae on CapeDwarf:
             Enumeration<?> attributeNames = request.getAttributeNames();
