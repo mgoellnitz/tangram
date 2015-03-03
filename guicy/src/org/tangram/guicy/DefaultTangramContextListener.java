@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.guice;
+package org.tangram.guicy;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

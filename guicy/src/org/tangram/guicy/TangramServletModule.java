@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.guice;
+package org.tangram.guicy;
 
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -52,6 +52,12 @@ import org.tangram.view.TemplateResolver;
  * appendConfiguration() which gets called at the end of the generic configureServlets() method.
  */
 public class TangramServletModule extends ServletModule {
+
+    public static final String GUICY_BASE = "guicy";
+
+    public static final String GUICY_PROPERTIES = GUICY_BASE+"/tangram.properties";
+
+    public static final String GUICY_DEFAULTS = GUICY_BASE+"/defaults.properties";
 
     private static final Logger LOG = LoggerFactory.getLogger(TangramServletModule.class);
 
@@ -121,12 +127,12 @@ public class TangramServletModule extends ServletModule {
     protected final void configureServlets() {
         LOG.info("configureServlets() reading configuration");
         try {
-            configuration.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("guice/defaults.properties"));
+            configuration.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(GUICY_DEFAULTS));
         } catch (Exception ex) {
             LOG.error("configureServlets() could not read config defaults: {}", ex.getMessage());
         } // try/catch
         try {
-            configuration.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("guice/tangram.properties"));
+            configuration.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(GUICY_PROPERTIES));
         } catch (Exception ex) {
             LOG.error("configureServlets() could not read configuration: {}", ex.getMessage());
         } // try/catch
@@ -143,7 +149,7 @@ public class TangramServletModule extends ServletModule {
         final GroovyShell shell = createShell();
         Set<String> scripts = new HashSet<>();
         try {
-            scripts = SetupUtils.getResourceListing("guice", ".groovy");
+            scripts = SetupUtils.getResourceListing(GUICY_BASE, ".groovy");
         } catch (Exception e) {
             LOG.error("{} error while reading all modules binding scripts", e);
         } // try/catch

@@ -34,7 +34,7 @@ Set<String> basePackages = SetupUtils.stringSetFromParameterString(config.getPro
 JpaBeanFactoryImpl beanFactory = new JpaBeanFactoryImpl()
 beanFactory.setBasePackages(basePackages)
 
-String overridesName = "guice/jpaConfigOverrides.properties"
+String overridesName = "guicy/jpaConfigOverrides.properties"
 InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName)
 Properties configOverrides = new Properties()
 configOverrides.load(resource)

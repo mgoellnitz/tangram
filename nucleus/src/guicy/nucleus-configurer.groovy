@@ -36,7 +36,7 @@ Set<String> basePackages = SetupUtils.stringSetFromParameterString(config.getPro
 NucleusBeanFactory beanFactory = new NucleusBeanFactory()
 beanFactory.setBasePackages(basePackages)
 
-String overridesName = "guice/jdoConfigOverrides.properties"
+String overridesName = "guicy/jdoConfigOverrides.properties"
 InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName)
 Properties configOverrides = new Properties()
 configOverrides.load(resource)
