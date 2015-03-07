@@ -20,6 +20,7 @@ package org.tangram.spring;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,20 +36,11 @@ import org.tangram.monitor.Statistics;
  */
 public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
 
+    @Resource(name="freeUrls")
     private Set<String> freeUrls = new HashSet<>();
 
     @Inject
     private Statistics statistics;
-
-
-    public Set<String> getFreeUrls() {
-        return freeUrls;
-    }
-
-
-    public void setFreeUrls(Set<String> freeUrls) {
-        this.freeUrls = freeUrls;
-    }
 
 
     @Override
@@ -62,7 +54,7 @@ public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
         String thisURL = request.getRequestURI();
-        if (!getFreeUrls().contains(thisURL)) {
+        if (!freeUrls.contains(thisURL)) {
             Long startTime = (Long) request.getAttribute("start.time");
             statistics.avg("page render time", System.currentTimeMillis()-startTime);
         } // if

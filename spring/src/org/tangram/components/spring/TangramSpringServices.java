@@ -32,7 +32,7 @@ import org.springframework.core.convert.ConversionService;
 
 @Named
 @Singleton
-public class TangramSpringServices implements ApplicationContextAware {
+public final class TangramSpringServices implements ApplicationContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(TangramSpringServices.class);
 
@@ -41,9 +41,14 @@ public class TangramSpringServices implements ApplicationContextAware {
     private static ConversionService conversionService = null;
 
 
+    private TangramSpringServices() {
+    }
+
+
     private static class ConversionServiceHolder {
 
         public static final ConversionService INSTANCE = getBeanFromContext(ConversionService.class);
+
     }
 
 
@@ -53,6 +58,7 @@ public class TangramSpringServices implements ApplicationContextAware {
 
 
     @Inject
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         TangramSpringServices.applicationContext = applicationContext;
     }
@@ -79,7 +85,10 @@ public class TangramSpringServices implements ApplicationContextAware {
 
 
     /**
-     * this more or less is an implementation of @Autowired(required=false).
+     * Returns the system wide conversation service instance.
+     * This more or less is an implementation of @Autowired(required=false).
+     *
+     * @return May return null,
      */
     public static ConversionService getConversionService() {
         return ConversionServiceHolder.INSTANCE;
@@ -87,9 +96,9 @@ public class TangramSpringServices implements ApplicationContextAware {
 
 
     /**
-     * create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
+     * Create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
      *
-     * @param bean
+     * @param bean any object to be wrapped for java bean access
      * @return wrapper for the given bean
      */
     public static BeanWrapper createWrapper(Object bean) {

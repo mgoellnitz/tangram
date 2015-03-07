@@ -63,17 +63,14 @@ Object stringSetVehicle = new Object() {
 };
 Type interimType = stringSetVehicle.getClass().getDeclaredField("stringSet").getGenericType()
 TypeLiteral stringSet = TypeLiteral.get(interimType)
-String admins = config.getProperty("adminUsers", "")
-Set<String> adminUsers = SetupUtils.stringSetFromParameterString(admins)
+Set<String> adminUsers = SetupUtils.stringSetFromParameterString(config.getProperty("adminUsers", ""))
+// This is how to inject this by name. We don't use it just because of springframework weaknesses.
 module.bind(stringSet).annotatedWith(Names.named("adminUsers")).toInstance(adminUsers)
-String allowed = config.getProperty("allowedUsers", "")
-Set<String> allowedUsers = SetupUtils.stringSetFromParameterString(allowed)
+Set<String> allowedUsers = SetupUtils.stringSetFromParameterString(config.getProperty("allowedUsers", ""))
 module.bind(stringSet).annotatedWith(Names.named("allowedUsers")).toInstance(allowedUsers)
-String free = config.getProperty("freeUrls", "")
-Set<String> freeUrls = SetupUtils.stringSetFromParameterString(free)
+Set<String> freeUrls = SetupUtils.stringSetFromParameterString(config.getProperty("freeUrls", ""))
 module.bind(stringSet).annotatedWith(Names.named("freeUrls")).toInstance(freeUrls)
-String login = config.getProperty("loginProviders", "")
-Set<String> loginProviders = SetupUtils.stringSetFromParameterString(login)
+Set<String> loginProviders = SetupUtils.stringSetFromParameterString(config.getProperty("loginProviders", ""))
 module.bind(stringSet).annotatedWith(Names.named("loginProviders")).toInstance(loginProviders)
 
 log.info("configuring view settings")
@@ -104,6 +101,7 @@ basicAuthClient.usernamePasswordAuthenticator = authenticator
 module.addClient(basicAuthClient)
 
 log.info("configuring authentication")
+AuthenticationService authenticationService = 
 module.bind(AuthenticationService.class).toInstance(new PacAuthenticationService())
 
 log.info("configuring controller hooks")
@@ -116,8 +114,7 @@ log.info("configureServlets() password filter {} for {}", PasswordFilter.class, 
 module.filter(dispatcherPath+"/*").through(PasswordFilter.class)
 
 log.info("configuring authorization service")
-AuthorizationService authorizationService = new GenericAuthorizationService();
-module.bind(AuthorizationService.class).toInstance(authorizationService)
+module.bind(AuthorizationService.class).toInstance(new GenericAuthorizationService())
 
 log.info("configuring code resource cache")
 CodeResourceCache codeResourceCache = new CodeResourceCache()

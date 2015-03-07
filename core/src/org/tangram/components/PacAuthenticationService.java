@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -62,15 +63,16 @@ import org.tangram.view.TargetDescriptor;
  * according to their respective name - which we tend to set in the DI config files for the clients to
  * be shorter than their default counterparts.
  */
-@Named("authenticationService")
-@Singleton
 @LinkHandler
+@Named
+@Singleton
 public class PacAuthenticationService implements AuthenticationService, LinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(PacAuthenticationService.class);
 
     @Inject
     @Named("loginProviders")
+    @Resource(name="loginProviders")
     private Set<String> loginProviders;
 
     @Inject
@@ -229,7 +231,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             } // if
             LOG.info("callback({}) logged in users after callback {}", session.getId(), users);
         } catch (RequiresHttpAction|RuntimeException e) {
-            LOG.warn("callback()", e);
+            LOG.warn("callback() {}", e.getLocalizedMessage(), e);
             session.setAttribute("tangram.login.error", e.getLocalizedMessage());
             return new TargetDescriptor(this, null, client.getName());
         } // try/catch

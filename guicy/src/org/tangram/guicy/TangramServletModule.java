@@ -48,8 +48,9 @@ import org.tangram.view.TemplateResolver;
 /**
  * All elements generically needed for tangram in guice scanerios are collected here.
  *
- * Subclasses implement the createRestartCache() and createBeanFactor() methods and a potentially empty
- * appendConfiguration() which gets called at the end of the generic configureServlets() method.
+ * This class calls any *.groovy script in the guicy/ resource folder with its self bound to the name module,
+ * a decent log bound to the name log and the net configuration as properties loaded from "/guicy/defaults.properties"
+ * followed by "/guicy/tangram.properties".
  */
 public class TangramServletModule extends ServletModule {
 
@@ -109,10 +110,10 @@ public class TangramServletModule extends ServletModule {
      * @throws NoSuchFieldException should in fact not happen
      */
     public TypeLiteral<?> getStringStringMap() throws NoSuchFieldException {
-        Object stringStringMapVehicle = new Object() {
-            Map<String, String> stringStringMap;
+        Object mapVehicle = new Object() {
+            Map<String, String> map;
         };
-        Type interimType = stringStringMapVehicle.getClass().getDeclaredField("stringStringMap").getGenericType();
+        Type interimType = mapVehicle.getClass().getDeclaredField("map").getGenericType();
         return TypeLiteral.get(interimType);
     } // getStringStringMap()
 

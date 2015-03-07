@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -45,15 +46,16 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
 
     @Inject
     @Named("usernamePasswordMapping")
+    @Resource(name="usernamePasswordMapping")
     private Map<String, String> usernamePasswordMapping;
 
 
     /**
      * generate a string readable digest value with a given message digest instance.
-     * 
+     *
      * SHA256 values can be manually generated via
      * http://www.xorbin.com/tools/sha256-hash-calculator
-     * 
+     *
      * @param md digest to use
      * @param message message as byte array
      * @return readable digest
@@ -78,7 +80,8 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
         try {
             MessageDigest md = MessageDigest.getInstance(MessageDigestAlgorithms.SHA_256);
             String hash = getHash(md, upc.getPassword().getBytes("UTF-8"));
-            if (!usernamePasswordMapping.get(upc.getUsername()).equals(hash)) {
+            Object storedHash = usernamePasswordMapping.get(upc.getUsername());
+            if ((storedHash==null)||!storedHash.equals(hash)) {
                 throw new RuntimeException("wrong credentials");
             } // if
         } catch (NoSuchAlgorithmException|UnsupportedEncodingException e) {

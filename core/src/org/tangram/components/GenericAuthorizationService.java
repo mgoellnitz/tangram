@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -52,7 +53,7 @@ import org.tangram.view.Utils;
  * allowedUsers if not empty only these users are allowed to log in and view contents for any result of the application
  *
  * adminUsers list of admin users considered valid actors for components using this service
- * 
+ *
  * loginProviders list of providers the underlying authentication service may take into consideration
  *
  */
@@ -70,18 +71,22 @@ public class GenericAuthorizationService implements AuthorizationService {
 
     @Inject
     @Named("freeUrls")
+    @Resource(name="freeUrls")
     protected Set<String> freeUrls;
 
     @Inject
     @Named("allowedUsers")
+    @Resource(name="allowedUsers")
     protected Set<String> allowedUsers;
 
     @Inject
     @Named("adminUsers")
+    @Resource(name="adminUsers")
     protected Set<String> adminUsers;
 
     @Inject
     @Named("loginProviders")
+    @Resource(name="loginProviders")
     protected Set<String> loginProviders;
 
 

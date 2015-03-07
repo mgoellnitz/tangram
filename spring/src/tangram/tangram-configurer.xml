@@ -18,9 +18,10 @@
  
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
 
   <!--  this should include as few packages as possible -->
   <context:component-scan base-package="org.tangram.components" />
@@ -51,30 +52,45 @@
        just a small set if URLs which don't need performance measurement and logins. 
        Re-define this in your WEB-INF/tangram directory with values as needed
   -->  
-  <bean id="freeUrls" class="java.util.HashSet">
-    <constructor-arg>
-      <set>
-        <value>${tangram.servlet.path}/stats</value>
-        <value>${tangram.servlet.path}/clear/caches</value>
-      </set>
-    </constructor-arg>
-  </bean>
+  <util:set id="freeUrls" value-type="java.lang.String">
+    <value>${tangram.servlet.path}/stats</value>
+    <value>${tangram.servlet.path}/login</value>
+    <value>${tangram.servlet.path}/callback</value>
+    <value>${tangram.servlet.path}/login-form</value>
+    <value>${tangram.servlet.path}/redirect/form</value>
+    <value>${tangram.servlet.path}/redirect/basic</value>
+  </util:set>
     
   <!-- 
        just an empty set of admin users as a default. 
        Re-define this in your WEB-INF/tangram directory with values as needed
   -->  
-  <bean id="adminUsers" class="java.util.HashSet" />
+  <util:set id="adminUsers" value-type="java.lang.String"/>
     
   <!-- 
        just an empty set of allowed users as a default - to let everyone pass.
        Re-define this in your WEB-INF/tangram directory with values as needed
   -->  
-  <bean id="allowedUsers" class="java.util.HashSet" />
+  <util:set id="allowedUsers" value-type="java.lang.String"/>
   
-  <bean id="measureTimeInterceptor" class="org.tangram.spring.MeasureTimeInterceptor">
-    <property name="freeUrls" ref="freeUrls"/>
+  <util:set id="loginProviders" value-type="java.lang.String">
+    <value>form</value>
+    <value>basic</value>
+  </util:set>
+  
+  <bean id="basicAuthLogin" class="org.pac4j.http.client.BasicAuthClient">
+    <property name="name" value="basic"/>
+    <property name="usernamePasswordAuthenticator" ref="usernamePasswordAuthenticator"/>
   </bean>
+  
+  <bean id="formLogin" class="org.pac4j.http.client.FormClient">
+    <property name="name" value="form"/>
+    <property name="usernameParameter" value="username"/>
+    <property name="passwordParameter" value="password"/>
+    <property name="usernamePasswordAuthenticator" ref="usernamePasswordAuthenticator"/>
+  </bean>
+  
+  <bean id="measureTimeInterceptor" class="org.tangram.spring.MeasureTimeInterceptor"/>
   
   <bean id="passwordInterceptor" class="org.tangram.spring.PasswordInterceptor" />
   
@@ -91,9 +107,6 @@
     </constructor-arg>
   </bean>
   
-  <!--
-  <bean id="propertyConfigurer" class="org.tangram.spring.PropertySplittingPlaceholderConfigurer">
-  -->
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list>
