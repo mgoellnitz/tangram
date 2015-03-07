@@ -170,7 +170,7 @@ if (value instanceof Collection) {
 <script language="JavaScript">
 function new<%=fid%>() {
 	var e = document.getElementById('select<%=fid%>');
-	var url = '<cms:link bean="${self}" action="link"/>?<%=EditingHandler.PARAMETER_PROPERTY%>=<%=key%>&<%=EditingHandler.PARAMETER_ID%>=${self.id}&<%=EditingHandler.PARAMETER_CLASS_NAME%>='+e.value
+	var url = '<cms:link bean="${editingHandler}" action="link"/>?<%=EditingHandler.PARAMETER_PROPERTY%>=<%=key%>&<%=EditingHandler.PARAMETER_ID%>=${self.id}&<%=EditingHandler.PARAMETER_CLASS_NAME%>='+e.value
 	location.href=url;
 } //
 </script>
