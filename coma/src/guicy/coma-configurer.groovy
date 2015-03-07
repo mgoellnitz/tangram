@@ -16,6 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import com.google.inject.name.Names;
 import org.tangram.PersistentRestartCache
 import org.tangram.components.coma.ComaHandler
 import org.tangram.view.PropertyConverter
@@ -30,8 +31,10 @@ module.bind(PersistentRestartCache.class).toInstance(new DummyRestartCache())
 log.info "configuring property converter"
 module.bind(PropertyConverter.class).toInstance(new GenericPropertyConverter())
 
-log.info("configuring authentication service")
-// TODO
+log.info("configuring empty name password mapping")
+Map<String,String> mapping = new HashMap<>()
+// empty - which may be a bad decision as a non overridable instance
+module.bind(module.stringStringMap).annotatedWith(Names.named("usernamePasswordMapping")).toInstance(mapping)
 
 log.info "configuring coma handler"
 module.bind(ComaHandler.class).toInstance(new ComaHandler())

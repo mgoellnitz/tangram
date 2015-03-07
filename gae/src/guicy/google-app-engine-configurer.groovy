@@ -16,6 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import com.google.inject.name.Names;
 import org.tangram.Constants
 import org.tangram.util.SetupUtils
 import org.tangram.PersistentRestartCache
@@ -45,6 +46,11 @@ module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFa
 module.bind(BeanFactory.class).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
 module.bind(JdoBeanFactory.class).toInstance(beanFactory)
+
+log.info("configuring empty name password mapping")
+Map<String,String> mapping = new HashMap<>()
+// empty - which may be a bad decision as a non overridable instance
+module.bind(module.stringStringMap).annotatedWith(Names.named("usernamePasswordMapping")).toInstance(mapping)
 
 log.info("configuring authentication service")
 GaeUserServiceClient gaeClient = new GaeUserServiceClient()

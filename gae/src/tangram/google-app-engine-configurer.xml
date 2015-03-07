@@ -33,10 +33,12 @@
     <property name="useHdrDatastore" value="${use.hdr.datastore}" />
   </bean>
 
-  <!--  edit scenarios only  -->
-
   <bean id="propertyConverter" class="org.tangram.gae.GaePropertyConverter">
     <property name="dateFormat" value="${tangram.date.format}"/>
   </bean>
   
+  <bean id="gaeLogin" class="org.pac4j.gae.client.GaeUserServiceClient">
+    <property name="name" value="gae"/>
+  </bean>
+    
 </beans>
