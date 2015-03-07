@@ -43,9 +43,9 @@ class TangramPlugin implements Plugin<Project> {
         def jarPath = project.getConfigurations().getByName('runtime').asPath
         def persistenceAPI = ''
         def jpaBackend = ''
-        if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
         if (jarPath.indexOf('jdo-api') > 0) { persistenceAPI = 'jdo' }
         if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
+        if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
         if (jarPath.indexOf('datanucleus') > 0) { jpaBackend = 'datanucleus' }
         // println "API: $persistenceAPI"
         // println "JPA: $jpaBackend"
