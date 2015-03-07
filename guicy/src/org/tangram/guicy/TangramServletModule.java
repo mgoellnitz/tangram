@@ -98,7 +98,7 @@ public class TangramServletModule extends ServletModule {
     } // addTemplateResolver()
 
 
-    public void addClient(Client client) {
+    public void addClient(Client<?,?> client) {
         clientBinder.addBinding().toInstance(client);
     } // addTemplateResolver()
 

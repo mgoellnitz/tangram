@@ -93,7 +93,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         Set<String> providerNames = new HashSet<>();
         LOG.info("getProviderNames() login provider {}", loginProviders);
         LOG.debug("getProviderNames() client set {}", clientSet);
-        for (Client client : clientSet) {
+        for (Client<?,?> client : clientSet) {
             if (loginProviders.contains(client.getName())) {
                 providerNames.add(client.getName());
             } // if
@@ -218,7 +218,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             session.setAttribute(Constants.ATTRIBUTE_USERS, users);
         } // if
         WebContext context = new J2EContext(request, response);
-        final Client client = getClients(request, response).findClient(context);
+        final Client<Credentials,UserProfile> client = getClients(request, response).findClient(context);
         LOG.info("callback() client: {}", client);
         try {
             Credentials credentials = client.getCredentials(context);
@@ -274,7 +274,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         registry.registerLinkHandler(this);
         linkFactoryAggregator.registerFactory(this);
         LOG.debug("afterPropertiesSet() collecting clients");
-        for (Client client : clientSet) {
+        for (Client<?,?> client : clientSet) {
             LOG.info("afterPropertiesSet() client {}", client.getName());
         } // for
     } // afterPropertiesSet()
