@@ -18,7 +18,6 @@
  */
 package org.tangram.spring;
 
-import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -37,7 +36,7 @@ import org.tangram.monitor.Statistics;
 public class MeasureTimeInterceptor extends HandlerInterceptorAdapter {
 
     @Resource(name="freeUrls")
-    private Set<String> freeUrls = new HashSet<>();
+    private Set<String> freeUrls;
 
     @Inject
     private Statistics statistics;
