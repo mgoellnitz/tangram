@@ -18,7 +18,7 @@
  */
 import org.tangram.Constants
 import org.tangram.components.nucleus.ClassRepositoryEnhancer
-import org.tangram.util.SetupUtils
+import org.tangram.util.SystemUtils
 import org.tangram.view.PropertyConverter
 import org.tangram.jdo.JdoBeanFactory
 import org.tangram.nucleus.NucleusBeanFactory
@@ -32,7 +32,7 @@ log.info "configuring property converter"
 module.bind(PropertyConverter.class).toInstance(new GenericPropertyConverter())
 
 log.info "configuring bean factory"
-Set<String> basePackages = SetupUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
+Set<String> basePackages = SystemUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
 NucleusBeanFactory beanFactory = new NucleusBeanFactory()
 beanFactory.setBasePackages(basePackages)
 

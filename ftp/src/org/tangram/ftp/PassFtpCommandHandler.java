@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -58,10 +59,11 @@ public class PassFtpCommandHandler extends PassCommandHandler {
             String pass = command.getParameter(0);
             LOG.info("handleCommand() logging in with password {}", pass);
             if (pass!=null) {
-                CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
+                CodeResource code = codeResourceCache.getTypeCache("text/plain").get("ftp-users.properties");
                 Properties p = new Properties();
                 try {
                     p.load(code.getStream());
+                    pass = SystemUtils.getSha256Hash(pass);
                 } catch (Exception e) {
                     LOG.error("handleCommand() error while reading user database", e);
                 } // try/catch

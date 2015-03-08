@@ -20,23 +20,27 @@ package org.tangram.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.lang.StringUtils;
 
 
 /**
  * Generic String utility functions not found elsewhere in the libraries we are using.
  */
-public final class SetupUtils {
+public final class SystemUtils {
 
-    private SetupUtils() {
+    private SystemUtils() {
     }
 
 
@@ -106,4 +110,30 @@ public final class SetupUtils {
         return result;
     } // getResourceListing()
 
-} // SetupUtils
+
+    /**
+     * Generate a string readable hash value through a SHA256 message digest.
+     *
+     * SHA256 values can be manually generated via
+     * http://www.xorbin.com/tools/sha256-hash-calculator
+     *
+     * @param value text value to generate hash for
+     * @return readable hash
+     * @throws NoSuchAlgorithmException Should not happen but indicates that SHA256 is not available
+     * @throws UnsupportedEncodingException Should not happen but indicates that UTF-8 encoding is not
+     */
+    public static String getSha256Hash(String value) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance(MessageDigestAlgorithms.SHA_256);
+        byte[] hash = md.digest(value.getBytes("UTF-8"));
+        StringBuilder hexString = new StringBuilder(32);
+        for (int i = 0; i<hash.length; i++) {
+            int element = 0xff&hash[i];
+            if (element<0x10) {
+                hexString.append('0');
+            } // if
+            hexString.append(Integer.toHexString(element));
+        } // for
+        return hexString.toString();
+    } // getSha256Hash()
+
+} // SystemUtils

@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.monitor.Statistics;
-import org.tangram.util.SetupUtils;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -86,7 +86,7 @@ public class MeasureTimeFilter implements Filter {
     @SuppressWarnings("rawtypes")
     public void init(FilterConfig config) throws ServletException {
         context = config.getServletContext();
-        freeUrls.addAll(SetupUtils.stringSetFromParameterString(config.getInitParameter("free.urls")));
+        freeUrls.addAll(SystemUtils.stringSetFromParameterString(config.getInitParameter("free.urls")));
         LOG.info("init() free urls {}", freeUrls);
         LOG.info("init() context {}", context);
     } // init()

@@ -21,20 +21,20 @@ package org.tangram.util.test;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
-import org.tangram.util.SetupUtils;
+import org.tangram.util.SystemUtils;
 
 
 public class SetupUtilsTest {
 
     @Test
     public void testStringUtils() {
-        Set<String> stringSet = SetupUtils.stringSetFromParameterString("hallo,this,is,a,test");
+        Set<String> stringSet = SystemUtils.stringSetFromParameterString("hallo,this,is,a,test");
         Assert.assertEquals("The set should contain five elements", stringSet.size(), (long) 5);
         Assert.assertTrue("The set should contain the string 'this'", stringSet.contains("this"));
-        Set<String> emptySet = SetupUtils.stringSetFromParameterString("");
+        Set<String> emptySet = SystemUtils.stringSetFromParameterString("");
         Assert.assertNotNull("The set should exist despite the empty input", emptySet);
         Assert.assertTrue("The set should be empty the empty input", emptySet.isEmpty());
-        Assert.assertNotNull("The set should exist despite the null input", SetupUtils.stringSetFromParameterString(null));
+        Assert.assertNotNull("The set should exist despite the null input", SystemUtils.stringSetFromParameterString(null));
     } // testStringUtils()
 
 } // SetupUtilsTest

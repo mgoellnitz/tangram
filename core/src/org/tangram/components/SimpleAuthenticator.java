@@ -19,18 +19,19 @@
 package org.tangram.components;
 
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.util.Properties;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.pac4j.http.credentials.UsernamePasswordAuthenticator;
 import org.pac4j.http.credentials.UsernamePasswordCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.content.CodeResource;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -46,41 +47,27 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
 
     @Inject
     @Named("usernamePasswordMapping")
-    @Resource(name="usernamePasswordMapping")
+    @Resource(name = "usernamePasswordMapping")
     private Map<String, String> usernamePasswordMapping;
 
-
-    /**
-     * generate a string readable digest value with a given message digest instance.
-     *
-     * SHA256 values can be manually generated via
-     * http://www.xorbin.com/tools/sha256-hash-calculator
-     *
-     * @param md digest to use
-     * @param message message as byte array
-     * @return readable digest
-     */
-    private static String getHash(MessageDigest md, byte[] message) {
-        byte[] hash = md.digest(message);
-        StringBuilder hexString = new StringBuilder(32);
-        for (int i = 0; i<hash.length; i++) {
-            int element = 0xff&hash[i];
-            if (element<0x10) {
-                hexString.append('0');
-            } // if
-            hexString.append(Integer.toHexString(element));
-        } // for
-        return hexString.toString();
-    } // getHash()
+    @Inject
+    private CodeResourceCache codeResourceCache;
 
 
     @Override
     public void validate(UsernamePasswordCredentials upc) {
         LOG.info("validate() {} in {}", upc.getUsername(), usernamePasswordMapping);
         try {
-            MessageDigest md = MessageDigest.getInstance(MessageDigestAlgorithms.SHA_256);
-            String hash = getHash(md, upc.getPassword().getBytes("UTF-8"));
-            Object storedHash = usernamePasswordMapping.get(upc.getUsername());
+            CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
+            Properties p = new Properties();
+            try {
+                p.load(code.getStream());
+            } catch (Exception e) {
+                LOG.error("validate() error while reading user database", e);
+            } // try/catch
+            p.putAll(usernamePasswordMapping);
+            String hash = SystemUtils.getSha256Hash(upc.getPassword());
+            Object storedHash = p.get(upc.getUsername());
             if ((storedHash==null)||!storedHash.equals(hash)) {
                 throw new RuntimeException("wrong credentials");
             } // if

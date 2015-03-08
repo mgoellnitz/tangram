@@ -45,7 +45,7 @@ import org.tangram.servlet.JspTemplateResolver
 import org.tangram.servlet.MetaServlet
 import org.tangram.servlet.PasswordFilter
 import org.tangram.servlet.RepositoryTemplateResolver
-import org.tangram.util.SetupUtils
+import org.tangram.util.SystemUtils
 import org.tangram.view.DynamicViewContextFactory
 import org.tangram.view.ViewContextFactory
 import org.tangram.view.ViewUtilities
@@ -63,14 +63,14 @@ Object stringSetVehicle = new Object() {
 };
 Type interimType = stringSetVehicle.getClass().getDeclaredField("stringSet").getGenericType()
 TypeLiteral stringSet = TypeLiteral.get(interimType)
-Set<String> adminUsers = SetupUtils.stringSetFromParameterString(config.getProperty("adminUsers", ""))
+Set<String> adminUsers = SystemUtils.stringSetFromParameterString(config.getProperty("adminUsers", ""))
 // This is how to inject this by name. We don't use it just because of springframework weaknesses.
 module.bind(stringSet).annotatedWith(Names.named("adminUsers")).toInstance(adminUsers)
-Set<String> allowedUsers = SetupUtils.stringSetFromParameterString(config.getProperty("allowedUsers", ""))
+Set<String> allowedUsers = SystemUtils.stringSetFromParameterString(config.getProperty("allowedUsers", ""))
 module.bind(stringSet).annotatedWith(Names.named("allowedUsers")).toInstance(allowedUsers)
-Set<String> freeUrls = SetupUtils.stringSetFromParameterString(config.getProperty("freeUrls", ""))
+Set<String> freeUrls = SystemUtils.stringSetFromParameterString(config.getProperty("freeUrls", ""))
 module.bind(stringSet).annotatedWith(Names.named("freeUrls")).toInstance(freeUrls)
-Set<String> loginProviders = SetupUtils.stringSetFromParameterString(config.getProperty("loginProviders", ""))
+Set<String> loginProviders = SystemUtils.stringSetFromParameterString(config.getProperty("loginProviders", ""))
 module.bind(stringSet).annotatedWith(Names.named("loginProviders")).toInstance(loginProviders)
 
 log.info("configuring view settings")

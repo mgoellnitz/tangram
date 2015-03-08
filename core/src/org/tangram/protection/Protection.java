@@ -27,6 +27,8 @@ public interface Protection extends ProtectedContent {
 
     /**
      * A site wide unique key for the protection.
+     * 
+     * @return protection key
      */
     String getProtectionKey();
 

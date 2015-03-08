@@ -19,7 +19,7 @@
 import com.avaje.ebean.config.DataSourceConfig
 import com.avaje.ebean.config.ServerConfig
 import org.tangram.Constants
-import org.tangram.util.SetupUtils
+import org.tangram.util.SystemUtils
 import org.tangram.view.PropertyConverter
 import org.tangram.content.BeanFactory
 import org.tangram.ebean.EBeanFactoryImpl
@@ -48,7 +48,7 @@ serverConfig.setRegister(false)
 serverConfig.setDdlGenerate(config.getProperty("tangram.ebean.ddl.generate", "true").equals("true"))
 serverConfig.setDdlRun(config.getProperty("tangram.ebean.ddl.run", "true").equals("true"))
 
-Set<String> basePackages = SetupUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
+Set<String> basePackages = SystemUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
 EBeanFactoryImpl beanFactory = new EBeanFactoryImpl()
 beanFactory.setBasePackages(basePackages)
 beanFactory.setServerConfig(serverConfig)

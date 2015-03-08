@@ -24,7 +24,7 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.util.SetupUtils;
+import org.tangram.util.SystemUtils;
 
 
 public final class Constants {
@@ -153,7 +153,7 @@ public final class Constants {
 
     static {
         try {
-            for (String s : SetupUtils.getResourceListing(PREFIX, SUFFIX)) {
+            for (String s : SystemUtils.getResourceListing(PREFIX, SUFFIX)) {
                 Properties p = new Properties();
                 p.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(s));
                 VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH), p.getProperty(Constants.PROPERTY_VERSION_BUILD));

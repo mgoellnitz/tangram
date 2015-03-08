@@ -17,7 +17,7 @@
  *
  */
 import org.tangram.Constants
-import org.tangram.util.SetupUtils
+import org.tangram.util.SystemUtils
 import org.tangram.view.PropertyConverter
 import org.tangram.jpa.JpaBeanFactoryImpl
 import org.tangram.content.BeanFactory
@@ -30,7 +30,7 @@ log.info "configuring property converter"
 module.bind(PropertyConverter.class).toInstance(new GenericPropertyConverter())
 
 log.info "configuring bean factory"
-Set<String> basePackages = SetupUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
+Set<String> basePackages = SystemUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
 JpaBeanFactoryImpl beanFactory = new JpaBeanFactoryImpl()
 beanFactory.setBasePackages(basePackages)
 

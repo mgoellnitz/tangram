@@ -18,7 +18,6 @@
  */
 import com.google.inject.name.Names;
 import org.tangram.Constants
-import org.tangram.util.SetupUtils
 import org.tangram.PersistentRestartCache
 import org.tangram.view.PropertyConverter
 import org.tangram.servlet.MeasureTimeFilter

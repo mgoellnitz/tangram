@@ -41,7 +41,7 @@ import org.pac4j.core.client.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.controller.ControllerHook;
-import org.tangram.util.SetupUtils;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.TemplateResolver;
 
 
@@ -150,7 +150,7 @@ public class TangramServletModule extends ServletModule {
         final GroovyShell shell = createShell();
         Set<String> scripts = new HashSet<>();
         try {
-            scripts = SetupUtils.getResourceListing(GUICY_BASE, ".groovy");
+            scripts = SystemUtils.getResourceListing(GUICY_BASE, ".groovy");
         } catch (Exception e) {
             LOG.error("{} error while reading all modules binding scripts", e);
         } // try/catch
