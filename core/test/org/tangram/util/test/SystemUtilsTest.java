@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.tangram.util.SystemUtils;
 
 
-public class SetupUtilsTest {
+public class SystemUtilsTest {
 
     @Test
     public void testStringUtils() {
@@ -37,4 +37,19 @@ public class SetupUtilsTest {
         Assert.assertNotNull("The set should exist despite the null input", SystemUtils.stringSetFromParameterString(null));
     } // testStringUtils()
 
-} // SetupUtilsTest
+
+    @Test
+    public void testResourceListing() throws Exception {
+        Set<String> resourceListing = SystemUtils.getResourceListing("", "properties");
+        Assert.assertEquals("Unexpected number of resources listed", 1, resourceListing.size());
+        Assert.assertEquals("Unexpected resources listed", "[/log4j.properties]", resourceListing.toString());
+    } // testResourceListing()
+
+
+    @Test
+    public void testHashGeneration() throws Exception {
+        String hash = SystemUtils.getSha256Hash("tangram");
+        Assert.assertEquals("Unexpected hash value generated", "35d51bb942eeb1528f19ba81e9db37fd47fc1f5b838d98286e1bc0bbb82b7a71", hash);
+    } // testHashGeneration()
+
+} // SystemUtilsTest
