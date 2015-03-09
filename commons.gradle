@@ -38,6 +38,9 @@ eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/cla
 // A place for a common checkstyle config file
 def checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
 
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 compileJava.doLast {
   // do this here to avoid compiling without source changes since this here is a source change
   incrementBuildCounter(project)

@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -122,6 +123,7 @@ public class ClassResolver {
         } // for
         for (String path : paths) {
             try {
+                path = URLDecoder.decode(path, "UTF-8");
                 LOG.debug("getClassNames() path={}", path);
                 if (path.endsWith(".jar")) {
                     JarInputStream is = new JarInputStream(new FileInputStream(path));
