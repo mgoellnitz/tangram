@@ -65,7 +65,7 @@ public class PassFtpCommandHandler extends PassCommandHandler {
                     p.load(code.getStream());
                     pass = SystemUtils.getSha256Hash(pass);
                 } catch (Exception e) {
-                    LOG.error("handleCommand() error while reading user database", e);
+                    LOG.error("handleCommand() error while reading user database or generating hash", e);
                 } // try/catch
                 if (pass.equals(p.getProperty(user))) {
                     setReplyCode(ReplyCodes.PASS_OK);
