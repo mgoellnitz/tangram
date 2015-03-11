@@ -350,7 +350,7 @@ public class EditingHandler extends AbstractRenderingBase {
                 LOG.error("list() error while sorting", e);
             } // try/catch
         } // if
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType(Constants.MIME_TYPE_HTML_UTF8);
         request.setAttribute("editingHandler", this);
         request.setAttribute(Constants.THIS, contents);
         request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
@@ -373,7 +373,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (!authorizationService.isAdminUser(request, response)) {
             return authorizationService.getLoginTarget(request);
         } // if
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType(Constants.MIME_TYPE_HTML_UTF8);
         Content content = beanFactory.getBean(id);
         if (content==null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
@@ -453,7 +453,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (!authorizationService.isAdminUser(request, response)) {
             return authorizationService.getLoginTarget(request);
         } // if
-        response.setContentType("text/xml");
+        response.setContentType(Constants.MIME_TYPE_XML);
         response.setCharacterEncoding("UTF-8");
         // The pure reflection provider is used because of Google App Engines API limitations
         XStream xstream = new AppEngineXStream(new StaxDriver());
@@ -557,7 +557,7 @@ public class EditingHandler extends AbstractRenderingBase {
             return authorizationService.getLoginTarget(request);
         } // if
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
-        response.setContentType("text/html");
+        response.setContentType(Constants.MIME_TYPE_HTML);
         response.setCharacterEncoding("UTF-8");
         return new TargetDescriptor(this, null, null);
     } // importer()

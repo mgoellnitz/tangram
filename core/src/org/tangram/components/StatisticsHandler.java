@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
@@ -55,7 +56,7 @@ public class StatisticsHandler {
     @LinkAction("/stats")
     public TargetDescriptor stats(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("stats()");
-        response.setContentType("text/html");
+        response.setContentType(Constants.MIME_TYPE_HTML);
         response.setCharacterEncoding("utf-8");
         return new TargetDescriptor(statistics, null, null);
     } // stats()

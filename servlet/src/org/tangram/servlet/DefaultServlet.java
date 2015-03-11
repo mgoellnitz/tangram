@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.Constants;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
@@ -131,7 +132,7 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
             LOG.debug("doGet() done {} on {}", response.getContentType(), response.getClass().getName());
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
-            response.setContentType("text/html");
+            response.setContentType(Constants.MIME_TYPE_HTML);
             response.setCharacterEncoding("utf-8");
             viewUtilities.render(null, context.getModel(), context.getViewName());
         } // try/catch

@@ -6,7 +6,7 @@
 %><%@page import="org.tangram.view.Utils,com.yahoo.platform.yui.compressor.JavaScriptCompressor"
 %><% CodeResource code = (CodeResource)(request.getAttribute(Constants.THIS));
 // hard coded mimetype
-response.setContentType("text/javascript");
+response.setContentType(Constants.MIME_TYPE_JS);
 Calendar calendar = Calendar.getInstance();
 response.setHeader("Last-modified", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
   Map<String, Object> viewSettings = (Map<String, Object>)application.getAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS);

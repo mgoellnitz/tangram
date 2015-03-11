@@ -18,6 +18,7 @@ package org.tangram.content;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.tangram.Constants;
 
 
 /**
@@ -27,8 +28,10 @@ public final class CodeHelper {
 
     private static final Set<String> EXTENSION_TO_CUT = new HashSet<>();
 
+
     private CodeHelper() {
     }
+
 
     /**
      * a set of ignorable extensions. Tweaked for use with NetBeans FTP uploader
@@ -40,22 +43,19 @@ public final class CodeHelper {
 
 
     public static String getExtension(String mimeType) {
-        if ("application/x-groovy".equals(mimeType)) {
+        if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
             mimeType = "text/groovy";
         } // if
-        if ("text/html".equals(mimeType)) {
+        if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
             mimeType = "text/vtl";
         } // if
-        if ("text/xml".equals(mimeType)) {
+        if (Constants.MIME_TYPE_XML.equals(mimeType)) {
             mimeType = "text/vtl";
         } // if
-        if ("application/javascript".equals(mimeType)) {
+        if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
         } // if
-        if ("text/javascript".equals(mimeType)) {
-            mimeType = "text/js";
-        } // if
-        if ("text/plain".equals(mimeType)) {
+        if (Constants.MIME_TYPE_PLAIN.equals(mimeType)) {
             mimeType = "";
         } // if
         if (mimeType.startsWith("text/")) {
@@ -66,19 +66,16 @@ public final class CodeHelper {
 
 
     public static String getFolder(String mimeType) {
-        if ("application/x-groovy".equals(mimeType)) {
+        if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
             mimeType = "text/groovy";
         } // if
-        if ("text/html".equals(mimeType)) {
+        if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
             mimeType = "text/velocity";
         } // if
-        if ("text/xml".equals(mimeType)) {
+        if (Constants.MIME_TYPE_XML.equals(mimeType)) {
             mimeType = "text/velocity-xml";
         } // if
-        if ("application/javascript".equals(mimeType)) {
-            mimeType = "text/js";
-        } // if
-        if ("text/javascript".equals(mimeType)) {
+        if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
         } // if
         if (mimeType.startsWith("text/")) {
@@ -92,19 +89,19 @@ public final class CodeHelper {
         String result = "text/plain";
 
         if ("velocity".equals(directoryName)) {
-            result = "text/html";
+            result = Constants.MIME_TYPE_HTML;
         } // if
         if ("velocity-xml".equals(directoryName)) {
-            result = "text/xml";
+            result = Constants.MIME_TYPE_XML;
         } // if
         if ("css".equals(directoryName)) {
-            result = "text/css";
+            result = Constants.MIME_TYPE_CSS;
         } // if
         if ("js".equals(directoryName)) {
-            result = "application/javascript";
+            result = Constants.MIME_TYPE_JS;
         } // if
         if ("groovy".equals(directoryName)) {
-            result = "application/x-groovy";
+            result = Constants.MIME_TYPE_GROOVY;
         } // if
 
         return result;

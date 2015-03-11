@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.Constants;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewUtilities;
@@ -54,7 +55,7 @@ public class MetaServlet extends HttpServlet {
         } catch (Throwable ex) {
             ViewContext context = viewUtilities.getViewContextFactory().createViewContext(ex, request, response);
             LOG.warn("service() caught throwable {}#{}", context.getViewName(), context.getModel().keySet());
-            response.setContentType("text/html");
+            response.setContentType(Constants.MIME_TYPE_HTML);
             response.setCharacterEncoding("utf-8");
             viewUtilities.render(null, context.getModel(), context.getViewName());
         } // try/catch

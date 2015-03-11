@@ -38,6 +38,20 @@ public final class Constants {
 
     public static final String THIS = "self";
 
+    public static final String MIME_TYPE_HTML = "text/html";
+    
+    public static final String MIME_TYPE_HTML_UTF8 = "text/html; charset=UTF-8";
+    
+    public static final String MIME_TYPE_XML = "application/xml";
+    
+    public static final String MIME_TYPE_CSS = "text/css";
+    
+    public static final String MIME_TYPE_GROOVY = "application/x-groovy";
+    
+    public static final String MIME_TYPE_JS = "application/javascript";
+
+    public static final String MIME_TYPE_PLAIN = "text/plain";
+
     /**
      * Default date format string for http headers and the like.
      */

@@ -72,7 +72,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
 
     @Inject
     @Named("loginProviders")
-    @Resource(name="loginProviders")
+    @Resource(name = "loginProviders")
     private Set<String> loginProviders;
 
     @Inject
@@ -93,7 +93,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         Set<String> providerNames = new HashSet<>();
         LOG.info("getProviderNames() login provider {}", loginProviders);
         LOG.debug("getProviderNames() client set {}", clientSet);
-        for (Client<?,?> client : clientSet) {
+        for (Client<?, ?> client : clientSet) {
             if (loginProviders.contains(client.getName())) {
                 providerNames.add(client.getName());
             } // if
@@ -168,7 +168,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     @LinkAction("/login")
     public TargetDescriptor login(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("login()");
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType(Constants.MIME_TYPE_HTML_UTF8);
         return new TargetDescriptor(this, null, null);
     } // login()
 
@@ -176,7 +176,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     @LinkAction("/login-form")
     public TargetDescriptor form(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("form()");
-        response.setContentType("text/html; charset=UTF-8");
+        response.setContentType(Constants.MIME_TYPE_HTML_UTF8);
         return new TargetDescriptor(this, "form", null);
     } // form()
 
@@ -218,7 +218,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             session.setAttribute(Constants.ATTRIBUTE_USERS, users);
         } // if
         WebContext context = new J2EContext(request, response);
-        final Client<Credentials,UserProfile> client = getClients(request, response).findClient(context);
+        final Client<Credentials, UserProfile> client = getClients(request, response).findClient(context);
         LOG.info("callback() client: {}", client);
         try {
             Credentials credentials = client.getCredentials(context);
@@ -226,7 +226,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             UserProfile userProfile = client.getUserProfile(credentials, context);
             LOG.debug("callback() userProfile {}: {} ({})", userProfile.getId(), userProfile, request.getSession(false));
             GenericUser user = new GenericUser(client.getName(), userProfile.getId(), userProfile.getAttributes());
-            if (!users.contains(user))  {
+            if (!users.contains(user)) {
                 users.add(user);
             } // if
             LOG.info("callback({}) logged in users after callback {}", session.getId(), users);
@@ -274,7 +274,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         registry.registerLinkHandler(this);
         linkFactoryAggregator.registerFactory(this);
         LOG.debug("afterPropertiesSet() collecting clients");
-        for (Client<?,?> client : clientSet) {
+        for (Client<?, ?> client : clientSet) {
             LOG.info("afterPropertiesSet() client {}", client.getName());
         } // for
     } // afterPropertiesSet()
