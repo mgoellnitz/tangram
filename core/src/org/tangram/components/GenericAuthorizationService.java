@@ -20,8 +20,11 @@ package org.tangram.components;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,9 +38,12 @@ import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.authentication.AuthenticationService;
 import org.tangram.authentication.User;
+import org.tangram.content.BeanListener;
+import org.tangram.content.CodeResource;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.protection.AuthorizationService;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 
@@ -47,6 +53,10 @@ import org.tangram.view.Utils;
  *
  * Meant to check if a the system is globally locked to be only usable by allowed users. Support the maintenance
  * of a generic admin role used by other components and provides some helpers for these components.
+ * 
+ * It is possible to have an additional list of users in admin role by adding an entry "adminUsers" to the code resource
+ * item "users.properties" (holding additional user/hashed password mappings for the authentication) having a comma
+ * separated list of user's names.
  *
  * freeUrls any URL in this set will not be consired protected
  *
@@ -59,7 +69,7 @@ import org.tangram.view.Utils;
  */
 @Singleton
 @Named("authorizationService")
-public class GenericAuthorizationService implements AuthorizationService {
+public class GenericAuthorizationService implements AuthorizationService, BeanListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenericAuthorizationService.class);
 
@@ -70,24 +80,29 @@ public class GenericAuthorizationService implements AuthorizationService {
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
+    private CodeResourceCache codeResourceCache;
+
+    @Inject
     @Named("freeUrls")
-    @Resource(name="freeUrls")
+    @Resource(name = "freeUrls")
     protected Set<String> freeUrls;
 
     @Inject
     @Named("allowedUsers")
-    @Resource(name="allowedUsers")
+    @Resource(name = "allowedUsers")
     protected Set<String> allowedUsers;
 
     @Inject
     @Named("adminUsers")
-    @Resource(name="adminUsers")
+    @Resource(name = "adminUsers")
     protected Set<String> adminUsers;
 
     @Inject
     @Named("loginProviders")
-    @Resource(name="loginProviders")
+    @Resource(name = "loginProviders")
     protected Set<String> loginProviders;
+
+    private Set<String> effectiveAdminUsers;
 
 
     @Override
@@ -96,7 +111,7 @@ public class GenericAuthorizationService implements AuthorizationService {
         boolean result = false;
         for (User user : users) {
             LOG.info("isAdminUser() {} in {}?", user, adminUsers);
-            result = result||adminUsers.contains(user.getId());
+            result = result||effectiveAdminUsers.contains(user.getId());
         } // for
         return result;
     } // isAdminUser()
@@ -173,5 +188,28 @@ public class GenericAuthorizationService implements AuthorizationService {
             } // if
         } // if
     } // handleRequest()
+
+
+    @Override
+    public void reset() {
+        effectiveAdminUsers = new HashSet<>(adminUsers);
+        try {
+            LOG.info("reset() reading repository based additional admin users");
+            CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
+            Properties p = new Properties();
+            p.load(code.getStream());
+            effectiveAdminUsers.addAll(SystemUtils.stringSetFromParameterString(p.getProperty("adminUsers")));
+            LOG.info("reset() effective admin user list is {}", effectiveAdminUsers);
+        } catch (Exception e) {
+            LOG.error("validate() error while reading admin user list", e);
+        } // try/catch
+    } // reset()
+
+
+    @PostConstruct
+    public void afterPropertiesSet() {
+        codeResourceCache.addListener(this);
+        reset();
+    } // afterPropertiesSet()
 
 } // GenericAuthorizationService
