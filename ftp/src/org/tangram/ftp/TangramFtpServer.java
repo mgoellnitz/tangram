@@ -67,6 +67,10 @@ public class TangramFtpServer extends AbstractFtpServer {
 
     /**
      * Create a new instance. Initialize the default command handlers and reply text ResourceBundle.
+     * 
+     * @param port port to bind to
+     * @param beanFactory bean factory instance to to content from and store in.
+     * @param codeResourceCache code access facade for the bean factory.
      */
     public TangramFtpServer(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache) {
         PwdFtpCommandHandler pwdCommandHandler = new PwdFtpCommandHandler();
@@ -106,7 +110,7 @@ public class TangramFtpServer extends AbstractFtpServer {
         commands.put(CommandNames.TYPE, new TypeCommandHandler());
         commands.put(CommandNames.USER, new UserFtpCommandHandler());
         commands.put(CommandNames.UNSUPPORTED, new UnsupportedCommandHandler());
-        commands.put(CommandNames.XPWD, pwdCommandHandler);           // same as PWD
+        commands.put(CommandNames.XPWD, pwdCommandHandler); // same as PWD
 
         setCommandHandlers(commands);
     } // TangramFtpServer()

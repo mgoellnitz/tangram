@@ -49,13 +49,27 @@ public class FtpDirectory {
     @Inject
     private CodeResourceCache codeResourceCache;
 
+    private int ftpPort = 20021;
+
+
+    /**
+     * Set the port to be used for the ftp service.
+     * It default to 20021 - not the ftp default service port 21.
+     *
+     * @param ftpPort port number to be used.
+     */
+    public void setFtpPort(int ftpPort) {
+        this.ftpPort = ftpPort;
+    }
+
 
     @PostConstruct
     public void afterPropertiesSet() {
         LOG.info("() initializing with code cache {}", codeResourceCache);
         if (beanFactory instanceof MutableBeanFactory) {
             ftpServerStub = new TangramFtpServer((MutableBeanFactory) beanFactory, codeResourceCache);
-            LOG.info("() starting");
+            LOG.info("() starting on port {}", ftpPort);
+            ftpServerStub.setServerControlPort(ftpPort);
             ftpServerStub.start();
         } else {
             LOG.error("afterPropertiesSet() no factory for mutable beans - not starting ftp service");
