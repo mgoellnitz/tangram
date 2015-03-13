@@ -25,7 +25,6 @@ package org.tangram.gradle.plugin;
  *  By the use of the constants from within build files a consistent library set is ensured. 
  */
 public class TangramVersions {
-
   String lombok = '1.16.2'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
@@ -38,13 +37,15 @@ public class TangramVersions {
   String xstream = '1.4.7'
   String pac4j = '1.6.0'
   String tomcat = '7.0.57'
+  String codemirror = '3.24'
+  String ckeditor = '4.4.7'
   
   // For testing purposes
   String junit = '4.12'
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
   
   String dinistiq = '0.4-SNAPSHOT'
-  String shiro = '1.2.3'
+  // String shiro = '1.2.3'
 
   String springframework = '4.1.5.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
@@ -75,5 +76,4 @@ public class TangramVersions {
   String ebean_agent = '4.1.6' // (4.5.1)
 
   String appengine = '1.9.18'
-  
 } // TangramVersions

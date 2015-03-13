@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+import org.gradle.api.file.FileTree
+import org.gradle.api.file.FileCopyDetails
+import org.gradle.api.file.RelativePath
+
 apply from: '../webapp.gradle'
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'de.undercouch:gradle-download-task:1.0'
+  }
+}
+
+apply plugin: 'download-task'
 
 dependencies {
   compile project(':tangram-mutable')
@@ -27,4 +42,48 @@ dependencies {
   
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
+}
+
+war.doFirst {
+  // TODO: Do we want this? <script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>  
+  String ckeditor = "ckeditor_${versions.ckeditor}_standard.zip"
+  def ckeditorFile = new File("$ckeditor") 
+  if ((!ckeditorFile.exists())) {
+    String ckeditorUrl = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%20${versions.ckeditor}/${ckeditor}"
+    download {
+      src "$ckeditorUrl"
+      dest "$projectDir"
+      onlyIfNewer true
+    }
+  }
+  if (ckeditorFile.exists()) {
+    FileTree ckeditorTree = zipTree("${ckeditor}")
+    into('editor') {
+      from ckeditorTree
+      include "ckeditor/**"
+      exclude '**/*.md', 'ckeditor/samples/**'
+    }
+  }
+  
+  def codemirrorFile = new File("codemirror-${versions.codemirror}.zip") 
+  if ((!codemirrorFile.exists())) {
+    download {
+      src "http://codemirror.net/codemirror-${versions.codemirror}.zip"
+      dest "$projectDir"
+      onlyIfNewer true
+    }
+  }
+  if (codemirrorFile.exists()) {
+    FileTree codemirror = zipTree("codemirror-${versions.codemirror}.zip")
+    into('editor/cm') {
+      from codemirror
+      include "codemirror-${versions.codemirror}/**"
+      exclude '**/bin/**', '**/demo/**', '**/doc/**', '**/test/**', '**/*.html', '**/*.json', '**/*.md'
+      eachFile { FileCopyDetails fcp ->
+        def segments = fcp.relativePath.segments
+        def pathsegments = segments[0,1,3..-1] as String[]
+        fcp.relativePath = new RelativePath(!fcp.file.isDirectory(), pathsegments)
+      }
+    }
+  }
 }
