@@ -45,7 +45,6 @@ dependencies {
 }
 
 war.doFirst {
-  // TODO: Do we want this? <script src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>  
   String ckeditor = "ckeditor_${versions.ckeditor}_standard.zip"
   def ckeditorFile = new File("$ckeditor") 
   if ((!ckeditorFile.exists())) {
@@ -64,21 +63,22 @@ war.doFirst {
       exclude '**/*.md', 'ckeditor/samples/**'
     }
   }
-  
-  def codemirrorFile = new File("codemirror-${versions.codemirror}.zip") 
+
+  def codemirrorBasename="codemirror-${versions.codemirror}"
+  def codemirrorFile = new File("${codemirrorBasename}.zip") 
   if ((!codemirrorFile.exists())) {
     download {
-      src "http://codemirror.net/codemirror-${versions.codemirror}.zip"
+      src "http://codemirror.net/${codemirrorBasename}.zip"
       dest "$projectDir"
       onlyIfNewer true
     }
   }
   if (codemirrorFile.exists()) {
-    FileTree codemirror = zipTree("codemirror-${versions.codemirror}.zip")
-    into('editor/cm') {
+    FileTree codemirror = zipTree("${codemirrorBasename}.zip")
+    into('editor/codemirror') {
       from codemirror
-      include "codemirror-${versions.codemirror}/**"
-      exclude '**/bin/**', '**/demo/**', '**/doc/**', '**/test/**', '**/*.html', '**/*.json', '**/*.md'
+      include "${codemirrorBasename}/lib/**", "${codemirrorBasename}/mode/**", "${codemirrorBasename}/keymap/**", "${codemirrorBasename}/theme/**"
+      exclude "${codemirrorBasename}/lib", "${codemirrorBasename}/mode", "${codemirrorBasename}/keymap", "${codemirrorBasename}/theme"
       eachFile { FileCopyDetails fcp ->
         def segments = fcp.relativePath.segments
         def pathsegments = segments[0,1,3..-1] as String[]
