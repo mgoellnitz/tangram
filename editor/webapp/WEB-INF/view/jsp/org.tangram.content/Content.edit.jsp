@@ -136,7 +136,7 @@ CKEDITOR.replace( 'ke<%=key%>');
         if (cmmode.length() == 0) {
 %><textarea class="cms_editor_textfield" cols="60" rows="25" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea><%
         } else {
-%><%=cmmode%><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
+%><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
 <script type="application/javascript">
   var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     height: "dynamic", continuousScanning: 500, mode: "<%=cmmode%>", lineNumbers: true

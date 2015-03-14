@@ -54,6 +54,16 @@
   width: 370px;
   border-bottom: 1px dotted #000000;
 }
+.cms_editor_button_box {
+  float: left; 
+  width: 225px;
+}
+
+.cms_editor_title_box {
+  width: 500px; 
+  float: left;
+  margin-bottom: 15px;
+}
 
 .CodeMirror-wrapping {
   background-color: #FFFFFF;
@@ -75,4 +85,9 @@
 ul {
   list-style-type: none;
   padding-left: 5px;
+}
+
+#newbutton {
+  clear: both; 
+  margin-top: 2em;
 }

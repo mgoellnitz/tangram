@@ -1,13 +1,13 @@
 .longversion {
-	visibility: hidden;
-	width: 0;
-	font-size: 0;
+  visibility: hidden;
+  width: 0;
+  font-size: 0;
 }
 
 div.cms_editor_id_box {
-  margin-top: 3pt;
+  // margin-top: 3pt;
   width: 305px;
-  border: 0px;
+  border-color:#f0f0f0; 
 }
 
 td.cms_editor_label_td {

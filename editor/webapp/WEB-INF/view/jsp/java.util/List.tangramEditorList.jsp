@@ -23,6 +23,7 @@
 </c:forEach></ul>
 </div>
 <c:if test="${designClass != null}">
+<div id="newbutton"/>
 <form method="post" action="<cms:link bean="${editingHandler}" action="create"/>">
 <div class="cms_editor_row">
 <input class="cms_editor_textfield" type="hidden" name="cms.editor.class.name" value="${designClass.name}"/>
