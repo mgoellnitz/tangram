@@ -1,2 +1,0 @@
-codemirror: 3.23
-ckeditor: 4.3.3
