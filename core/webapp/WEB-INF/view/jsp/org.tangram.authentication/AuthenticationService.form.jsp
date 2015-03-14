@@ -23,9 +23,6 @@ request.setAttribute("tangramLoginError", request.getSession(true).getAttribute(
 <div class="cms_editor_row">
 <span class="cms_editor_label">Password: </span><input type="password" name="password"/>
 </div>
-<div class="cms_editor_row">
-<span class="cms_editor_label">Remember me: </span><input type="checkbox" name="rememberMe"/>
-</div>
 <input type="submit" value="  <fmt:message key="label.login" bundle="${msg}"/>  "/>
 <input type="hidden" name="client_name" value="form"/>
 </form>
