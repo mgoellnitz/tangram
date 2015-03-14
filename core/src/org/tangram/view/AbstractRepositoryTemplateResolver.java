@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
@@ -39,14 +40,14 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
     @Inject
     private CodeResourceCache codeResourceCache;
 
-    private final Collection<String> supportedCtontenTypes;
+    private final Collection<String> supportedContentTypes;
 
 
     public AbstractRepositoryTemplateResolver() {
         super(false, ".");
-        supportedCtontenTypes = new HashSet<>();
-        supportedCtontenTypes.add("text/html");
-        supportedCtontenTypes.add("text/xml");
+        supportedContentTypes = new HashSet<>();
+        supportedContentTypes.add(Constants.MIME_TYPE_HTML);
+        supportedContentTypes.add(Constants.MIME_TYPE_XML);
     } // AbstractRepositoryTemplateResolver()
 
 
@@ -67,7 +68,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
      */
     protected CodeResource resolveTemplate(String path, Locale locale) throws Exception {
         CodeResource template = null;
-        for (String type : supportedCtontenTypes) {
+        for (String type : supportedContentTypes) {
             if (template==null) {
                 template = codeResourceCache.get(type, path);
             } // if
