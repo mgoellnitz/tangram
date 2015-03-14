@@ -56,9 +56,8 @@ war.doFirst {
     }
   }
   if (ckeditorFile.exists()) {
-    FileTree ckeditorTree = zipTree("${ckeditor}")
     into('editor') {
-      from ckeditorTree
+      from zipTree("${ckeditor}")
       include "ckeditor/**"
       exclude '**/*.md', 'ckeditor/samples/**'
     }
@@ -74,11 +73,10 @@ war.doFirst {
     }
   }
   if (codemirrorFile.exists()) {
-    FileTree codemirror = zipTree("${codemirrorBasename}.zip")
     into('editor/codemirror') {
-      from codemirror
+      from zipTree("${codemirrorBasename}.zip")
       include "${codemirrorBasename}/lib/**", "${codemirrorBasename}/mode/**", "${codemirrorBasename}/keymap/**", "${codemirrorBasename}/theme/**"
-      exclude "${codemirrorBasename}/lib", "${codemirrorBasename}/mode", "${codemirrorBasename}/keymap", "${codemirrorBasename}/theme"
+      exclude "${codemirrorBasename}/lib", "${codemirrorBasename}/mode/*", "${codemirrorBasename}/keymap", "${codemirrorBasename}/theme"
       eachFile { FileCopyDetails fcp ->
         def segments = fcp.relativePath.segments
         def pathsegments = segments[0,1,3..-1] as String[]

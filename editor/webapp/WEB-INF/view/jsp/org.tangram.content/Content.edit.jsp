@@ -13,9 +13,16 @@
 <%@include file="../../../include/head-elements.jsp" %>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
-<script type="text/javascript" src="${prefix}/editor/ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="${prefix}/editor/codemirror/js/codemirror.js"></script>
-<script type="text/javascript" src="${prefix}/editor/script.js"></script>
+<link rel="stylesheet" href="${prefix}/editor/codemirror/lib/codemirror.css" type="text/css" media="screen"/>
+<script type="application/javascript" src="${prefix}/editor/ckeditor/ckeditor.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/lib/codemirror.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/mode/groovy/groovy.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/mode/xml/xml.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/mode/javascript/javascript.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/mode/css/css.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script type="application/javascript" src="${prefix}/editor/codemirror/mode/htmlembedded/htmlembedded.js"></script>
+<script type="application/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
@@ -46,7 +53,7 @@ for (String key : bw.propertyNames()) {
     Class<? extends Object> type = bw.getType(key);
 %><tr class="cms_editor_row"><td class="cms_editor_label_td"><%=key%>:
 <% 
-if ((propertyConverter.isTextType(type)) &&("code".equals(key)) && bw.isReadable("mimeType") && (!(""+bw.get("mimeType")).equals("text/javascript")) && (!(""+bw.get("mimeType")).equals("text/css"))) {
+if ((propertyConverter.isTextType(type)) &&("code".equals(key)) && bw.isReadable("mimeType") && (!(""+bw.get("mimeType")).equals(Constants.MIME_TYPE_JS)) && (!(""+bw.get("mimeType")).equals(Constants.MIME_TYPE_CSS))) {
 Class<? extends Object> c = null;
 Object annotation = bw.get("annotation");
 String className = annotation == null ? null : ""+annotation;
@@ -67,7 +74,7 @@ PropertyDescriptor[] ps = new PropertyDescriptor[0];
 if (c != null) {
     ps = JavaBean.getPropertyDescriptors(c);
     String mimeType = ""+bw.get("mimeType");
-	if ("application/x-groovy".equals(mimeType)) {
+	if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
     %>delegate kennt<br/><%
     } else {
     %>$self kennt<br/><%
@@ -97,50 +104,42 @@ if (propertyConverter.isBlobType(type)) {
       if (!("code".equals(key))) {
 %>
 <textarea id="ke<%=key%>" class="cms_editor_textfield ckeditor" cols="60" rows="5" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
-<script type="text/javascript">
+<script type="application/javascript">
 //<![CDATA[
 CKEDITOR.replace( 'ke<%=key%>');
 //]]>
 </script>
 <%
     } else {
-        String parserfile = "";
-        String stylesheet = "";
+        String cmmode = "";
         try {
+            // TODO: Use constants.
             String mimeType = ""+bw.get("mimeType");
-            if ("application/x-groovy".equals(mimeType)) {
-                parserfile = "['tokenizegroovy.js', 'parsegroovy.js']";
-                stylesheet = "'"+Utils.getUriPrefix(request)+"/editor/codemirror/css/groovycolors.css'";
+            if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
+                cmmode = "groovy";
             } // if
-            if ("text/javascript".equals(mimeType)) {
-                parserfile = "['tokenizejavascript.js', 'parsejavascript.js']";
-                stylesheet = "'"+Utils.getUriPrefix(request)+"/editor/codemirror/css/jscolors.css'";
+            if (Constants.MIME_TYPE_JS.equals(mimeType)) {
+                cmmode = "javascript";
             } // if
-            if ("text/css".equals(mimeType)) {
-                parserfile = "'parsecss.js'";
-                stylesheet = "'"+Utils.getUriPrefix(request)+"/editor/codemirror/css/csscolors.css'";
+            if (Constants.MIME_TYPE_CSS.equals(mimeType)) {
+                cmmode = "css";
             } // if
-            if ("text/xml".equals(mimeType)) {
-                parserfile = "'parsexml.js'";
-                stylesheet = "'"+Utils.getUriPrefix(request)+"/editor/codemirror/css/xmlcolors.css'";
+            if (Constants.MIME_TYPE_XML.equals(mimeType)) {
+                cmmode = "xml";
             } // if
-            if ("text/html".equals(mimeType)) {
-                parserfile = "['parsexml.js', 'parsecss.js', 'tokenizejavascript.js', 'parsejavascript.js', 'parsehtmlmixed.js']";
-                stylesheet = "['"+Utils.getUriPrefix(request)+"/editor/codemirror/css/xmlcolors.css', '"+Utils.getUriPrefix(request)+"/editor/codemirror/css/jscolors.css', '"+Utils.getUriPrefix(request)+"/editor/codemirror/css/csscolors.css']";
+            if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
+                cmmode = "application/x-jsp";
             } // if
         } catch (Exception e) {
             
         } // try/catch
-        if (parserfile.length() == 0) {
+        if (cmmode.length() == 0) {
 %><textarea class="cms_editor_textfield" cols="60" rows="25" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea><%
         } else {
-%><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
-<script type="text/javascript">
-  var editor = CodeMirror.fromTextArea('code', {
-    height: "dynamic", continuousScanning: 500, path: "${prefix}/editor/codemirror/js/",
-    parserfile: <%=parserfile%>,
-    stylesheet: <%=stylesheet%>,
-    lineNumbers: true
+%><%=cmmode%><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
+<script type="application/javascript">
+  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+    height: "dynamic", continuousScanning: 500, mode: "<%=cmmode%>", lineNumbers: true
   });
 </script>
 <%
@@ -198,7 +197,7 @@ if (value instanceof Content) {
 (${contentClass.name} ${note})<br/>
 <cms:include bean="${self}" view="tangramEditorClasses" />
 <%@include file="../../../include/tangram-footer.jsp" %>
-<script type="text/javascript">
+<script type="application/javascript">
 window.focus();window.onkeydown=keydown;window.onkeypress=keypress;
 </script>
 </body>
