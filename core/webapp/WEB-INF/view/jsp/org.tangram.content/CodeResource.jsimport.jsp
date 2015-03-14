@@ -4,8 +4,8 @@
 %><%@page import="org.tangram.content.CodeResource"
 %><%@page import="org.tangram.Constants"
 %><c:choose><c:when test="${self.size < 1024}"
-><script type="text/javascript">
+><script type="application/javascript">
 <cms:include bean="${self}" view="js"/></script></c:when
 ><c:otherwise><c:set var="link"><cms:link bean="${self}" view="js"/></c:set
-><script type="text/javascript" src="${link}"></script></c:otherwise
+><script type="application/javascript" src="${link}"></script></c:otherwise
 ></c:choose>

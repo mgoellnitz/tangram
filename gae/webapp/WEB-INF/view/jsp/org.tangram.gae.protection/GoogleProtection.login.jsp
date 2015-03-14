@@ -20,7 +20,7 @@ nicht berechtigt, diese Seite zu sehen. <%
         } catch (Exception e)  {
             System.out.println("GoogleProtection.login.jsp "+e.getMessage());
         } // try/catch
-        %><script type="text/javascript">location.href='<%=loginURL%>';</script>
+        %><script type="application/javascript">location.href='<%=loginURL%>';</script>
         Die <a href="<%=loginURL%>">Login-Seite</a> konnte leider nicht automatisch aufgerufen werden.
 <%  } // if
 %></div>

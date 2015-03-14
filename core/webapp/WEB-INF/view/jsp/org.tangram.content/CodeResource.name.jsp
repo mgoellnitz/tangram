@@ -5,7 +5,7 @@
 <c:when test="${self.mimeType == 'application/x-groovy'}">
 Groovy Code ${self.annotation}
 </c:when>
-<c:when test="${self.mimeType == 'text/javascript'}">
+<c:when test="${self.mimeType == 'application/javascript'}">
 JavaScript Code ${self.annotation}
 </c:when>
 <c:when test="${self.mimeType == 'text/css'}">
@@ -14,7 +14,7 @@ Stylesheet - Medium ${self.annotation}
 <c:when test="${self.mimeType == 'text/html'}">
 Template - ${self.annotation}
 </c:when>
-<c:when test="${self.mimeType == 'text/xml'}">
+<c:when test="${self.mimeType == 'application/xml'}">
 XML Template - ${self.annotation}
 </c:when>
 <c:otherwise>

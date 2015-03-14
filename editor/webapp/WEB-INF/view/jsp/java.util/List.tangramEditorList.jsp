@@ -10,7 +10,7 @@
 <%@include file="../../../include/head-elements.jsp" %>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print" />
-<script type="text/javascript" src="${prefix}/editor/script.js">
+<script type="application/javascript" src="${prefix}/editor/script.js">
 </script>
 </head>
 <body>
