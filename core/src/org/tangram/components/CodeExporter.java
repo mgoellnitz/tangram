@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,12 +32,13 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
+import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
-import org.tangram.protection.AuthorizationService;
 import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 import org.tangram.link.LinkHandlerRegistry;
+import org.tangram.protection.AuthorizationService;
 import org.tangram.view.TargetDescriptor;
 
 
@@ -62,11 +63,11 @@ public class CodeExporter {
 
 
     static {
-        MIME_TYPES.add("text/xml");
-        MIME_TYPES.add("text/html");
-        MIME_TYPES.add("text/css");
-        MIME_TYPES.add("application/javascript");
-        MIME_TYPES.add("application/x-groovy");
+        MIME_TYPES.add(Constants.MIME_TYPE_XML);
+        MIME_TYPES.add(Constants.MIME_TYPE_HTML);
+        MIME_TYPES.add(Constants.MIME_TYPE_CSS);
+        MIME_TYPES.add(Constants.MIME_TYPE_JS);
+        MIME_TYPES.add(Constants.MIME_TYPE_GROOVY);
     }
 
 
