@@ -45,43 +45,54 @@ dependencies {
 }
 
 war.doFirst {
-  String ckeditor = "ckeditor_${versions.ckeditor}_standard.zip"
-  def ckeditorFile = new File("$ckeditor") 
-  if ((!ckeditorFile.exists())) {
-    String ckeditorUrl = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%20${versions.ckeditor}/${ckeditor}"
-    download {
-      src "$ckeditorUrl"
-      dest "$projectDir"
-      onlyIfNewer true
+  String ckeditorBase = "ckeditor_${versions.ckeditor}"
+  if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
+    String ckeditor = "${ckeditorBase}_standard.zip"
+    def ckeditorFile = new File("$ckeditor") 
+    if (!ckeditorFile.exists()) {
+      String ckeditorUrl = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%20${versions.ckeditor}/${ckeditor}"
+      download {
+        src "$ckeditorUrl"
+        dest "$projectDir"
+        onlyIfNewer true
+      }
     }
-  }
-  if (ckeditorFile.exists()) {
-    into('editor') {
-      from zipTree("${ckeditor}")
-      include "ckeditor/**"
-      exclude '**/*.md', 'ckeditor/samples/**'
+    if (ckeditorFile.exists()) {
+      copy {
+        into "$projectDir/expanded/$ckeditorBase"
+        from zipTree("${ckeditor}")
+        include "ckeditor/**"
+        exclude '**/*.md', 'ckeditor/samples/**'
+      }
     }
   }
 
-  def codemirrorBasename="codemirror-${versions.codemirror}"
-  def codemirrorFile = new File("${codemirrorBasename}.zip") 
-  if ((!codemirrorFile.exists())) {
-    download {
-      src "http://codemirror.net/${codemirrorBasename}.zip"
-      dest "$projectDir"
-      onlyIfNewer true
-    }
-  }
-  if (codemirrorFile.exists()) {
-    into('editor/codemirror') {
-      from zipTree("${codemirrorBasename}.zip")
-      include "${codemirrorBasename}/lib/**", "${codemirrorBasename}/mode/**", "${codemirrorBasename}/keymap/**", "${codemirrorBasename}/theme/**"
-      exclude "${codemirrorBasename}/lib", "${codemirrorBasename}/mode/*", "${codemirrorBasename}/keymap", "${codemirrorBasename}/theme"
-      eachFile { FileCopyDetails fcp ->
-        def segments = fcp.relativePath.segments
-        def pathsegments = segments[0,1,3..-1] as String[]
-        fcp.relativePath = new RelativePath(!fcp.file.isDirectory(), pathsegments)
+  def codemirrorBase="codemirror-${versions.codemirror}"
+  if (!(new File("$projectDir/expanded/$codemirrorBase").exists())) {
+    def codemirrorFile = new File("${codemirrorBase}.zip") 
+    if (!codemirrorFile.exists()) {
+      download {
+        src "http://codemirror.net/${codemirrorBase}.zip"
+        dest "$projectDir"
+        onlyIfNewer true
       }
     }
+    if (codemirrorFile.exists()) {
+      copy {
+        into "$projectDir/expanded"
+        from zipTree("${codemirrorBase}.zip")
+        // We could also include themes and keymaps.
+        // include "${codemirrorBasename}/lib/**", "${codemirrorBasename}/mode/**", "${codemirrorBasename}/keymap/**", "${codemirrorBasename}/theme/**"
+        include "${codemirrorBase}/lib/**", "${codemirrorBase}/mode/*/*.js"
+      }
+    }
+  }
+  into('editor') {
+    from fileTree("$projectDir/expanded/$ckeditorBase")
+  }
+  into('editor/codemirror') {
+    from fileTree("$projectDir/expanded/$codemirrorBase")
+    // deliberately leave out some of the very many modes
+    exclude "**/mode/a*/**", "**/mode/cl*/**", "**/mode/e*/**", "**/mode/f*/**", "**/mode/gh*/**", "**/mode/ha*/**", "**/mode/id*/**", "**/mode/jad*/**", "**/mode/n*/**", "**/mode/pe*/**", "**/mode/r*/**", "**/mode/sli*/**", "**/mode/sql*/**", "**/mode/styl*/**", "**/mode/t*/**", "**/mode/veri*/**", "**/mode/xq*/**", "**/mode/y*/**", "**/mode/z*/**"
   }
 }

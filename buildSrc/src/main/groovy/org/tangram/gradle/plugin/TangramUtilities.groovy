@@ -44,6 +44,7 @@ class TangramUtilities {
   
   /**
    * Helper methods to be used for conditional filtering of input files.
+   * These filters only work with files - not e.g. with zip entries.
    */
   public isCss(input) {
     return (input.displayName.startsWith('file') && input.name.endsWith('.css'))
@@ -54,9 +55,9 @@ class TangramUtilities {
   }
   
   /**
-   *  Extract all webarchives we depend on and leave ut files we'd like 
-   *  to overwrite with local versions.
-   *  Then copy JavaScript and CSS Codes and try to minify them.
+   *  Extract all webarchives we depend on and leave out files we'd like to 
+   *  overwrite with local versions. Then copy JavaScript and CSS Codes and 
+   *  try to minify them.
    */
   public overlayWebapp(War w) {
     Project p = w.project

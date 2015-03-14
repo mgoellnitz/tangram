@@ -9,5 +9,6 @@
 *.nb-gradl*
 /ebean/tangram-*.sql
 /build/
+/editor/expanded*
 /editor/codemirror*
 /editor/ckeditor*
