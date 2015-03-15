@@ -55,31 +55,13 @@
   border-bottom: 1px dotted #000000;
 }
 .cms_editor_button_box {
-  float: left; 
-  width: 225px;
+  float: left;
 }
 
 .cms_editor_title_box {
   width: 500px; 
   float: left;
-  margin-bottom: 15px;
-}
-
-.CodeMirror-wrapping {
-  background-color: #FFFFFF;
-}
-
-.CodeMirror-line-numbers {
-  margin-top: 5px;
-}
-
-.CodeMirror-line-numbers div {
-  font-size: 12px;
-  height: 16px;
-  text-align: right;
-  color: #706040;
-  padding-right: 2px;
-  background-color: #d8c8a8;
+  margin-bottom: 12px;
 }
 
 ul {
@@ -90,4 +72,8 @@ ul {
 #newbutton {
   clear: both; 
   margin-top: 2em;
+}
+
+.CodeMirror {
+  height: auto;
 }
