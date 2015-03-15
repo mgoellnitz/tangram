@@ -238,27 +238,35 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
                 // select blobs
                 query = "SELECT * FROM Blobs WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
+                List<Integer> ids = new ArrayList<>();
+                List<String> propertyNames = new ArrayList<>();
                 try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
                     while (resultSet.next()) {
                         String propertyName = resultSet.getString("propertyname");
                         int blobId = resultSet.getInt("target");
-
-                        query = "SELECT * FROM BlobData WHERE id = "+blobId;
-                        try (Statement st = dbConnection.createStatement(); ResultSet blobSet = st.executeQuery(query)) {
-                            if (blobSet.next()) {
-                                String mimeType = blobSet.getString("mimetype");
-                                byte[] data = blobSet.getBytes("data");
-                                long len = blobSet.getLong("len");
-                                properties.put(propertyName, createBlob(id, propertyName, mimeType, len, data));
-                                LOG.debug("getProperties() {} blob bytes {} ({})", propertyName, data.length, len);
-                            } // if
-                        } catch (SQLException se) {
-                            LOG.error("getProperties() "+query, se);
-                        } // try/catch
+                        ids.add(blobId);
+                        propertyNames.add(propertyName);
                     } // while
                 } catch (SQLException se) {
                     LOG.error("getProperties() "+query, se);
                 } // try/catch
+
+                for (int i = 0; i < ids.size(); i++) {
+                    int blobId = ids.get(i);
+                    String propertyName = propertyNames.get(i);
+                    query = "SELECT * FROM BlobData WHERE id = "+blobId;
+                    try (Statement st = dbConnection.createStatement(); ResultSet blobSet = st.executeQuery(query)) {
+                        if (blobSet.next()) {
+                            String mimeType = blobSet.getString("mimetype");
+                            byte[] data = blobSet.getBytes("data");
+                            long len = blobSet.getLong("len");
+                            properties.put(propertyName, createBlob(id, propertyName, mimeType, len, data));
+                            LOG.debug("getProperties() {} blob bytes {} ({})", propertyName, data.length, len);
+                        } // if
+                    } catch (SQLException se) {
+                        LOG.error("getProperties() "+query, se);
+                    } // try/catch
+                } // for
 
                 // select xml
                 query = "SELECT * FROM Texts WHERE documentid = "+id+" AND documentversion = "+version+" ORDER BY propertyname ASC";
