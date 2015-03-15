@@ -4,7 +4,7 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
 %><%@page import="org.tangram.Constants,org.tangram.components.editor.EditingHandler,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.content.Content,org.tangram.content.BeanFactory"
+%><%@page import="org.tangram.annotate.Abstract,org.tangram.content.Content,org.tangram.content.BeanFactory"
 %><%@page import="org.tangram.view.Utils,org.tangram.view.PropertyConverter"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
@@ -151,7 +151,7 @@ CKEDITOR.replace( 'ke<%=key%>');
  (<%=type.getSimpleName()%><%
 if (value instanceof Collection) {
   Class<? extends Object>  elementClass = bw.getCollectionType(key);
-  boolean abstractClass = (elementClass.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT;
+  boolean abstractClass = ((elementClass.getModifiers() & Modifier.ABSTRACT) == Modifier.ABSTRACT) || (elementClass.getAnnotation(Abstract.class)!=null);
   if (elementClass != Object.class) {
 %>&lt;<%=(abstractClass?"*":"")+elementClass.getSimpleName()%>&gt;)<%
   } // if

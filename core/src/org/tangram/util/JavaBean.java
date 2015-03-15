@@ -25,8 +25,11 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +70,9 @@ public class JavaBean {
      * @return names of properties
      */
     public Collection<String> propertyNames() {
-        return descriptors.keySet();
+        List<String> arrayList = new ArrayList<>(descriptors.keySet());
+        Collections.sort(arrayList);
+        return arrayList;
     } // propertyNames
 
 
