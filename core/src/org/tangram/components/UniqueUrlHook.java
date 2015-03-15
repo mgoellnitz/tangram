@@ -62,11 +62,12 @@ public class UniqueUrlHook implements ControllerHook {
             // If you run into trouble with encodings, this might be a place to search
             // String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8");
             // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8");
-            String decodedUrl = link.getUrl();
-            final String queryString = request.getQueryString();
-            String requestURI = request.getRequestURI()+(StringUtils.isBlank(queryString) ? "" : "?"+queryString);
+            String queryString = request.getQueryString();
+            queryString = StringUtils.isBlank(queryString) ? "" : "?"+queryString;
+            String decodedUrl = link.getUrl()+queryString;
+            String requestURI = request.getRequestURI()+queryString;
             if (!decodedUrl.equals(requestURI)) {
-                LOG.info("render() sending redirect for {} to {}", requestURI, decodedUrl);
+                LOG.info("intercept() sending redirect for {} to {}", requestURI, decodedUrl);
                 response.setHeader("Location", link.getUrl());
                 response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
                 return true;
