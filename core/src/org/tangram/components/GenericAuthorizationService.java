@@ -53,7 +53,7 @@ import org.tangram.view.Utils;
  *
  * Meant to check if a the system is globally locked to be only usable by allowed users. Support the maintenance
  * of a generic admin role used by other components and provides some helpers for these components.
- * 
+ *
  * It is possible to have an additional list of users in admin role by adding an entry "adminUsers" to the code resource
  * item "users.properties" (holding additional user/hashed password mappings for the authentication) having a comma
  * separated list of user's names.
@@ -197,7 +197,9 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
             LOG.info("reset() reading repository based additional admin users");
             CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
             Properties p = new Properties();
-            p.load(code.getStream());
+            if (code!=null) {
+                p.load(code.getStream());
+            } // if
             effectiveAdminUsers.addAll(SystemUtils.stringSetFromParameterString(p.getProperty("adminUsers")));
             LOG.info("reset() effective admin user list is {}", effectiveAdminUsers);
         } catch (Exception e) {

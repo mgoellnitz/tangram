@@ -61,7 +61,9 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
             CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
             Properties p = new Properties();
             try {
-                p.load(code.getStream());
+                if (code!=null) {
+                    p.load(code.getStream());
+                } // ifF
             } catch (Exception e) {
                 LOG.error("validate() error while reading user database", e);
             } // try/catch
