@@ -56,18 +56,11 @@ public class ClassResolver {
             while (urlEnumeration.hasMoreElements()) {
                 String url = urlEnumeration.nextElement().toString();
                 int idx = url.indexOf('!');
-                if (idx>0) {
-                    url = url.substring(0, idx);
-                } // if
-                if (url.startsWith("jar:")) {
-                    url = url.substring(4);
-                } // if
-                if (url.startsWith("file:")) {
-                    url = url.substring(5);
-                } // if
-                if (!url.endsWith(".jar")) {
-                    url = url.substring(0, url.length()-packagePath.length());
-                } //
+                url = idx>0 ? url.substring(0, idx) : url;
+                url = url.startsWith("jar:") ? url.substring(4) : url;
+                url = url.startsWith("vfs:/") ? "file"+url.substring(3, url.length()-packagePath.length()-2) : url;
+                url = url.startsWith("file:") ? url.substring(5) : url;
+                url = !url.endsWith(".jar") ? url.substring(0, url.length()-packagePath.length()) : url;
                 LOG.info("addPathsForPackage() {}", url);
                 urls.add(url);
             } // while
