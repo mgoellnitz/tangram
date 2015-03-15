@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
+import org.tangram.annotate.Abstract;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
@@ -515,7 +516,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             if (modelClasses==null) {
                 modelClasses = new ArrayList<>();
                 for (Class<? extends Content> cls : getAllClasses()) {
-                    if ((cls!=TransientCode.class)&&(!cls.isInterface())&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
+                    if ((cls.getAnnotation(Abstract.class)==null)&&(cls!=TransientCode.class)&&(!cls.isInterface())&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
                         modelClasses.add(cls);
                     } // if
                 } // for

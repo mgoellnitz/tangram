@@ -70,7 +70,7 @@ public class NucleusContentTest extends BaseContentTest {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 17;
+        return 16;
     }
 
 
