@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,10 @@ package org.tangram.nucleus;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.content.Content;
+import org.tangram.protection.Protection;
 
 /**
  * Abstract base class for the protected content core feature.
@@ -29,7 +32,8 @@ import org.tangram.content.Content;
  * can be delivered by the framework.
  *
  */
-public abstract class AbstractProtection extends NucleusContent implements org.tangram.protection.Protection {
+@PersistenceCapable
+public abstract class AbstractProtection extends NucleusContent implements Protection {
 
     /**
      * for compatibility reasons internally use String and map it to char[]
@@ -38,7 +42,8 @@ public abstract class AbstractProtection extends NucleusContent implements org.t
 
     private String protectionKey;
 
-    private List<Content> protectedContents;
+    @Join
+    private List<NucleusContent> protectedContents;
 
 
     public char[] getDescription() {
@@ -62,12 +67,13 @@ public abstract class AbstractProtection extends NucleusContent implements org.t
     }
 
 
-    public List<Content> getProtectedContent() {
+    @Override
+    public List<NucleusContent> getProtectedContents() {
         return protectedContents;
     }
 
 
-    public void setProtectedContent(List<Content> protectedContents) {
+    public void setProtectedContents(List<NucleusContent> protectedContents) {
         this.protectedContents = protectedContents;
     }
 

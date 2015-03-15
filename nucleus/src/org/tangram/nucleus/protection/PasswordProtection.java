@@ -22,6 +22,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.tangram.nucleus.AbstractProtection;
 import org.tangram.protection.SimplePasswordProtection;
 
 

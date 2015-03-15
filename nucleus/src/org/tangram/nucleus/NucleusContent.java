@@ -33,7 +33,7 @@ import org.tangram.jdo.JdoContent;
 
 @PersistenceCapable(identityType = IdentityType.DATASTORE)
 @DatastoreIdentity(strategy = IdGeneratorStrategy.INCREMENT)
-@Inheritance(strategy = InheritanceStrategy.NEW_TABLE, customStrategy = "complete-table")
+@Inheritance(strategy = InheritanceStrategy.COMPLETE_TABLE)
 public abstract class NucleusContent extends JdoContent {
 
     private static final Logger LOG = LoggerFactory.getLogger(NucleusContent.class);

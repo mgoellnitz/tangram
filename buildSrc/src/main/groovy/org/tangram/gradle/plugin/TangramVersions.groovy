@@ -56,7 +56,7 @@ public class TangramVersions {
   String guice = '4.0-beta5'
   String mycila_guice = '3.5.ga'
   
-  String jdo_api = 'javax.jdo:jdo-api:3.0.1'
+  String jdo_api = 'javax.jdo:jdo-api:3.1-rc1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
   
   String openjpa = '2.3.0'

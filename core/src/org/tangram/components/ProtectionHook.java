@@ -122,6 +122,7 @@ public class ProtectionHook implements ControllerHook {
     @Override
     public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+
         Protection protection = null;
         String loginResult = null;
         if (descriptor.bean instanceof ProtectedContent) {
@@ -158,9 +159,7 @@ public class ProtectionHook implements ControllerHook {
         } // if
 
         // save the results of our work for others - say templates - to use it
-        
         // TODO: May be we should pass the authentication service here?
-        
         // Setting login protection object
         model.put(Constants.ATTRIBUTE_PROTECTION, protection);
         // Setting login result
