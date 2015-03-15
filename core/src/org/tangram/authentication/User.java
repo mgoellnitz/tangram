@@ -26,9 +26,28 @@ package org.tangram.authentication;
  */
 public interface User {
 
+    /**
+     * Users might be resolved by different providers.
+     *
+     * @return provider ID
+     */
+    String getProvider();
+
+
+    /**
+     * Provide a unique ID for this user regardless of backends and providers.
+     *
+     * @return system wide unique ID
+     */
     String getId();
 
 
+    /**
+     * User might have a provider specific set of properties which can be accessed here.
+     * 
+     * @param name name of the property to request
+     * @return value of the named property or null
+     */
     Object getProperty(String name);
 
 } // User()

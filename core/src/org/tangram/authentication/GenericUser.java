@@ -32,15 +32,24 @@ public class GenericUser implements User, Serializable {
 
     private static final long serialVersionUID = 324847968531348468L;
 
+    private final String provider;
+
     private final String id;
-    
+
     private final Map<String, Object> properties;
 
 
-    public GenericUser(String provider, String username, Map<String, Object> attributes) {
-        id = provider+":"+username;
-        properties = attributes;
+    public GenericUser(String provider, String username, Map<String, Object> properties) {
+        this.provider = provider;
+        this.id = provider+":"+username;
+        this.properties = properties;
     } // ()
+
+
+    @Override
+    public String getProvider() {
+        return provider;
+    }
 
 
     @Override
