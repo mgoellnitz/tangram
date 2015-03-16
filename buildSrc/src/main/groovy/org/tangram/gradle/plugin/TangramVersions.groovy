@@ -33,7 +33,7 @@ public class TangramVersions {
   String slf4j = '1.7.10'
   String log4j = '1.2.17'
   String yui = '2.4.7'
-  String mockito = '1.10.8' // 1.10.14 available from jcenter()
+  String mockito = '1.10.19'
   String xstream = '1.4.7'
   String pac4j = '1.6.0'
   String tomcat = '7.0.57'
