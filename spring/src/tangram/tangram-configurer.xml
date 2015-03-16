@@ -73,6 +73,11 @@
   -->  
   <util:set id="allowedUsers" value-type="java.lang.String"/>
   
+  <util:map id="userIdAttributes" key-type="java.lang.String" value-type="java.lang.String">
+    <entry key="twitter" value="screen_name" />
+    <entry key="google" value="email" />
+  </util:map>
+      
   <util:set id="loginProviders" value-type="java.lang.String">
     <value>form</value>
     <value>basic</value>

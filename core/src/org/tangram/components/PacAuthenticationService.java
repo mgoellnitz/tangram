@@ -1,20 +1,20 @@
 /*
- * 
+ *
  * Copyright 2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.components;
 
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -31,6 +32,7 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.lang.StringUtils;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.context.J2EContext;
@@ -74,6 +76,11 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     @Named("loginProviders")
     @Resource(name = "loginProviders")
     private Set<String> loginProviders;
+
+    @Inject
+    @Named("userIdAttributes")
+    @Resource(name = "userIdAttributes")
+    private Map<String, String> userIdAttributes;
 
     @Inject
     @SuppressWarnings("rawtypes")
@@ -225,7 +232,9 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             LOG.info("callback() credentials: {}", credentials);
             UserProfile userProfile = client.getUserProfile(credentials, context);
             LOG.debug("callback() userProfile {}: {} ({})", userProfile.getId(), userProfile, request.getSession(false));
-            GenericUser user = new GenericUser(client.getName(), userProfile.getId(), userProfile.getAttributes());
+            String idAttribute = userIdAttributes.get(client.getName());
+            String userId = StringUtils.isEmpty(idAttribute) ? userProfile.getId() : ""+userProfile.getAttribute(idAttribute);
+            GenericUser user = new GenericUser(client.getName(), userId, userProfile.getAttributes());
             if (!users.contains(user)) {
                 users.add(user);
             } // if

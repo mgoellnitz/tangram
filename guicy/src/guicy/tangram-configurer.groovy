@@ -100,8 +100,14 @@ basicAuthClient.name='basic'
 basicAuthClient.usernamePasswordAuthenticator = authenticator
 module.addClient(basicAuthClient)
 
+log.info("configuring provider specific id attributes for external users")
+Map<String,String> mapping = new HashMap<>()
+mapping.put('twitter', 'screen_name')
+mapping.put('google', 'email')
+module.bind(module.stringStringMap).annotatedWith(Names.named("userIdAttributes")).toInstance(mapping)
+
 log.info("configuring authentication")
-AuthenticationService authenticationService = 
+AuthenticationService authenticationService =
 module.bind(AuthenticationService.class).toInstance(new PacAuthenticationService())
 
 log.info("configuring controller hooks")
