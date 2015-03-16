@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013-2014 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,9 +14,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
-package org.tangram.gradle.plugin;
+package org.tangram.gradle.plugin
 
 import org.gradle.api.Project
 import org.datanucleus.enhancer.DataNucleusEnhancer
@@ -25,23 +25,23 @@ import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.bundling.War
 import com.avaje.ebean.enhance.agent.Transformer
 import com.avaje.ebean.enhance.ant.OfflineFileTransform
-import org.eclipse.persistence.tools.weaving.jpa.StaticWeaveProcessor;
+import org.eclipse.persistence.tools.weaving.jpa.StaticWeaveProcessor
 
 
 /**
  * Utility class building the foundation of the tangram plugin.
- * The main utility functions for the hanlding of the needed oberlays and 
+ * The main utility functions for the hanlding of the needed oberlays and
  * the ORM frameworks are placed here.
  */
 class TangramUtilities {
 
   private Project project
-  
+
   public TangramUtilities(Project p) {
     project = p
-  } 
-    
-  
+  }
+
+
   /**
    * Helper methods to be used for conditional filtering of input files.
    * These filters only work with files - not e.g. with zip entries.
@@ -53,15 +53,15 @@ class TangramUtilities {
   public isJavaScript(input) {
     return (input.displayName.startsWith('file') && input.name.endsWith('.js'))
   }
-  
+
   /**
-   *  Extract all webarchives we depend on and leave out files we'd like to 
-   *  overwrite with local versions. Then copy JavaScript and CSS Codes and 
+   *  Extract all webarchives we depend on and leave out files we'd like to
+   *  overwrite with local versions. Then copy JavaScript and CSS Codes and
    *  try to minify them.
    */
   public overlayWebapp(War w) {
     Project p = w.project
-        
+
     // calculate all files in the local webapp dir for the exclusion from wars
     def exclusion = []
     def base=p.webAppDir.path.length()+1
@@ -69,7 +69,7 @@ class TangramUtilities {
     tree.each {
       exclusion.add(it.path.substring(base))
     }
-    
+
     // extract wars from the dependencies as project dependencies or file paths
     // and leave out the exclusions while adding them
     Object iter = p.configurations.webapp.dependencies.iterator()
@@ -84,7 +84,7 @@ class TangramUtilities {
         }
       } else {
         if (p.configurations.webapp.dependencies.size() > 0) {
-          String archiveFileName = archiveFileNames[i];
+          String archiveFileName = archiveFileNames[i]
           println "$project.name: path: $archiveFileName"
           int idx = archiveFileName.indexOf(';')
           if (idx >= 0) {
@@ -96,9 +96,9 @@ class TangramUtilities {
         } else {
           println "$project.name: ** WARNING: MISSING WAR TO ADD LOCAL FILES TO! **"
         } // if
-      } // if 
+      } // if
     } // while
-        
+
     w.eachFile {
       if(isCss(it)) {
         it.filter(org.tangram.gradle.plugin.CSSMinify)
@@ -109,7 +109,7 @@ class TangramUtilities {
     }
   } // overlayWebapp()
 
-  
+
   /**
    * Create a classloader from the projects compile dependencies and output path
    */
@@ -158,7 +158,7 @@ class TangramUtilities {
         project.fileTree(dir: it).each {
           if (it.name.endsWith(".class")) {
             fileList.add(it.canonicalPath)
-          } 
+          }
         }
       }
       project.sourceSets['test'].output.files.each {
@@ -167,7 +167,7 @@ class TangramUtilities {
         project.fileTree(dir: it).each {
           if (it.name.endsWith(".class")) {
             fileList.add(it.canonicalPath)
-          } 
+          }
         }
       }
       // Add compile classpath
@@ -180,10 +180,10 @@ class TangramUtilities {
         urlList.add(new URL(urlstring))
       }
       String[] filenames = fileList.toArray()
-      URL[] urls = urlList.toArray();      
+      URL[] urls = urlList.toArray()
       // Build classloader from path element URLs
       URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
-      
+
       // Instanciate enhancer and pass filename list
       DataNucleusEnhancer enhancer = new DataNucleusEnhancer(api)
       if (dir != null) {
@@ -194,16 +194,16 @@ class TangramUtilities {
       enhancer.addFiles(filenames)
       enhancer.setClassLoader(cl)
       // println "enhancing $filenames"
-      int numClasses = enhancer.enhance();
+      int numClasses = enhancer.enhance()
       println "$numClasses classes enhanced."
     } catch(Exception e) {
       println ''
-      e.printStackTrace(System.out);
+      e.printStackTrace(System.out)
       throw new GradleException('An error occurred enhancing persistence capable classes.', e)
     } // try/catch
   } // nucleusEnhance()
-  
-  
+
+
   /**
    *  Do JDO enhancement with datanucleus enhancer of classes from the
    *  callers javaCompile output set.
@@ -211,8 +211,8 @@ class TangramUtilities {
   public nucleusJdoEnhance() {
     nucleusEnhance("JDO", null)
   } // nucleusJdoEnhance()
-  
-  
+
+
   /**
    *  Do JPA enhancement with datanucleus enhancer of classes from the
    *  callers javaCompile output set.
@@ -220,8 +220,8 @@ class TangramUtilities {
   public nucleusJpaEnhance() {
     nucleusEnhance("JPA", null)
   } // nucleusJpaEnhance()
-  
-  
+
+
   /**
    *  Do JPA enhancement with datanucleus enhancer of classes from the
    *  callers javaCompile output set to the given target directory.
@@ -229,18 +229,18 @@ class TangramUtilities {
   public nucleusJpaEnhance(String dir) {
     nucleusEnhance("JPA", dir)
   } // nucleusJpaEnhance()
-  
-  
+
+
   /**
    * Call the OpenJPA Enhancer as an ant task. OpenJPA must be available
    * from the callers runtime classpath, which is the case for any project
    * using OpenJPA.
-   * 
+   *
    * The target directory parameter dir is optional. If present the enhanced
    * classes will be placed in the given directory otherwise the original
    * classes get overridden.
-   * 
-   * An optional persistence.xml can be placed in the subfolder META-INF folder 
+   *
+   * An optional persistence.xml can be placed in the subfolder META-INF folder
    * of an 'enhance/' folder in the project's root directory which then is only
    * used during the enhancement process. This helps when having multiple jars
    * with enhanced classes while only one of them may later contain the
@@ -263,8 +263,8 @@ class TangramUtilities {
       }
     } // if
   } // openjpaEnhance()
-  
-  
+
+
   /**
    * Call the EclipseLink Weaver for the callers classes before packaging a jar.
    * You may provide an output directory for the woven classes. If this parameter
@@ -273,7 +273,7 @@ class TangramUtilities {
   public eclipselinkWeave(String dir) {
     try {
       URLClassLoader cl = getClassLoader()
-      
+
       if (dir == null) {
         dir = project.sourceSets['main'].output.classesDir.canonicalPath
       } // if
@@ -294,45 +294,45 @@ class TangramUtilities {
       throw new GradleException('An error occurred weaving entity classes.', e)
     } // try/catch
   } // eclipselinkWeave()
-  
-  
+
+
   /**
    * Call the Ebean Enhancer as an ant task. Ebean must be available
    * from the callers runtime classpath.
    */
   public ebeanEnhance() {
     URLClassLoader cl = getClassLoader()
-    
-    String transformArgs = "debug=1"      
+
+    String transformArgs = "debug=1"
     Transformer t = new Transformer(project.configurations.compile.asPath, transformArgs)
-    
+
     String classSource = null
     project.sourceSets['main'].output.files.each {
       if (classSource == null) {
         classSource = it.absolutePath
       } // if
-    }    
+    }
     OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
     ft.process(null)
   } // ebeanEnhance()
-  
-  
+
+
   /**
-   * Call the Ebean Enhancer for the test classes of the caller as an ant task. 
+   * Call the Ebean Enhancer for the test classes of the caller as an ant task.
    * Ebean must be available from the callers runtime classpath.
    */
   public ebeanEnhanceTest() {
     URLClassLoader cl = getClassLoader()
-    
+
     String transformArgs = "debug=1"
     Transformer t = new Transformer(project.configurations.testCompile.asPath, transformArgs)
-    
+
     String classSource = null
     project.sourceSets['test'].output.files.each {
       if (classSource == null) {
         classSource = it.absolutePath
       } // if
-    }    
+    }
     OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
     ft.process(null)
   } // ebeanEnhanceTest()

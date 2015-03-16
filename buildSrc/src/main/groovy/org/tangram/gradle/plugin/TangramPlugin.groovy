@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013-2014 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.gradle.plugin;
 
@@ -23,7 +23,7 @@ import org.gradle.api.Project
 
 /**
  * Gradle plugin base module.
- * 
+ *
  * A plugin especially usefull for tangram projects but also for other
  * projects using JPA, JDO, or EBean
  */
@@ -33,9 +33,9 @@ class TangramPlugin implements Plugin<Project> {
     def utilities = new TangramUtilities(project)
     project.convention.plugins.utilities = utilities
     project.extensions.create('versions', TangramVersions)
-    
+
     project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.");
-    
+
     def cjIterator = project.getTasksByName('compileJava', true).iterator()
     if(cjIterator.hasNext()) {
       def compileJava = cjIterator.next();
@@ -64,19 +64,22 @@ class TangramPlugin implements Plugin<Project> {
           utilities.ebeanEnhance()
         }
       }
-      
-      def jar = project.getTasksByName('jar', true).iterator().next();
+
+      def jar = project.getTasksByName('jar', true).iterator().next()
       // jar.enabled = true
-      jar.doFirst { 
+      jar.doFirst {
         def jarPath = project.getConfigurations().getByName('runtime').asPath
         def persistenceAPI = ''
         def jpaBackend = ''
         if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
         if (jarPath.indexOf('org.eclipse.persistence.core') > 0) { jpaBackend = 'eclipselink' }
-        if (jarPath.indexOf('openjpa') > 0) { jpaBackend = 'openjpa' }
+        if (jarPath.indexOf('openjpa') > 0) {
+          persistenceAPI = 'jpa'
+          jpaBackend = 'openjpa'
+        }
         def byteCodeTransform = (persistenceAPI != 'jpa')
         if (jarPath.indexOf('-eclipselink.jar') > 0) { byteCodeTransform = true }
-        if (jarPath.indexOf('-openjpa.jar') > 0) { byteCodeTransform = true }  
+        if (jarPath.indexOf('-openjpa.jar') > 0) { byteCodeTransform = true }
         // println "API: $persistenceAPI"
         // println "JPA: $jpaBackend"
         // println "enhance: $byteCodeTransform"
@@ -94,14 +97,14 @@ class TangramPlugin implements Plugin<Project> {
         }
       }
     }
-    
+
     def warIterator = project.getTasksByName('war', true).iterator()
     if (warIterator.hasNext()) {
-      def war = warIterator.next();
+      def war = warIterator.next()
       war.doFirst() {
         utilities.overlayWebapp(war)
       }
     }
   } // apply()
-    
+
 } // TangramPlugin
