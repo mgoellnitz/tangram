@@ -540,12 +540,14 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @LinkAction("/import-text")
     public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
         return doImport(new StringReader(xmltext), request, response);
     } // contentImport()
 
 
     @LinkAction("/import")
     public TargetDescriptor contentImport(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
         return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request, response);
     } // contentImport()
@@ -556,6 +558,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (!authorizationService.isAdminUser(request, response)) {
             return authorizationService.getLoginTarget(request);
         } // if
+        request.setAttribute("editingHandler", this);
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
         response.setContentType(Constants.MIME_TYPE_HTML);
         response.setCharacterEncoding("UTF-8");
