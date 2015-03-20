@@ -138,6 +138,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     private Clients getClients(HttpServletRequest request, HttpServletResponse response) {
         synchronized (this) {
             if (clients==null) {
+                @SuppressWarnings("rawtypes")
                 List<Client> clientList = new ArrayList<>(clientSet);
                 String callbackUri = linkFactoryAggregator.createLink(request, response, this, "callback", null).getUrl();
                 String callbackUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+callbackUri;

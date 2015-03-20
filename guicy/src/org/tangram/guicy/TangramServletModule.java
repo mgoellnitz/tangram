@@ -82,6 +82,7 @@ public class TangramServletModule extends ServletModule {
 
     private Multibinder<ControllerHook> controllerHookBinder = null;
 
+    @SuppressWarnings("rawtypes")
     private Multibinder<Client> clientBinder = null;
 
     @SuppressWarnings("rawtypes")
