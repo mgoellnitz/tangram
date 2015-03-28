@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 import org.gradle.api.Project
 
@@ -25,23 +25,23 @@ allprojects {
   // our custom directory layout
   sourceSets {
     main {
-      java { 
+      java {
         srcDir 'src'
         exclude '**/*.properties'
         exclude '**/*.xml'
       }
-      resources { 
+      resources {
         srcDir 'src'
         exclude '**/*.java'
       }
     }
     test {
-      java { 
+      java {
         srcDir 'test'
         exclude '**/*.properties'
         exclude '**/*.xml'
       }
-      resources { 
+      resources {
         srcDir 'test'
         exclude '**/*.java'
       }
@@ -60,7 +60,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
@@ -68,7 +68,7 @@ buildscript {
 }
 
 repositories {
-  mavenCentral()
+  jcenter()
 }
 
 /**
@@ -89,7 +89,7 @@ public incrementBuildCounter(Project prj) {
     p.load(fis)
     fis.close()
   } catch (Exception e) {
-    // 
+    //
   } // try/catch
   p.setProperty('version.date', ""+(new Date()))
   p.setProperty('version.build', ""+(Integer.parseInt(p.getProperty('version.build', '0'))+1))
@@ -102,7 +102,7 @@ task jacocoCombinedReport(type: JacocoReport) {
   // Obtain execution data from subprojects
   executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
 
-  // Add all relevant sourcesets from the subprojects 
+  // Add all relevant sourcesets from the subprojects
   subprojects.each {
     sourceSets it.sourceSets.main
   }
