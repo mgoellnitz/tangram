@@ -31,6 +31,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.AbstractRequestParameterAccess;
 
 
@@ -47,7 +48,6 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
     /**
      * Weak visibility to avoid direct instanciation.
      */
-    @SuppressWarnings("unchecked")
     ServletRequestParameterAccess(HttpServletRequest request, long uploadFileMaxSize) {
         final String reqContentType = request.getContentType();
         LOG.debug("() uploadFileMaxSize={} request.contentType={}", uploadFileMaxSize, reqContentType);
@@ -82,7 +82,7 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                                 blobs.put(fieldName, bytes);
                             } // if
                         } catch (IOException ex) {
-                            LOG.error("()", ex);                             
+                            LOG.error("()", ex);
                             if (ex.getCause() instanceof FileUploadBase.FileSizeLimitExceededException) {
                                 throw new RuntimeException(ex.getCause().getMessage()); // NOPMD we want to lose parts of our stack trace!
                             } // if
@@ -93,7 +93,7 @@ public class ServletRequestParameterAccess extends AbstractRequestParameterAcces
                 LOG.error("()", ex);
             } // try/catch
         } else {
-            parameterMap = request.getParameterMap();
+            parameterMap = SystemUtils.convert(request.getParameterMap());
         } // if
     } // ServletRequestParameterAccess()
 

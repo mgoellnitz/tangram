@@ -38,6 +38,7 @@ import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.util.ClassResolver;
+import org.tangram.util.SystemUtils;
 
 
 public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory {
@@ -201,8 +202,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
             } // if
-            @SuppressWarnings("unchecked")
-            List<T> results = (List<T>) query.execute();
+            List<T> results = SystemUtils.convert(query.execute());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             for (T o : results) {
                 if (o instanceof BeanFactoryAware) {
@@ -231,8 +231,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             if (allClasses==null) {
                 allClasses = new ArrayList<>();
                 try {
-                    @SuppressWarnings("unchecked")
-                    List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
+                    List<String> classNames = SystemUtils.convert(startupCache.get(getClassNamesCacheKey(), List.class));
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<>();
@@ -289,7 +288,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @PostConstruct
-    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
         LOG.info("afterPropertiesSet() using overrides for persistence manager factory: {}", overrides);
@@ -301,7 +299,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             Collection<Class<? extends Content>> theClasses = getClasses();
             LOG.info("afterPropertiesSet() prefilling done for {}: {}", getBasePackages(), theClasses);
         } // if
-        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        Map<String, List<String>> c = SystemUtils.convert(startupCache.get(QUERY_CACHE_KEY, queryCache.getClass()));
         if (c!=null) {
             queryCache = c;
         } // if

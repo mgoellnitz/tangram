@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -61,7 +62,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // setDateFormat()
 
 
-    @SuppressWarnings("unchecked")
+    @Override
     public String getEditString(Object o) {
         try {
             if (o==null) {
@@ -142,8 +143,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
      * @return Matcher instance from given string and ID_PATTERN
      */
     private Matcher createIdMatcher(String idString) {
-        Pattern p = Pattern.compile(Constants.ID_PATTERN);
-        return p.matcher(idString);
+        return Pattern.compile(Constants.ID_PATTERN).matcher(idString);
     } // createidMatcher()
 
 
@@ -165,6 +165,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // getReferenceValue()
 
 
+    @Override
     public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
         if (valueString==null) {
             return null;
@@ -211,8 +212,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             } // for
             value = elements;
         } else if (Content.class.isAssignableFrom(cls)) {
-            @SuppressWarnings("unchecked")
-            Class<? extends Content> cc = (Class<? extends Content>) cls;
+            Class<? extends Content> cc = SystemUtils.convert(cls);
             Content referenceValue = getReferenceValue(cc, request, valueString);
             value = (client!=null)&&client.equals(referenceValue) ? null : referenceValue;
         } // if
@@ -220,6 +220,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // getStorableObject()
 
 
+    @Override
     public abstract boolean isBlobType(Class<?> cls);
 
 
@@ -229,12 +230,15 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
      * @param o
      * @return blob's size
      */
+    @Override
     public abstract long getBlobLength(Object o);
 
 
+    @Override
     public abstract boolean isTextType(Class<?> cls);
 
 
+    @Override
     public abstract Object createBlob(byte[] octets);
 
 } // AbstractPropertyConverter

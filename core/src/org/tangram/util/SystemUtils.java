@@ -136,4 +136,17 @@ public final class SystemUtils {
         return hexString.toString();
     } // getSha256Hash()
 
+
+    /**
+     * Small helper method to keep areas with suppressed warnings small.
+     *
+     * @param <T> intended type of result
+     * @param bean
+     * @return converted result
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T convert(Object bean) {
+        return (T) bean;
+    } // convert()
+
 } // SystemUtils

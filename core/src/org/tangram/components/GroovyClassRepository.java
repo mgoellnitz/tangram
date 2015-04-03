@@ -40,6 +40,7 @@ import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.logic.ClassRepository;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -72,9 +73,8 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     private GroovyClassLoader classLoader;
 
 
-    @SuppressWarnings("unchecked")
     protected void fillClasses() {
-        byteCodes = startupCache.get(BYTECODE_CACHE_KEY, Map.class);
+        byteCodes = SystemUtils.convert(startupCache.get(BYTECODE_CACHE_KEY, Map.class));
         if (classes!=null) {
             byteCodes = null;
         } // if
@@ -112,11 +112,11 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                         CompilationUnit cu = new CompilationUnit(classLoader);
                         cu.addSource(code.getKey()+".groovy", code.getValue());
                         cu.compile(Phases.CLASS_GENERATION);
-                        List<GroovyClass> classList = cu.getClasses();
+                        List<GroovyClass> classList = SystemUtils.convert(cu.getClasses());
                         if (classList.size()==1) {
                             GroovyClass groovyClass = classList.get(0);
                             byteCodes.put(groovyClass.getName(), groovyClass.getBytes());
-                            Class<? extends Object> clazz = classLoader.defineClass(groovyClass.getName(), groovyClass.getBytes());
+                            Class<? extends Object> clazz = SystemUtils.convert(classLoader.defineClass(groovyClass.getName(), groovyClass.getBytes()));
                             LOG.info("fillClasses() defining {}"+clazz.getName());
                             classes.put(clazz.getName(), clazz);
                         } // if
@@ -132,7 +132,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
         } else {
             for (Map.Entry<String, byte[]> byteCode : byteCodes.entrySet()) {
                 LOG.debug("fillClasses() defining {}", byteCode.getKey());
-                Class<? extends Object> clazz = classLoader.defineClass(byteCode.getKey(), byteCode.getValue());
+                Class<? extends Object> clazz = SystemUtils.convert(classLoader.defineClass(byteCode.getKey(), byteCode.getValue()));
                 classes.put(clazz.getName(), clazz);
             } // if
         } // if

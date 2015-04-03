@@ -40,6 +40,7 @@ import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
 import org.tangram.monitor.Statistics;
 import org.tangram.util.ClassResolver;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -238,14 +239,14 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * Be aware of different class loaders - like with groovy based classes.
      *
      * @param className fully qualified name of the class
+     * @param <T> content sub class described by given class name
      * @return resulting class or null if not possible (should never happen...)
      */
-    @SuppressWarnings("unchecked")
     protected <T extends Content> Class<T> getClassForName(String className) {
         Class<T> result = null;
         for (Class<? extends Content> c : getClasses()) {
             if (c.getName().equals(className)) {
-                result = (Class<T>) c;
+                result = SystemUtils.convert(c);
             } // if
         } // for
         if (result==null) {
@@ -371,11 +372,10 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String id) {
         if (activateCaching&&(cache.containsKey(id))) {
             statistics.increase("get bean cached");
-            return (T) cache.get(id);
+            return SystemUtils.convert(cache.get(id));
         } // if
         T result = null;
         try {
@@ -489,8 +489,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             result = new ArrayList<>();
             for (Class<? extends Content> cx : getClasses()) {
                 if (cls.isAssignableFrom(cx)) {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends T> c = (Class<? extends T>) cx;
+                    Class<? extends T> c = SystemUtils.convert(cx);
                     List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
                     result.addAll(beans);
                 } // if

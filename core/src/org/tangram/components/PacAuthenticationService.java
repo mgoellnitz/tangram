@@ -54,6 +54,7 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.TargetDescriptor;
 
 
@@ -166,7 +167,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             Object users = session.getAttribute(Constants.ATTRIBUTE_USERS);
             LOG.info("getUsers({}) users: {}", session.getId(), users);
             if (users!=null) {
-                result = (Set<User>) users;
+                result = SystemUtils.convert(users);
             } // if
         } // if
         return result;
@@ -219,14 +220,14 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     public TargetDescriptor callback(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.warn("callback()");
         HttpSession session = request.getSession(true);
-        Set<User> users = (Set<User>) session.getAttribute(Constants.ATTRIBUTE_USERS);
+        Set<User> users = SystemUtils.convert(session.getAttribute(Constants.ATTRIBUTE_USERS));
         LOG.info("callback() logged in users {}", users);
         if (users==null) {
             users = new HashSet<>();
             session.setAttribute(Constants.ATTRIBUTE_USERS, users);
         } // if
         WebContext context = new J2EContext(request, response);
-        final Client<Credentials, UserProfile> client = getClients(request, response).findClient(context);
+        final Client<Credentials, UserProfile> client = SystemUtils.convert(getClients(request, response).findClient(context));
         LOG.info("callback() client: {}", client);
         try {
             Credentials credentials = client.getCredentials(context);

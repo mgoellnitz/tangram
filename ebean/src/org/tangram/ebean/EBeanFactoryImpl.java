@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,6 +38,7 @@ import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.util.ClassResolver;
+import org.tangram.util.SystemUtils;
 
 
 @Named("beanFactory")
@@ -159,8 +160,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
             if (LOG.isInfoEnabled()) {
                 LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName+(queryString==null ? "" : " with condition "+queryString));
             } // if
-            @SuppressWarnings("unchecked")
-            List<T> results = query.findList();
+            List<T> results = SystemUtils.convert(query.findList());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             filterExactClass(cls, results, result);
             statistics.increase("list beans");
@@ -177,8 +177,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
             if (allClasses==null) {
                 allClasses = new ArrayList<>();
                 try {
-                    @SuppressWarnings("unchecked")
-                    List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
+                    List<String> classNames = SystemUtils.convert(startupCache.get(getClassNamesCacheKey(), List.class));
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<>();
@@ -197,8 +196,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
                     } else {
                         // re-fill runtimes caches from persistence startup cache
                         for (String beanClassName : classNames) {
-                            @SuppressWarnings("unchecked")
-                            Class<? extends Content> cls = (Class<? extends Content>) Class.forName(beanClassName);
+                            Class<? extends Content> cls = SystemUtils.convert(Class.forName(beanClassName));
                             LOG.info("getAllClasses() # {}", cls.getName());
                             allClasses.add(cls);
                         } // for
@@ -222,8 +220,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
         LOG.info("afterPropertiesSet() db platform: {}", serverConfig.getDatabasePlatform());
         LOG.info("afterPropertiesSet() DDL: {}/{}", serverConfig.isDdlGenerate(), serverConfig.isDdlRun());
 
-        @SuppressWarnings("unchecked")
-        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        Map<String, List<String>> c = SystemUtils.convert(startupCache.get(QUERY_CACHE_KEY, queryCache.getClass()));
         if (c!=null) {
             queryCache = c;
         } // if

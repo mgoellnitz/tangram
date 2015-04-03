@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.tangram.spring.StreamingMultipartResolver;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.AbstractRequestParameterAccess;
 
 
@@ -41,7 +42,6 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
     /**
      * Weak visibility to avoid direct instanciation.
      */
-    @SuppressWarnings("unchecked")
     SpringRequestParameterAccess(HttpServletRequest request) throws Exception {
         if (request instanceof DefaultMultipartHttpServletRequest) {
             DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;
@@ -68,7 +68,7 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
                 } // if
             } // for
         } // if
-        parameterMap = request.getParameterMap();
+        parameterMap = SystemUtils.convert(request.getParameterMap());
     } // SpringRequestParameterAccess()
 
 } // SpringRequestParameterAccess

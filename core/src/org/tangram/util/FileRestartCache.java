@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -59,7 +59,7 @@ public class FileRestartCache implements PersistentRestartCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> c) {
-        return cache==null ? null : (T) cache.get(key);
+        return cache==null ? null : (T)cache.get(key);
     } // get()
 
 
@@ -74,10 +74,8 @@ public class FileRestartCache implements PersistentRestartCache {
     public <T> void put(String key, T value) {
         if (cache!=null) {
             cache.put(key, value);
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
                 oos.writeObject(cache);
-                oos.close();
             } catch (IOException e) {
                 LOG.error("put()", e);
             } // try/catch
@@ -86,13 +84,10 @@ public class FileRestartCache implements PersistentRestartCache {
 
 
     @PostConstruct
-    @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
         LOG.info("afterPropertiesSet({})", filename);
-        try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
-            cache = (Map<String, Object>) (ois.readObject());
-            ois.close();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            cache = SystemUtils.convert(ois.readObject());
         } catch (Exception e) {
             LOG.warn("afterPropertiesSet() could not load cache '{}' starting with an empty set of values", filename);
             cache = new HashMap<>();

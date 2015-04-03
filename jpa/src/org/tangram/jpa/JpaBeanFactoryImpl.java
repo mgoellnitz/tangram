@@ -41,6 +41,7 @@ import org.tangram.content.TransientCode;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.util.ClassResolver;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -128,7 +129,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
-    public JpaContent getBean(String id) {
+    public Content getBean(String id) {
         return getBean(JpaContent.class, id);
     } // getBean()
 
@@ -191,8 +192,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
                 LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName
                         +(queryString==null ? "" : " with condition "+queryString));
             } // if
-            @SuppressWarnings("unchecked")
-            List<Object> results = query.getResultList();
+            List<Object> results = SystemUtils.convert(query.getResultList());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             filterExactClass(cls, results, result);
             statistics.increase("list beans");
@@ -209,8 +209,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
             if (allClasses==null) {
                 allClasses = new ArrayList<>();
                 try {
-                    @SuppressWarnings("unchecked")
-                    List<String> classNames = startupCache.get(getClassNamesCacheKey(), List.class);
+                    List<String> classNames = SystemUtils.convert(startupCache.get(getClassNamesCacheKey(), List.class));
                     if (classNames==null) {
                         ClassResolver resolver = new ClassResolver(getBasePackages());
                         classNames = new ArrayList<>();
@@ -253,7 +252,6 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
      *
      * intializes the queryCache from the startupCache if possible and re-calibrates the available entity list.
      */
-    @SuppressWarnings("unchecked")
     protected void initFactory() {
         LOG.info("initFactory() manager factory: {}", managerFactory.getClass().getName());
         LOG.info("initFactory() manager: {}", manager.getClass().getName());
@@ -270,7 +268,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 //        } else {
 //            LOG.warn("initFactory() not meta model");
 //        } // if
-        Map<String, List<String>> c = startupCache.get(QUERY_CACHE_KEY, queryCache.getClass());
+        Map<String, List<String>> c = SystemUtils.convert(startupCache.get(QUERY_CACHE_KEY, queryCache.getClass()));
         if (c!=null) {
             queryCache = c;
         } // if

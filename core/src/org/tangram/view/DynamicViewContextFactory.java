@@ -37,6 +37,7 @@ import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
 import org.tangram.logic.Shim;
 import org.tangram.logic.ViewShim;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -87,7 +88,6 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public void reset() {
         definedViewShims = new HashMap<>();
         definedBeanShims = new HashMap<>();
@@ -100,7 +100,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
                 try {
                     ParameterizedType pt = ((ParameterizedType) c.getGenericSuperclass());
                     Type[] actualTypes = pt.getActualTypeArguments();
-                    Class<Content> beanClass = (Class<Content>) (actualTypes[0]);
+                    Class<Content> beanClass = SystemUtils.convert(actualTypes[0]);
                     String className = c.getName();
                     if (ViewShim.class.isAssignableFrom(c)) {
                         LOG.info("reset() defining view shim {} for {}", className, beanClass.getName());

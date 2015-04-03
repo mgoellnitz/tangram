@@ -29,6 +29,7 @@ import net.sf.jsr107cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
+import org.tangram.util.SystemUtils;
 
 
 @Named
@@ -42,11 +43,10 @@ public class GaeCacheAdapter implements PersistentRestartCache {
     private Map<String, Object> jsrCache = null;
 
 
-    @SuppressWarnings("unchecked")
     public GaeCacheAdapter() {
         try {
             CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
-            jsrCache = cacheFactory.createCache(Collections.emptyMap());
+            jsrCache = SystemUtils.convert(cacheFactory.createCache(Collections.emptyMap()));
             LOG.info("() jsrCache={}", jsrCache);
         } catch (CacheException ce) {
             LOG.error("()", ce);

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,6 +37,7 @@ import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.content.TransientCode;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -71,12 +72,11 @@ public class CodeResourceCache implements BeanListener {
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public void reset() {
         List<CodeResource> resources = null;
         if (resourceCache==null) {
             // just started
-            resources = startupCache.get(CODE_RESOURCE_CACHE_KEY, List.class);
+            resources = SystemUtils.convert(startupCache.get(CODE_RESOURCE_CACHE_KEY, List.class));
             LOG.info("reset() cache: {}", resources);
         } // if
         if (resources==null) {

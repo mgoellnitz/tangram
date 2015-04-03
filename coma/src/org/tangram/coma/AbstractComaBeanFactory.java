@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.util.SystemUtils;
 
 
 public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
@@ -141,9 +142,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Content> T getBean(Class<T> cls, String id) {
-        return (T) getBean(id);
+        return SystemUtils.convert(getBean(id));
     } // getBeanForUpdate()
 
 

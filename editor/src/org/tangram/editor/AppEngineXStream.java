@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -93,6 +93,7 @@ public class AppEngineXStream extends XStream {
         }
 
 
+        @SuppressWarnings("deprecation")
         private boolean myIsSerializable(final Class<?> type) {
             // LOG.warn("myIsSerializable() "+type.getName());
             if (type!=null) {

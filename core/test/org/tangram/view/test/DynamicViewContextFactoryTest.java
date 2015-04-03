@@ -29,6 +29,7 @@ import org.tangram.content.test.BeanClass;
 import org.tangram.logic.Shim;
 import org.tangram.logic.test.BeanShim;
 import org.tangram.logic.test.ViewShim;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.DynamicViewContextFactory;
 import org.tangram.view.ViewContext;
 
@@ -37,12 +38,11 @@ public class DynamicViewContextFactoryTest {
 
     private class TestFactory extends DynamicViewContextFactory {
 
-        @SuppressWarnings("unchecked")
         @Override
         public void afterPropertiesSet() {
             super.afterPropertiesSet();
-            Constructor<Shim> beanShim = (Constructor<Shim>) BeanShim.class.getConstructors()[0];
-            Constructor<Shim> viewShim = (Constructor<Shim>) ViewShim.class.getConstructors()[0];
+            Constructor<Shim> beanShim = SystemUtils.convert(BeanShim.class.getConstructors()[0]);
+            Constructor<Shim> viewShim = SystemUtils.convert(ViewShim.class.getConstructors()[0]);
             this.defineBeanShim(BeanClass.class, beanShim);
             this.defineViewShim(BeanClass.class, viewShim);
         } // afterPropertiesSet()
