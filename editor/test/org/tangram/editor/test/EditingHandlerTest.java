@@ -18,11 +18,11 @@
  */
 package org.tangram.editor.test;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.components.editor.EditingHandler;
 import org.tangram.content.Content;
 import org.tangram.link.Link;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class EditingHandlerTest {
@@ -51,14 +51,14 @@ public class EditingHandlerTest {
 
         for (String a : EditingHandler.PARAMETER_ACTIONS) {
             Link link = handler.createLink(null, null, handler, a, null);
-            Assert.assertNotNull("generation of "+a+" action link failed", link);
-            Assert.assertEquals("generation of "+a+" action link with strange result", "/"+a, link.getUrl());
+            Assert.assertNotNull(link, "generation of "+a+" action link failed");
+            Assert.assertEquals(link.getUrl(), "/"+a, "generation of "+a+" action link with strange result");
         } // for
 
         for (String a : EditingHandler.ID_URL_ACTIONS) {
             Link link = handler.createLink(null, null, c, a, null);
-            Assert.assertNotNull("generation of "+a+" action link failed", link);
-            Assert.assertEquals("generation of "+a+" action link with strange result", "/"+a+"/id_"+DUMMY_ID, link.getUrl());
+            Assert.assertNotNull(link, "generation of "+a+" action link failed");
+            Assert.assertEquals(link.getUrl(), "/"+a+"/id_"+DUMMY_ID, "generation of "+a+" action link with strange result");
         } // for
     } // testUrlGeneration()
 

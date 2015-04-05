@@ -20,8 +20,6 @@ package org.tangram.view.test;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.Constants;
@@ -32,6 +30,8 @@ import org.tangram.logic.test.ViewShim;
 import org.tangram.util.SystemUtils;
 import org.tangram.view.DynamicViewContextFactory;
 import org.tangram.view.ViewContext;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class DynamicViewContextFactoryTest {
@@ -60,10 +60,10 @@ public class DynamicViewContextFactoryTest {
         BeanClass bean = new BeanClass();
 
         Map<String, Object> shims = factory.getShims(request, bean);
-        Assert.assertEquals("Expected no shims at all", 2, shims.size());
+        Assert.assertEquals(shims.size(), 2, "Expected no shims at all");
         ViewContext viewContext = factory.createViewContext(bean, request, response);
-        Assert.assertEquals("Null view expected", Constants.DEFAULT_VIEW, viewContext.getViewName());
-        Assert.assertEquals("Unexpected number of beans in model", 6, viewContext.getModel().size());
+        Assert.assertEquals(viewContext.getViewName(), Constants.DEFAULT_VIEW, "Null view expected");
+        Assert.assertEquals(viewContext.getModel().size(), 6, "Unexpected number of beans in model");
     } // testViewContextCreation()
 
 } // DynamicViewContextFactoryTest

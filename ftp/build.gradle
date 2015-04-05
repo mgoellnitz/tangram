@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,16 +14,16 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 apply from: '../lib.gradle'
 
 dependencies {
   compile project (':tangram-mutable')
-  
+
   compile "org.mockftpserver:MockFtpServer:2.4"
 
-  testCompile "junit:junit:$versions.junit"
+  testCompile "org.testng:testng:$versions.testng"
   // bean wire up for test cases is done via dinistiq
   testCompile "dinistiq:dinistiq:$versions.dinistiq"
   // dinistiq logging at debug level through special log4j.properties
@@ -31,7 +31,7 @@ dependencies {
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-dinistiq')
   testCompile project (':tangram-jpa')
-  
+
   testCompile project (':tangram-mutable').sourceSets.test.output
   testCompile "org.springframework:spring-core:$versions.testspring"
   testCompile "org.springframework:spring-test:$versions.testspring"

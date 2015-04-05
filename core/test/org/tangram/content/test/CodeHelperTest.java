@@ -18,28 +18,28 @@
  */
 package org.tangram.content.test;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.content.CodeHelper;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class CodeHelperTest {
 
     @Test
     public void testCodeHelper() {
-        Assert.assertEquals("Folder for html templates is velocity", "velocity", CodeHelper.getFolder("text/html"));
-        Assert.assertEquals("Folder for xml templates is velocity-xml", "velocity-xml", CodeHelper.getFolder("application/xml"));
-        Assert.assertEquals("Folder for css files is css", "css", CodeHelper.getFolder("text/css"));
-        Assert.assertEquals("Folder for JavaScript files is js", "js", CodeHelper.getFolder("application/javascript"));
-        Assert.assertEquals("Folder for groovy code is groovy", "groovy", CodeHelper.getFolder("application/x-groovy"));
-        Assert.assertEquals("Extension for velocity templates is vtl", ".vtl", CodeHelper.getExtension("text/html"));
-        Assert.assertEquals("Extension for velocity templates is vtl", ".vtl", CodeHelper.getExtension("application/xml"));
-        Assert.assertEquals("Extension for css files is css", ".css", CodeHelper.getExtension("text/css"));
-        Assert.assertEquals("Extension for JavaScript files is js", ".js", CodeHelper.getExtension("application/javascript"));
-        Assert.assertEquals("Folder for groovy code is groovy", ".groovy", CodeHelper.getExtension("application/x-groovy"));
-        Assert.assertEquals("MimeType for folder css is text/css", "text/css", CodeHelper.getMimetype("css"));
-        Assert.assertEquals("Annotation for css file is its filename without extension", "screen", CodeHelper.getAnnotation("screen.css.new"));
-        Assert.assertEquals("Annotation for groovy code is its filename without extension", "org.tangram.example.TestClass", CodeHelper.getAnnotation("org.tangram.example.TestClass.groovy.old"));
+        Assert.assertEquals("velocity", CodeHelper.getFolder("text/html"), "Folder for html templates is velocity");
+        Assert.assertEquals("velocity-xml", CodeHelper.getFolder("application/xml"), "Folder for xml templates is velocity-xml");
+        Assert.assertEquals("css", CodeHelper.getFolder("text/css"), "Folder for css files is css");
+        Assert.assertEquals("js", CodeHelper.getFolder("application/javascript"), "Folder for JavaScript files is js");
+        Assert.assertEquals("groovy", CodeHelper.getFolder("application/x-groovy"), "Folder for groovy code is groovy");
+        Assert.assertEquals(".vtl", CodeHelper.getExtension("text/html"), "Extension for velocity templates is vtl");
+        Assert.assertEquals(".vtl", CodeHelper.getExtension("application/xml"), "Extension for velocity templates is vtl");
+        Assert.assertEquals(".css", CodeHelper.getExtension("text/css"), "Extension for css files is css");
+        Assert.assertEquals(".js", CodeHelper.getExtension("application/javascript"), "Extension for JavaScript files is js");
+        Assert.assertEquals(".groovy", CodeHelper.getExtension("application/x-groovy"), "Folder for groovy code is groovy");
+        Assert.assertEquals("text/css", CodeHelper.getMimetype("css"), "MimeType for folder css is text/css");
+        Assert.assertEquals("screen", CodeHelper.getAnnotation("screen.css.new"), "Annotation for css file is its filename without extension");
+        Assert.assertEquals("org.tangram.example.TestClass", CodeHelper.getAnnotation("org.tangram.example.TestClass.groovy.old"), "Annotation for groovy code is its filename without extension");
     } // testJavaBean()
 
 } // CodeHelperTest

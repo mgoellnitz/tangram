@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,11 +19,11 @@
 package org.tangram.content.test;
 
 import java.io.InputStream;
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class TransientCodeTest {
@@ -76,11 +76,11 @@ public class TransientCodeTest {
         };
         TransientCode t = new TransientCode(c);
         TransientCode tc = new TransientCode("screen", "text/css", "CodeResource:2", "// empty css");
-        Assert.assertEquals("id", "CodeResource:12", t.getId());
-        Assert.assertEquals("mime type", "text/html", t.getMimeType());
-        Assert.assertEquals("annotation", "org.tangram.example.Topic.name", t.getAnnotation());
-        Assert.assertEquals("id", 13, t.getSize());
-        Assert.assertEquals("toString for empty css", "screen (text/css)", tc.toString());
+        Assert.assertEquals(t.getId(), "CodeResource:12", "id");
+        Assert.assertEquals(t.getMimeType(), "text/html", "mime type");
+        Assert.assertEquals(t.getAnnotation(), "org.tangram.example.Topic.name", "annotation");
+        Assert.assertEquals(t.getSize(), 13, "size");
+        Assert.assertEquals(tc.toString(), "screen (text/css)", "toString() to empty css");
     } // testTransientCode()
 
 } // TransientCodeTest

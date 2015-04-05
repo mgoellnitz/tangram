@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,14 +14,14 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 apply from: '../lib.gradle'
 
 dependencies {
   compile project (':tangram-core')
-  
-  compile "org.springframework:spring-beans:$versions.springframework"  
+
+  compile "org.springframework:spring-beans:$versions.springframework"
   compile ("org.springframework:spring-core:$versions.springframework") {
     exclude group: 'commons-logging'
   }
@@ -31,6 +31,6 @@ dependencies {
   compile "org.springframework:spring-expression:$versions.springframework"
   compile "org.springframework:spring-web:$versions.springframework"
   compile "org.springframework:spring-webmvc:$versions.springframework"
-  
-  testCompile "junit:junit:$versions.junit"
+
+  testCompile "org.testng:testng:$versions.testng"
 }

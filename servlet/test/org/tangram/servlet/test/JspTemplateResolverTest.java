@@ -1,7 +1,7 @@
 /*
- * 
- * Copyright 2014 Martin Goellnitz
- * 
+ *
+ * Copyright 2014-2015 Martin Goellnitz
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.servlet.test;
 
@@ -26,14 +26,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletContext;
-import org.junit.Assert;
-import org.junit.Test;
 import org.mockito.Mockito;
 import org.tangram.Constants;
 import org.tangram.components.SimpleStatistics;
 import org.tangram.content.BeanFactory;
 import org.tangram.monitor.Statistics;
 import org.tangram.servlet.JspTemplateResolver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 /**
@@ -54,15 +54,15 @@ public class JspTemplateResolverTest {
             packages.add(SimpleStatistics.class.getPackage().getName());
             Dinistiq d = new Dinistiq(packages, initialBeans);
             JspTemplateResolver jspTemplateResolver = d.findBean(JspTemplateResolver.class);
-            Assert.assertNotNull("Have no JSP template resolver to test", jspTemplateResolver);
+            Assert.assertNotNull(jspTemplateResolver, "Have no JSP template resolver to test");
             Map<String, Object> model = new HashMap<>();
             Statistics statistics = d.findBean(Statistics.class);
-            Assert.assertNotNull("Have no object to lookup template for", jspTemplateResolver);
+            Assert.assertNotNull(jspTemplateResolver, "Have no object to lookup template for");
             model.put(Constants.THIS, statistics);
             String template = jspTemplateResolver.resolveTemplate("test", model, Locale.GERMANY);
-            Assert.assertEquals("There should be a template called test.jsp", "/WEB-INF/view/jsp/org.tangram.monitor/Statistics.test.jsp", template);
+            Assert.assertEquals(template, "/WEB-INF/view/jsp/org.tangram.monitor/Statistics.test.jsp", "There should be a template called test.jsp");
             String noTemplate = jspTemplateResolver.resolveTemplate("fail", model, Locale.GERMANY);
-            Assert.assertNull("There should be not template", noTemplate);
+            Assert.assertNull(noTemplate, "There should be not template");
         } catch (Exception ex) {
             Assert.fail(ex.getMessage());
         } // try/catch

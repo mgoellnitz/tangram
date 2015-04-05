@@ -20,19 +20,16 @@ package org.tangram.jpa.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JpaContentTest extends BaseContentTest {
 
     static {
@@ -76,7 +73,7 @@ public class JpaContentTest extends BaseContentTest {
     protected int getNumberOfClasses() {
         return 4;
     }
-    
+
     /**
      * Dummy test so that this test class contains at least one test.
      */

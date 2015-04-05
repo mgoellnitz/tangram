@@ -21,9 +21,9 @@ package org.tangram.ftp.test;
 import dinistiq.Dinistiq;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.components.ftp.FtpDirectory;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class FtpDirectoryTest {
@@ -34,7 +34,7 @@ public class FtpDirectoryTest {
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages);
         FtpDirectory ftp = dinistiq.findBean(FtpDirectory.class);
-        Assert.assertNotNull("Could not find ftp directory instance", ftp);
+        Assert.assertNotNull(ftp, "Could not find ftp directory instance");
     } // testFtpComponent()
 
 } // FtpDirectoryTest

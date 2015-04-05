@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -9,12 +9,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.FileCopyDetails
@@ -35,11 +35,11 @@ apply plugin: 'download-task'
 
 dependencies {
   compile project(':tangram-mutable')
-  
+
   compile "com.thoughtworks.xstream:xstream:$versions.xstream"
 
-  testCompile "junit:junit:$versions.junit"
-  
+  testCompile "org.testng:testng:$versions.testng"
+
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
 }
@@ -48,7 +48,7 @@ war.doFirst {
   String ckeditorBase = "ckeditor_${versions.ckeditor}"
   if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
     String ckeditor = "${ckeditorBase}_standard.zip"
-    def ckeditorFile = new File("$ckeditor") 
+    def ckeditorFile = new File("$ckeditor")
     if (!ckeditorFile.exists()) {
       String ckeditorUrl = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%20${versions.ckeditor}/${ckeditor}"
       download {
@@ -69,7 +69,7 @@ war.doFirst {
 
   def codemirrorBase="codemirror-${versions.codemirror}"
   if (!(new File("$projectDir/expanded/$codemirrorBase").exists())) {
-    def codemirrorFile = new File("${codemirrorBase}.zip") 
+    def codemirrorFile = new File("${codemirrorBase}.zip")
     if (!codemirrorFile.exists()) {
       download {
         src "http://codemirror.net/${codemirrorBase}.zip"

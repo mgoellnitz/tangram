@@ -22,8 +22,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.ebean.Code;
 import org.tangram.ebean.test.content.BaseClass;
 import org.tangram.ebean.test.content.SubClass;
@@ -31,6 +29,8 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class EbeanContentTest extends BaseContentTest {
@@ -94,10 +94,10 @@ public class EbeanContentTest extends BaseContentTest {
     /**
      * From time to time we ran into the problem that classes didn't get enhanced correctly
      */
-    @Test
+    @Test(priority = 0)
     public void test0IsEnhanced() {
         Method[] methods = Code.class.getMethods();
-        Assert.assertTrue("Classes not enhanced", checkMethodPrefixOccurs(methods, "_ebean"));
+        Assert.assertTrue(checkMethodPrefixOccurs(methods, "_ebean"), "Classes not enhanced");
     } // test0IsEnhanced()
 
 } // EbeanContentTest

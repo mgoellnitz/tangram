@@ -20,10 +20,6 @@ package org.tangram.nucleus.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
@@ -31,6 +27,8 @@ import org.tangram.mutable.test.content.SubInterface;
 import org.tangram.nucleus.NucleusContent;
 import org.tangram.nucleus.test.content.BaseClass;
 import org.tangram.nucleus.test.content.SubClass;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 /**
@@ -39,7 +37,6 @@ import org.tangram.nucleus.test.content.SubClass;
  * We need a test order to have enhanced classes first, then create some content, and the test this content in
  * a separate test "session".
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NucleusContentTest extends BaseContentTest {
 
     @Override
@@ -80,9 +77,9 @@ public class NucleusContentTest extends BaseContentTest {
     }
 
 
-    @Test
+    @Test(priority = 0)
     public void test0IsEnhanced() {
-        Assert.assertTrue("Classes not enhanced", checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "jdo"));
+        Assert.assertTrue(checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "jdo"), "Classes not enhanced");
     } // test1IsEnhanced()
 
 
@@ -90,8 +87,8 @@ public class NucleusContentTest extends BaseContentTest {
     public void testStringConversion() throws Exception {
         SubClass subBean = new SubClass();
         String testString = "justateststringtouseforconversiontesting";
-        Assert.assertEquals("Nucleus specific conversion methods failed", testString, subBean.checkConversion(testString));
-        Assert.assertNull("Nucleus specific conversion methods failed", subBean.checkConversion(null));
+        Assert.assertEquals(subBean.checkConversion(testString), testString, "Nucleus specific conversion methods failed");
+        Assert.assertNull(subBean.checkConversion(null), "Nucleus specific conversion methods failed");
     } // testStringConversion()
 
 } // NucleusContentTest

@@ -28,20 +28,21 @@ public class TangramVersions {
   String lombok = '1.16.2'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.3.11' // 2.4.2
+  String groovy = '2.3.11' // 2.4.3
   String velocity = '1.7'
-  String slf4j = '1.7.10'
+  String slf4j = '1.7.12'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
-  String pac4j = '1.6.0'
+  String pac4j = '1.7.0'
   String tomcat = '7.0.59'
-  String codemirror = '5.0'
+  String codemirror = '5.1'
   String ckeditor = '4.4.7'
 
   // For testing purposes
   String junit = '4.12'
+  String testng = '6.8.21'
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
@@ -50,8 +51,8 @@ public class TangramVersions {
   String springframework = '4.1.5.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
 
-  String weld = '2.2.9.Final'
-  String openwebbeans = '1.2.6'
+  String weld = '2.2.10.Final'
+  String openwebbeans = '1.2.7'
 
   String guice = '4.0-beta5'
   String mycila_guice = '3.5.ga'

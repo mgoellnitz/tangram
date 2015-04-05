@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,40 +19,40 @@
 package org.tangram.util.test;
 
 import java.beans.IntrospectionException;
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.util.JavaBean;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class JavaBeanTest {
-    
+
     public static final String PROPERTY_NAME = "value";
-    
+
     public static final String STRING_VALUE = "Hallo";
-    
-    
+
+
     private class TestBean {
-        
+
         private String value;
-        
-        
+
+
         public String getValue() {
             return value;
         }
-        
-        
+
+
         public void setValue(String value) {
             this.value = value;
         }
-        
+
 
         public String getStuff() {
             return "stuff";
         }
-        
+
     } // TestBean
 
-    
+
     @Test
     public void testJavaBean() {
         JavaBean jb = null;
@@ -61,16 +61,16 @@ public class JavaBeanTest {
         } catch (IntrospectionException ie) {
             Assert.fail("Introspection failed.");
         } // try/catch
-        Assert.assertNotNull("JavaBean should be instanciatable", jb);
-        Assert.assertNull("property value should be null", jb.get(PROPERTY_NAME));
-        Assert.assertTrue("property 'value' should be available", jb.propertyNames().contains(PROPERTY_NAME));
-        Assert.assertTrue("property 'value' should be readable", jb.isReadable(PROPERTY_NAME));
-        Assert.assertTrue("property 'value' should be writable", jb.isWritable(PROPERTY_NAME));
-        Assert.assertTrue("property 'stuff' should be readable", jb.isReadable("stuff"));
-        Assert.assertFalse("property 'stuff' should not be writable", jb.isWritable("stuff"));
-        Assert.assertFalse("Unavailable property value should not be readable", jb.isReadable("test"));
+        Assert.assertNotNull(jb, "JavaBean should be instanciatable");
+        Assert.assertNull(jb.get(PROPERTY_NAME), "property value should be null");
+        Assert.assertTrue(jb.propertyNames().contains(PROPERTY_NAME), "property 'value' should be available");
+        Assert.assertTrue(jb.isReadable(PROPERTY_NAME), "property 'value' should be readable");
+        Assert.assertTrue(jb.isWritable(PROPERTY_NAME), "property 'value' should be writable");
+        Assert.assertTrue(jb.isReadable("stuff"), "property 'stuff' should be readable");
+        Assert.assertFalse(jb.isWritable("stuff"), "property 'stuff' should not be writable");
+        Assert.assertFalse(jb.isReadable("test"), "Unavailable property value should not be readable");
         jb.set(PROPERTY_NAME, STRING_VALUE);
-        Assert.assertEquals("Property 'value' should be of type String", String.class, jb.getType(PROPERTY_NAME));
+        Assert.assertEquals(jb.getType(PROPERTY_NAME), String.class, "Property 'value' should be of type String");
         // TODO: exceptions occur
         // Assert.assertEquals("Property value should meet the value set previously", STRING_VALUE, jb.get(PROPERTY_NAME));
     } // testJavaBean()

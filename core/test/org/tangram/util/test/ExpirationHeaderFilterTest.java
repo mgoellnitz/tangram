@@ -24,11 +24,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.junit.Assert;
-import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.util.ExpirationHeaderFilter;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class ExpirationHeaderFilterTest {
@@ -52,7 +52,7 @@ public class ExpirationHeaderFilterTest {
                 HttpServletResponse response = new MockHttpServletResponse();
                 Mockito.when(request.getRequestURI()).thenReturn(url);
                 filter.doFilter(request, response, chain);
-                Assert.assertEquals("Unexpected occurence of expiry header "+url, expected, response.containsHeader("Expires"));
+                Assert.assertEquals(response.containsHeader("Expires"), expected, "Unexpected occurence of expiry header "+url);
                 expected = true;
             } // for
         } catch (ServletException|IOException e) {

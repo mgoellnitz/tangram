@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,19 +14,19 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 apply from: '../webapp.gradle'
 
 configurations {
-  all*.exclude(group: 'rhino', module: 'js') 
+  all*.exclude(group: 'rhino', module: 'js')
 }
 
 dependencies {
-  compile "javax.servlet:jstl:1.1.2"  
+  compile "javax.servlet:jstl:1.1.2"
   compile "taglibs:standard:1.1.2"
   compile "javax.inject:javax.inject:1"
-  
+
   compile "org.slf4j:slf4j-api:$versions.slf4j"
   // Nice to have for some pac4j implementations
   runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
@@ -44,18 +44,18 @@ dependencies {
   compile("com.yahoo.platform.yui:yuicompressor:$versions.yui") {
     exclude module: 'js'
   }
-  
+
   compile "org.pac4j:pac4j-core:$versions.pac4j"
   compile "org.pac4j:pac4j-http:$versions.pac4j"
   compile "org.pac4j:pac4j-oauth:$versions.pac4j"
-  
-  testCompile "junit:junit:$versions.junit"
+
+  testCompile "org.testng:testng:$versions.testng"
   // logging at debug level through special log4j.properties for tests
   testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
   testCompile "org.mockito:mockito-all:$versions.mockito"
   testCompile "org.springframework:spring-core:$versions.testspring"
   testCompile "org.springframework:spring-test:$versions.testspring"
-  
+
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
 }

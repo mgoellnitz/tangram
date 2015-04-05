@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,13 +19,13 @@
 package org.tangram.components.test;
 
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 import org.tangram.components.SimpleStatistics;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class SimpleStatisticsTest {
-    
+
     @Test
     public void testSimpleStatistics() {
         SimpleStatistics s = new SimpleStatistics();
@@ -35,8 +35,8 @@ public class SimpleStatisticsTest {
         s.avg("avg", 4);
         s.avg("avg", 6);
         Map<String, Long> counter = s.getCounter();
-        Assert.assertEquals("we tried to count two events", 2, (long)counter.get("test"));
-        Assert.assertEquals("average value should be 4", 4, (long)counter.get("avg"));
+        Assert.assertEquals((long) counter.get("test"), 2, "we tried to count two events");
+        Assert.assertEquals((long) counter.get("avg"), 4, "average value should be 4");
     } // testSimpleStatistics()
 
 } // SimpleStatisticsTest

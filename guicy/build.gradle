@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 apply from: '../lib.gradle'
 
@@ -27,13 +27,13 @@ dependencies {
   // interfere with a slf4j-jul logging as slf4j implementation,
   // so add this in your project directly if appropriate.
   // runtime "org.slf4j:jul-to-slf4j:$versions.slf4j"
-  
+
   compile ("com.mycila.guice.extensions:mycila-guice-jsr250:$versions.mycila_guice") {
     exclude module: 'sisu-guice'
   }
-  
-  testCompile "junit:junit:$versions.junit"
-  
+
+  testCompile "org.testng:testng:$versions.testng"
+
   // Redundancy to keep groovy google guice init script compilation in netbeans calm.
   providedCompile project (':tangram-servlet')
 }
