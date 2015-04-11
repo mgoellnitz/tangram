@@ -16,9 +16,10 @@
  */
 package org.tangram.ebean;
 
-import javax.persistence.Entity;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import org.tangram.content.Content;
 
 
@@ -27,7 +28,8 @@ import org.tangram.content.Content;
  *
  * Sad enough ebean only seems to support single table inhertance strategy.
  */
-@Entity
+@MappedSuperclass
+@DiscriminatorColumn(name = "TANGRAM_TYPE")
 public abstract class EContent implements Content {
 
     @Id

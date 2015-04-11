@@ -157,9 +157,8 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
             } // if
             // TODO: How to use query string
             // Default is no ordering - not even via IDs
-            if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName+(queryString==null ? "" : " with condition "+queryString));
-            } // if
+            LOG.info("listBeansOfExactClass() looking up instances of {}{}", shortTypeName, (queryString==null ? "" : " with condition "+queryString));
+            LOG.info("listBeansOfExactClass() ebean query object is {} ", query);
             List<T> results = SystemUtils.convert(query.findList());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             filterExactClass(cls, results, result);

@@ -19,7 +19,10 @@
 package org.tangram.ebean.test.content;
 
 import java.util.List;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import org.tangram.ebean.EContent;
 import org.tangram.mutable.test.content.BaseInterface;
 
@@ -27,6 +30,8 @@ import org.tangram.mutable.test.content.BaseInterface;
  * Persistent bean class just for test purposes.
  */
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorValue("BaseClass")
 public class BaseClass extends EContent implements BaseInterface {
 
     private String title;

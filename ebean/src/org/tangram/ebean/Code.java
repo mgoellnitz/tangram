@@ -21,14 +21,18 @@ package org.tangram.ebean;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
 
 
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorValue("Code")
 public final class Code extends EContent implements MutableCode {
 
     private String annotation;
@@ -38,9 +42,9 @@ public final class Code extends EContent implements MutableCode {
     @Column(length = 32000)
     private char[] code;
 
-    @ManyToOne
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    private EContent codeOf; // For any item refering this code - the ebean orm uses this
+//    @ManyToOne
+//    @SuppressWarnings("PMD.UnusedPrivateField")
+//    private EContent codeOf; // For any item refering this code - the ebean orm uses this
 
     @Override
     public String getAnnotation() {

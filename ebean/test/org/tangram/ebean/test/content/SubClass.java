@@ -18,7 +18,10 @@
  */
 package org.tangram.ebean.test.content;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import org.tangram.mutable.test.content.SubInterface;
 
 
@@ -26,6 +29,8 @@ import org.tangram.mutable.test.content.SubInterface;
  * Persistent bean sub class just for test purposes.
  */
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorValue("SubClass")
 public class SubClass extends BaseClass implements SubInterface {
 
     private String subtitle;
