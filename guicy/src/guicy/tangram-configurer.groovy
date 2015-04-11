@@ -178,6 +178,7 @@ module.serveRegex("\\"+dispatcherPath+"\\/id_([A-Z][a-zA-Z]+:[0-9]+)").with(tang
 log.info("configuring meta servlet");
 MetaServlet tangramMetaServlet = new MetaServlet()
 module.serve(dispatcherPath+"/*").with(tangramMetaServlet)
+module.serve(dispatcherPath).with(tangramMetaServlet)
 
 log.info "done."
 println "tangram done."

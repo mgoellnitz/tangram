@@ -39,6 +39,7 @@ public class TangramMetaServlet extends MetaServlet implements RegisterableServl
     @Override
     public Set<String> getUriRegex() {
         Set<String> result = new HashSet<>();
+        result.add("");
         result.add("/.*");
         return result;
     } // getUriRegex()
