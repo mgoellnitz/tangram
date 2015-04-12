@@ -11,7 +11,7 @@
 <head>
 <title>Tangram - <cms:include bean="${self}" view="description"/>: ${designClass.simpleName}</title>
 <%@include file="../../../include/head-elements.jsp" %>
-<link rel="stylesheet" href="${prefix}/editor/codemirror/lib/codemirror.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="${cmprefix}/lib/codemirror.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
 <script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>

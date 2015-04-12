@@ -96,3 +96,41 @@ war.doFirst {
     exclude "**/mode/a*/**", "**/mode/cl*/**", "**/mode/e*/**", "**/mode/f*/**", "**/mode/gh*/**", "**/mode/ha*/**", "**/mode/id*/**", "**/mode/jad*/**", "**/mode/n*/**", "**/mode/pe*/**", "**/mode/r*/**", "**/mode/sli*/**", "**/mode/sql*/**", "**/mode/styl*/**", "**/mode/t*/**", "**/mode/veri*/**", "**/mode/xq*/**", "**/mode/y*/**", "**/mode/z*/**"
   }
 }
+
+// Editor war referencing components from the cloud
+task cloudWar(type: War, dependsOn: war) {
+  classifier = 'cloud'
+}
+
+cloudWar.doFirst() {
+  overlayWebapp(cloudWar)
+}
+
+cloudWar {
+  eachFile {
+    if(isCss(it)) {
+      it.filter(org.tangram.gradle.plugin.CSSMinify)
+    }
+    if(isJavaScript(it)) {
+      it.filter(org.tangram.gradle.plugin.JavaScriptMinify)
+    }
+  }
+  // This is a strange way to get one of the smallest jars as dependency
+  // included in the web archive since empty paths are not allowed here.
+  classpath = 'WEB-INF/lib/javax.inject-1.jar'
+  excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**', 'WEB-INF/view/jsp/org.tangram.content/*.edit.jsp' ]
+  into ('WEB-INF/view') {
+    from "$projectDir/cloud"
+  }
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifact cloudWar {
+        classifier 'cloud'
+        extension 'war'
+      }
+    }
+  }
+}
