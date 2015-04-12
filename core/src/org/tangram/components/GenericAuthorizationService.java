@@ -1,27 +1,25 @@
 /*
- * 
+ *
  * Copyright 2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 package org.tangram.components;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.PostConstruct;
@@ -29,10 +27,8 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
@@ -141,31 +137,6 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
         LOG.debug("handleRequest() allowed users {} ({})", allowedUsers, allowedUsers.size());
         LOG.debug("handleRequest() free urls {} ({})", freeUrls, freeUrls.size());
         if (!freeUrls.contains(thisURL)) {
-            // TODO: Debug code for tangram-gae on CapeDwarf:
-            Enumeration<?> attributeNames = request.getAttributeNames();
-            while (attributeNames.hasMoreElements()) {
-                String attributeName = ""+attributeNames.nextElement();
-                LOG.debug("handleRequest() request attribute {}={}", attributeName, request.getAttribute(attributeName));
-            } // while
-            HttpSession session = request.getSession(false);
-            if (session!=null) {
-                attributeNames = session.getAttributeNames();
-                while (attributeNames.hasMoreElements()) {
-                    String attributeName = ""+attributeNames.nextElement();
-                    LOG.debug("handleRequest() session attribute {}={}", attributeName, session.getAttribute(attributeName));
-                } // while
-            } // if
-            Map<?, ?> parameterMap = request.getParameterMap();
-            for (Map.Entry<?, ?> parameter : parameterMap.entrySet()) {
-                LOG.debug("handleRequest() parameter {}={}", parameter.getKey(), parameter.getValue());
-            } // for
-            Cookie[] cookies = request.getCookies();
-            if (cookies!=null) {
-                for (Cookie cookie : cookies) {
-                    LOG.debug("handleRequest() cookie {} {} {} {}", cookie.getName(), cookie.getPath(), cookie.getDomain(), cookie.getValue());
-                } // for
-            } // if
-
             Set<User> users = authenticationService.getUsers(request, response);
             boolean closedSystem = !allowedUsers.isEmpty();
             if (!users.isEmpty()) {
