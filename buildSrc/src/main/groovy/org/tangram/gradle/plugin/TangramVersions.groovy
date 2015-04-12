@@ -37,7 +37,7 @@ public class TangramVersions {
   String xstream = '1.4.8'
   String pac4j = '1.6.0' // 1.7.0
   String tomcat = '7.0.59'
-  String codemirror = '5.0' // 5.1
+  String codemirror = '5.1'
   String ckeditor = '4.4.7'
 
   // For testing purposes

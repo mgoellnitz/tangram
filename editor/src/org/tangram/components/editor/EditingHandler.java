@@ -388,6 +388,8 @@ public class EditingHandler extends AbstractRenderingBase {
         request.setAttribute("propertyConverter", propertyConverter);
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
         request.setAttribute("prefix", Utils.getUriPrefix(request));
+        request.setAttribute("cmprefix", Utils.getUriPrefix(request)+"/editor/codemirror");
+        request.setAttribute("ckprefix", Utils.getUriPrefix(request)+"/editor/ckeditor");
         Class<? extends Content> cls = content.getClass();
         String note = getOrmNote(cls);
         Class<? extends Object> designClass = getDesignClass(cls);

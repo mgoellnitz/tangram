@@ -14,14 +14,14 @@
 <link rel="stylesheet" href="${prefix}/editor/codemirror/lib/codemirror.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
-<script type="application/javascript" src="${prefix}/editor/ckeditor/ckeditor.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/lib/codemirror.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/mode/groovy/groovy.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/mode/xml/xml.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/mode/javascript/javascript.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/mode/css/css.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/mode/htmlmixed/htmlmixed.js"></script>
-<script type="application/javascript" src="${prefix}/editor/codemirror/mode/htmlembedded/htmlembedded.js"></script>
+<script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>
+<script type="application/javascript" src="${cmprefix}/lib/codemirror.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/groovy/groovy.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/xml/xml.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/javascript/javascript.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/css/css.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/htmlmixed/htmlmixed.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/htmlembedded/htmlembedded.js"></script>
 <script type="application/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
