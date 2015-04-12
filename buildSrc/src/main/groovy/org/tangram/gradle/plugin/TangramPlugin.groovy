@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.gradle.plugin;
+package org.tangram.gradle.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -34,11 +34,11 @@ class TangramPlugin implements Plugin<Project> {
     project.convention.plugins.utilities = utilities
     project.extensions.create('versions', TangramVersions)
 
-    project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.");
+    project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.")
 
     def cjIterator = project.getTasksByName('compileJava', true).iterator()
     if(cjIterator.hasNext()) {
-      def compileJava = cjIterator.next();
+      def compileJava = cjIterator.next()
       compileJava.doLast {
         def jarPath = project.getConfigurations().getByName('runtime').asPath
         def persistenceAPI = ''

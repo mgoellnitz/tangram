@@ -25,6 +25,7 @@ package org.tangram.gradle.plugin;
  *  By the use of the constants from within build files a consistent library set is ensured.
  */
 public class TangramVersions {
+
   String lombok = '1.16.2'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
