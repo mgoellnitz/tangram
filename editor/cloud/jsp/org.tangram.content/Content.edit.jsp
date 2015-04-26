@@ -15,13 +15,12 @@
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
 <script type="application/javascript" src="//cdn.ckeditor.com/4.4.7/standard/ckeditor.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/codemirror.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/groovy/groovy.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/xml/xml.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/javascript/javascript.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/css/css.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/htmlmixed/htmlmixed.js"></script>
-<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.0.0/mode/htmlembedded/htmlembedded.js"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/codemirror.js"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/groovy/groovy.js"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/xml/xml.js"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/javascript/javascript.js"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/css/css.js"></script>
+<script type="application/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/5.2.0/mode/htmlmixed/htmlmixed.js"></script>
 <script type="application/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
@@ -128,7 +127,7 @@ CKEDITOR.replace( 'ke<%=key%>');
                 cmmode = "xml";
             } // if
             if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
-                cmmode = "application/x-jsp";
+                cmmode = "htmlmixed";
             } // if
         } catch (Exception e) {
             

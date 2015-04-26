@@ -80,7 +80,7 @@ war.doFirst {
     if (codemirrorFile.exists()) {
       copy {
         into "$projectDir/expanded"
-        from zipTree("${codemirrorBase}.zip")
+        from zipTree("${codemirrorFile}")
         // We could also include themes and keymaps.
         // include "${codemirrorBasename}/lib/**", "${codemirrorBasename}/mode/**", "${codemirrorBasename}/keymap/**", "${codemirrorBasename}/theme/**"
         include "${codemirrorBase}/lib/**", "${codemirrorBase}/mode/*/*.js"

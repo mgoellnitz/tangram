@@ -21,7 +21,6 @@
 <script type="application/javascript" src="${cmprefix}/mode/javascript/javascript.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/css/css.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/htmlmixed/htmlmixed.js"></script>
-<script type="application/javascript" src="${cmprefix}/mode/htmlembedded/htmlembedded.js"></script>
 <script type="application/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
@@ -128,7 +127,7 @@ CKEDITOR.replace( 'ke<%=key%>');
                 cmmode = "xml";
             } // if
             if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
-                cmmode = "application/x-jsp";
+                cmmode = "htmlmixed";
             } // if
         } catch (Exception e) {
             
