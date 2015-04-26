@@ -26,10 +26,10 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
-  String lombok = '1.16.2'
+  String lombok = '1.16.4'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.3.11' // 2.4.3
+  String groovy = '2.3.11' // '2.3.11' // 2.4.3
   String velocity = '1.7'
   String slf4j = '1.7.12'
   String log4j = '1.2.17'
@@ -37,8 +37,8 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.8'
   String pac4j = '1.6.0' // 1.7.0
-  String tomcat = '7.0.59'
-  String codemirror = '5.1'
+  String tomcat = '7.0.61'
+  String codemirror = '5.0'
   String ckeditor = '4.4.7'
 
   // For testing purposes
@@ -52,8 +52,8 @@ public class TangramVersions {
   String springframework = '4.1.6.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
 
-  String weld = '2.2.10.Final'
-  String openwebbeans = '1.2.7'
+  String weld = '2.2.10.SP1'
+  String openwebbeans = '1.5.0'
 
   String guice = '4.0-beta5'
   String mycila_guice = '3.5.ga'
@@ -63,7 +63,7 @@ public class TangramVersions {
 
   String openjpa = '2.3.0'
   String eclipselink = '2.6.0'
-  String hibernate = '4.3.8.Final'
+  String hibernate = '4.3.9.Final'
 
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
   String datanucleus = '3.1.3'
@@ -77,6 +77,6 @@ public class TangramVersions {
   String ebean = '4.5.5'
   String ebean_agent = '4.5.2'
 
-  String appengine = '1.9.18'
+  String appengine = '1.9.19'
 
 } // TangramVersions
