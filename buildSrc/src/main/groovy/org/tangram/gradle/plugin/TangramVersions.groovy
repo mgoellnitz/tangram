@@ -52,16 +52,16 @@ public class TangramVersions {
   String springframework = '4.1.6.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
 
-  String weld = '2.2.10.SP1'
+  String weld = '2.2.11.Final'
   String openwebbeans = '1.5.0'
 
-  String guice = '4.0-beta5'
-  String mycila_guice = '3.5.ga'
+  String guice = '4.0'
+  String mycila_guice = '3.6.ga'
 
   String jdo_api = 'javax.jdo:jdo-api:3.1-rc1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
-  String openjpa = '2.3.0'
+  String openjpa = '2.4.0'
   String eclipselink = '2.6.0'
   String hibernate = '4.3.9.Final'
 
@@ -74,9 +74,9 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '4.5.5'
-  String ebean_agent = '4.5.2'
+  String ebean = '4.5.6'
+  String ebean_agent = '4.5.3'
 
-  String appengine = '1.9.19'
+  String appengine = '1.9.20'
 
 } // TangramVersions
