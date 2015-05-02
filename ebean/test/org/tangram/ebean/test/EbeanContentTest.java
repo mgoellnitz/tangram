@@ -18,10 +18,13 @@
  */
 package org.tangram.ebean.test;
 
+import dinistiq.Dinistiq;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.tangram.ebean.Code;
 import org.tangram.ebean.test.content.BaseClass;
 import org.tangram.ebean.test.content.SubClass;
@@ -51,6 +54,16 @@ public class EbeanContentTest extends BaseContentTest {
         result.put("ebeanDdlRun", Boolean.FALSE);
         return result;
     }
+
+    @Override
+    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+        Set<String> packages = new HashSet<>();
+        packages.add("org.tangram.components");
+        Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
+        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
+        return dinistiq.findBean(type);
+    } // getInstance()
+
 
 
     @Override

@@ -24,8 +24,6 @@ dependencies {
   testCompile "org.testng:testng:$versions.testng"
   testCompile "org.springframework:spring-core:$versions.testspring"
   testCompile "org.springframework:spring-test:$versions.testspring"
-  // more or less a dummy for the various autoscanned and auto injected beans
-  testCompile project(':tangram-dinistiq')
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"

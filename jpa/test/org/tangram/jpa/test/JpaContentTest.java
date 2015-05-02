@@ -18,8 +18,11 @@
  */
 package org.tangram.jpa.test;
 
+import dinistiq.Dinistiq;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
 import org.tangram.mutable.MutableBeanFactory;
@@ -35,6 +38,16 @@ public class JpaContentTest extends BaseContentTest {
     static {
         org.apache.openjpa.enhance.InstrumentationFactory.setDynamicallyInstallAgent(false);
     }
+
+
+    @Override
+    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+        Set<String> packages = new HashSet<>();
+        packages.add("org.tangram.components");
+        Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
+        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
+        return dinistiq.findBean(type);
+    } // getInstance()
 
 
     @Override
@@ -73,6 +86,7 @@ public class JpaContentTest extends BaseContentTest {
     protected int getNumberOfClasses() {
         return 4;
     }
+
 
     /**
      * Dummy test so that this test class contains at least one test.

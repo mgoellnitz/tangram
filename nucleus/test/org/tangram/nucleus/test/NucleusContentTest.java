@@ -18,8 +18,11 @@
  */
 package org.tangram.nucleus.test;
 
+import dinistiq.Dinistiq;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
@@ -38,6 +41,16 @@ import org.testng.annotations.Test;
  * a separate test "session".
  */
 public class NucleusContentTest extends BaseContentTest {
+
+    @Override
+    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+        Set<String> packages = new HashSet<>();
+        packages.add("org.tangram.components");
+        Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
+        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
+        return dinistiq.findBean(type);
+    } // getInstance()
+
 
     @Override
     protected BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception {

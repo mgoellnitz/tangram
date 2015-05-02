@@ -18,13 +18,10 @@
  */
 package org.tangram.mutable.test;
 
-import dinistiq.Dinistiq;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.inject.Named;
 import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
@@ -78,6 +75,14 @@ public abstract class BaseContentTest {
     }
 
 
+    /**
+     * Init DI container and return instance of given type from that container.
+     *
+     * @param create is this test meant to create content or just check results
+     */
+    protected abstract <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception;
+
+
     protected abstract BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception;
 
 
@@ -101,11 +106,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 1)
     public void test1CreateTestContent() throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCreate());
-        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
-        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
+        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
         Assert.assertNotNull(beanFactory, "need factory for beans");
         int numberOfAllClasses = getNumberOfAllClasses();
         // Assert.assertEquals("List of classes as strings", "[interface org.tangram.feature.protection.Protection, interface org.tangram.feature.protection.ProtectedContent, interface org.tangram.mutable.test.content.SubInterface, interface org.tangram.mutable.MutableCode, interface org.tangram.content.CodeResource, class org.tangram.ebean.EContent, interface org.tangram.mutable.test.content.BaseInterface, class org.tangram.content.TransientCode, class org.tangram.ebean.Code, interface org.tangram.content.Content, class org.tangram.ebean.test.content.BaseClass, class org.tangram.ebean.test.content.SubClass]", beanFactory.getAllClasses().toString());
@@ -126,11 +127,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 2)
     public void test2Components() throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
-        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
-        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
+        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "need factory for beans");
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals(allBeans.size(), 2, "we have prepared a fixed number of beans");
@@ -145,11 +142,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 3)
     public void test3Code() throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
-        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
-        MutableBeanFactory beanFactory = dinistiq.findBean(MutableBeanFactory.class);
+        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "need factory for beans");
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
         Assert.assertNotNull(classesMap, "we have a classes map");
@@ -183,10 +176,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 4)
     public void test4ObtainCode() throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, getBeansForContentCheck());
-        ClassRepository repository = dinistiq.findBean(ClassRepository.class);
+        ClassRepository repository = getInstance(ClassRepository.class, false);
         Assert.assertNotNull(repository, "Could not find class repository");
         Map<String, Class<Object>> annotatedClasses = repository.getAnnotated(Named.class);
         Assert.assertNotNull(annotatedClasses, "Could not find annotated classes");
