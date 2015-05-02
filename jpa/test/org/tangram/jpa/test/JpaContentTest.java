@@ -20,7 +20,6 @@ package org.tangram.jpa.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceFilter;
 import com.mycila.guice.ext.closeable.CloseableModule;
 import com.mycila.guice.ext.jsr250.Jsr250Module;
 import java.util.ArrayList;
@@ -45,19 +44,6 @@ public class JpaContentTest extends BaseContentTest {
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
-//        final org.springframework.mock.web.MockServletContext context = new org.springframework.mock.web.MockServletContext() {
-//
-//        };
-//        TangramServletModule servletModule = new TangramServletModule() {
-//
-//            @Override
-//            public ServletContext getServletContext() {
-//                return context;
-//            }
-//
-//        };
-
-        GuiceFilter c;
         Injector injector = Guice.createInjector(new CloseableModule(), new Jsr250Module(), new TangramServletModule());
         return injector.getInstance(type);
     } // getInstance()
