@@ -18,11 +18,14 @@
  */
 package org.tangram.jpa.test;
 
-import dinistiq.Dinistiq;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceFilter;
+import com.mycila.guice.ext.closeable.CloseableModule;
+import com.mycila.guice.ext.jsr250.Jsr250Module;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import org.tangram.guicy.TangramServletModule;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
 import org.tangram.mutable.MutableBeanFactory;
@@ -42,11 +45,21 @@ public class JpaContentTest extends BaseContentTest {
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
-        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
-        return dinistiq.findBean(type);
+//        final org.springframework.mock.web.MockServletContext context = new org.springframework.mock.web.MockServletContext() {
+//
+//        };
+//        TangramServletModule servletModule = new TangramServletModule() {
+//
+//            @Override
+//            public ServletContext getServletContext() {
+//                return context;
+//            }
+//
+//        };
+
+        GuiceFilter c;
+        Injector injector = Guice.createInjector(new CloseableModule(), new Jsr250Module(), new TangramServletModule());
+        return injector.getInstance(type);
     } // getInstance()
 
 

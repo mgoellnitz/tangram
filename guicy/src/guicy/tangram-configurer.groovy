@@ -73,17 +73,24 @@ module.bind(stringSet).annotatedWith(Names.named("freeUrls")).toInstance(freeUrl
 Set<String> loginProviders = SystemUtils.stringSetFromParameterString(config.getProperty("loginProviders", ""))
 module.bind(stringSet).annotatedWith(Names.named("loginProviders")).toInstance(loginProviders)
 
+// used for null checks during tests
+def servletContext = module.getServletContext()
+
 log.info("configuring view settings")
 Map<String, Object> viewSettings = new HashMap<>()
 viewSettings.put("cssCacheTime", config.getProperty("cssCacheTime", "10080"))
 viewSettings.put("jsCacheTime", config.getProperty("jsCacheTime", "10080"))
 viewSettings.put("imageCacheTime", config.getProperty("imageCacheTime", "10080"))
-module.getServletContext().setAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS, viewSettings)
+if (servletContext != null) {
+  servletContext.setAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS, viewSettings)
+}
 module.bind(module.VIEW_SETTINGS_KEY).toInstance(viewSettings)
 
 log.info("configuring statistics")
 Statistics statistics = new SimpleStatistics()
-module.getServletContext().setAttribute(Constants.ATTRIBUTE_STATISTICS, statistics)
+if (servletContext != null) {
+  servletContext.setAttribute(Constants.ATTRIBUTE_STATISTICS, statistics)
+}
 module.bind(Statistics.class).toInstance(statistics)
 
 log.info("configuring simple name password mapper")
@@ -133,7 +140,9 @@ velocityPatchBean.setCodeResourceCache(codeResourceCache)
 log.info("configuring link factory aggregator")
 LinkFactoryAggregator linkFactoryAggregator = new GenericLinkFactoryAggregator()
 linkFactoryAggregator.setDispatcherPath(dispatcherPath)
-module.getServletContext().setAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR, linkFactoryAggregator)
+if (servletContext != null) {
+  servletContext.setAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR, linkFactoryAggregator)
+}
 module.bind(LinkFactoryAggregator.class).toInstance(linkFactoryAggregator)
 
 log.info("configuring statistics handler")
@@ -150,7 +159,9 @@ module.bind(ViewContextFactory.class).toInstance(new DynamicViewContextFactory()
 
 log.info("configuring view utilities");
 ViewUtilities viewUtilities = new ServletViewUtilities()
-module.getServletContext().setAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, viewUtilities)
+if (servletContext != null) {
+  servletContext.setAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, viewUtilities)
+}
 module.bind(ViewUtilities.class).toInstance(viewUtilities)
 
 log.info("configuring link handler registry")
@@ -158,11 +169,13 @@ MetaLinkHandler metaLinkHandler = new MetaLinkHandler()
 module.bind(LinkHandlerRegistry.class).toInstance(metaLinkHandler)
 module.bind(MetaLinkHandler.class).toInstance(metaLinkHandler)
 
-log.info("configuring jsp templating")
-JspTemplateResolver jspTemplateResolver = new JspTemplateResolver()
-jspTemplateResolver.setName("JSP")
-jspTemplateResolver.setActivateCaching(true)
-module.addTemplateResolver(jspTemplateResolver)
+if (servletContext != null) {
+  log.info("configuring jsp templating")
+  JspTemplateResolver jspTemplateResolver = new JspTemplateResolver()
+  jspTemplateResolver.setName("JSP")
+  jspTemplateResolver.setActivateCaching(true)
+  module.addTemplateResolver(jspTemplateResolver)
+}
 
 log.info("configuring velocity templating")
 RepositoryTemplateResolver repositoryTemplateResolver = new RepositoryTemplateResolver()

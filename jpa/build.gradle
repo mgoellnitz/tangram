@@ -32,10 +32,10 @@ dependencies {
   }
 
   testCompile "org.testng:testng:$versions.testng"
-  // dinistiq logging at debug level through special log4j.properties
+  // test logging at debug level through special log4j.properties
   testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
   // more or less a dummy for the various autoscanned and auto injected beans
-  testCompile project (':tangram-dinistiq')
+  testCompile project (':tangram-guicy')
 
   testCompile project (':tangram-mutable').sourceSets.test.output
   testCompile "org.springframework:spring-core:$versions.testspring"

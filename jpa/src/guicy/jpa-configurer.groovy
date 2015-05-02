@@ -35,11 +35,16 @@ JpaBeanFactoryImpl beanFactory = new JpaBeanFactoryImpl()
 beanFactory.setBasePackages(basePackages)
 
 String overridesName = "guicy/jpaConfigOverrides.properties"
-InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName)
 Properties configOverrides = new Properties()
-configOverrides.load(resource)
+InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName)
+if (resource != null) {
+  configOverrides.load(resource)
+}
 beanFactory.setConfigOverrides(configOverrides)
-module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
+def servletContext = module.getServletContext()
+if (servletContext != null) {
+  servletContext.setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
+}
 module.bind(BeanFactory.class).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
 

@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.pac4j.core.client.Client;
 import org.slf4j.Logger;
@@ -144,7 +145,8 @@ public class TangramServletModule extends ServletModule {
         resolverBinder = Multibinder.newSetBinder(binder(), TemplateResolver.class);
         clientBinder = Multibinder.newSetBinder(binder(), Client.class);
 
-        String dispatcherPath = getServletContext().getInitParameter(DefaultTangramContextListener.DISPATCHER_PATH);
+        ServletContext context = getServletContext();
+        String dispatcherPath = context == null ? null : context.getInitParameter(DefaultTangramContextListener.DISPATCHER_PATH);
         dispatcherPath = dispatcherPath==null ? "/s" : dispatcherPath;
         configuration.setProperty("dispatcherPath", dispatcherPath);
 
