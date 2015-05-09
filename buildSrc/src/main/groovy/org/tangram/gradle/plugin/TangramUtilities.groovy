@@ -247,7 +247,7 @@ class TangramUtilities {
    * persistence.xml in effect for the deployed system.
    */
   public openjpaEnhance(String dir) {
-    String cp = project.runtimeClasspath.asPath+File.pathSeparator+"${project.projectDir}/enhance"
+    String cp = project.sourceSets['main'].runtimeClasspath.asPath+File.pathSeparator+"${project.projectDir}/enhance"
     project.ant.taskdef(
       name : 'enhance',
       classpath : cp,

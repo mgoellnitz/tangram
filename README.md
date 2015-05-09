@@ -47,7 +47,7 @@ HOW-TO
 To make all this work you need
 
 - Java 7 (Java 8 is untested)
-- Gradle 2.0 or later (Including 2.2)
+- Gradle 2.0 or later (Including 2.4)
 
 Gradle 1.x can only be used, if you recompile dinistiq and tangram with that very gradle
 version due to some incompatibilities with the groovy version used.
