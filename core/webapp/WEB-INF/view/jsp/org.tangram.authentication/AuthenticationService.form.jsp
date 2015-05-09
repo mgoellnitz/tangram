@@ -16,7 +16,7 @@
 request.setAttribute("tangramLoginError", request.getSession(true).getAttribute("tangram.login.error"));
 %>
 <p style="color: red;">&nbsp;${tangramLoginError}</p>
-<form name="loginform" action="<cms:link bean="${self}" action="callback"/>" method="get">
+<form name="loginform" action="<cms:link bean="${self}" action="callback"/>" method="post">
 <div class="cms_editor_row">
 <span class="cms_editor_label">Username: </span><input type="text" name="username"/>
 </div>
