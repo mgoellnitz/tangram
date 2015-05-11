@@ -139,6 +139,9 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
         if (!freeUrls.contains(thisURL)) {
             Set<User> users = authenticationService.getUsers(request, response);
             boolean closedSystem = !allowedUsers.isEmpty();
+            if (isAdminUser(request, response)) {
+                request.setAttribute("tangramAdminUser", true);
+            } // if
             if (!users.isEmpty()) {
                 boolean allowed = false;
                 request.setAttribute("tangramLogoutUrl", authenticationService.getLogoutLink(request, response).getUrl());

@@ -5,7 +5,7 @@
 %><%@page import="org.tangram.Constants"
 %><%@page import="com.google.appengine.api.users.User,com.google.appengine.api.users.UserServiceFactory"
 %><c:set var="infoLineClass" value="tangram_infobar"/><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"
-/><c:if test="${tangramAdminUser && !tangramLiveSystem}"
+/><c:if test="${tangramAdminUser}"
 	><p class="tangram_edit_toolbar"><a <cms:link bean="${self}" action="edit" href="true" target="true" handlers="true"/> ><fmt:message key="label.editobject" bundle="${msg}"/></a>
  | <%=com.google.appengine.api.utils.SystemProperty.applicationId.get()%>
 v<%=com.google.appengine.api.utils.SystemProperty.applicationVersion.get()%>
