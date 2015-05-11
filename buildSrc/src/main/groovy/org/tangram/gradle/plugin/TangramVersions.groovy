@@ -43,7 +43,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.8.21'
+  String testng = '6.9.4'
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
