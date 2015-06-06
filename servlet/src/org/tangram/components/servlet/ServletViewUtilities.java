@@ -62,7 +62,7 @@ public class ServletViewUtilities implements ViewUtilities {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServletViewUtilities.class);
 
-    private static final Pattern ID_PATTRN = Pattern.compile(Constants.ID_PATTERN);
+    private static final Pattern ID_PATTERN = Pattern.compile(Constants.ID_PATTERN);
 
     @Inject
     private ViewContextFactory viewContextFactory;
@@ -141,7 +141,7 @@ public class ServletViewUtilities implements ViewUtilities {
         } // if
         HttpServletRequest request = (HttpServletRequest) model.get(Constants.ATTRIBUTE_REQUEST);
         HttpServletResponse response = (HttpServletResponse) model.get(Constants.ATTRIBUTE_RESPONSE);
-        if (ID_PATTRN.matcher(template).matches()) {
+        if (ID_PATTERN.matcher(template).matches()) {
             // Velocity:
             LOG.debug("render() Velocity template={}", template);
             try {
