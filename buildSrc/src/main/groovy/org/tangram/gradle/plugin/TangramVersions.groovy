@@ -37,8 +37,8 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.8'
   String pac4j = '1.6.0' // 1.7.0
-  String tomcat = '7.0.61'
-  String codemirror = '5.2'
+  String tomcat = '7.0.62'
+  String codemirror = '5.3'
   String ckeditor = '4.4.7'
 
   // For testing purposes
@@ -53,7 +53,7 @@ public class TangramVersions {
   // String springsecurity = '3.2.5.RELEASE'
 
   String weld = '2.2.12.Final'
-  String openwebbeans = '1.5.0'
+  String openwebbeans = '1.6.0'
 
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
@@ -74,9 +74,9 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '4.6.1'
+  String ebean = '4.6.2'
   String ebean_agent = '4.5.3'
 
-  String appengine = '1.9.20'
+  String appengine = '1.9.21'
 
 } // TangramVersions
