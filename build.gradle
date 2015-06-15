@@ -48,8 +48,7 @@ allprojects {
     }
   }
   test {
-    useTestNG() {
-    }
+    useTestNG()
   }
   jacocoTestReport {
     reports {
