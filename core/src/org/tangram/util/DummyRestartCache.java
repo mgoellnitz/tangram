@@ -43,6 +43,7 @@ public class DummyRestartCache implements PersistentRestartCache {
 
     @Override
     public <T> void put(String key, T value) {
+        // Dummy
     } // put()
 
 } // DummyRestartCache

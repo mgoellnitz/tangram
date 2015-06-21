@@ -38,13 +38,14 @@ public final class TangramSpringServices implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
-    private static ConversionService conversionService = null;
-
 
     private TangramSpringServices() {
     }
 
 
+    /**
+     * Static ontainer class for thread safe singleton pattern.
+     */
     private static class ConversionServiceHolder {
 
         public static final ConversionService INSTANCE = getBeanFromContext(ConversionService.class);

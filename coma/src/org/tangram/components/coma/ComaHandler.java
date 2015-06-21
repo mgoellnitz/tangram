@@ -111,18 +111,16 @@ public class ComaHandler extends AbstractRenderingBase {
         if (action==null) {
             Link result = null;
             if (bean instanceof ComaContent) {
-                result = new Link();
                 ComaContent cc = (ComaContent) bean;
                 String url = "/content/"+cc.getId()+(view==null ? "" : "?view="+view);
-                result.setUrl(url);
+                result = new Link(url);
             } // if
             if (bean instanceof ComaBlob) {
-                result = new Link();
                 ComaBlob cb = (ComaBlob) bean;
 
                 String url = "/contentblob/"+cb.getContentId()+"/"+cb.getPropertyName()+"/123"
                         +(view==null ? "" : "?view="+view);
-                result.setUrl(url);
+                result = new Link(url);
             } // if
             return result;
         } // if

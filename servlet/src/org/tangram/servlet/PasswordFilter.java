@@ -49,6 +49,7 @@ public class PasswordFilter implements Filter {
 
     @Override
     public void destroy() {
+        // The filter itself doesn't need to do anything on destruction.
     } // destroy()
 
 
@@ -61,6 +62,7 @@ public class PasswordFilter implements Filter {
 
     @Override
     public void init(FilterConfig config) throws ServletException {
+        // The filter itself doesn't need any additional initialization.
     } // init()
 
 } // PasswordFilter

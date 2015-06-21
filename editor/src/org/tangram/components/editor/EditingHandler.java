@@ -585,8 +585,7 @@ public class EditingHandler extends AbstractRenderingBase {
         Link result = null;
         String url = getUrl(bean, action, view);
         if (url!=null) {
-            result = new Link();
-            result.setUrl(url);
+            result = new Link(url);
             if ("edit".equals(action)) {
                 result.setTarget(EDIT_TARGET);
                 String jsOpenWindow = "window.open('"+result.getUrl()+"', '"+EDIT_TARGET

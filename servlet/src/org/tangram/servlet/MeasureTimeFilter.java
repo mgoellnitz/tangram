@@ -63,6 +63,7 @@ public class MeasureTimeFilter implements Filter {
 
     @Override
     public void destroy() {
+        // The filter doesn't need to do anything on destruction.
     } // destroy()
 
 

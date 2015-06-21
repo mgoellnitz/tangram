@@ -72,6 +72,7 @@ public class SpringViewUtilities implements ViewUtilities {
 
         @Override
         public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            // Dummy
         }
 
     };

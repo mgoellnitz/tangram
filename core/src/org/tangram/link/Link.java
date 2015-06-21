@@ -37,10 +37,6 @@ public class Link {
     private final Map<String, String> handlers = new HashMap<>();
 
 
-    public Link() {
-    }
-
-
     public Link(String url) {
         this.url = url;
     }

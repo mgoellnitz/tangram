@@ -164,6 +164,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
 
     @Override
     public void cleanupMultipart(MultipartHttpServletRequest request) {
+        // There is no clean up job to do.
     } // cleanupMultipart()
 
 

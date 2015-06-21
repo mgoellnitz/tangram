@@ -79,6 +79,9 @@ import java.io.Serializable;
  */
 public class AppEngineXStream extends XStream {
 
+    /**
+     * Custom converter for certain serializable instances.
+     */
     private class AppEngineSerializableConverter extends SerializableConverter {
 
         public AppEngineSerializableConverter(Mapper mapper, ReflectionProvider reflectionProvider, ClassLoaderReference classLoaderReference) {
@@ -115,6 +118,7 @@ public class AppEngineXStream extends XStream {
             } // if
             return false;
         } // myIsSerializable()
+
     } // AppEngineSerializableConverter
 
 
