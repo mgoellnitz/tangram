@@ -543,7 +543,7 @@ public class EditingHandler extends AbstractRenderingBase {
     @LinkAction("/import-text")
     public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
-        return doImport(new StringReader(xmltext), request, response);
+        return StringUtils.isBlank(xmltext) ? TargetDescriptor.DONE : doImport(new StringReader(xmltext), request, response);
     } // contentImport()
 
 
