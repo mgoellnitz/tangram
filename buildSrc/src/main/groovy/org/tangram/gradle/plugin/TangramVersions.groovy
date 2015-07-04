@@ -36,14 +36,14 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
-  String pac4j = '1.6.0' // 1.7.0
+  String pac4j = '1.6.0' // 1.7.1 with relevant API changes
   String tomcat = '7.0.62'
   String codemirror = '5.3'
   String ckeditor = '4.4.7'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.9.4'
+  String testng = '6.9.4' // Gradle 2.4 has 6.3.1 - latest is 6.9.4
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
@@ -52,7 +52,7 @@ public class TangramVersions {
   String springframework = '4.1.6.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
 
-  String weld = '2.2.12.Final'
+  String weld = '2.2.14.Final'
   String openwebbeans = '1.6.0'
 
   String guice = '4.0'
@@ -74,9 +74,9 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '4.6.2'
+  String ebean = '4.7.1'
   String ebean_agent = '4.5.3'
 
-  String appengine = '1.9.21'
+  String appengine = '1.9.23'
 
 } // TangramVersions
