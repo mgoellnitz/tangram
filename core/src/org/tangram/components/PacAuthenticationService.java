@@ -113,7 +113,15 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
 
     private String getLoginAction(Set<String> providers) {
         LOG.debug("getLoginAction() {}", providers);
-        return providers.size()==1 ? providers.iterator().next() : "login";
+        // only use the providers that are really available
+        Set<String> availableProviders = new HashSet<>();
+        for (String provider : getProviderNames()) {
+            if (providers.contains(provider)) {
+                availableProviders.add(provider);
+            } // if
+        } // for
+        LOG.debug("getLoginAction() {}", availableProviders);
+        return availableProviders.size()==1 ? availableProviders.iterator().next() : "login";
     }     // getLoginAction
 
 
