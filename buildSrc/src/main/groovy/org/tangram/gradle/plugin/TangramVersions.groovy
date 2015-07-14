@@ -29,7 +29,7 @@ public class TangramVersions {
   String lombok = '1.16.4'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.3.11' // 2.4.3
+  String groovy = '2.4.3'
   String velocity = '1.7'
   String slf4j = '1.7.12'
   String log4j = '1.2.17'
@@ -37,23 +37,23 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.8'
   String pac4j = '1.6.0' // 1.7.1 with relevant API changes
-  String tomcat = '7.0.62'
-  String codemirror = '5.3'
-  String ckeditor = '4.4.7'
+  String tomcat = '7.0.63'
+  String codemirror = '5.4'
+  String ckeditor = '4.5.1'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.9.4' // Gradle 2.4 has 6.3.1 - latest is 6.9.4
+  String testng = '6.3.1' // Gradle 2.5 has 6.3.1 - latest is 6.9.4
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
   // String shiro = '1.2.3'
 
-  String springframework = '4.1.6.RELEASE'
+  String springframework = '4.1.7.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
 
   String weld = '2.2.14.Final'
-  String openwebbeans = '1.6.0'
+  String openwebbeans = '1.6.1'
 
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
@@ -74,7 +74,7 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '4.7.1'
+  String ebean = '4.7.3'
   String ebean_agent = '4.5.3'
 
   String appengine = '1.9.23'
