@@ -47,8 +47,8 @@ dependencies {
 war.doFirst {
   String ckeditorBase = "ckeditor_${versions.ckeditor}"
   if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
-    String ckeditor = "$projectDir/${ckeditorBase}_standard.zip"
-    def ckeditorFile = new File("$ckeditor")
+    String ckeditor = "${ckeditorBase}_standard.zip"
+    def ckeditorFile = new File("$projectDir/$ckeditor")
     if (!ckeditorFile.exists()) {
       String ckeditorUrl = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%20${versions.ckeditor}/${ckeditor}"
       download {
