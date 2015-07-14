@@ -40,8 +40,9 @@ public abstract class BaseContentTest {
      *
      * All byte-code transformers create such schematic methods.
      *
-     * @param methods
-     * @param prefix
+     * @param methods array of methods to check names
+     * @param prefix name prefix at least one of the method's names should have
+     * @return true if any of the method's names starts with the given prefix.
      */
     protected boolean checkMethodPrefixOccurs(Method[] methods, String prefix) {
         boolean flag = false;
@@ -78,7 +79,11 @@ public abstract class BaseContentTest {
     /**
      * Init DI container and return instance of given type from that container.
      *
+     * @param <T> type variable for the result type
+     * @param type type constraint for the result instance
      * @param create is this test meant to create content or just check results
+     * @throws Exception Anything might happen during such a process
+     * @return result if available in the DI container or null
      */
     protected abstract <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception;
 
@@ -99,7 +104,9 @@ public abstract class BaseContentTest {
 
 
     /**
-     * excluding interfafes and abstract classes.
+     * Return expetect number of available classes in our test configuration.
+     *
+     * @return Number of classes excluding interfaces and abstract classes
      */
     protected abstract int getNumberOfClasses();
 
@@ -167,7 +174,8 @@ public abstract class BaseContentTest {
         codeResource = beanFactory.createBean(codeClass);
         codeResource.setAnnotation("org.tangram.example.Test");
         codeResource.setMimeType("application/x-groovy");
-        codeResource.setCode("package org.tangram.example; import javax.inject.Named; @Named public class Test {}".toCharArray());
+        final String classCode = "package org.tangram.example; import javax.inject.Named; @Named public class Test { public String s; }";
+        codeResource.setCode(classCode.toCharArray());
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals(codes.size(), 2, "We have one code instance");
@@ -183,11 +191,11 @@ public abstract class BaseContentTest {
         Assert.assertEquals(annotatedClasses.size(), 1, "Expected one annotated class");
         byte[] classBytes = repository.getBytes("org.tangram.example.Test");
         Assert.assertNotNull(classBytes, "Could not find class");
-        Assert.assertEquals(classBytes.length, 4869, "Unexpected number of bytes for class found");
+        Assert.assertEquals(classBytes.length, 2372, "Unexpected number of bytes for class found");
         repository.overrideClass("org.tangram.example.Test", classBytes);
         byte[] emptyClassBytes = repository.getBytes("org.tangram.example.Test");
         Assert.assertNotNull(emptyClassBytes, "Could not find class");
-        Assert.assertEquals(emptyClassBytes.length, 4869, "Unexpected number of bytes for class found");
+        Assert.assertEquals(emptyClassBytes.length, 2372, "Unexpected number of bytes for class found");
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors");
     } // test4ObtainCode()
