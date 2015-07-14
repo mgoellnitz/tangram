@@ -47,7 +47,7 @@ dependencies {
 war.doFirst {
   String ckeditorBase = "ckeditor_${versions.ckeditor}"
   if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
-    String ckeditor = "${ckeditorBase}_standard.zip"
+    String ckeditor = "$projectDir/${ckeditorBase}_standard.zip"
     def ckeditorFile = new File("$ckeditor")
     if (!ckeditorFile.exists()) {
       String ckeditorUrl = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%20${versions.ckeditor}/${ckeditor}"
@@ -60,7 +60,7 @@ war.doFirst {
     if (ckeditorFile.exists()) {
       copy {
         into "$projectDir/expanded/$ckeditorBase"
-        from zipTree("${ckeditor}")
+        from zipTree("${ckeditorFile}")
         include "ckeditor/**"
         exclude '**/*.md', 'ckeditor/samples/**'
       }
@@ -71,7 +71,6 @@ war.doFirst {
   if (!(new File("$projectDir/expanded/$codemirrorBase").exists())) {
     def codemirrorFile = new File("$projectDir/${codemirrorBase}.zip")
     if (!codemirrorFile.exists()) {
-      println "dl"
       download {
         src "http://codemirror.net/${codemirrorBase}.zip"
         dest "$projectDir"
@@ -79,7 +78,6 @@ war.doFirst {
       }
     }
     if (codemirrorFile.exists()) {
-      println "check"
       copy {
         into "$projectDir/expanded"
         from zipTree("${codemirrorFile}")
@@ -89,6 +87,7 @@ war.doFirst {
       }
     }
   }
+  println "$projectDir/expanded/$ckeditorBase"
   into('editor') {
     from fileTree("$projectDir/expanded/$ckeditorBase")
   }
