@@ -1,4 +1,6 @@
+sudo: false
+
 language: java
 
 after_success:
-  - gradle jacocoTestReport jacocoCombinedReport coveralls  
+  - gradle jacocoTestReport jacocoCombinedReport coveralls
