@@ -37,10 +37,6 @@ dependencies {
   testCompile "com.h2database:h2:1.3.174"
 }
 
-compileJava.doLast {
-  ebeanEnhance()
-}
-
 compileTestJava.doLast {
   ebeanEnhanceTest()
 }
