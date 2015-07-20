@@ -43,7 +43,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.3.1' // Gradle 2.5 has 6.3.1 - latest is 6.9.4
+  String testng = '6.3.1' // Gradle 2.5 has 6.3.1 - latest is 6.9.6
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
@@ -74,7 +74,7 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '4.7.3'
+  String ebean = '6.1.1'
   String ebean_agent = '4.5.3'
 
   String appengine = '1.9.23'
