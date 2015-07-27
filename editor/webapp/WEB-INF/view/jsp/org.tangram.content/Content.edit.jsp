@@ -1,4 +1,4 @@
-<%@page isELIgnored="false" language="java" session="false" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" 
+<%@page isELIgnored="false" language="java" session="false" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 %><?xml version="1.0" encoding="UTF-8" ?><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 %><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
@@ -26,11 +26,11 @@
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
 ><form id="tangram" method="post" action="<cms:link bean="${self}" action="store"/>" enctype="multipart/form-data">
 <div class="cms_editor_row"><span class="longversion"><span class="cms_editor_label">
-<fmt:message key="label.edit" bundle="${msg}"/></span> | 
+<fmt:message key="label.edit" bundle="${msg}"/></span> |
 <fmt:message key="label.type" bundle="${msg}"/>: ${designClassPackage.name}.<span class="cms_editor_title">${designClass.simpleName}</span>
 | </span><span class="cms_editor_label">ID: </span>${self.id}
-<c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>><fmt:message key="label.webview" bundle="${msg}"/></a></c:if> 
-| <a href="#" onclick="window.close();">[ X ]</a> 
+<c:if test="${! empty normalView}">| <a <c:out value="${normalView}" escapeXml="false"/>><fmt:message key="label.webview" bundle="${msg}"/></a></c:if>
+| <a href="#" onclick="window.close();">[ X ]</a>
 &#160; &#160; <input type="submit" value="    <fmt:message key="button.save" bundle="${msg}"/>    " class="cms_editor_button"/>
 </div>
 <div style="color: #FF0000;">
@@ -45,13 +45,13 @@ PropertyConverter propertyConverter = (PropertyConverter)request.getAttribute("p
 int fid = 0; // form ids
 JavaBean bw = new JavaBean(request.getAttribute(Constants.THIS));
 for (String key : bw.propertyNames()) {
-    if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {          
+    if (!EditingHandler.SYSTEM_PROPERTIES.contains(key)) {
         if (bw.isWritable(key)) {
     Object value = bw.get(key);
     @SuppressWarnings("unchecked")
     Class<? extends Object> type = bw.getType(key);
 %><tr class="cms_editor_row"><td class="cms_editor_label_td"><%=key%>:
-<% 
+<%
 if ((propertyConverter.isTextType(type)) &&("code".equals(key)) && bw.isReadable("mimeType") && (!(""+bw.get("mimeType")).equals(Constants.MIME_TYPE_JS)) && (!(""+bw.get("mimeType")).equals(Constants.MIME_TYPE_CSS))) {
 Class<? extends Object> c = null;
 Object annotation = bw.get("annotation");
@@ -130,7 +130,7 @@ CKEDITOR.replace( 'ke<%=key%>');
                 cmmode = "htmlmixed";
             } // if
         } catch (Exception e) {
-            
+
         } // try/catch
         if (cmmode.length() == 0) {
 %><textarea class="cms_editor_textfield" cols="60" rows="25" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea><%
@@ -158,7 +158,7 @@ if (value instanceof Collection) {
   request.setAttribute("elementClass", elementClass);
 %><c:if test="${! empty beanFactory.implementingClassesMap[elementClass]}">
 <br/><c:forEach items="${propertyValue}" var="item">
-<a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
+<a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a>
 </c:forEach>
 <select name="<%=EditingHandler.PARAMETER_CLASS_NAME%>" id="select<%=fid%>">
 <c:forEach items="${beanFactory.implementingClassesMap[elementClass]}" var="c"
@@ -177,13 +177,13 @@ fid++;
 %></c:if><%
 } else {
 %>)<%
-} // if 
+} // if
 if (value instanceof Content) {
-    request.setAttribute("item", value); 
+    request.setAttribute("item", value);
 %><br/>
-<a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a> 
-<% } // if 
-   } // if 
+<a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a>
+<% } // if
+   } // if
 %></td>
 <% } // if %>
 </tr><%
