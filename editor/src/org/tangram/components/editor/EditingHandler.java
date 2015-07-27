@@ -37,6 +37,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -118,6 +119,15 @@ public class EditingHandler extends AbstractRenderingBase {
     @Inject
     private AuthorizationService authorizationService;
 
+    /**
+     * Generic URI prefix of the application derived from servlet context.
+     */
+    private String prefix;
+
+    /**
+     * Should the user be able to delete objects.
+     * In some older versions of tangram IDs had to be stored in Strings with the negative impact, that deletion was dangerous.
+     */
     private boolean deleteMethodEnabled;
 
 
@@ -136,6 +146,17 @@ public class EditingHandler extends AbstractRenderingBase {
         PARAMETER_ACTIONS.add("link");
         PARAMETER_ACTIONS.add("list");
     } // static
+
+
+    /**
+     * Vehicel to obtain applications URI prefix just once bu without configuration effort.
+     *
+     * @param servletContext needed to obtain the context path.
+     */
+    @Inject
+    public void setServletContext(ServletContext servletContext) {
+        prefix = Utils.getUriPrefix(servletContext);
+    } // setServletContext()
 
 
     /**
@@ -357,7 +378,7 @@ public class EditingHandler extends AbstractRenderingBase {
         request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
         request.setAttribute("classes", classes);
         request.setAttribute("canDelete", deleteMethodEnabled);
-        request.setAttribute("prefix", Utils.getUriPrefix(request));
+        request.setAttribute("prefix", prefix);
         if (cls!=null) {
             Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
             request.setAttribute("designClass", designClass);
@@ -387,9 +408,9 @@ public class EditingHandler extends AbstractRenderingBase {
         request.setAttribute("beanFactory", getMutableBeanFactory());
         request.setAttribute("propertyConverter", propertyConverter);
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
-        request.setAttribute("prefix", Utils.getUriPrefix(request));
-        request.setAttribute("cmprefix", Utils.getUriPrefix(request)+"/editor/codemirror");
-        request.setAttribute("ckprefix", Utils.getUriPrefix(request)+"/editor/ckeditor");
+        request.setAttribute("prefix", prefix);
+        request.setAttribute("cmprefix", prefix+"/editor/codemirror");
+        request.setAttribute("ckprefix", prefix+"/editor/ckeditor");
         Class<? extends Content> cls = content.getClass();
         String note = getOrmNote(cls);
         Class<? extends Object> designClass = getDesignClass(cls);
@@ -562,6 +583,7 @@ public class EditingHandler extends AbstractRenderingBase {
         } // if
         request.setAttribute("editingHandler", this);
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
+        request.setAttribute("prefix", prefix);
         response.setContentType(Constants.MIME_TYPE_HTML);
         response.setCharacterEncoding("UTF-8");
         return new TargetDescriptor(this, null, null);

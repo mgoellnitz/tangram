@@ -11,11 +11,12 @@
 <head>
 <title>Tangram - <cms:include bean="${self}" view="description"/>: ${designClass.simpleName}</title>
 <%@include file="../../../include/head-elements.jsp" %>
-<link rel="stylesheet" href="${cmprefix}/lib/codemirror.css" type="text/css" media="screen"/>
+<%@include file="../../../include/editing-components.jsp" %>
+<link rel="stylesheet" href="${cmlibprefix}/codemirror.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
 <script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>
-<script type="application/javascript" src="${cmprefix}/lib/codemirror.js"></script>
+<script type="application/javascript" src="${cmlibprefix}/codemirror.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/groovy/groovy.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/xml/xml.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/javascript/javascript.js"></script>

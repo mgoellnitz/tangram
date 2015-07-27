@@ -119,8 +119,8 @@ cloudWar {
   // This is a strange way to get one of the smallest jars as dependency
   // included in the web archive since empty paths are not allowed here.
   classpath = 'WEB-INF/lib/javax.inject-1.jar'
-  excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**', 'WEB-INF/view/jsp/org.tangram.content/*.edit.jsp' ]
-  into ('WEB-INF/view') {
+  excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**', 'WEB-INF/include/*.jsp' ]
+  into ('WEB-INF') {
     from "$projectDir/cloud"
   }
 }

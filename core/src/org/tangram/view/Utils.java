@@ -99,17 +99,18 @@ public final class Utils {
     } // urlize()
 
 
+    public static String getUriPrefix(String contextPath) {
+        return (contextPath.length()==1) ? "" : contextPath;
+    } // getUriPrefix()
+
+
     public static String getUriPrefix(ServletContext context) {
-        String contextPath = context.getContextPath();
-        contextPath = (contextPath.length()==1) ? "" : contextPath;
-        return contextPath;
+        return getUriPrefix(context.getContextPath());
     } // getUriPrefix()
 
 
     public static String getUriPrefix(HttpServletRequest request) {
-        String contextPath = request.getContextPath();
-        contextPath = (contextPath.length()==1) ? "" : contextPath;
-        return contextPath;
+        return getUriPrefix(request.getContextPath());
     } // getUriPrefix()
 
 
