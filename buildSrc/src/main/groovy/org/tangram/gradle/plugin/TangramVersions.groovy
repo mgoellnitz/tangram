@@ -74,7 +74,7 @@ public class TangramVersions {
   // String datanucleus_appengine = '3.0.0-20140128'
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.1.1'
+  String ebean = '6.2.1'
   String ebean_agent = '4.5.3'
 
   String appengine = '1.9.24'
