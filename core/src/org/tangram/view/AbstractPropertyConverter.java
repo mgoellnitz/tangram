@@ -105,7 +105,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             LOG.debug("getObjectsViaDescription({}) checking {}", title, beans);
             for (T bean : beans) {
                 try {
-                    LOG.debug("getObjectsViaDescription() checking {}", bean);
+                    LOG.debug("getObjectsViaDescription() checking bean {}", bean);
                     BufferResponse r = new BufferResponse();
                     viewUtilties.render(r.getWriter(), bean, "description", request, r);
                     String description = r.getContents();
@@ -180,6 +180,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             } catch (ParseException pe) {
                 LOG.error("getStorableObject() cannot parse as Date: "+valueString);
             } // try/catch
+        } else if (cls==Long.class) {
+            value = StringUtils.isNotBlank(valueString) ? Long.parseLong(valueString) : null;
         } else if (cls==Integer.class) {
             value = StringUtils.isNotBlank(valueString) ? Integer.parseInt(valueString) : null;
         } else if (cls==Float.class) {
