@@ -288,7 +288,7 @@ public class EditingHandler extends AbstractRenderingBase {
             try {
                 wrapper.set(property.getKey(), property.getValue());
             } catch (Exception ex) {
-                e = new Exception("Cannot set value for "+property.getKey(), ex);
+                e = new Exception("Cannot set value for "+property.getKey()+" :"+wrapper.getType(property.getKey()), ex);
             } // try/catch
         } // for
 
