@@ -57,7 +57,7 @@ public abstract class NucleusContent extends JdoContent {
     } // postprocessPlainId()
 
 
-    /** utility helpers until we understand to do this natively in the datanucleus / mongoDB layer (or similar layers) * */
+    /* utility helpers until we understand to do this natively in the datanucleus / mongoDB layer (or similar layers) */
 
     protected byte[] stringToByteArray(String data) {
         return data==null ? null : Base64.decode(data);
