@@ -119,7 +119,7 @@ public class JavaBean {
             try {
                 writeMethod.invoke(delegate, value);
             } catch (IllegalAccessException|IllegalArgumentException|InvocationTargetException ex) {
-                LOG.error("set("+name+")", ex);
+                LOG.error("set("+name+" :"+descriptors.get(name).getPropertyType()+")", ex);
             } // try/catch
         } // if
     } // set()
