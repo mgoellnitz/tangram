@@ -52,7 +52,7 @@ public class TangramVersions {
   String springframework = '4.1.7.RELEASE'
   // String springsecurity = '3.2.5.RELEASE'
 
-  String weld = '2.2.14.Final'
+  String weld = '2.2.15.Final'
   String openwebbeans = '1.6.1'
 
   String guice = '4.0'
