@@ -509,6 +509,17 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     } // listBeans()
 
 
+    /**
+     * Obtain name of the underlying database table for content type.
+     *
+     * @param cls type specification
+     * @return table name
+     */
+    protected String getTablename(Class<? extends Content> cls) {
+        return cls.getSimpleName();
+    } // getTablename()
+
+
     @Override
     public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {

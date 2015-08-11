@@ -34,6 +34,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
@@ -183,14 +184,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
             if (orderProperty!=null) {
                 queryString += " order by "+orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
             } // if
-            String shortTypeName = cls.getSimpleName();
-            // String findAllQuery = "select x from "+shortTypeName+" x where type(x) in ("+shortTypeName+")";
-            String findAllQuery = "select x from "+shortTypeName+" x";
+            String tableName = getTablename(cls);
+            String findAllQuery = "select x from "+tableName+" x";
             Query query = manager.createQuery(queryString==null ? findAllQuery : queryString, cls);
             // Default is no ordering - not even via IDs
             if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looking up instances of "+shortTypeName
-                        +(queryString==null ? "" : " with condition "+queryString));
+                LOG.info("listBeansOfExactClass() looking up instances of {} as {} {}", cls.getSimpleName(), tableName,
+                        (queryString==null ? "" : " with condition "+queryString));
             } // if
             List<Object> results = SystemUtils.convert(query.getResultList());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
@@ -201,6 +201,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
         } // try/catch/finally
         return result;
     } // listBeansOfExactClass()
+
+
+    @Override
+    protected String getTablename(Class<? extends Content> cls) {
+        Table annotation = cls.getAnnotation(Table.class);
+        return annotation==null ? cls.getSimpleName() : annotation.name();
+    } // getTablename()
 
 
     @Override
