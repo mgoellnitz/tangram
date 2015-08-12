@@ -52,7 +52,7 @@ public abstract class AbstractProtection extends NucleusContent implements Prote
 
 
     public void setDescription(char[] description) {
-        this.description = charArraytoString(description);
+        this.description = charArrayToString(description);
     }
 
 

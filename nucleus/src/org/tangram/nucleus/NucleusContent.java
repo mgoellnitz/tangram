@@ -71,11 +71,11 @@ public abstract class NucleusContent extends JdoContent {
 
     protected char[] stringToCharArray(String data) {
         return data==null ? null : data.toCharArray();
-    } // stringToByteArray()
+    } // stringToCharArray()
 
 
-    protected String charArraytoString(char[] data) {
+    protected String charArrayToString(char[] data) {
         return data==null ? null : String.valueOf(data);
-    } // byteArraytoString()
+    } // charArrayToString()
 
 } // NucleusContent

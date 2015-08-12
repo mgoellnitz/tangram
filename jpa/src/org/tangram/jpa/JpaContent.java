@@ -82,8 +82,8 @@ public abstract class JpaContent implements Content {
     } // stringToCharArray()
 
 
-    protected String charArraytoString(char[] data) {
+    protected String charArrayToString(char[] data) {
         return data==null ? null : String.valueOf(data);
-    } // charArraytoString()
+    } // charArrayToString()
 
 } // JpaContent

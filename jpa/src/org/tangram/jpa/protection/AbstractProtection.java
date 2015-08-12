@@ -26,15 +26,18 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import org.tangram.content.Content;
-import org.tangram.protection.Protection;
 import org.tangram.jpa.JpaContent;
+import org.tangram.protection.Protection;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class AbstractProtection extends JpaContent implements Protection {
 
-    private char[] description;
+    /**
+     * for compatibility reasons internally use String and map it to char[]
+     */
+    private String description;
 
     private String protectionKey;
 
@@ -43,12 +46,12 @@ public abstract class AbstractProtection extends JpaContent implements Protectio
 
 
     public char[] getDescription() {
-        return description;
+        return stringToCharArray(description);
     }
 
 
     public void setDescription(char[] description) {
-        this.description = description;
+        this.description = charArrayToString(description);
     }
 
 
