@@ -87,7 +87,6 @@ war.doFirst {
       }
     }
   }
-  println "$projectDir/expanded/$ckeditorBase"
   into('editor') {
     from fileTree("$projectDir/expanded/$ckeditorBase")
   }

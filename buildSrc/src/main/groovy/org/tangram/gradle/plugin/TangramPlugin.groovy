@@ -66,7 +66,7 @@ class TangramPlugin implements Plugin<Project> {
       }
 
       def jar = project.getTasksByName('jar', true).iterator().next()
-      // jar.enabled = true
+      jar.enabled = true
       jar.doFirst {
         def jarPath = project.getConfigurations().getByName('runtime').asPath
         def persistenceAPI = ''

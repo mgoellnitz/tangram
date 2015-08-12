@@ -2,5 +2,5 @@
 %><%
 request.setAttribute("cmprefix", "//cdnjs.cloudflare.com/ajax/libs/codemirror/5.5.0");
 request.setAttribute("cmlibprefix", "//cdnjs.cloudflare.com/ajax/libs/codemirror/5.5.0");
-request.setAttribute("ckprefix", "//cdn.ckeditor.com/4.5.1/standard");
+request.setAttribute("ckprefix", "//cdn.ckeditor.com/4.5.2/standard");
 %>

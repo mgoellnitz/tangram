@@ -29,7 +29,7 @@ public class TangramVersions {
   String lombok = '1.16.4'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.4.3'
+  String groovy = '2.4.4'
   String velocity = '1.7'
   String slf4j = '1.7.12'
   String log4j = '1.2.17'
@@ -39,7 +39,7 @@ public class TangramVersions {
   String pac4j = '1.6.0' // 1.7.1 with relevant API changes
   String tomcat = '7.0.63'
   String codemirror = '5.5'
-  String ckeditor = '4.5.1'
+  String ckeditor = '4.5.2'
 
   // For testing purposes
   String junit = '4.12'
@@ -47,10 +47,8 @@ public class TangramVersions {
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
-  // String shiro = '1.2.3'
 
   String springframework = '4.1.7.RELEASE'
-  // String springsecurity = '3.2.5.RELEASE'
 
   String weld = '2.2.15.Final'
   String openwebbeans = '1.6.1'
@@ -62,20 +60,19 @@ public class TangramVersions {
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
   String openjpa = '2.4.0'
-  String eclipselink = '2.6.0'
-  String hibernate = '4.3.10.Final'
+  String eclipselink = '2.6.0' // '2.6.0' MongoDB access for EclipseLink needs this very version
+  String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
+  String hibernate = '4.3.11.Final'
 
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
   String datanucleus = '3.1.3'
   // The byte code enhancer is not included in every version for some reason
   String datanucleus_enhancer = '3.1.1'
-  // Latest version presented by google is 2.1.2 - this version here is provided
-  // by datanucleus for plattform version 3.3
-  // String datanucleus_appengine = '3.0.0-20140128'
+  // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.2.1'
-  String ebean_agent = '4.5.3'
+  String ebean = '6.2.2'
+  String ebean_agent = '4.5.4'
 
   String appengine = '1.9.24'
 

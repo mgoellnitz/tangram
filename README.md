@@ -47,13 +47,13 @@ HOW-TO
 To make all this work you need
 
 - Java 7 (Java 8 is not working and Java 7 is needed right now for GAE compatibility)
-- Gradle 2.0 or later (Including 2.4)
+- Gradle 2.0 or later (Right now excluding the latest 2.6 release)
 
-Gradle 1.x can only be used, if you recompile dinistiq and tangram with that very gradle
+Gradle 1.x can only be used, if you recompile dinistiq and tangram with that very Gradle
 version due to some incompatibilities with the groovy version used. Ubuntu LTS users be
-warned not use the gradle version references by their Version 12 LTS install.
+warned not use the Gradle version referenced by their Version 12 LTS install.
 
-To make things easier for applications using this framework we provide a gradle plugin now.
+To make things easier for applications using this framework we provide a Gradle plugin now.
 
 To use this plugin seperately - which very much makes sense for applications using JPA, JDO,
 or EBean - you have to build and publish the tangram buildSrc folder.
