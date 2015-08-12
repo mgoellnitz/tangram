@@ -60,9 +60,10 @@ public class TangramVersions {
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
   String openjpa = '2.4.0'
-  String eclipselink = '2.6.0' // '2.6.0' MongoDB access for EclipseLink needs this very version
+  String eclipselink = '2.6.0'
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
   String hibernate = '4.3.11.Final'
+  String hibernate_ogm = '4.2.0.Final'
 
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
   String datanucleus = '3.1.3'

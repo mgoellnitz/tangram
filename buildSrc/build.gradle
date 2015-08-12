@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2013-2014 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 defaultTasks 'clean', 'publishToMavenLocal'
 
@@ -26,7 +26,7 @@ def versions = new GroovyScriptEngine(roots).loadScriptByName('org/tangram/gradl
 
 repositories {
   // most of the usual stuff
-  mavenCentral()
+  jcenter()
 }
 
 // Must for the time being be compiled with gradle 1.x/Groovy 1.x since most
@@ -44,7 +44,7 @@ dependencies {
   compile "org.datanucleus:datanucleus-api-jpa:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
   // for the direct ecliselink enhancer
-  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:$versions.eclipselink"  
+  compile "org.eclipse.persistence:org.eclipse.persistence.jpa:$versions.eclipselink"
   // For the direct ebean enhancer
   compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
   compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
