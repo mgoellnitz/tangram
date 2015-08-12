@@ -20,10 +20,10 @@ package org.tangram.jpa;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
@@ -44,7 +44,7 @@ public class Code extends JpaContent implements MutableCode {
 
     private String mimeType;
 
-    @Lob
+    @Column(length = 32000)
     private String code;
 
 
