@@ -75,4 +75,15 @@ public abstract class JpaContent implements Content {
         return getClass().getSimpleName()+"/"+getId();
     } // toString()
 
+    /* utility helpers until we understand to do use char[] natively in the Hibernate OGM / mongoDB layer (or similar layers) */
+
+    protected char[] stringToCharArray(String data) {
+        return data==null ? null : data.toCharArray();
+    } // stringToCharArray()
+
+
+    protected String charArraytoString(char[] data) {
+        return data==null ? null : String.valueOf(data);
+    } // charArraytoString()
+
 } // JpaContent
