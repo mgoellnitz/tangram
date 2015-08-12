@@ -23,6 +23,7 @@ import java.io.InputStream;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
@@ -43,7 +44,8 @@ public class Code extends JpaContent implements MutableCode {
 
     private String mimeType;
 
-    private char[] code;
+    @Lob
+    private String code;
 
 
     @Override
@@ -71,25 +73,25 @@ public class Code extends JpaContent implements MutableCode {
 
 
     public char[] getCode() {
-        return code;
+        return code==null ? null : code.toCharArray();
     }
 
 
     @Override
     public void setCode(char[] code) {
-        this.code = code;
+        this.code = code==null ? null : String.valueOf(code);
     }
 
 
     @Override
     public String getCodeText() {
-        return code == null ? null : new String(code);
+        return code;
     }
 
 
     @Override
     public long getSize() {
-        return code.length;
+        return code.length();
     }
 
 
