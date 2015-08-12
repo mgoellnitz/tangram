@@ -67,8 +67,7 @@ public class TangramFtpServer extends AbstractFtpServer {
 
     /**
      * Create a new instance. Initialize the default command handlers and reply text ResourceBundle.
-     * 
-     * @param port port to bind to
+     *
      * @param beanFactory bean factory instance to to content from and store in.
      * @param codeResourceCache code access facade for the bean factory.
      */
