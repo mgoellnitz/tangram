@@ -44,7 +44,7 @@ public class SubClass extends BaseClass implements SubInterface {
 
 
     public String checkConversion(String s) {
-        return byteArraytoString(stringToByteArray(charArraytoString(stringToCharArray(s))));
+        return byteArraytoString(stringToByteArray(charArrayToString(stringToCharArray(s))));
     } // checkConversions()
 
 } // SubClass
