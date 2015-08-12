@@ -24,7 +24,7 @@ apply from: '../webapp.gradle'
 
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
     classpath 'de.undercouch:gradle-download-task:1.0'
