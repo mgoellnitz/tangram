@@ -180,14 +180,14 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<>();
         try {
-            if (orderProperty!=null) {
-                queryString += " order by "+orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
-            } // if
             String simpleName = cls.getSimpleName();
-            String findAllQuery = "select x from "+simpleName+" x";
-            Query query = manager.createQuery(queryString==null ? findAllQuery : queryString, cls);
+            queryString = queryString==null ? "select x from "+simpleName+" x" : queryString;
             // Default is no ordering - not even via IDs
-            LOG.info("listBeansOfExactClass() looking up instances of {} {}", simpleName, (queryString==null ? "" : " with condition "+queryString));
+            if (orderProperty!=null) {
+                queryString += " order by "+orderProperty+(ascending ? " asc" : " desc");
+            } // if
+            LOG.info("listBeansOfExactClass() looking up instances of {} with condition {}", simpleName, queryString);
+            Query query = manager.createQuery(queryString, cls);
             List<Object> results = SystemUtils.convert(query.getResultList());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             filterExactClass(cls, results, result);

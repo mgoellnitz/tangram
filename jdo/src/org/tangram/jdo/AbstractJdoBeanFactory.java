@@ -191,7 +191,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
-                String order = orderProperty+((ascending==Boolean.TRUE) ? " asc" : " desc");
+                String order = orderProperty+(ascending ? " asc" : " desc");
                 query.setOrdering(order);
             } // if
             // Will be extended once we decide to introduce start/end
@@ -199,9 +199,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
             // long from = start!=null ? start : 0;
             // query.setRange(from, end+1);
             // } // if
-            if (LOG.isInfoEnabled()) {
-                LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
-            } // if
+            LOG.info("listBeansOfExactClass() looking up instances of {} {}", cls.getSimpleName(), (queryString==null ? "-" : " with condition "+queryString));
             List<T> results = SystemUtils.convert(query.execute());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             for (T o : results) {
