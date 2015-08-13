@@ -40,7 +40,7 @@ public final class Code extends NucleusContent implements MutableCode {
 
     private String mimeType;
 
-    @Column(length = 32000)
+    @Column(jdbcType = "clob")
     private String code;
 
 
@@ -75,7 +75,7 @@ public final class Code extends NucleusContent implements MutableCode {
 
     @Override
     public void setCode(char[] code) {
-        this.code = charArraytoString(code);
+        this.code = charArrayToString(code);
     }
 
 
