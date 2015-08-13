@@ -27,11 +27,11 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'de.undercouch:gradle-download-task:1.0'
+    classpath 'de.undercouch:gradle-download-task:1.2'
   }
 }
 
-apply plugin: 'download-task'
+apply plugin: 'de.undercouch.download'
 
 dependencies {
   compile project(':tangram-mutable')
