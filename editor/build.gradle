@@ -44,7 +44,13 @@ dependencies {
   providedCompile "$versions.jsp_api"
 }
 
-war.doFirst {
+// Editor war containing codemirror and ckeditor locally - default not is to use them from the cloud
+task localWar(type: War, dependsOn: war) {
+  classifier = 'local'
+}
+
+localWar.doFirst() {
+  overlayWebapp(localWar)
   String ckeditorBase = "ckeditor_${versions.ckeditor}"
   if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
     String ckeditor = "${ckeditorBase}_standard.zip"
@@ -97,16 +103,7 @@ war.doFirst {
   }
 }
 
-// Editor war referencing components from the cloud
-task cloudWar(type: War, dependsOn: war) {
-  classifier = 'cloud'
-}
-
-cloudWar.doFirst() {
-  overlayWebapp(cloudWar)
-}
-
-cloudWar {
+localWar {
   eachFile {
     if(isCss(it)) {
       it.filter(org.tangram.gradle.plugin.CSSMinify)
@@ -120,15 +117,15 @@ cloudWar {
   classpath = 'WEB-INF/lib/javax.inject-1.jar'
   excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**', 'WEB-INF/include/*.jsp' ]
   into ('WEB-INF') {
-    from "$projectDir/cloud"
+    from "$projectDir/local"
   }
 }
 
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      artifact cloudWar {
-        classifier 'cloud'
+      artifact localWar {
+        classifier 'local'
         extension 'war'
       }
     }
