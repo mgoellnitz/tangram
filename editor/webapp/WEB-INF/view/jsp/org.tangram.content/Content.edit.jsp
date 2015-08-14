@@ -15,7 +15,9 @@
 <link rel="stylesheet" href="${cmlibprefix}/codemirror.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
+<% if (!(request.getAttribute("self") instanceof org.tangram.content.CodeResource)) { %>
 <script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>
+<% } // if %>
 <script type="application/javascript" src="${cmlibprefix}/codemirror.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/groovy/groovy.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/xml/xml.js"></script>
@@ -113,7 +115,6 @@ CKEDITOR.replace( 'ke<%=key%>');
     } else {
         String cmmode = "";
         try {
-            // TODO: Use constants.
             String mimeType = ""+bw.get("mimeType");
             if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
                 cmmode = "groovy";
