@@ -472,7 +472,7 @@ public class EditingHandler extends AbstractRenderingBase {
 
 
     @LinkAction("/export")
-    public TargetDescriptor contentExport(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public TargetDescriptor contentExport(@ActionParameter(value = "classes") String classList, HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (!authorizationService.isAdminUser(request, response)) {
             return authorizationService.getLoginTarget(request);
         } // if
@@ -506,8 +506,30 @@ public class EditingHandler extends AbstractRenderingBase {
             xstream.omitField(c, "userServices");
             xstream.alias(c.getSimpleName(), c);
         } // for
-        Collection<Content> allContent = new ArrayList<>();
+
+        List<Class<? extends Content>> sortedClasses = new ArrayList<>();
+        sortedClasses.add(getMutableBeanFactory().getImplementingClasses(CodeResource.class).get(0));
+
+        for (String className : StringUtils.isNotEmpty(classList) ? classList.split(",") : new String[0]) {
+            for (Class<? extends Content> c : classes) {
+                if (c.getSimpleName().equals(className.trim())) {
+                    if (!sortedClasses.contains(c)) {
+                        sortedClasses.add(c);
+                    } // if
+                } // if
+            } // for
+        } // for
+
         for (Class<? extends Content> c : classes) {
+            if (!sortedClasses.contains(c)) {
+                sortedClasses.add(c);
+            } // if
+        } // for
+
+        LOG.info("contentExport() sorted classes {}", sortedClasses);
+
+        Collection<Content> allContent = new ArrayList<>();
+        for (Class<? extends Content> c : sortedClasses) {
             try {
                 allContent.addAll(beanFactory.listBeansOfExactClass(c));
             } catch (Exception e) {
@@ -547,11 +569,11 @@ public class EditingHandler extends AbstractRenderingBase {
         } // for
 
         Object contents = xstream.fromXML(input);
-        LOG.info("read() {}", contents);
+        LOG.info("doImport() {}", contents);
         if (contents instanceof List) {
             List<? extends Content> list = convertList(contents);
             for (Content o : list) {
-                LOG.info("read() {}", o);
+                LOG.info("doImport() {}", o);
                 getMutableBeanFactory().persistUncommitted(o);
             } // for
         } // if
