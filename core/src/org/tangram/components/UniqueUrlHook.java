@@ -59,11 +59,11 @@ public class UniqueUrlHook implements ControllerHook {
             } // if
         } // try/catch
         if (link!=null) {
-            // If you run into trouble with encodings, this might be a place to search
-            // String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8");
-            // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8");
             String queryString = request.getQueryString();
             queryString = StringUtils.isBlank(queryString) ? "" : "?"+queryString;
+            // If you run into trouble with encodings, this might be a place to search
+            // String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8");
+            // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8")+queryString;
             String decodedUrl = link.getUrl()+queryString;
             String requestURI = request.getRequestURI()+queryString;
             if (!decodedUrl.equals(requestURI)) {
