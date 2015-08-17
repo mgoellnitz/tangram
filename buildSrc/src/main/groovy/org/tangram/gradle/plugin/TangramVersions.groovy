@@ -75,6 +75,6 @@ public class TangramVersions {
   String ebean = '6.2.2'
   String ebean_agent = '4.5.4'
 
-  String appengine = '1.9.24'
+  String appengine = '1.9.25'
 
 } // TangramVersions
