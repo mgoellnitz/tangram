@@ -43,7 +43,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.9.6' // Gradle 2.6 has 6.3.1 - latest is 6.9.6
+  String testng = '6.3.1' // Gradle 2.6 has 6.3.1 - tests fail with other versions - latest is 6.9.6
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'

@@ -47,7 +47,7 @@ HOW-TO
 To make all this work you need
 
 - Java 7 (Java 8 is not working and Java 7 is needed right now for GAE compatibility)
-- Gradle 2.0 or later (Right now excluding the latest 2.6 release)
+- Gradle 2.2.1 or later
 
 Gradle 1.x can only be used, if you recompile dinistiq and tangram with that very Gradle
 version due to some incompatibilities with the groovy version used. Ubuntu LTS users be
@@ -132,7 +132,7 @@ Tangram now provides choice for nearly any of the parts we put together:
 
 Storage Layer: JDO, JPA, Ebean
 
-Dependency Injction: Springframework, Dinistiq, Guice (CDI)
+Dependency Injection: Springframework, Dinistiq, Guice (CDI)
 
 Templating: JSP and Apache Velocity
 
