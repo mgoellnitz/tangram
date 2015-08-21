@@ -26,7 +26,7 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
-  String lombok = '1.16.4'
+  String lombok = '1.16.6'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
   String groovy = '2.4.4'
@@ -43,7 +43,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.3.1' // Gradle 2.5 has 6.3.1 - latest is 6.9.6
+  String testng = '6.9.6' // Gradle 2.6 has 6.3.1 - latest is 6.9.6
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
@@ -72,7 +72,7 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.2.2'
+  String ebean = '6.3.1'
   String ebean_agent = '4.5.4'
 
   String appengine = '1.9.25'
