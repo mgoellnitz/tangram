@@ -65,8 +65,14 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
     } // getChildren()
 
 
+    /**
+     * Empty implementation.
+     * Coma is read only and does not even deal with external changes.
+     *
+     * @see org.tangram.content.BeanFactory#addListener(java.lang.Class, org.tangram.content.BeanListener)
+     */
     @Override
-    public void addListener(Class<? extends Content> arg0, BeanListener arg1) {
+    public void addListener(Class<? extends Content> cls, BeanListener listener) {
         // Since we don't have any changes, we don't need to register listeners
     }
 

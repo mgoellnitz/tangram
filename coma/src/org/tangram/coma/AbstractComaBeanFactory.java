@@ -63,11 +63,20 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     private Map<String, Object> additionalProperties = new HashMap<>();
 
 
+    /**
+     * Obtain mapping from document type name to its parent's document type name.
+     *
+     * @return Map type to parent map
+     */
     public Map<String, String> getParents() {
         return parents;
     }
 
 
+    /**
+     * Set mapping from document type name to its parent's document type name.
+     * Must resemble the document type relationship of the underlying CMS repository DB.
+     */
     public void setParents(Map<String, String> parents) {
         this.parents = parents;
     }
@@ -126,6 +135,9 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     public abstract Content createContent(String id, String type, Map<String, Object> properties);
 
 
+    /**
+     * @see BeanFactory#getBean(java.lang.String)
+     */
     @Override
     public Content getBean(String id) {
         Content result = null;
@@ -141,12 +153,18 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     } // getBean()
 
 
+    /**
+     * @see BeanFactory#getBean(java.lang.Class, java.lang.String)
+     */
     @Override
     public <T extends Content> T getBean(Class<T> cls, String id) {
         return SystemUtils.convert(getBean(id));
     } // getBeanForUpdate()
 
 
+    /**
+     * @see BeanFactory#listBeansOfExactClass(java.lang.Class, java.lang.String, java.lang.String, java.lang.Boolean)
+     */
     @Override
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<>();
@@ -160,6 +178,9 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     } // listBeansOfExactClass()
 
 
+    /**
+     * @see BeanFactory#listBeans(java.lang.Class, java.lang.String, java.lang.String, java.lang.Boolean)
+     */
     @Override
     public <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
         return listBeansOfExactClass(cls, optionalQuery, orderProperty, ascending);
@@ -251,7 +272,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                     LOG.error("getProperties() "+query, se);
                 } // try/catch
 
-                for (int i = 0; i < ids.size(); i++) {
+                for (int i = 0; i<ids.size(); i++) {
                     int blobId = ids.get(i);
                     String propertyName = propertyNames.get(i);
                     query = "SELECT * FROM BlobData WHERE id = "+blobId;
@@ -325,6 +346,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     } // getProperties()
 
 
+    /**
+     * Obtain document type name for a given content item.
+     *
+     * @param id id of the content item
+     * @return document type name for the given id from the underlying repository database
+     */
     public String getType(String id) {
         String type = null;
         String query = "SELECT * FROM Resources WHERE id_ = '"+id+"'";
@@ -346,6 +373,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     } // getType()
 
 
+    /**
+     * Return the ID of a content items described by its path.
+     *
+     * @param path path to lookup content item from
+     * @return id for the given path from the underlying repository database
+     */
     public String getChildId(String path) {
         try {
             String[] arcs = path.split("/");
