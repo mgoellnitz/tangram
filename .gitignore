@@ -4,10 +4,11 @@
 /*/.classpath
 /*/.project
 /*/.settings
-/*/private/cache
+/*/private
 /*/src/tangram/*-build.properties
 *.nb-gradl*
 /ebean/tangram-*.sql
+/private
 /build/
 /editor/expanded*
 /editor/codemirror*

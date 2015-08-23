@@ -19,6 +19,7 @@
 version = '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'pmd'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'tangram'
@@ -33,8 +34,12 @@ targetCompatibility = 1.7
 // Project specific default output directory
 eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/classes/main") }
 
-// A place for a common checkstyle config file
-def checkstyleConfigFileName="${project.rootDir.absolutePath}/codestyle.xml"
+pmd {
+  ruleSets = []
+  ruleSetFiles = files("$project.rootProject.projectDir/pmd.xml")
+  sourceSets = [sourceSets.main]
+  toolVersion = '5.1.1' // We'd love to have a later version but travis seems to have a probem with this.
+}
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
