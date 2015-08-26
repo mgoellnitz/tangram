@@ -104,7 +104,19 @@ openjpaJar.doFirst {
   openjpaEnhance("$buildDir/classes/openjpa")
 }
 
-sourcesJar.dependsOn openjpaJar
+// For Hibernate - must be the last in the que
+task hibernateJar(type: Jar, dependsOn: openjpaJar) {
+  classifier = 'hibernate'
+  from "$buildDir/classes/main"
+  from "$buildDir/resources/main"
+}
+
+hibernateJar.doFirst {
+  // uses persistence.xml in enhance/ and copies all non Entity classes except interfaces unchanged
+  hibernateEnhance()
+}
+
+sourcesJar.dependsOn hibernateJar
 
 publishing {
   publications {
@@ -122,6 +134,7 @@ publishing {
       artifact eclipselinkJar
       artifact nucleusJar
       artifact openjpaJar
+      artifact hibernateJar
     }
   }
 }

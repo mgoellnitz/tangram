@@ -48,6 +48,9 @@ dependencies {
   // For the direct ebean enhancer
   compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
   compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
+  // For the direct hibernate enhancer
+  compile 'org.javassist:javassist:3.20.0-GA'
+  compile "org.hibernate:hibernate-core:$versions.hibernate"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

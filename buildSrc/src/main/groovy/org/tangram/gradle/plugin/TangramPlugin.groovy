@@ -33,6 +33,8 @@ class TangramPlugin implements Plugin<Project> {
     def utilities = new TangramUtilities(project)
     project.convention.plugins.utilities = utilities
     project.extensions.create('versions', TangramVersions)
+    EnhancerFlags enhancer = new EnhancerFlags()
+    project.extensions.add('enhancer', enhancer)
 
     project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.")
 
@@ -73,25 +75,28 @@ class TangramPlugin implements Plugin<Project> {
         def jpaBackend = ''
         if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
         if (jarPath.indexOf('org.eclipse.persistence.core') > 0) { jpaBackend = 'eclipselink' }
+        if (jarPath.indexOf('hibernate') > 0) { jpaBackend = 'hibernate' }
         if (jarPath.indexOf('openjpa') > 0) {
           persistenceAPI = 'jpa'
           jpaBackend = 'openjpa'
         }
-        def byteCodeTransform = (persistenceAPI != 'jpa')
-        if (jarPath.indexOf('-eclipselink.jar') > 0) { byteCodeTransform = true }
-        if (jarPath.indexOf('-openjpa.jar') > 0) { byteCodeTransform = true }
-        // println "API: $persistenceAPI"
-        // println "JPA: $jpaBackend"
-        // println "enhance: $byteCodeTransform"
+        def byteCodeTransform = enhancer.enabled
+        println "API: $persistenceAPI"
+        println "JPA: $jpaBackend"
+        println "enhance: $byteCodeTransform"
         if (persistenceAPI == 'jpa') {
           if (byteCodeTransform) {
-            if (jpaBackend == 'openjpa') {
-              println "Performing OpenJPA byte code transformation."
-              utilities.openjpaEnhance()
-            }
             if (jpaBackend == 'eclipselink') {
               println "Performing EclipseLink byte code transformation."
               utilities.eclipselinkWeave()
+            }
+            if (jpaBackend == 'hibernate') {
+              println "Performing Hibernate byte code transformation."
+              utilities.hibernateEnhance()
+            }
+            if (jpaBackend == 'openjpa') {
+              println "Performing OpenJPA byte code transformation."
+              utilities.openjpaEnhance()
             }
           }
         }
