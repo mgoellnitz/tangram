@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -356,7 +356,10 @@ class TangramUtilities {
   }
 
 
-  private void hibernateEnhance() {
+  private void hibernateEnhance(String dir) {
+    if (dir == null) {
+      dir = project.sourceSets['main'].output.classesDir.canonicalPath
+    } // if
     final ClassLoader classLoader = getClassLoader()
     EnhancementContext enhancementContext = new DefaultEnhancementContext() {
       @Override
@@ -386,7 +389,7 @@ class TangramUtilities {
     };
     final Enhancer enhancer = new Enhancer(enhancementContext)
     final ClassPool classPool = new ClassPool(false)
-    final FileTree fileTree = project.fileTree(project.sourceSets['main'].getOutput().getClassesDir())
+    final FileTree fileTree = project.fileTree(dir)
     for (File file : fileTree) {
       if (file.name.endsWith(".class")) {
         CtClass jClass = getJavassistClass(file, classPool)

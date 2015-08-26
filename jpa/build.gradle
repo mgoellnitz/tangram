@@ -21,6 +21,8 @@ apply from: '../lib.gradle'
 // This is needed to let the testCompile time dependency work reliably
 evaluationDependsOn(':tangram-mutable')
 
+enhancer.enabled=false
+
 dependencies {
   compile project(':tangram-mutable')
 
@@ -112,8 +114,12 @@ task hibernateJar(type: Jar, dependsOn: openjpaJar) {
 }
 
 hibernateJar.doFirst {
-  // uses persistence.xml in enhance/ and copies all non Entity classes except interfaces unchanged
-  hibernateEnhance()
+  copy {
+    from "$buildDir/classes/main"
+    into "$buildDir/classes/hibernate"
+    include '**/**'
+  }
+  hibernateEnhance("$buildDir/classes/hibernate")
 }
 
 sourcesJar.dependsOn hibernateJar
