@@ -18,6 +18,7 @@
  */
 package org.tangram.components;
 
+import java.net.URLDecoder;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -62,9 +63,9 @@ public class UniqueUrlHook implements ControllerHook {
             String queryString = request.getQueryString();
             queryString = StringUtils.isBlank(queryString) ? "" : "?"+queryString;
             // If you run into trouble with encodings, this might be a place to search
-            // String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8");
             // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8")+queryString;
-            String decodedUrl = link.getUrl()+queryString;
+            // String decodedUrl = link.getUrl()+queryString;
+            String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8")+queryString;
             String requestURI = request.getRequestURI()+queryString;
             if (!decodedUrl.equals(requestURI)) {
                 LOG.info("intercept() sending redirect for {} to {}", requestURI, decodedUrl);
