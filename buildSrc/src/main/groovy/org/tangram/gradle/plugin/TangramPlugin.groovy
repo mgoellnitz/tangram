@@ -81,9 +81,9 @@ class TangramPlugin implements Plugin<Project> {
           jpaBackend = 'openjpa'
         }
         def byteCodeTransform = enhancer.enabled
-        println "API: $persistenceAPI"
-        println "JPA: $jpaBackend"
-        println "enhance: $byteCodeTransform"
+        // println "API: $persistenceAPI"
+        // println "JPA: $jpaBackend"
+        // println "enhance: $byteCodeTransform"
         if (persistenceAPI == 'jpa') {
           if (byteCodeTransform) {
             if (jpaBackend == 'eclipselink') {
