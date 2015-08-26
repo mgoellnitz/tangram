@@ -109,7 +109,7 @@ openjpaJar.doFirst {
 // For Hibernate - must be the last in the que
 task hibernateJar(type: Jar, dependsOn: openjpaJar) {
   classifier = 'hibernate'
-  from "$buildDir/classes/main"
+  from "$buildDir/classes/hibernate"
   from "$buildDir/resources/main"
 }
 
