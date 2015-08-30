@@ -36,7 +36,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
-  String pac4j = '1.6.0' // 1.7.1 with relevant API changes
+  String pac4j = '1.7.1'
   String tomcat = '7.0.63'
   String codemirror = '5.5'
   String ckeditor = '4.5.2'

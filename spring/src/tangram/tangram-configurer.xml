@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
-  
+<!--
+
  Copyright 2011-2015 Martin Goellnitz
-  
+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  GNU Lesser General Public License for more details.
- 
+
  You should have received a copy of the GNU Lesser General Public License
  along with this program. If not, see <http://www.gnu.org/licenses/>.
- 
+
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
@@ -48,10 +48,10 @@
 
   <!-- really spring specific stuff -->
 
-  <!-- 
-       just a small set if URLs which don't need performance measurement and logins. 
+  <!--
+       just a small set if URLs which don't need performance measurement and logins.
        Re-define this in your WEB-INF/tangram directory with values as needed
-  -->  
+  -->
   <util:set id="freeUrls" value-type="java.lang.String">
     <value>${tangram.servlet.path}/stats</value>
     <value>${tangram.servlet.path}/login</value>
@@ -60,49 +60,53 @@
     <value>${tangram.servlet.path}/redirect/form</value>
     <value>${tangram.servlet.path}/redirect/basic</value>
   </util:set>
-    
-  <!-- 
-       just an empty set of admin users as a default. 
+
+  <!--
+       just an empty set of admin users as a default.
        Re-define this in your WEB-INF/tangram directory with values as needed
-  -->  
+  -->
   <util:set id="adminUsers" value-type="java.lang.String"/>
-    
-  <!-- 
+
+  <!--
        just an empty set of allowed users as a default - to let everyone pass.
        Re-define this in your WEB-INF/tangram directory with values as needed
-  -->  
+  -->
   <util:set id="allowedUsers" value-type="java.lang.String"/>
-  
+
   <util:map id="userIdAttributes" key-type="java.lang.String" value-type="java.lang.String">
     <entry key="twitter" value="screen_name" />
     <entry key="google" value="email" />
   </util:map>
-      
+
   <util:set id="loginProviders" value-type="java.lang.String">
     <value>form</value>
     <value>basic</value>
   </util:set>
-  
+
+  <bean id="profileCreator" class="org.pac4j.http.profile.UsernameProfileCreator" />
+
   <bean id="basicAuthLogin" class="org.pac4j.http.client.BasicAuthClient">
     <property name="name" value="basic"/>
-    <property name="usernamePasswordAuthenticator" ref="usernamePasswordAuthenticator"/>
+    <property name="authenticator" ref="usernamePasswordAuthenticator"/>
+    <property name="profileCreator" ref="profileCreator"/>
   </bean>
-  
+
   <bean id="formLogin" class="org.pac4j.http.client.FormClient">
     <property name="name" value="form"/>
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
-    <property name="usernamePasswordAuthenticator" ref="usernamePasswordAuthenticator"/>
+    <property name="authenticator" ref="usernamePasswordAuthenticator"/>
+    <property name="profileCreator" ref="profileCreator"/>
   </bean>
-  
+
   <bean id="measureTimeInterceptor" class="org.tangram.spring.MeasureTimeInterceptor"/>
-  
+
   <bean id="passwordInterceptor" class="org.tangram.spring.PasswordInterceptor" />
-  
-  <!-- 
+
+  <!--
        The common default list of interceptors for time measurement and login check.
        Re-define this in your WEB-INF/tangram directory with values as needed.
-  -->  
+  -->
   <bean name="interceptors" class="java.util.ArrayList">
     <constructor-arg>
       <list>
@@ -111,7 +115,7 @@
       </list>
     </constructor-arg>
   </bean>
-  
+
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list>

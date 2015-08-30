@@ -52,6 +52,7 @@ import org.tangram.view.ViewUtilities
 import org.tangram.view.velocity.VelocityPatchBean
 import org.pac4j.http.client.BasicAuthClient
 import org.pac4j.http.client.FormClient
+import org.pac4j.http.profile.UsernameProfileCreator
 import org.pac4j.http.credentials.UsernamePasswordAuthenticator
 
 log.info "starting"
@@ -97,14 +98,18 @@ log.info("configuring simple name password mapper")
 UsernamePasswordAuthenticator authenticator = new SimpleAuthenticator()
 module.bind(UsernamePasswordAuthenticator.class).toInstance(authenticator)
 
+UsernameProfileCreator profileCreator = new UsernameProfileCreator()
+
 log.info("configuring authentication clients")
 FormClient formClient = new FormClient()
 formClient.name='form'
-formClient.usernamePasswordAuthenticator = authenticator
+formClient.authenticator = authenticator
+formClient.profileCreator = profileCreator
 module.addClient(formClient)
 BasicAuthClient basicAuthClient = new BasicAuthClient()
 basicAuthClient.name='basic'
-basicAuthClient.usernamePasswordAuthenticator = authenticator
+basicAuthClient.authenticator = authenticator
+basicAuthClient.profileCreator = profileCreator
 module.addClient(basicAuthClient)
 
 log.info("configuring provider specific id attributes for external users")
