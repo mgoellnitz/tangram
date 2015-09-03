@@ -483,7 +483,7 @@ public class EditingHandler extends AbstractRenderingBase {
             xstream.omitField(baseClass, "ebeanInternalId");
         } // if
 
-        for (Class<? extends Content> c : classes) {
+        for (Class<? extends Content> c : getMutableBeanFactory().getAllClasses()) {
             LOG.info("contentExport() aliasing and ignoring fields for {}", c.getName());
             xstream.omitField(c, "beanFactory");
             xstream.omitField(c, "gaeBeanFactory");
