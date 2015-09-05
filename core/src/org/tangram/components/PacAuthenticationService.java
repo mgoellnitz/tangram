@@ -20,6 +20,7 @@ package org.tangram.components;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,8 @@ import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.http.client.FormClient;
+import org.pac4j.oauth.profile.google2.Google2Email;
+import org.pac4j.oauth.profile.google2.Google2Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
@@ -241,10 +244,20 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             Credentials credentials = client.getCredentials(context);
             LOG.info("callback() credentials: {}", credentials);
             UserProfile userProfile = client.getUserProfile(credentials, context);
+            Map<String, Object> attributes = new HashMap<String,Object>(userProfile.getAttributes());
+            // Mail attribute hack for google
+            if (userProfile instanceof Google2Profile) {
+                Google2Profile gp = (Google2Profile) userProfile;
+                for (Google2Email em : gp.getEmails()) {
+                    LOG.debug("callback() google mail: {}", em.getEmail());
+                    attributes.put("email", em.getEmail());
+                } // for
+            } // if
             LOG.debug("callback() userProfile {}: {} ({})", userProfile.getId(), userProfile, request.getSession(false));
             String idAttribute = userIdAttributes.get(client.getName());
-            String userId = StringUtils.isEmpty(idAttribute) ? userProfile.getId() : ""+userProfile.getAttribute(idAttribute);
-            GenericUser user = new GenericUser(client.getName(), userId, userProfile.getAttributes());
+            String userId = StringUtils.isEmpty(idAttribute) ? userProfile.getId() : ""+attributes.get(idAttribute);
+            LOG.debug("callback() user id : {} ({})", userId, idAttribute);
+            GenericUser user = new GenericUser(client.getName(), userId, attributes);
             if (!users.contains(user)) {
                 users.add(user);
             } // if
