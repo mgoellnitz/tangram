@@ -49,7 +49,7 @@ public class TangramVersions {
 
   String dinistiq = '0.4'
 
-  String springframework = '4.1.7.RELEASE'
+  String springframework = '4.2.1.RELEASE'
 
   String weld = '2.2.15.Final'
   String openwebbeans = '1.6.1'
