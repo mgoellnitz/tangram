@@ -30,6 +30,7 @@ public class TangramVersions {
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
   String groovy = '2.4.4'
+  String asm = '4.0'
   String velocity = '1.7'
   String slf4j = '1.7.12'
   String log4j = '1.2.17'
