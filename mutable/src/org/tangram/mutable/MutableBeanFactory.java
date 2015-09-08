@@ -28,7 +28,7 @@ import org.tangram.content.Content;
 public interface MutableBeanFactory extends BeanFactory {
 
     /**
-     *  Returns the root class of all content classes handled by the implementing instance - may be null;
+     * Returns the root class of all content classes handled by the implementing instance - may be null;
      */
     Class<? extends Content> getBaseClass();
 
@@ -142,5 +142,15 @@ public interface MutableBeanFactory extends BeanFactory {
      * @param cls
      */
     void clearCacheFor(Class<? extends Content> cls);
+
+
+    /**
+     * Get managing instance of the underlying implementation.
+     *
+     * Unspecified type instance of the implementing backend.
+     * This is e.g. a JDO PersistenceManager instance or a JPA
+     * EntitiyManager instance.
+     */
+    Object getManager();
 
 } // MutableBeanFactory

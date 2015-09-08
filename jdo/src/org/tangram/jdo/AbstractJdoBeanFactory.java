@@ -285,6 +285,12 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // getFactoryConfigOverrides()
 
 
+    @Override
+    public Object getManager() {
+        return manager;
+    } // getManager()
+
+
     @PostConstruct
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();

@@ -39,15 +39,15 @@ public final class Constants {
     public static final String THIS = "self";
 
     public static final String MIME_TYPE_HTML = "text/html";
-    
+
     public static final String MIME_TYPE_HTML_UTF8 = "text/html; charset=UTF-8";
-    
+
     public static final String MIME_TYPE_XML = "application/xml";
-    
+
     public static final String MIME_TYPE_CSS = "text/css";
-    
+
     public static final String MIME_TYPE_GROOVY = "application/x-groovy";
-    
+
     public static final String MIME_TYPE_JS = "application/javascript";
 
     public static final String MIME_TYPE_PLAIN = "text/plain";
@@ -130,6 +130,12 @@ public final class Constants {
      * name of the request attribute to take the result of a login attempt from.
      */
     public static final String ATTRIBUTE_LOGIN_RESULT = "loginResult";
+
+    /**
+     * name of the request attribute to take the value of the authentication service
+     * instance.
+     */
+    public static final String ATTRIBUTE_AUTHENTICATION_SERVICE = "authentication";
 
     /**
      * name of the request attribute to take the value of a protecton from, which

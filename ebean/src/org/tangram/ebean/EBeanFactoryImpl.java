@@ -209,6 +209,12 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
     } // getAllClasses()
 
 
+    @Override
+    public Object getManager() {
+        return server;
+    } // getManager()
+
+
     @PostConstruct
     public void afterPropertiesSet() {
         for (Class<? extends Content> c : getAllClasses()) {

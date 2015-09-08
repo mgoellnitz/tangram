@@ -238,6 +238,12 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     } // getAllClasses()
 
 
+    @Override
+    public Object getManager() {
+        return manager;
+    } // getManager()
+
+
     protected Map<? extends Object, ? extends Object> getFactoryConfigOverrides() {
         return getConfigOverrides()==null ? Collections.emptyMap() : getConfigOverrides();
     } // getFactoryConfigOverrides()
