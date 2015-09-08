@@ -31,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
-import org.tangram.authentication.AuthenticationService;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.controller.ControllerHook;
@@ -51,10 +50,6 @@ public class ProtectionHook implements ControllerHook {
 
     @Inject
     private BeanFactory beanFactory;
-
-    @Inject
-    private AuthenticationService authenticationService;
-
 
     /**
      * Return which protections (mapped by key) must be adhered when calling the given congent.
@@ -163,8 +158,6 @@ public class ProtectionHook implements ControllerHook {
         } // if
 
         // save the results of our work for others - say templates - to use it
-        // Maybe the template has an idea to do something for the user with it
-        model.put(Constants.ATTRIBUTE_AUTHENTICATION_SERVICE, authenticationService);
         // Setting login protection object
         model.put(Constants.ATTRIBUTE_PROTECTION, protection);
         // Setting login result
