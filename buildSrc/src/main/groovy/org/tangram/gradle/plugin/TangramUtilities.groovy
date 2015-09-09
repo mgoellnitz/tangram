@@ -191,7 +191,7 @@ class TangramUtilities {
       URLClassLoader cl = new URLClassLoader(urls, this.class.classLoader)
 
       // Instanciate enhancer and pass filename list
-      DataNucleusEnhancer enhancer = new DataNucleusEnhancer(api)
+      DataNucleusEnhancer enhancer = new DataNucleusEnhancer(api, new Properties())
       if (dir != null) {
         enhancer.setOutputDirectory(dir)
       } // if
@@ -418,7 +418,7 @@ class TangramUtilities {
         classSource = it.absolutePath
       } // if
     }
-    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
+    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource)
     ft.process(null)
   } // ebeanEnhance()
 
@@ -439,7 +439,7 @@ class TangramUtilities {
         classSource = it.absolutePath
       } // if
     }
-    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
+    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource)
     ft.process(null)
   } // ebeanEnhanceTest()
 

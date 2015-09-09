@@ -24,7 +24,6 @@ dependencies {
   compile "$versions.jdo_api"
   compile "org.datanucleus:datanucleus-api-jdo:$versions.datanucleus"
   compile "org.datanucleus:datanucleus-core:$versions.datanucleus"
-  compile "org.datanucleus:datanucleus-enhancer:$versions.datanucleus_enhancer"
 
   testCompile "org.testng:testng:$versions.testng"
   // dinistiq logging at debug level through special log4j.properties
@@ -32,8 +31,8 @@ dependencies {
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-spring')
   testCompile project (':tangram-mutable').sourceSets.test.output
-  testCompile "org.springframework:spring-core:$versions.testspring"
-  testCompile "org.springframework:spring-test:$versions.testspring"
+  testCompile "org.springframework:spring-core:$versions.springframework"
+  testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile "org.datanucleus:datanucleus-rdbms:$versions.datanucleus"
   testCompile "$versions.jdo_api"
   testCompile "hsqldb:hsqldb:1.8.0.10"

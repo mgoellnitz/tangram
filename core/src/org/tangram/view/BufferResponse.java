@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,8 +22,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Locale;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -150,6 +152,18 @@ public class BufferResponse implements HttpServletResponse {
             @Override
             public void write(int b) throws IOException {
                 out.write(b);
+            }
+
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+
+            @Override
+            public void setWriteListener(WriteListener wl) {
+                throw new UnsupportedOperationException("NYI");
             }
 
         };
@@ -286,6 +300,36 @@ public class BufferResponse implements HttpServletResponse {
     @Override
     @Deprecated
     public void setStatus(int sc, String sm) {
+        throw new UnsupportedOperationException("NYI");
+    }
+
+
+    @Override
+    public int getStatus() {
+        throw new UnsupportedOperationException("NYI");
+    }
+
+
+    @Override
+    public String getHeader(String string) {
+        throw new UnsupportedOperationException("NYI");
+    }
+
+
+    @Override
+    public Collection<String> getHeaders(String string) {
+        throw new UnsupportedOperationException("NYI");
+    }
+
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        throw new UnsupportedOperationException("NYI");
+    }
+
+
+    @Override
+    public void setContentLengthLong(long l) {
         throw new UnsupportedOperationException("NYI");
     }
 

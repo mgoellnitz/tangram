@@ -33,7 +33,7 @@ dependencies {
   testCompile project (':tangram-jpa')
 
   testCompile project (':tangram-mutable').sourceSets.test.output
-  testCompile "org.springframework:spring-core:$versions.testspring"
-  testCompile "org.springframework:spring-test:$versions.testspring"
+  testCompile "org.springframework:spring-core:$versions.springframework"
+  testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile "hsqldb:hsqldb:1.8.0.10"
 }

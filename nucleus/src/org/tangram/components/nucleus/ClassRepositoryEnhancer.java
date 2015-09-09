@@ -21,6 +21,7 @@ package org.tangram.components.nucleus;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -58,7 +59,7 @@ public class ClassRepositoryEnhancer implements BeanListener {
             if (c.getAnnotation(PersistenceCapable.class)!=null) {
                 LOG.info("reset() defining {}", c.getName());
                 try {
-                    DataNucleusEnhancer enhancer = new DataNucleusEnhancer();
+                    DataNucleusEnhancer enhancer = new DataNucleusEnhancer("JDO", new Properties());
                     enhancer.setVerbose(true);
                     enhancer.setSystemOut(true);
                     final String classname = c.getName();

@@ -27,8 +27,8 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   String lombok = '1.16.6'
-  String servlet_api = 'javax.servlet:servlet-api:2.5'
-  String jsp_api = 'javax.servlet:jsp-api:2.0'
+  String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
+  String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String groovy = '2.4.4'
   String asm = '4.0'
   String velocity = '1.7'
@@ -45,7 +45,6 @@ public class TangramVersions {
   // For testing purposes
   String junit = '4.12'
   String testng = '6.3.1' // Gradle 2.6 has 6.3.1 - tests fail with other versions - latest is 6.9.6
-  String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
 
@@ -57,7 +56,7 @@ public class TangramVersions {
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
 
-  String jdo_api = 'javax.jdo:jdo-api:3.1-rc1'
+  String jdo_api = 'javax.jdo:jdo-api:3.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
   String openjpa = '2.4.0'
@@ -66,16 +65,10 @@ public class TangramVersions {
   String hibernate = '5.0.0.Final'
   String hibernate_ogm = '4.2.0.Final'
 
-  // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
-  String datanucleus = '3.1.3'
-  // The byte code enhancer is not included in every version for some reason
-  String datanucleus_enhancer = '3.1.1'
-  // Latest version presented by google is 2.1.2
-  String datanucleus_appengine = '2.1.2'
+  // The last DataNucleus Access Plattform version to include all necessary modules
+  String datanucleus = '4.1.1'
 
   String ebean = '6.6.1'
-  String ebean_agent = '4.5.4'
-
-  String appengine = '1.9.25'
+  String ebean_agent = '4.6.1'
 
 } // TangramVersions

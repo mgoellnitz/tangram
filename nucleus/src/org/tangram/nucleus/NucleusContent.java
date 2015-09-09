@@ -24,7 +24,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import org.datanucleus.identity.OID;
+import org.datanucleus.identity.SCOID;
 import org.datanucleus.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +44,12 @@ public abstract class NucleusContent extends JdoContent {
         if (LOG.isDebugEnabled()) {
             LOG.debug("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
         } // if
-        if (id instanceof OID) {
-            OID oid = (OID) id;
-            String pcClass = oid.getPcClass();
-            int idx = pcClass.lastIndexOf('.');
-            pcClass = pcClass.substring(idx+1);
-            return pcClass+":"+oid.getKeyValue();
+        if (id instanceof SCOID) {
+            SCOID oid = (SCOID) id;
+//            String pcClass = oid.getSCOClass();
+//            int idx = pcClass.lastIndexOf('.');
+//            pcClass = pcClass.substring(idx+1);
+            return oid.toString();
         } else {
             LOG.warn("postprocessPlainId() returning default '{}'", id);
             return ""+id;
@@ -58,7 +58,6 @@ public abstract class NucleusContent extends JdoContent {
 
 
     /* utility helpers until we understand to do this natively in the datanucleus / mongoDB layer (or similar layers) */
-
     protected byte[] stringToByteArray(String data) {
         return data==null ? null : Base64.decode(data);
     } // stringToByteArray()

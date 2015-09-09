@@ -88,7 +88,7 @@ public class NucleusContentTest extends BaseContentTest {
 
     @Test(priority = 0)
     public void test0IsEnhanced() {
-        Assert.assertTrue(checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "jdo"), "Classes not enhanced");
+        Assert.assertTrue(checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "dn"), "Classes not enhanced");
     } // test1IsEnhanced()
 
 

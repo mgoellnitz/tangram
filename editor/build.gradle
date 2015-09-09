@@ -44,6 +44,13 @@ dependencies {
   providedCompile "$versions.jsp_api"
 }
 
+// Use resources from jar file
+jar.doFirst {
+  into('META-INF/resources') {
+    from fileTree("$projectDir/webapp")
+  }
+}
+
 // Editor war containing codemirror and ckeditor locally - default not is to use them from the cloud
 task localWar(type: War, dependsOn: war) {
   classifier = 'local'

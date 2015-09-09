@@ -23,8 +23,8 @@ dependencies {
 
   testCompile "org.testng:testng:$versions.testng"
   // Used for mocking some things
-  testCompile "org.springframework:spring-core:$versions.testspring"
-  testCompile "org.springframework:spring-test:$versions.testspring"
+  testCompile "org.springframework:spring-core:$versions.springframework"
+  testCompile "org.springframework:spring-test:$versions.springframework"
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
