@@ -418,7 +418,7 @@ class TangramUtilities {
         classSource = it.absolutePath
       } // if
     }
-    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
+    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource)
     ft.process(null)
   } // ebeanEnhance()
 
@@ -439,7 +439,7 @@ class TangramUtilities {
         classSource = it.absolutePath
       } // if
     }
-    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource, null)
+    OfflineFileTransform ft = new OfflineFileTransform(t, cl, classSource)
     ft.process(null)
   } // ebeanEnhanceTest()
 

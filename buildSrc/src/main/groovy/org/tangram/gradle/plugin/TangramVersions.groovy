@@ -57,7 +57,7 @@ public class TangramVersions {
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
 
-  String jdo_api = 'javax.jdo:jdo-api:3.1-rc1'
+  String jdo_api = 'javax.jdo:jdo-api:3.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
   String openjpa = '2.4.0'
@@ -74,7 +74,7 @@ public class TangramVersions {
   String datanucleus_appengine = '2.1.2'
 
   String ebean = '6.6.1'
-  String ebean_agent = '4.5.4'
+  String ebean_agent = '4.7.1'
 
   String appengine = '1.9.25'
 
