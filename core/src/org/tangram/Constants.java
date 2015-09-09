@@ -132,12 +132,6 @@ public final class Constants {
     public static final String ATTRIBUTE_LOGIN_RESULT = "loginResult";
 
     /**
-     * name of the request attribute to take the value of the authentication service
-     * instance.
-     */
-    public static final String ATTRIBUTE_AUTHENTICATION_SERVICE = "authentication";
-
-    /**
      * name of the request attribute to take the value of a protecton from, which
      * needs to be met right now for the content to be displayed. If the value
      * is not null, we should issue a login form to the user in this output
