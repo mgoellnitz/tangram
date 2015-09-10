@@ -69,6 +69,6 @@ public class TangramVersions {
   String datanucleus = '4.1.1'
 
   String ebean = '6.6.1'
-  String ebean_agent = '4.6.1'
+  String ebean_agent = '4.7.1'
 
 } // TangramVersions
