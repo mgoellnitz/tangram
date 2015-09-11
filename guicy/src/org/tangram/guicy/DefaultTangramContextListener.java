@@ -41,8 +41,6 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
 
     public static final String SERVLET_MODULE_CLASS = "servlet.module.class";
 
-    public static final String DISPATCHER_PATH = "tangram.dispatcher.path";
-
     private ServletModule servletModule = null;
 
 

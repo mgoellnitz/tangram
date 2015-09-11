@@ -55,10 +55,24 @@ import org.tangram.view.TemplateResolver;
  */
 public class TangramServletModule extends ServletModule {
 
+    /**
+     * Servlet context init parameter indicating the base URI path for the tangram dispatcher.
+     */
+    public static final String DISPATCHER_PATH = "tangram.dispatcher.path";
+
+    /**
+     * Resource base path for the configuration of the Google Guice itnegration.
+     */
     public static final String GUICY_BASE = "guicy";
 
+    /**
+     * Resource name of a properties file for additional values to be used during configuration.
+     */
     public static final String GUICY_PROPERTIES = GUICY_BASE+"/tangram.properties";
 
+    /**
+     * Resource name of a properties file for defaults of additional values (s.a.) to be used during configuration.
+     */
     public static final String GUICY_DEFAULTS = GUICY_BASE+"/defaults.properties";
 
     private static final Logger LOG = LoggerFactory.getLogger(TangramServletModule.class);
@@ -100,7 +114,7 @@ public class TangramServletModule extends ServletModule {
     } // addTemplateResolver()
 
 
-    public void addClient(Client<?,?> client) {
+    public void addClient(Client<?, ?> client) {
         clientBinder.addBinding().toInstance(client);
     } // addTemplateResolver()
 
@@ -146,7 +160,7 @@ public class TangramServletModule extends ServletModule {
         clientBinder = Multibinder.newSetBinder(binder(), Client.class);
 
         ServletContext context = getServletContext();
-        String dispatcherPath = context == null ? null : context.getInitParameter(DefaultTangramContextListener.DISPATCHER_PATH);
+        String dispatcherPath = context==null ? null : context.getInitParameter(DISPATCHER_PATH);
         dispatcherPath = dispatcherPath==null ? "/s" : dispatcherPath;
         configuration.setProperty("dispatcherPath", dispatcherPath);
 
