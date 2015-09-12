@@ -26,6 +26,7 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
+  // The basics
   String lombok = '1.16.6'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
@@ -46,22 +47,23 @@ public class TangramVersions {
   String junit = '4.12'
   String testng = '6.3.1' // Gradle 2.6 has 6.3.1 - tests fail with other versions - latest is 6.9.6
 
-  String dinistiq = '0.4'
+  // The dependency injection options
+  String dinistiq = '0.5-SNAPSHOT'
+
+  String guice = '4.0'
+  String mycila_guice = '3.6.ga'
 
   String springframework = '4.2.1.RELEASE'
 
   String weld = '2.2.15.Final'
   String openwebbeans = '1.6.1'
 
-  String guice = '4.0'
-  String mycila_guice = '3.6.ga'
-
+  // Storage options
   String jdo_api = 'javax.jdo:jdo-api:3.1'
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
   String openjpa = '2.4.0'
   String eclipselink = '2.6.0'
-  String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
   String hibernate = '5.0.0.Final'
   String hibernate_ogm = '4.2.0.Final'
 
@@ -70,5 +72,8 @@ public class TangramVersions {
 
   String ebean = '6.6.1'
   String ebean_agent = '4.7.1'
+
+  // Not used by tangram itself
+  String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
 
 } // TangramVersions

@@ -32,12 +32,25 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface LinkFactoryAggregator {
 
+    /**
+     * Return the base URI segment for tangram as configured.
+     * This segment is missing the servlet context prefix.
+     * @see #getPrefix(javax.servlet.http.HttpServletRequest)
+     * @return configured dispatcher path
+     */
+    String getDispatcherPath();
+
+    /**
+     * Get URI prefix for requests handled by tangram view dispatching.
+     * @param request current request context
+     * @return URI prefix string
+     */
     String getPrefix(HttpServletRequest request);
 
 
     /**
      * Register a link handler factory to be used in aggregated link generation process.
-     * 
+     *
      * @param factory factory instance to be registered
      */
     void registerFactory(LinkFactory factory);
@@ -45,8 +58,8 @@ public interface LinkFactoryAggregator {
 
     /**
      * Unregister a previously registered link factory instance to be excluded from future aggregated link generation processes.
-     * 
-     * @param factory factory instance to be unregistered 
+     *
+     * @param factory factory instance to be unregistered
      */
     void unregisterFactory(LinkFactory factory);
 

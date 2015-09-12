@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -69,6 +69,7 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     private String prefix = null;
 
 
+    @Override
     public String getDispatcherPath() {
         return dispatcherPath;
     }
@@ -84,6 +85,16 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public void setDispatcherPath(String dispatcherPath) {
         this.dispatcherPath = dispatcherPath;
     }
+
+
+    @Override
+    public String getPrefix(HttpServletRequest request) {
+        if (prefix==null) {
+            String contextPath = request.getContextPath();
+            prefix = (contextPath.length()==1 ? "" : contextPath)+dispatcherPath;
+        } // if
+        return prefix;
+    } // getPrefix()
 
 
     @Override
@@ -104,16 +115,6 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     public void unregisterFactory(LinkFactory factory) {
         factories.remove(factory);
     } // unregisterFactory()
-
-
-    @Override
-    public String getPrefix(HttpServletRequest request) {
-        if (prefix==null) {
-            String contextPath = request.getContextPath();
-            prefix = (contextPath.length()==1 ? "" : contextPath)+dispatcherPath;
-        } // if
-        return prefix;
-    } // getPrefix()
 
 
     public void postProcessResult(Link result, HttpServletRequest request) {

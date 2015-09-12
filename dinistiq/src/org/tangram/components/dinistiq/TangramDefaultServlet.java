@@ -21,14 +21,20 @@ package org.tangram.components.dinistiq;
 import dinistiq.web.RegisterableServlet;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.servlet.DefaultServlet;
 
 
 @Named("defaultServlet")
 @Singleton
 public class TangramDefaultServlet extends DefaultServlet implements RegisterableServlet {
+
+    @Inject
+    LinkFactoryAggregator linkFactoryAggregator;
+
 
     @Override
     public int getOrder() {
@@ -37,12 +43,12 @@ public class TangramDefaultServlet extends DefaultServlet implements Registerabl
 
 
     @Override
-    public Set<String> getUriRegex() {
+    public Set<String> getUrlPatterns() {
         Set<String> result = new HashSet<>();
-        result.add("/id_([A-Z][a-zA-Z]+:[0-9]+)");
-        result.add("/id_([A-Z][a-zA-Z]+:[0-9]+)/view_(.*)");
+        result.add(linkFactoryAggregator.getDispatcherPath()+"/id_*");
+        result.add(linkFactoryAggregator.getDispatcherPath()+"/id_*/view_*");
         return result;
-    } // getUriRegex()
+    } // getUrlPatterns()
 
 
     @Override

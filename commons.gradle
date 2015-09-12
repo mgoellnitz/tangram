@@ -30,6 +30,7 @@ apply plugin: 'tangram'
 
 repositories {
   jcenter()
+  maven { url 'http://oss.jfrog.org/oss-snapshot-local/'}
 }
 
 sourceCompatibility = 1.7

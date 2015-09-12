@@ -21,14 +21,20 @@ package org.tangram.components.dinistiq;
 import dinistiq.web.RegisterableServlet;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.servlet.MetaServlet;
 
 
 @Named("metaServlet")
 @Singleton
 public class TangramMetaServlet extends MetaServlet implements RegisterableServlet {
+
+    @Inject
+    LinkFactoryAggregator linkFactoryAggregator;
+
 
     @Override
     public int getOrder() {
@@ -37,12 +43,12 @@ public class TangramMetaServlet extends MetaServlet implements RegisterableServl
 
 
     @Override
-    public Set<String> getUriRegex() {
+    public Set<String> getUrlPatterns() {
         Set<String> result = new HashSet<>();
-        result.add("");
-        result.add("/.*");
+        result.add(linkFactoryAggregator.getDispatcherPath()+"/");
+        result.add(linkFactoryAggregator.getDispatcherPath()+"/*");
         return result;
-    } // getUriRegex()
+    } // getUrlPatterns()
 
 
     @Override
