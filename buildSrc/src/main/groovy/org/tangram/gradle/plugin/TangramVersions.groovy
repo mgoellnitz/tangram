@@ -63,7 +63,7 @@ public class TangramVersions {
   String openjpa = '2.4.0'
   String eclipselink = '2.6.0'
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
-  String hibernate = '5.0.0.Final'
+  String hibernate = '5.0.1.Final'
   String hibernate_ogm = '4.2.0.Final'
 
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
@@ -76,6 +76,6 @@ public class TangramVersions {
   String ebean = '6.6.1'
   String ebean_agent = '4.7.1'
 
-  String appengine = '1.9.25'
+  String appengine = '1.9.26'
 
 } // TangramVersions
