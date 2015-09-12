@@ -33,7 +33,7 @@ import org.tangram.servlet.MetaServlet;
 public class TangramMetaServlet extends MetaServlet implements RegisterableServlet {
 
     @Inject
-    LinkFactoryAggregator linkFactoryAggregator;
+    private LinkFactoryAggregator linkFactoryAggregator;
 
 
     @Override

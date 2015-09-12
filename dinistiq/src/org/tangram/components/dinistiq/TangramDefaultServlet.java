@@ -33,7 +33,7 @@ import org.tangram.servlet.DefaultServlet;
 public class TangramDefaultServlet extends DefaultServlet implements RegisterableServlet {
 
     @Inject
-    LinkFactoryAggregator linkFactoryAggregator;
+    private LinkFactoryAggregator linkFactoryAggregator;
 
 
     @Override
