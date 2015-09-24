@@ -45,6 +45,24 @@ import org.slf4j.LoggerFactory;
  * user friendly default expiration headers, which might of course subsequently be overridden in the response.
  * Since we can't set header after we come back in the chain and content type is only known after that call,
  * we use extensions here and map them to times.
+ *
+ * The filter takes an init parameter "expiration" which is a comma separated list of "extension=seconds" pairs
+ * mapping extensions to caching times in seconds. Exensons don't include the dot in this case. All times have
+ * to be issued in seconds.
+ *
+ *  &lt;filter>
+ *    &lt;filter-name&gt;expiryFilter&lt;/filter-name&gt;
+ *    &lt;filter-class&gt;org.tangram.util.ExpirationHeaderFilter&lt;/filter-class&gt;
+ *    &lt;init-param&gt;
+ *      &lt;param-name&gt;expirations</param-name&gt;
+ *      &lt;param-value&gt;css=604800,js=604800,gif=604800,ico=604800,html=0,DEFAULT=86400&lt;/param-value&gt;
+ *    &lt;/init-param&gt;
+ *  &lt;/filter&gt;
+ *  &lt;filter-mapping&gt;
+ *    &lt;filter-name&gt;expiryFilter&lt;/filter-name&gt;
+ *    &lt;url-pattern>&gt;/*&lt;/url-pattern&gt;
+ *  &lt;/filter-mapping&gt;
+ *
  */
 public class ExpirationHeaderFilter implements Filter {
 
@@ -105,13 +123,14 @@ public class ExpirationHeaderFilter implements Filter {
             if (timeObject!=null) {
                 long time = timeObject;
                 if (time>0) {
-                    long expirationValue = System.currentTimeMillis()+time;
+                    long expirationValue = System.currentTimeMillis()+(time*1000);
                     LOG.debug("doFilter() expirationValue=", expirationValue);
                     String expires = formatter.format(new Date(expirationValue));
                     LOG.debug("doFilter() expires={}", expires);
-                    response.addHeader("Last-Modified", startTimeHeader);
+                    response.addHeader("Cache-Control", "max-age="+time);
                     response.addHeader("Etag", startTimeString+uri.hashCode()+"\"");
                     response.addHeader("Expires", expires);
+                    response.addHeader("Last-Modified", startTimeHeader);
                 } // if
             } // if
         } // if
@@ -130,7 +149,7 @@ public class ExpirationHeaderFilter implements Filter {
                 String[] kvp = exp.split("=");
                 String extension = kvp[0];
                 String timeString = kvp[1];
-                long time = Long.parseLong(timeString)*1000;
+                long time = Long.parseLong(timeString);
                 LOG.info("init() time for {} is {}", extension, time);
                 addExpirationTime(extension, time);
             } // for

@@ -16,7 +16,8 @@ if (bytes != null) {
   if (viewSettings.get("imageCacheTime") != null) {
     int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("imageCacheTime"));
     calendar.add(Calendar.MINUTE, cacheTimeMinutes);
-    response.setHeader("Expires", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));  
+    response.setHeader("Cache-Control", "max-age="+(cacheTimeMinutes*60));
+    response.setHeader("Expires", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
   } // if
   response.getOutputStream().write(bytes);
 } // if
