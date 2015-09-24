@@ -71,7 +71,7 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
     private static final Pattern PATTERN_ID_VIEW = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+).view_(.+)");
 
     /**
-     * URL part pattern to match onyl ID based calls
+     * URL part pattern to match only ID based calls
      */
     private static final Pattern PATTERN_ID = Pattern.compile("([A-Z][a-zA-Z]+:[0-9]+)");
 
