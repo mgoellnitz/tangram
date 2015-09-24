@@ -23,6 +23,7 @@ import org.tangram.Constants
 import org.tangram.authentication.AuthenticationService
 import org.tangram.components.CodeExporter
 import org.tangram.components.CodeResourceCache
+import org.tangram.components.DefaultHandler
 import org.tangram.components.GenericAuthorizationService
 import org.tangram.components.GroovyClassRepository
 import org.tangram.components.MetaLinkHandler
@@ -40,7 +41,6 @@ import org.tangram.link.LinkHandlerRegistry
 import org.tangram.logic.ClassRepository
 import org.tangram.monitor.Statistics
 import org.tangram.protection.AuthorizationService
-import org.tangram.servlet.DefaultServlet
 import org.tangram.servlet.JspTemplateResolver
 import org.tangram.servlet.MetaServlet
 import org.tangram.servlet.PasswordFilter
@@ -153,6 +153,9 @@ module.bind(LinkFactoryAggregator.class).toInstance(linkFactoryAggregator)
 log.info("configuring statistics handler")
 module.bind(StatisticsHandler.class).toInstance(new StatisticsHandler())
 
+log.info("configuring default handler")
+module.bind(DefaultHandler.class).toInstance(new DefaultHandler())
+
 log.info("configuring code exporter handler")
 module.bind(CodeExporter.class).toInstance(new CodeExporter())
 
@@ -187,11 +190,6 @@ RepositoryTemplateResolver repositoryTemplateResolver = new RepositoryTemplateRe
 repositoryTemplateResolver.setName("Velocity")
 repositoryTemplateResolver.setActivateCaching(true)
 module.addTemplateResolver(repositoryTemplateResolver)
-
-log.info("configuring default servlet")
-DefaultServlet tangramDefaultServlet = new DefaultServlet()
-module.serveRegex("\\"+dispatcherPath+"\\/id_([A-Z][a-zA-Z]+:[0-9]+)\\/view_(.*)").with(tangramDefaultServlet)
-module.serveRegex("\\"+dispatcherPath+"\\/id_([A-Z][a-zA-Z]+:[0-9]+)").with(tangramDefaultServlet)
 
 log.info("configuring meta servlet");
 MetaServlet tangramMetaServlet = new MetaServlet()

@@ -89,7 +89,7 @@ public abstract class AbstractRenderingBase implements LinkFactory {
 
     public static Link createDefaultLink(Object bean, String action, String view) {
         Link result = null;
-        if (action==null) {
+        if ((bean instanceof Content) && (action==null)) {
             String url = "/id_"+((Content)bean).getId()+(view==null ? "" : "/view_"+view);
             result = new Link(url);
             result.setTarget("_tangram_view");
