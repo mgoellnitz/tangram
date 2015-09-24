@@ -12,6 +12,7 @@ response.setHeader("Last-modified", Utils.HTTP_HEADER_DATE_FORMAT.format(calenda
 if (viewSettings.get("cssCacheTime") != null) {
   int cacheTimeMinutes = Integer.parseInt(""+viewSettings.get("cssCacheTime"));
   calendar.add(Calendar.MINUTE, cacheTimeMinutes);
+  response.setHeader("Cache-Control", "max-age="+(cacheTimeMinutes*60));
   response.setHeader("Expires", Utils.HTTP_HEADER_DATE_FORMAT.format(calendar.getTime()));
 } // if
 InputStreamReader isr = new InputStreamReader(code.getStream());
