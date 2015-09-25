@@ -51,7 +51,7 @@ public class TangramVersions {
 
   String springframework = '4.2.1.RELEASE'
 
-  String weld = '2.2.15.Final'
+  String weld = '2.2.16.Final'
   String openwebbeans = '1.6.1'
 
   String guice = '4.0'
@@ -73,7 +73,7 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.6.1'
+  String ebean = '6.8.1'
   String ebean_agent = '4.7.1'
 
   String appengine = '1.9.26'
