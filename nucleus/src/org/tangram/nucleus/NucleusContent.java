@@ -24,7 +24,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import org.datanucleus.identity.SCOID;
+import org.datanucleus.identity.DatastoreId;
 import org.datanucleus.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,17 +41,16 @@ public abstract class NucleusContent extends JdoContent {
 
     @Override
     public String postprocessPlainId(Object id) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("postprocessPlainId() id="+id+" ("+(id==null ? "-" : id.getClass().getName())+")");
-        } // if
-        if (id instanceof SCOID) {
-            SCOID oid = (SCOID) id;
-//            String pcClass = oid.getSCOClass();
-//            int idx = pcClass.lastIndexOf('.');
-//            pcClass = pcClass.substring(idx+1);
-            return oid.toString();
+        LOG.debug("postprocessPlainId() id={} ({})", id, (id==null ? "-" : id.getClass().getName()));
+        if (id instanceof DatastoreId) {
+            DatastoreId oid = (DatastoreId) id;
+            String targetClass = oid.getTargetClassName();
+            int idx = targetClass.lastIndexOf('.');
+            targetClass = targetClass.substring(idx+1);
+            LOG.debug("postprocessPlainId() key as object is ='{}'", oid.getKeyAsObject().getClass().getName());
+            return targetClass+":"+oid.getKeyAsObject();
         } else {
-            LOG.warn("postprocessPlainId() returning default '{}'", id);
+            LOG.error("postprocessPlainId() returning default '{}'", id);
             return ""+id;
         } // if
     } // postprocessPlainId()
