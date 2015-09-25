@@ -48,7 +48,7 @@ public class TangramVersions {
   String testng = '6.3.1' // Gradle 2.6 has 6.3.1 - tests fail with other versions - latest is 6.9.6
 
   // The dependency injection options
-  String dinistiq = '0.5-SNAPSHOT'
+  String dinistiq = '0.5'
 
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
