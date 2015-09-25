@@ -70,7 +70,7 @@ public class TangramVersions {
   // The last DataNucleus Access Plattform version to include all necessary modules
   String datanucleus = '4.1.1'
 
-  String ebean = '6.6.1'
+  String ebean = '6.8.1'
   String ebean_agent = '4.7.1'
 
   // Not used by tangram itself
