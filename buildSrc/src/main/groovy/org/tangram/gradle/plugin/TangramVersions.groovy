@@ -29,7 +29,7 @@ public class TangramVersions {
   String lombok = '1.16.6'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.4.4'
+  String groovy = '2.4.5'
   String asm = '4.0'
   String velocity = '1.7'
   String slf4j = '1.7.12'
@@ -51,7 +51,7 @@ public class TangramVersions {
 
   String springframework = '4.2.1.RELEASE'
 
-  String weld = '2.2.16.Final'
+  String weld = '2.3.0.Final'
   String openwebbeans = '1.6.1'
 
   String guice = '4.0'
