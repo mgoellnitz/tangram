@@ -18,7 +18,7 @@
  */
 import org.gradle.api.Project
 
-allprojects {
+subprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
   apply plugin: 'java'
   apply plugin: 'jacoco'

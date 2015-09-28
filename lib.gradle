@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,74 +14,14 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
-import org.gradle.api.artifacts.ExcludeRule
-import org.gradle.api.artifacts.ModuleDependency
-import groovy.util.Node
-
 apply from: '../commons.gradle'
 
 def release = project.hasProperty('release')
 
 // Since this is just a lib we need this "providedCompile" stuff explicitly here
 configurations {
-  libs 
+  libs
   providedCompile
-}
-
-// right now this is only necessary for the libs
-// http://forums.gradle.org/gradle/topics/exclude_not_set_in_generated_pom_maven_publish
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      pom.withXml {
-        def pom = asNode()
-        def first = pom.children().get(0)
-        first.plus {
-          new Node(pom, 'name', 'Tangram')
-          new Node(pom, 'description', 'Object oriented templating and dynamic web development framework')
-          new Node(pom, 'url', 'https://github.com/mgoellnitz/tangram/')
-          def scm = new Node(pom, 'scm')
-          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
-          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
-          scm.appendNode('url', 'git@github.com:mgoellnitz/tangram.git')
-          scm
-          def license = new Node(pom, 'licenses').appendNode('license')
-          license.appendNode('name', 'LGPL-3.0')
-          license.appendNode('url', 'http://opensource.org/licenses/LGPL-3.0')
-          license
-        }
-        def developer = pom.appendNode('developers').appendNode('developer')
-        developer.appendNode('name', 'Martin Goellnitz')
-        developer.appendNode('organization', 'Provocon')
-        developer.appendNode('organizationUrl', 'http://www.provocon.de/')
-      }
-      from components.java
-      if (release) {
-        artifact sourcesJar 
-        artifact javadocJar 
-      }
-      configurations[JavaPlugin.RUNTIME_CONFIGURATION_NAME].allDependencies.findAll {  
-        it instanceof ModuleDependency && !it.excludeRules.isEmpty()  
-      }.each { ModuleDependency dep ->  
-        pom.withXml {  
-          def xmlDep = asNode().dependencies.dependency.find {  
-            it.groupId[0].text() == dep.group && it.artifactId[0].text() == dep.name  
-          }
-          if (xmlDep) {
-            def xmlExclusions = xmlDep.exclusions[0]  
-            if (!xmlExclusions) {
-              xmlExclusions = xmlDep.appendNode('exclusions')
-            }
-            dep.excludeRules.each { ExcludeRule rule ->
-              def xmlExclusion = xmlExclusions.appendNode('exclusion')  
-              xmlExclusion.appendNode('groupId', rule.group)  
-              xmlExclusion.appendNode('artifactId', rule.module)  
-            }
-          }
-        }
-      }
-    }
-  }
 }
