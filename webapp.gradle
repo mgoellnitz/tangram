@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * Copyright 2011-2015 Martin Goellnitz
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -14,17 +14,17 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 apply from: '../commons.gradle'
 
 apply plugin: 'war'
 
-def release = project.hasProperty('release') ? ("$release" == "true") : false 
+def release = project.hasProperty('release')
 
 // needed for building jars and wars in the same project
 configurations {
-  libs 
+  libs
   webapp
 }
 artifacts {
@@ -36,7 +36,7 @@ artifacts {
 webAppDirName = 'webapp'
 
 // we want jars and wars
-jar.enabled = true 
+jar.enabled = true
 war.dependsOn jar
 
 // Special handling for the war packaging
@@ -58,11 +58,6 @@ war {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      from components.java
-      if (release) {
-        artifact sourcesJar 
-        artifact javadocJar 
-      }
       artifact war {
         classifier 'war'
         extension 'war'
