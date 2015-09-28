@@ -531,10 +531,10 @@ public class EditingHandler extends AbstractRenderingBase {
 
 
     /**
-     * Small helper method to heep areas with suppressed warnings small.
+     * Small helper method to keep areas with suppressed warnings small.
      *
      * @param contents
-     * @return
+     * @return type casted input parameter
      */
     @SuppressWarnings("unchecked")
     private List<Content> convertList(Object contents) {
