@@ -20,7 +20,7 @@ import org.gradle.api.artifacts.ExcludeRule
 import org.gradle.api.artifacts.ModuleDependency
 import groovy.util.Node
 
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
 def release = project.hasProperty('release')
 
