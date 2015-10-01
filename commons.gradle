@@ -18,8 +18,11 @@
  */
 import org.gradle.api.artifacts.ExcludeRule
 import org.gradle.api.artifacts.ModuleDependency
+import org.gradle.api.artifacts.PublishArtifact
+import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.internal.java.JavaLibrary
 import org.gradle.api.internal.component.Usage
+import org.gradle.api.internal.component.SoftwareComponentInternal
 import groovy.util.Node
 
 version = '1.0.0'
@@ -72,10 +75,13 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 class WrappedRuntimeUsage implements Usage {
 
-  private Usage delegate;
+  private Usage delegate
 
-  WrappedRuntimeUsage(Usage usage) {
+  private DefaultConfiguration configuration
+
+  WrappedRuntimeUsage(Usage usage, DefaultConfiguration conf) {
     delegate = usage
+    configuration = conf
   }
 
   public String getName() {
@@ -83,13 +89,13 @@ class WrappedRuntimeUsage implements Usage {
   }
 
 
-  public Set<org.gradle.api.artifacts.PublishArtifact> getArtifacts() {
+  public Set<PublishArtifact> getArtifacts() {
     return delegate.artifacts
   }
 
 
-  public Set<org.gradle.api.artifacts.ModuleDependency> getDependencies() {
-    Set<org.gradle.api.artifacts.ModuleDependency> result = new HashSet<>()
+  public Set<ModuleDependency> getDependencies() {
+    Set<ModuleDependency> result = new HashSet<>()
     delegate.dependencies.each {
       if (!result.contains(it)) {
         result.add(it)
@@ -97,17 +103,28 @@ class WrappedRuntimeUsage implements Usage {
         println "Ignoring another $it.group:$it.name:$it.version"
       }
     }
+    configuration.dependencies.each {
+      if (!result.contains(it)) {
+        println "* Adding $it.group:$it.name:$it.version"
+        result.add(it)
+      } else {
+        println "* Ignoring another $it.group:$it.name:$it.version"
+      }
+    }
     return result
   }
 
 }
 
-class WrappedLibrary implements org.gradle.api.internal.component.SoftwareComponentInternal {
+class WrappedLibrary implements SoftwareComponentInternal {
 
   private JavaLibrary delegate;
 
-  WrappedLibrary(JavaLibrary lib) {
+  private DefaultConfiguration configuration
+
+  WrappedLibrary(JavaLibrary lib, DefaultConfiguration conf) {
     delegate = lib;
+    configuration = conf
   }
 
   public String getName() {
@@ -117,7 +134,7 @@ class WrappedLibrary implements org.gradle.api.internal.component.SoftwareCompon
   public Set<Usage> getUsages() {
     Set<Usage> result = new HashSet<>()
     delegate.usages.each {
-      result.add(new WrappedRuntimeUsage(it))
+      result.add(new WrappedRuntimeUsage(it, configuration))
     }
     return result
   }
@@ -127,36 +144,8 @@ class WrappedLibrary implements org.gradle.api.internal.component.SoftwareCompon
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      pom.withXml {
-        def pom = asNode()
-        pom.dependencies.'*'.findAll() {
-          it.scope.text() == 'runtime'  && project.configurations.providedCompile.allDependencies.find { dep ->
-            dep.name == it.artifactId.text()
-          }
-        }.each() {
-          it.scope*.value = 'provided'
-        }
-        def first = pom.children().get(0)
-        first.plus {
-          new Node(pom, 'name', 'Tangram')
-          new Node(pom, 'description', 'Object oriented templating and dynamic web development framework')
-          new Node(pom, 'url', 'https://github.com/mgoellnitz/tangram/')
-          def scm = new Node(pom, 'scm')
-          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
-          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
-          scm.appendNode('url', 'git@github.com:mgoellnitz/tangram.git')
-          scm
-          def license = new Node(pom, 'licenses').appendNode('license')
-          license.appendNode('name', 'LGPL-3.0')
-          license.appendNode('url', 'http://opensource.org/licenses/LGPL-3.0')
-          license
-        }
-        def developer = pom.appendNode('developers').appendNode('developer')
-        developer.appendNode('name', 'Martin Goellnitz')
-        developer.appendNode('organization', 'Provocon')
-        developer.appendNode('organizationUrl', 'http://www.provocon.de/')
-      }
-      from new WrappedLibrary(components.java)
+      // println "Wrap: $project.name"
+      from new WrappedLibrary(components.java, configurations.providedCompile)
       if (release) {
         artifact sourcesJar
         artifact javadocJar
@@ -179,6 +168,35 @@ publishing {
               xmlExclusion.appendNode('artifactId', rule.module)
             }
           }
+        }
+      }
+      pom.withXml {
+        def pom = asNode()
+        pom.dependencies.'*'.findAll() {
+          it.scope.text() == 'runtime'  && project.configurations.providedCompile.allDependencies.find { dep ->
+            dep.name == it.artifactId.text()
+          }
+        }.each() {
+          it.scope*.value = 'provided'
+        }
+        pom.children().get(3).plus {
+          new Node(pom, 'name', "Tangram "+project.name.substring(8))
+          new Node(pom, 'description', 'Object oriented templating and dynamic web development framework')
+          new Node(pom, 'url', 'https://github.com/mgoellnitz/tangram/')
+          def scm = new Node(pom, 'scm')
+          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('url', 'git@github.com:mgoellnitz/tangram.git')
+          scm
+          def license = new Node(pom, 'licenses').appendNode('license')
+          license.appendNode('name', 'LGPL-3.0')
+          license.appendNode('url', 'http://opensource.org/licenses/LGPL-3.0')
+          license
+          def developer = pom.appendNode('developers').appendNode('developer')
+          developer.appendNode('name', 'Martin Goellnitz')
+          developer.appendNode('organization', 'Provocon')
+          developer.appendNode('organizationUrl', 'http://www.provocon.de/')
+          developer
         }
       }
     }
