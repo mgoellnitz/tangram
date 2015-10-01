@@ -18,6 +18,8 @@
  */
 import org.gradle.api.artifacts.ExcludeRule
 import org.gradle.api.artifacts.ModuleDependency
+import org.gradle.api.internal.java.JavaLibrary
+import org.gradle.api.internal.component.Usage
 import groovy.util.Node
 
 version = '1.0.0'
@@ -68,6 +70,60 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from "${buildDir}/docs/javadoc"
 }
 
+class WrappedRuntimeUsage implements Usage {
+
+  private Usage delegate;
+
+  WrappedRuntimeUsage(Usage usage) {
+    delegate = usage
+  }
+
+  public String getName() {
+    return delegate.name
+  }
+
+
+  public Set<org.gradle.api.artifacts.PublishArtifact> getArtifacts() {
+    return delegate.artifacts
+  }
+
+
+  public Set<org.gradle.api.artifacts.ModuleDependency> getDependencies() {
+    Set<org.gradle.api.artifacts.ModuleDependency> result = new HashSet<>()
+    delegate.dependencies.each {
+      if (!result.contains(it)) {
+        result.add(it)
+      } else {
+        println "Ignoring another $it.group:$it.name:$it.version"
+      }
+    }
+    return result
+  }
+
+}
+
+class WrappedLibrary implements org.gradle.api.internal.component.SoftwareComponentInternal {
+
+  private JavaLibrary delegate;
+
+  WrappedLibrary(JavaLibrary lib) {
+    delegate = lib;
+  }
+
+  public String getName() {
+    return delegate.name
+  }
+
+  public Set<Usage> getUsages() {
+    Set<Usage> result = new HashSet<>()
+    delegate.usages.each {
+      result.add(new WrappedRuntimeUsage(it))
+    }
+    return result
+  }
+
+}
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -100,7 +156,7 @@ publishing {
         developer.appendNode('organization', 'Provocon')
         developer.appendNode('organizationUrl', 'http://www.provocon.de/')
       }
-      from components.java
+      from new WrappedLibrary(components.java)
       if (release) {
         artifact sourcesJar
         artifact javadocJar
