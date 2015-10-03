@@ -34,10 +34,25 @@ Examples are presented for JDO with RDBMS (hsqldb is used for the example conten
 JDO on Google App Engine, JPA, EBean (with h2), and CoreMedia CMS's most simple example
 application.
 
+https://github.com/mgoellnitz/tangram-examples
+
+To make things easier for applications using this framework we provide a Gradle plugin now.
+
+This plugin can be used seperately independent of the rest of the framework - which very
+much makes sense for applications using JPA, JDO, or EBean, needing some WAR file overlay
+("underlying") mechanism, or simply want to have automatic minification of CSS and JavaScript
+resources in their webapps folder.
+
+http://qiqiaoban.blogspot.de/2015/10/gradle-plugin-in-tangram-now-grown-up.html
+
 Maven Repositories
 ------------------
 
-Snapshots and Releases:
+Releases:
+
+https://jcenter.bintray.com/
+
+Snapshots:
 
 https://raw.githubusercontent.com/mgoellnitz/artifacts/master
 
@@ -52,16 +67,6 @@ To make all this work you need
 Gradle 1.x can only be used, if you recompile dinistiq and tangram with that very Gradle
 version due to some incompatibilities with the groovy version used. Ubuntu LTS users be
 warned not use the Gradle version referenced by their Version 12 LTS install.
-
-To make things easier for applications using this framework we provide a Gradle plugin now.
-
-To use this plugin seperately - which very much makes sense for applications using JPA, JDO,
-or EBean - you have to build and publish the tangram buildSrc folder.
-
-```bash
-cd buildSrc
-gradle
-```
 
 For all the rest simply type
 
@@ -88,39 +93,6 @@ gradle eclipse
 (output folders are set to .../build/classes/main not to .../bin)
 
 (We don't recommend using eclipse anymore)
-
-Changes 0.9
-===========
-
-0.9 is a code cleanup and refactoring version to get a starting point for other
-backend and platform solutions.
-
-Users of relational database systems will have to get rid of their tangram-rdbms
-dependencies for library and web archives. Everything that's needed moved to the
-mere library dependecy nucleus for all datanucleus based scenarios, all other
-parts moved to core or jdo layer respectively. So an rdbms project will need the
-tanram-nucleus library compile dependency and the tangram-jdo war dependency
-instead of tangram-rdbms in both cases in the past.
-
-The security aspects have now been renamed from 'solution' to 'feature' which
-might result in a inheritance change and template renaming.
-
-The MimedBlob stuff now also is called a 'feature' and moved to the core package.
-
-TangramServlet resides in a spring package - you will have to change your web.xml
-
-The code level now is lifted to Java 7 since the problems with the datanucleus
-enhancer seem to have vanished.
-
-The editor is an independent module and can - through the middle layer of mutable
-contents - be used for jpa and jdo base layers. Only the GAE flavour integrates
-this directly. For all other scenarios applications will have to add those extra
-two dependencies to switch on the generic editor.
-
-An ftp module has been added to support IDE synchronisation of codes in the
-repository. It's in an early stage but seems to be working at least for netbeans
-quite well. Create a Code resource with annotaion users.properties, mimetpe
-text/plain and user=passwords tuples inside.
 
 Changes 1.0
 ===========
