@@ -18,6 +18,20 @@
  */
 import org.gradle.api.Project
 
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.0.3'
+  }
+}
+
+plugins {
+  // Code coverage reporting
+  id 'com.github.kt3k.coveralls' version '2.0.1'
+}
+
 allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
   apply plugin: 'java'
@@ -55,18 +69,6 @@ allprojects {
       xml.enabled = true // coveralls plugin depends on xml format report
       html.enabled = true
     }
-  }
-}
-
-// Code coverage reporting
-apply plugin: 'com.github.kt3k.coveralls'
-
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
   }
 }
 

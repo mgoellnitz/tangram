@@ -16,10 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-defaultTasks 'clean', 'publishToMavenLocal'
+import groovy.util.Node
+
+plugins {
+  id 'com.jfrog.artifactory' version '3.0.3'
+}
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
+
+defaultTasks 'clean', 'publishToMavenLocal'
 
 String[] roots = ["${project.projectDir}/src/main/groovy"]
 def versions = new GroovyScriptEngine(roots).loadScriptByName('org/tangram/gradle/plugin/TangramVersions.groovy').newInstance()
@@ -73,6 +79,28 @@ publishing {
       from components.java
       artifact sourcesJar
       artifact groovydocJar
+      pom.withXml {
+        def pom = asNode()
+        pom.children().get(3).plus {
+          new Node(pom, 'name', "Tangram Gradle plugin")
+          new Node(pom, 'description', 'Object oriented templating and dynamic web development framework')
+          new Node(pom, 'url', 'https://github.com/mgoellnitz/tangram/')
+          def scm = new Node(pom, 'scm')
+          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('url', 'git@github.com:mgoellnitz/tangram.git')
+          scm
+          def license = new Node(pom, 'licenses').appendNode('license')
+          license.appendNode('name', 'LGPL-3.0')
+          license.appendNode('url', 'http://opensource.org/licenses/LGPL-3.0')
+          license
+          def developer = pom.appendNode('developers').appendNode('developer')
+          developer.appendNode('name', 'Martin Goellnitz')
+          developer.appendNode('organization', 'Provocon')
+          developer.appendNode('organizationUrl', 'http://www.provocon.de/')
+          developer
+        }
+      }
     }
   }
 }

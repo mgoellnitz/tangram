@@ -35,6 +35,7 @@ if (release) {
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'tangram'
+apply plugin: 'com.jfrog.artifactory'
 
 repositories {
   jcenter()
@@ -71,6 +72,21 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
   from "${buildDir}/docs/javadoc"
+}
+
+artifactory {
+  contextUrl = 'https://oss.jfrog.org/artifactory'
+  publish {
+    repository {
+      repoKey = version.endsWith('SNAPSHOT') ? 'oss-snapshot-local' : 'oss-release-local'
+      username = "$bintrayUser"
+      password = "$bintrayKey"
+      maven = true
+    }
+    defaults {
+      publications ('mavenJava')
+    }
+  }
 }
 
 class WrappedRuntimeUsage implements Usage {
