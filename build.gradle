@@ -29,7 +29,7 @@ buildscript {
 
 plugins {
   // Code coverage reporting
-  id 'com.github.kt3k.coveralls' version '2.0.1'
+  id 'com.github.kt3k.coveralls' version '2.4.0x'
 }
 
 allprojects {
