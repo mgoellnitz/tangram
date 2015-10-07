@@ -51,6 +51,7 @@ task localWar(type: War, dependsOn: war) {
 
 localWar.doFirst() {
   overlayWebapp(localWar)
+  minifyArchive(localWar)
   String ckeditorBase = "ckeditor_${versions.ckeditor}"
   if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
     String ckeditor = "${ckeditorBase}_standard.zip"
@@ -104,14 +105,6 @@ localWar.doFirst() {
 }
 
 localWar {
-  eachFile {
-    if(isCss(it)) {
-      it.filter(org.tangram.gradle.plugin.CSSMinify)
-    }
-    if(isJavaScript(it)) {
-      it.filter(org.tangram.gradle.plugin.JavaScriptMinify)
-    }
-  }
   // This is a strange way to get one of the smallest jars as dependency
   // included in the web archive since empty paths are not allowed here.
   classpath = 'WEB-INF/lib/javax.inject-1.jar'
