@@ -17,9 +17,11 @@
  *
  */
 import groovy.util.Node
+import groovy.util.GroovyScriptEngine
 
 plugins {
-  id 'com.jfrog.artifactory' version '3.0.3'
+  id 'com.jfrog.artifactory' version '3.1.1'
+  id 'com.gradle.plugin-publish' version '0.9.1'
 }
 
 apply plugin: 'groovy'
@@ -27,11 +29,12 @@ apply plugin: 'maven-publish'
 
 defaultTasks 'clean', 'publishToMavenLocal'
 
+version '1.1-SNAPSHOT'
+
 String[] roots = ["${project.projectDir}/src/main/groovy"]
 def versions = new GroovyScriptEngine(roots).loadScriptByName('org/tangram/gradle/plugin/TangramVersions.groovy').newInstance()
 
 repositories {
-  // most of the usual stuff
   jcenter()
 }
 
@@ -75,7 +78,6 @@ publishing {
         groupId 'tangram'
         artifactId 'gradle-plugin'
       }
-      version '1.1-SNAPSHOT'
       from components.java
       artifact sourcesJar
       artifact groovydocJar
@@ -101,6 +103,20 @@ publishing {
           developer
         }
       }
+    }
+  }
+}
+
+pluginBundle {
+  website = 'https://github.com/mgoellnitz/tangram/'
+  vcsUrl = 'https://github.com/mgoellnitz/tangram/'
+  description = 'Tangram JPA, JDO, EBean, webapp overlay, and minifying plugin'
+  tags = ['tangram', 'jdo', 'jpa', 'ebean', 'datanucleus', 'eclipselink', 'hibernate', 'openjpa', 'overlay', 'minify']
+
+  plugins {
+    greetingsPlugin {
+      id = 'tangram.gradle.plugin'
+      displayName = 'Tangram Gradle plugin'
     }
   }
 }
