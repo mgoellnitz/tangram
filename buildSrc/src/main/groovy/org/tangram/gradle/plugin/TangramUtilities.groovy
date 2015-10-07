@@ -28,6 +28,7 @@ import org.gradle.api.Project
 import org.datanucleus.enhancer.DataNucleusEnhancer
 import org.gradle.api.GradleException
 import org.gradle.api.file.FileTree
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.War
 import com.avaje.ebean.enhance.agent.Transformer
 import com.avaje.ebean.enhance.ant.OfflineFileTransform
@@ -62,8 +63,7 @@ class TangramUtilities {
 
   /**
    *  Extract all webarchives we depend on and leave out files we'd like to
-   *  overwrite with local versions. Then copy JavaScript and CSS Codes and
-   *  try to minify them.
+   *  overwrite with local versions.
    */
   public overlayWebapp(War w) {
     Project p = w.project
@@ -104,8 +104,15 @@ class TangramUtilities {
         } // if
       } // if
     } // while
+  } // overlayWebapp()
 
-    w.eachFile {
+
+
+  /**
+   * Tries to minidy any JavaScript and CSS file in the given archive.
+   */
+  public minifyArchive(Jar j) {
+    j.eachFile {
       if(isCss(it)) {
         it.filter(org.tangram.gradle.plugin.CSSMinify)
       }
@@ -113,7 +120,7 @@ class TangramUtilities {
         it.filter(org.tangram.gradle.plugin.JavaScriptMinify)
       }
     }
-  } // overlayWebapp()
+  } // minifyArchive()
 
 
   /**
