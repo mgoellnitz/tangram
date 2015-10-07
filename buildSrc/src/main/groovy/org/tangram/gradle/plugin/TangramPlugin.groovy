@@ -108,6 +108,15 @@ class TangramPlugin implements Plugin<Project> {
       def war = warIterator.next()
       war.doFirst() {
         utilities.overlayWebapp(war)
+        utilities.minifyArchive(war)
+      }
+    }
+
+    def jarIterator = project.getTasksByName('jar', true).iterator()
+    if (jarIterator.hasNext()) {
+      def j = jarIterator.next()
+      j.doFirst() {
+        utilities.minifyArchive(j)
       }
     }
   } // apply()
