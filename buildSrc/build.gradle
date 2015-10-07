@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 defaultTasks 'clean', 'publishToMavenLocal'
 
-version = '1.0.0'
+version = '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -83,7 +83,6 @@ publishing {
         groupId 'tangram'
         artifactId 'gradle-plugin'
       }
-      version '1.0.0'
       from components.java
       artifact sourcesJar
       artifact groovydocJar
