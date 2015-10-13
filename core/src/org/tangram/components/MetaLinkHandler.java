@@ -53,6 +53,7 @@ import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
+import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
@@ -138,6 +139,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             List<Object> parameters = new ArrayList<>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
             Class<? extends Object>[] parameterTypes = method.getParameterTypes();
+            RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
             for (int typeIndex = 0; typeIndex<parameterTypes.length; typeIndex++) {
                 Annotation[] annotations = allAnnotations[typeIndex];
                 Class<? extends Object> type = parameterTypes[typeIndex];
@@ -147,7 +149,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                 if (type.equals(HttpServletResponse.class)) {
                     parameters.add(response);
                 } // if
-                Map<String, String[]> parameterMap = null;
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof LinkPart) {
                         String valueString = matcher.group(((LinkPart) annotation).value());
@@ -159,11 +160,9 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         if ("--empty--".equals(parameterName)) {
                             parameterName = type.getSimpleName().toLowerCase();
                         } // if
-                        if (parameterMap==null) {
-                            parameterMap = viewUtilities.createParameterAccess(request).getParameterMap();
-                        } // if
-                        LOG.debug("callAction() parameter {} should be of type {}", parameterName, type.getName());
-                        Object value = propertyConverter.getStorableObject(null, request.getParameter(parameterName), type, request);
+                        LOG.debug("callAction() parameter {} should be of type {} {}", parameterName, type.getSimpleName(), type.getName());
+                        boolean isBlob = "byte[]".equals(type.getSimpleName());
+                        Object value = isBlob ? parameterAccess.getData(parameterName) : propertyConverter.getStorableObject(null, request.getParameter(parameterName), type, request);
                         parameters.add(value);
                     } // if
                     if (annotation instanceof ActionForm) {
@@ -172,7 +171,9 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                             JavaBean wrapper = new JavaBean(form);
                             for (String propertyName : wrapper.propertyNames()) {
                                 String valueString = request.getParameter(propertyName);
-                                Object value = propertyConverter.getStorableObject(null, valueString, wrapper.getType(propertyName), request);
+                                Class<? extends Object> t = wrapper.getType(propertyName);
+                                boolean isBlob = "byte[]".equals(t.getSimpleName());
+                                Object value = isBlob ? parameterAccess.getData(propertyName) : propertyConverter.getStorableObject(null, valueString, t, request);
                                 wrapper.set(propertyName, value);
                             } // for
                             parameters.add(form);
