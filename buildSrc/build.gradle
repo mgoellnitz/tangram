@@ -87,15 +87,19 @@ publishing {
           new Node(pom, 'name', "Tangram Gradle plugin")
           new Node(pom, 'description', 'Object oriented templating and dynamic web development framework')
           new Node(pom, 'url', 'https://github.com/mgoellnitz/tangram/')
-          def scm = new Node(pom, 'scm')
-          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
-          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
-          scm.appendNode('url', 'git@github.com:mgoellnitz/tangram.git')
-          scm
           def license = new Node(pom, 'licenses').appendNode('license')
           license.appendNode('name', 'LGPL-3.0')
           license.appendNode('url', 'http://opensource.org/licenses/LGPL-3.0')
           license
+          def issues = new Node(pom, 'issueManagement')
+          issues.appendNode('system', 'mail')
+          issues.appendNode('url', 'mailto:tangram@provocon.de')
+          issues
+          def scm = new Node(pom, 'scm')
+          scm.appendNode('connection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('developerConnection', 'scm:git:git@github.com:mgoellnitz/tangram.git')
+          scm.appendNode('url', 'https://github.com/mgoellnitz/tangram.git')
+          scm
           def developer = pom.appendNode('developers').appendNode('developer')
           developer.appendNode('name', 'Martin Goellnitz')
           developer.appendNode('organization', 'Provocon')
