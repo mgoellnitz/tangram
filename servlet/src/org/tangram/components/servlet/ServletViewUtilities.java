@@ -46,6 +46,7 @@ import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
 import org.tangram.servlet.ResponseWrapper;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
 import org.tangram.view.ViewContextFactory;
@@ -118,7 +119,14 @@ public class ServletViewUtilities implements ViewUtilities {
      */
     @Override
     public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
-        return new ServletRequestParameterAccess(request, uploadFileMaxSize);
+        synchronized (request) {
+            RequestParameterAccess result = SystemUtils.convert(request.getAttribute(Constants.ATTRIBUTE_PARAMETER_ACCESS));
+            if (result==null) {
+                result = new ServletRequestParameterAccess(request, uploadFileMaxSize);
+                request.setAttribute(Constants.ATTRIBUTE_PARAMETER_ACCESS, result);
+            } // if
+            return result;
+        } // synchronized
     } // createParameterAccess()
 
 

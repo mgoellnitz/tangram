@@ -139,6 +139,11 @@ public final class Constants {
     public static final String ATTRIBUTE_PROTECTION = "protection";
 
     /**
+     * name of the request attribute to hold parameter access instance for that reqeust.
+     */
+    public static final String ATTRIBUTE_PARAMETER_ACCESS = "parameter.access";
+
+    /**
      * Name of the session attribute holding the last return url for logins etc.
      */
     public static final String ATTRIBUTE_RETURN_URL = "tangram.return.url";

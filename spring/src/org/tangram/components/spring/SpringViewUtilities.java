@@ -35,6 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.tangram.Constants;
 import org.tangram.spring.view.ViewHandler;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -92,7 +93,14 @@ public class SpringViewUtilities implements ViewUtilities {
      */
     @Override
     public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
-        return new SpringRequestParameterAccess(request);
+        synchronized (request) {
+            RequestParameterAccess result = SystemUtils.convert(request.getAttribute(Constants.ATTRIBUTE_PARAMETER_ACCESS));
+            if (result==null) {
+                result = new SpringRequestParameterAccess(request);
+                request.setAttribute(Constants.ATTRIBUTE_PARAMETER_ACCESS, result);
+            } // if
+            return result;
+        } // synchronized
     } // createParameterAccess()
 
 
