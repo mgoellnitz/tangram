@@ -30,6 +30,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.content.CodeHelper;
@@ -46,6 +48,8 @@ import org.tangram.view.TargetDescriptor;
 @Singleton
 @LinkHandler
 public class CodeExporter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CodeExporter.class);
 
     @Inject
     private LinkHandlerRegistry registry;
@@ -88,17 +92,21 @@ public class CodeExporter {
                 String folder = CodeHelper.getFolder(mimeType);
                 String extension = CodeHelper.getExtension(mimeType);
                 if (CodeHelper.getCodeMimeTypes().contains(mimeType)) {
-                    byte[] bytes = code.getCodeText().getBytes("UTF-8");
-                    ZipEntry ze = new ZipEntry(folder+"/"+getFilename(code)+extension);
-                    ze.setComment(mimeType);
-                    ze.setSize(bytes.length);
-                    ze.setTime(now);
-                    crc.reset();
-                    crc.update(bytes);
-                    ze.setCrc(crc.getValue());
-                    zos.putNextEntry(ze);
-                    zos.write(bytes);
-                    zos.closeEntry();
+                    try {
+                        byte[] bytes = code.getCodeText().getBytes("UTF-8");
+                        ZipEntry ze = new ZipEntry(folder+"/"+getFilename(code)+extension);
+                        ze.setComment(mimeType);
+                        ze.setSize(bytes.length);
+                        ze.setTime(now);
+                        crc.reset();
+                        crc.update(bytes);
+                        ze.setCrc(crc.getValue());
+                        zos.putNextEntry(ze);
+                        zos.write(bytes);
+                        zos.closeEntry();
+                    } catch (IOException ioe) {
+                        LOG.error("codes()", ioe);
+                    } // try/catch
                 } // if
             } // if
         } // for
