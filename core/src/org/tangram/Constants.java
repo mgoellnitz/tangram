@@ -159,7 +159,7 @@ public final class Constants {
 
     public static final String VERSION_MAJOR = "1";
 
-    public static final String VERSION_MINOR = "0";
+    public static final String VERSION_MINOR = "1";
 
     public static final Map<String, String> VERSIONS = new HashMap<>();
 
