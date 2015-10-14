@@ -45,7 +45,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.3.1' // Gradle 2.6 has 6.3.1 - tests fail with other versions - latest is 6.9.6
+  String testng = '6.3.1' // Gradle 2.7 has 6.3.1 - tests fail with other versions - latest is 6.9.8
 
   // The dependency injection options
   String dinistiq = '0.5'
