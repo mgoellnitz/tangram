@@ -36,22 +36,13 @@ apply plugin: 'de.undercouch.download'
 dependencies {
   compile project(':tangram-mutable')
 
-  compile "com.thoughtworks.xstream:xstream:$versions.xstream"
-
   testCompile "org.testng:testng:$versions.testng"
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
 }
 
-// Use resources from jar file
-jar.doFirst {
-  into('META-INF/resources') {
-    from fileTree("$projectDir/webapp")
-  }
-}
-
-// Editor war containing codemirror and ckeditor locally - default not is to use them from the cloud
+// Editor war containing codemirror and ckeditor locally - default is to use them from the cloud
 task localWar(type: War, dependsOn: war) {
   classifier = 'local'
 }

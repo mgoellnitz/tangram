@@ -60,7 +60,7 @@ public class StorFtpCommandHandler extends StorCommandHandler {
             dir = SessionHelper.getDirectoy(session);
             String mimetype = CodeHelper.getMimetype(dir);
             String annotation = CodeHelper.getAnnotation(filename);
-            CodeResource lookup = codeResourceCache.getTypeCache(mimetype).get(annotation);
+            CodeResource lookup = codeResourceCache.get(mimetype, annotation);
             // This hopefully is one really just one class effectively
             Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
             MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());

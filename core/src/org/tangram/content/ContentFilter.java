@@ -1,6 +1,6 @@
-/**
+/*
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,18 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-apply from: '../webapp.gradle'
+package org.tangram.content;
 
-dependencies {
-  compile project(':tangram-core')
+import java.util.List;
 
-  compile "com.thoughtworks.xstream:xstream:$versions.xstream"
 
-  testCompile "org.testng:testng:$versions.testng"
-  // Used for mocking some things
-  testCompile "org.springframework:spring-core:$versions.springframework"
-  testCompile "org.springframework:spring-test:$versions.springframework"
+/**
+ * Instances of this interface can be used to filter a list of typed content items.
+ */
+public interface ContentFilter {
 
-  providedCompile "$versions.servlet_api"
-  providedCompile "$versions.jsp_api"
-}
+    List<Content> filter(List<Content> contents);
+
+} // ContentFilter

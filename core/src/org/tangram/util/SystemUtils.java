@@ -28,11 +28,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.lang.StringUtils;
+import org.tangram.content.Content;
 
 
 /**
@@ -148,5 +150,17 @@ public final class SystemUtils {
     public static <T> T convert(Object bean) {
         return (T) bean;
     } // convert()
+
+
+    /**
+     * Small helper method to keep areas with suppressed warnings small.
+     *
+     * @param contents
+     * @return type casted input parameter
+     */
+    @SuppressWarnings("unchecked")
+    public static List<Content> convertList(Object contents) {
+        return (List<Content>) contents;
+    } // convertList()
 
 } // SystemUtils

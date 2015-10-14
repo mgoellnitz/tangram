@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.editor;
+package org.tangram.mutable;
 
 import com.thoughtworks.xstream.XStream;
 import static com.thoughtworks.xstream.XStream.PRIORITY_NORMAL;

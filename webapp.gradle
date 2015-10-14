@@ -39,6 +39,13 @@ webAppDirName = 'webapp'
 jar.enabled = true
 war.dependsOn jar
 
+// Use resources from jar file
+jar.doFirst {
+  into('META-INF/resources') {
+    from fileTree("$projectDir/webapp")
+  }
+}
+
 // Special handling for the war packaging
 war {
   eachFile {

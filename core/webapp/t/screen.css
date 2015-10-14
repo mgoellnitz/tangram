@@ -1,7 +1,7 @@
 body {
   font-family: Sans-Serif, Helvetica, Arial;
   font-size: 11pt;
-  background-color: #f0f0f0;
+  background-color: #f8f4f4;
   margin: 10px 25px 10px 15px;
 }
 
@@ -14,7 +14,7 @@ a {
 input {
   font-weight: bold;
   padding: 3px;
-  background-color: #d8c8a8;
+  background-color: #e8d8a8;
 }
 
 li {

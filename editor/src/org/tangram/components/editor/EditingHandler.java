@@ -18,11 +18,7 @@
  */
 package org.tangram.components.editor;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,13 +46,13 @@ import org.tangram.annotate.LinkPart;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.AbstractRenderingBase;
-import org.tangram.editor.AppEngineXStream;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.JavaBean;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TargetDescriptor;
@@ -201,6 +197,18 @@ public class EditingHandler extends AbstractRenderingBase {
     private TargetDescriptor describeTarget(Content bean) throws IOException {
         return new TargetDescriptor(bean, null, EDIT_VIEW);
     } // redirect()
+
+
+    /**
+     * Add the most common stuff to the response and request on any view returning method.
+     */
+    private void prepareView(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("editingHandler", this);
+        request.setAttribute("classes", getMutableBeanFactory().getClasses());
+        request.setAttribute("prefix", Utils.getUriPrefix(request));
+        response.setContentType(Constants.MIME_TYPE_HTML);
+        response.setCharacterEncoding("UTF-8");
+    } // prepareView()
 
 
     @LinkAction("/store/id_(.*)")
@@ -354,14 +362,11 @@ public class EditingHandler extends AbstractRenderingBase {
                 LOG.error("list() error while sorting", e);
             } // try/catch
         } // if
-        response.setContentType(Constants.MIME_TYPE_HTML_UTF8);
-        request.setAttribute("editingHandler", this);
+        prepareView(request, response);
         request.setAttribute(Constants.THIS, contents);
         request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
         request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
-        request.setAttribute("classes", classes);
         request.setAttribute("canDelete", deleteMethodEnabled);
-        request.setAttribute("prefix", Utils.getUriPrefix(request));
         if (cls!=null) {
             Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
             request.setAttribute("designClass", designClass);
@@ -377,7 +382,7 @@ public class EditingHandler extends AbstractRenderingBase {
         if (!authorizationService.isAdminUser(request, response)) {
             return authorizationService.getLoginTarget(request);
         } // if
-        response.setContentType(Constants.MIME_TYPE_HTML_UTF8);
+        prepareView(request, response);
         Content content = beanFactory.getBean(id);
         if (content==null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
@@ -387,12 +392,9 @@ public class EditingHandler extends AbstractRenderingBase {
             CodeResource code = (CodeResource) content;
             request.setAttribute("compilationErrors", classRepository.getCompilationErrors().get(code.getAnnotation()));
         } // if
-        request.setAttribute("editingHandler", this);
         request.setAttribute("beanFactory", getMutableBeanFactory());
         request.setAttribute("propertyConverter", propertyConverter);
-        request.setAttribute("classes", getMutableBeanFactory().getClasses());
         String prefix = Utils.getUriPrefix(request);
-        request.setAttribute("prefix", prefix);
         request.setAttribute("cmprefix", prefix+"/editor/codemirror");
         request.setAttribute("ckprefix", prefix+"/editor/ckeditor");
         Class<? extends Content> cls = content.getClass();
@@ -425,7 +427,7 @@ public class EditingHandler extends AbstractRenderingBase {
             JavaBean wrapper = new JavaBean(bean);
 
             Object listObject = wrapper.get(propertyName);
-            List<Content> list = convertList(listObject);
+            List<Content> list = SystemUtils.convertList(listObject);
             list.add(content);
 
             wrapper.set(propertyName, list);
@@ -453,147 +455,6 @@ public class EditingHandler extends AbstractRenderingBase {
         getMutableBeanFactory().delete(bean);
         return list(typeName, request, response);
     } // delete()
-
-
-    @LinkAction("/export")
-    public TargetDescriptor contentExport(@ActionParameter(value = "classes") String classList, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (!authorizationService.isAdminUser(request, response)) {
-            return authorizationService.getLoginTarget(request);
-        } // if
-        response.setContentType(Constants.MIME_TYPE_XML);
-        response.setCharacterEncoding("UTF-8");
-        // The pure reflection provider is used because of Google App Engines API limitations
-        XStream xstream = new AppEngineXStream(new StaxDriver());
-        Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
-
-        // Dig out root class of all this evil to find out where the id field is defined
-        Class<? extends Object> oneClass = classes.iterator().next();
-        while (oneClass.getSuperclass()!=Object.class) {
-            oneClass = oneClass.getSuperclass();
-        } // while
-        LOG.info("contentExport() root class to ignore fields in: {}", oneClass.getName());
-        xstream.omitField(oneClass, "id");
-        xstream.omitField(oneClass, "ebeanInternalId");
-        final Class<? extends Content> baseClass = getMutableBeanFactory().getBaseClass();
-        if (baseClass!=oneClass) {
-            LOG.info("contentExport() additional base class to ignore fields in: {}", oneClass.getName());
-            xstream.omitField(baseClass, "id");
-            xstream.omitField(baseClass, "beanFactory");
-            xstream.omitField(baseClass, "gaeBeanFactory");
-            xstream.omitField(baseClass, "ebeanInternalId");
-        } // if
-
-        for (Class<? extends Content> c : getMutableBeanFactory().getAllClasses()) {
-            LOG.info("contentExport() aliasing and ignoring fields for {}", c.getName());
-            xstream.omitField(c, "beanFactory");
-            xstream.omitField(c, "gaeBeanFactory");
-            xstream.omitField(c, "userServices");
-            xstream.alias(c.getSimpleName(), c);
-        } // for
-
-        List<Class<? extends Content>> sortedClasses = new ArrayList<>();
-        sortedClasses.add(getMutableBeanFactory().getImplementingClasses(CodeResource.class).get(0));
-
-        for (String className : StringUtils.isNotEmpty(classList) ? classList.split(",") : new String[0]) {
-            for (Class<? extends Content> c : classes) {
-                if (c.getSimpleName().equals(className.trim())) {
-                    if (!sortedClasses.contains(c)) {
-                        sortedClasses.add(c);
-                    } // if
-                } // if
-            } // for
-        } // for
-
-        for (Class<? extends Content> c : classes) {
-            if (!sortedClasses.contains(c)) {
-                sortedClasses.add(c);
-            } // if
-        } // for
-
-        LOG.info("contentExport() sorted classes {}", sortedClasses);
-
-        Collection<Content> allContent = new ArrayList<>();
-        for (Class<? extends Content> c : sortedClasses) {
-            try {
-                allContent.addAll(beanFactory.listBeansOfExactClass(c));
-            } catch (Exception e) {
-                LOG.error("contentExport()/list", e);
-            } // try/catch
-        } // for
-        try {
-            xstream.toXML(allContent, response.getWriter());
-            response.getWriter().flush();
-        } catch (IOException e) {
-            LOG.error("contentExport()/toxml", e);
-        } // try/catch
-        return TargetDescriptor.DONE;
-    } // contentExport()
-
-
-    /**
-     * Small helper method to keep areas with suppressed warnings small.
-     *
-     * @param contents
-     * @return type casted input parameter
-     */
-    @SuppressWarnings("unchecked")
-    private List<Content> convertList(Object contents) {
-        return (List<Content>) contents;
-    } // convertList()
-
-
-    private TargetDescriptor doImport(Reader input, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
-
-        getMutableBeanFactory().beginTransaction();
-        XStream xstream = new AppEngineXStream(new StaxDriver());
-        Collection<Class<? extends Content>> classes = getMutableBeanFactory().getClasses();
-        for (Class<? extends Content> c : classes) {
-            xstream.alias(c.getSimpleName(), c);
-        } // for
-
-        Object contents = xstream.fromXML(input);
-        LOG.info("doImport() {}", contents);
-        if (contents instanceof List) {
-            List<? extends Content> list = convertList(contents);
-            for (Content o : list) {
-                LOG.info("doImport() {}", o);
-                getMutableBeanFactory().persistUncommitted(o);
-            } // for
-        } // if
-        getMutableBeanFactory().commitTransaction();
-
-        return TargetDescriptor.DONE;
-    } // doImport()
-
-
-    @LinkAction("/import-text")
-    public TargetDescriptor contentImport(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
-        return StringUtils.isBlank(xmltext) ? TargetDescriptor.DONE : doImport(new StringReader(xmltext), request, response);
-    } // contentImport()
-
-
-    @LinkAction("/import")
-    public TargetDescriptor contentImport(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
-        RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
-        return doImport(new StringReader(new String(parameterAccess.getData("xmlfile"), "UTF-8")), request, response);
-    } // contentImport()
-
-
-    @LinkAction("/importer")
-    public TargetDescriptor importer(@ActionParameter("xmltext") String xmltext, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (!authorizationService.isAdminUser(request, response)) {
-            return authorizationService.getLoginTarget(request);
-        } // if
-        request.setAttribute("editingHandler", this);
-        request.setAttribute("classes", getMutableBeanFactory().getClasses());
-        request.setAttribute("prefix", Utils.getUriPrefix(request));
-        response.setContentType(Constants.MIME_TYPE_HTML);
-        response.setCharacterEncoding("UTF-8");
-        return new TargetDescriptor(this, null, null);
-    } // importer()
 
 
     private String getUrl(Object bean, String action, String view) {

@@ -21,7 +21,6 @@ import com.google.inject.TypeLiteral;
 import java.lang.reflect.Type;
 import org.tangram.Constants
 import org.tangram.authentication.AuthenticationService
-import org.tangram.components.CodeExporter
 import org.tangram.components.CodeResourceCache
 import org.tangram.components.DefaultHandler
 import org.tangram.components.GenericAuthorizationService
@@ -155,9 +154,6 @@ module.bind(StatisticsHandler.class).toInstance(new StatisticsHandler())
 
 log.info("configuring default handler")
 module.bind(DefaultHandler.class).toInstance(new DefaultHandler())
-
-log.info("configuring code exporter handler")
-module.bind(CodeExporter.class).toInstance(new CodeExporter())
 
 log.info("configuring class repository")
 module.bind(ClassRepository.class).toInstance(new GroovyClassRepository())
