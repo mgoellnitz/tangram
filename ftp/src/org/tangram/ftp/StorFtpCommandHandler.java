@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -61,8 +61,8 @@ public class StorFtpCommandHandler extends StorCommandHandler {
             String mimetype = CodeHelper.getMimetype(dir);
             String annotation = CodeHelper.getAnnotation(filename);
             CodeResource lookup = codeResourceCache.getTypeCache(mimetype).get(annotation);
-            // This hopefully is one really just one class efectively
-            final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
+            // This hopefully is one really just one class effectively
+            Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
             MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
             beanFactory.beginTransaction();
             code.setAnnotation(annotation);

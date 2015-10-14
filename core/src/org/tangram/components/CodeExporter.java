@@ -20,8 +20,6 @@ package org.tangram.components;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -32,7 +30,6 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.tangram.Constants;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.content.CodeHelper;
@@ -58,17 +55,6 @@ public class CodeExporter {
 
     @Inject
     private AuthorizationService authorizationService;
-
-    private static final Set<String> MIME_TYPES = new HashSet<>();
-
-
-    static {
-        MIME_TYPES.add(Constants.MIME_TYPE_XML);
-        MIME_TYPES.add(Constants.MIME_TYPE_HTML);
-        MIME_TYPES.add(Constants.MIME_TYPE_CSS);
-        MIME_TYPES.add(Constants.MIME_TYPE_JS);
-        MIME_TYPES.add(Constants.MIME_TYPE_GROOVY);
-    }
 
 
     private String getFilename(CodeResource code) {
@@ -101,9 +87,11 @@ public class CodeExporter {
                 String mimeType = code.getMimeType();
                 String folder = CodeHelper.getFolder(mimeType);
                 String extension = CodeHelper.getExtension(mimeType);
-                if (MIME_TYPES.contains(mimeType)) {
+                if (CodeHelper.getCodeMimeTypes().contains(mimeType)) {
                     byte[] bytes = code.getCodeText().getBytes("UTF-8");
                     ZipEntry ze = new ZipEntry(folder+"/"+getFilename(code)+extension);
+                    ze.setComment(mimeType);
+                    ze.setSize(bytes.length);
                     ze.setTime(now);
                     crc.reset();
                     crc.update(bytes);
