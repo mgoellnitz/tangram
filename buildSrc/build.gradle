@@ -19,13 +19,22 @@
 import groovy.util.Node
 import groovy.util.GroovyScriptEngine
 
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
+  }
+}
+
 plugins {
-  id 'com.jfrog.artifactory' version '3.1.1'
   id 'com.gradle.plugin-publish' version '0.9.1'
 }
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
 
 defaultTasks 'clean', 'publishToMavenLocal'
 
