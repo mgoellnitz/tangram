@@ -3,4 +3,4 @@ sudo: false
 language: java
 
 after_success:
-  - gradle -P pmdTest jacocoTestReport jacocoCombinedReport coveralls build generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle -Prelease build generatePomFileForMavenJavaPublication artifactoryPublish
