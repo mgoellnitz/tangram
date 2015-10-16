@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -25,6 +25,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
+
 
 /**
  * Datanucleus generic code implementation.
@@ -42,6 +43,8 @@ public final class Code extends NucleusContent implements MutableCode {
 
     @Column(jdbcType = "clob")
     private String code;
+
+    private long modificationTime;
 
 
     @Override
@@ -80,6 +83,18 @@ public final class Code extends NucleusContent implements MutableCode {
 
 
     @Override
+    public long getModificationTime() {
+        return modificationTime;
+    }
+
+
+    @Override
+    public void setModificationTime(long modificationTime) {
+        this.modificationTime = modificationTime;
+    }
+
+
+    @Override
     public String getCodeText() {
         return code;
     }
@@ -95,6 +110,7 @@ public final class Code extends NucleusContent implements MutableCode {
     public InputStream getStream() throws Exception {
         return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     }
+
 
     @Override
     public int compareTo(Content o) {

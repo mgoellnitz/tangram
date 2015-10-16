@@ -26,18 +26,53 @@ import java.io.InputStream;
  */
 public interface CodeResource extends Content {
 
+    /**
+     * Annotation indicating the use of the code text.
+     * Dependends on the mime type of the code.
+     *
+     * @return annotation value
+     */
     String getAnnotation();
 
 
+    /**
+     * Mime type of the code itself or the result produced for template codes.
+     *
+     * @return mime type - excluding encoding
+     */
     String getMimeType();
 
 
-    InputStream getStream() throws Exception;
+    /**
+     * Get modification time of the code.
+     *
+     * @return modification time in milliseconds since the epoche
+     */
+    long getModificationTime();
 
 
+    /**
+     * Return the code text.
+     *
+     * @return code text string
+     */
+    String getCodeText();
+
+
+    /**
+     * Return the size of the code text.
+     *
+     * @return size of the code text in characters
+     */
     long getSize();
 
 
-    String getCodeText();
+    /**
+     * Read the code as a stream.
+     *
+     * @return stream of the code text
+     * @throws Exception mostly IO Exceptions
+     */
+    InputStream getStream() throws Exception;
 
 } // CodeResource

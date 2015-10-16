@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,7 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableCode;
 
+
 /**
  * Implementation of CodeResource interface for use with JPA.
  *
@@ -46,6 +47,8 @@ public class Code extends JpaContent implements MutableCode {
 
     @Column(length = 32000)
     private String code;
+
+    private long modificationTime;
 
 
     @Override
@@ -84,6 +87,18 @@ public class Code extends JpaContent implements MutableCode {
 
 
     @Override
+    public long getModificationTime() {
+        return modificationTime;
+    }
+
+
+    @Override
+    public void setModificationTime(long modificationTime) {
+        this.modificationTime = modificationTime;
+    }
+
+
+    @Override
     public String getCodeText() {
         return code;
     }
@@ -99,6 +114,7 @@ public class Code extends JpaContent implements MutableCode {
     public InputStream getStream() throws Exception {
         return new ByteArrayInputStream(getCodeText().getBytes("UTF-8"));
     }
+
 
     @Override
     public int compareTo(Content o) {

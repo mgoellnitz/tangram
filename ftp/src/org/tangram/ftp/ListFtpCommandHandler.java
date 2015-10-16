@@ -113,15 +113,13 @@ public class ListFtpCommandHandler extends ListCommandHandler {
         String dir = SessionHelper.getCwd(session);
         LOG.info("handleCommand() listing directory with options {} in directory {}", options, dir);
 
-        // TODO: make codes stored with real modification time
-        String now = getUnixDate(codeResourceCache.getLastUpdate());
-
         StringBuilder listing = new StringBuilder(256);
         Set<String> types = codeResourceCache.getTypes();
         if (dir.length()==1) {
             LOG.info("handleCommand() root listing of all type directories");
             for (String type : types) {
                 String name = CodeHelper.getFolder(type);
+                String now = getUnixDate(codeResourceCache.getLastUpdate());
                 String item = DIR_PREFIX+"1 "+now+" "+name+"\n";
                 listing.append(item);
             } // for
@@ -133,6 +131,7 @@ public class ListFtpCommandHandler extends ListCommandHandler {
                 String extension = CodeHelper.getExtension(type);
                 Map<String, CodeResource> resources = codeResourceCache.getTypeCache(type);
                 for (CodeResource code : resources.values()) {
+                    String now = getUnixDate(code.getModificationTime());
                     String item = FILE_PREFIX+code.getSize()+" "+now+" "+code.getAnnotation()+extension+"\n";
                     listing.append(item);
                 } // for

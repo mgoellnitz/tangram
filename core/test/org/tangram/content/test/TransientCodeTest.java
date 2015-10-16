@@ -45,6 +45,12 @@ public class TransientCodeTest {
 
 
             @Override
+            public long getModificationTime() {
+                return 0;
+            }
+
+
+            @Override
             public InputStream getStream() throws Exception {
                 return null;
             }
@@ -75,7 +81,7 @@ public class TransientCodeTest {
 
         };
         TransientCode t = new TransientCode(c);
-        TransientCode tc = new TransientCode("screen", "text/css", "CodeResource:2", "// empty css");
+        TransientCode tc = new TransientCode("screen", "text/css", "CodeResource:2", "// empty css", 0);
         Assert.assertEquals(t.getId(), "CodeResource:12", "id");
         Assert.assertEquals(t.getMimeType(), "text/html", "mime type");
         Assert.assertEquals(t.getAnnotation(), "org.tangram.example.Topic.name", "annotation");

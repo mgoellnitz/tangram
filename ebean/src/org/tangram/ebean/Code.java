@@ -42,9 +42,8 @@ public final class Code extends EContent implements MutableCode {
     @Column(length = 32000)
     private char[] code;
 
-//    @ManyToOne
-//    @SuppressWarnings("PMD.UnusedPrivateField")
-//    private EContent codeOf; // For any item refering this code - the ebean orm uses this
+    private long modificationTime;
+
 
     @Override
     public String getAnnotation() {
@@ -78,6 +77,18 @@ public final class Code extends EContent implements MutableCode {
     @Override
     public void setCode(char[] code) {
         this.code = code;
+    }
+
+
+    @Override
+    public long getModificationTime() {
+        return modificationTime;
+    }
+
+
+    @Override
+    public void setModificationTime(long modificationTime) {
+        this.modificationTime = modificationTime;
     }
 
 

@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.content;
@@ -21,6 +21,7 @@ package org.tangram.content;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
+
 
 /**
  * Not persistable implementation of the code resource interfaces.
@@ -36,24 +37,24 @@ public class TransientCode implements CodeResource, Serializable {
 
     private final String mimeType;
 
-    private final String id;
-
     private final String codeText;
 
+    private final long modificationTime;
 
-    public TransientCode(String annotation, String mimeType, String id, String codeText) {
+    private final String id;
+
+
+    public TransientCode(String annotation, String mimeType, String id, String codeText, long modificationTime) {
         this.annotation = annotation;
         this.mimeType = mimeType;
-        this.id = id;
         this.codeText = codeText;
+        this.modificationTime = modificationTime;
+        this.id = id;
     } // TransientCodeResource()
 
 
-    public TransientCode(CodeResource resource) {
-        this.annotation = resource.getAnnotation();
-        this.mimeType = resource.getMimeType();
-        this.id = resource.getId();
-        this.codeText = resource.getCodeText();
+    public TransientCode(CodeResource code) {
+        this(code.getAnnotation(), code.getMimeType(), code.getId(), code.getCodeText(), code.getModificationTime());
     } // TransientCodeResource()
 
 
@@ -68,11 +69,10 @@ public class TransientCode implements CodeResource, Serializable {
         return mimeType;
     } // getMimeType()
 
-
     @Override
-    public String getId() {
-        return id;
-    } // getId()
+    public long getModificationTime() {
+        return modificationTime;
+    } // getModificationTime
 
 
     @Override
@@ -94,9 +94,15 @@ public class TransientCode implements CodeResource, Serializable {
 
 
     @Override
+    public String getId() {
+        return id;
+    } // getId()
+
+
+    @Override
     public int compareTo(Content o) {
-        return (o instanceof TransientCode) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource)o).getMimeType()
-                +((CodeResource)o).getAnnotation()) : -1;
+        return (o instanceof TransientCode) ? (getMimeType()+getAnnotation()).compareTo(((CodeResource) o).getMimeType()
+                +((CodeResource) o).getAnnotation()) : -1;
     } // compareTo()
 
 
