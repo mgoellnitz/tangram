@@ -49,6 +49,7 @@ import org.tangram.controller.AbstractRenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
+import org.tangram.mutable.HasModifactionTime;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.JavaBean;
@@ -125,6 +126,7 @@ public class EditingHandler extends AbstractRenderingBase {
         SYSTEM_PROPERTIES = new HashSet<>();
         // The groovy compiler seems to use this
         SYSTEM_PROPERTIES.add("metaClass");
+        SYSTEM_PROPERTIES.add("modificationTime");
         SYSTEM_PROPERTIES.add("manager");
         SYSTEM_PROPERTIES.add("beanFactory");
 
@@ -272,6 +274,10 @@ public class EditingHandler extends AbstractRenderingBase {
             } // try/catch
         } // for
 
+        if (bean instanceof HasModifactionTime) {
+            newValues.put("modificationTime", new Long(System.currentTimeMillis()));
+        } // if
+
         getMutableBeanFactory().beginTransaction();
         wrapper = new JavaBean(bean);
         Exception e = null;
@@ -322,6 +328,9 @@ public class EditingHandler extends AbstractRenderingBase {
         authorizationService.throwIfNotAdmin(request, response, "Create should not be called directly");
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
+        if (content instanceof HasModifactionTime) {
+            ((HasModifactionTime) content).setModificationTime(System.currentTimeMillis());
+        } // if
         if (getMutableBeanFactory().persist(content)) {
             LOG.debug("create() content={}", content);
             LOG.debug("create() id={}", content.getId());
