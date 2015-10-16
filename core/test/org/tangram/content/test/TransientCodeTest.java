@@ -46,7 +46,7 @@ public class TransientCodeTest {
 
             @Override
             public long getModificationTime() {
-                return 0;
+                return 1234;
             }
 
 
@@ -81,11 +81,12 @@ public class TransientCodeTest {
 
         };
         TransientCode t = new TransientCode(c);
-        TransientCode tc = new TransientCode("screen", "text/css", "CodeResource:2", "// empty css", 0);
+        TransientCode tc = new TransientCode("screen", "text/css", "CodeResource:2", "// empty css", 12345);
         Assert.assertEquals(t.getId(), "CodeResource:12", "id");
         Assert.assertEquals(t.getMimeType(), "text/html", "mime type");
         Assert.assertEquals(t.getAnnotation(), "org.tangram.example.Topic.name", "annotation");
         Assert.assertEquals(t.getSize(), 13, "size");
+        Assert.assertEquals(t.getModificationTime(), 1234, "modification time");
         Assert.assertEquals(tc.toString(), "screen (text/css)", "toString() to empty css");
     } // testTransientCode()
 
