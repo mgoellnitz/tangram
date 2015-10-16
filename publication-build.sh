@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Copyright 2015 Martin Goellnitz
 #
@@ -14,8 +15,4 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-#!/bin/sh
-cd buildSrc
-gradle -Prelease clean build publishToMavenLocal
-cd ..
 gradle -Prelease clean build jacocoCombinedReport publishToMavenLocal
