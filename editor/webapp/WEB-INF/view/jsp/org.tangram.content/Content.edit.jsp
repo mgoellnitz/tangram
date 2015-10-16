@@ -4,8 +4,8 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
 %><%@page import="org.tangram.Constants,org.tangram.components.editor.EditingHandler,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.annotate.Abstract,org.tangram.content.Content,org.tangram.content.BeanFactory"
-%><%@page import="org.tangram.view.Utils,org.tangram.view.PropertyConverter"
+%><%@page import="org.tangram.mutable.HashModificationTime,org.tangram.content.Content,org.tangram.content.BeanFactory"
+%><%@page import="org.tangram.annotate.Abstract,org.tangram.view.Utils,org.tangram.view.PropertyConverter"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
@@ -15,15 +15,16 @@
 <link rel="stylesheet" href="${cmlibprefix}/codemirror.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
-<% if (!(request.getAttribute("self") instanceof org.tangram.content.CodeResource)) { %>
+<% if (!(request.getAttribute(Constants.THIS) instanceof org.tangram.content.CodeResource)) { %>
 <script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>
-<% } // if %>
+<% } else { %>
 <script type="application/javascript" src="${cmlibprefix}/codemirror.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/groovy/groovy.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/xml/xml.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/javascript/javascript.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/css/css.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/htmlmixed/htmlmixed.js"></script>
+<% } // if %>
 <script type="application/javascript" src="${prefix}/editor/script.js"></script>
 </head>
 <body><c:set var="normalView"><c:catch><cms:link bean="${self}" href="true" target="true" /></c:catch></c:set
@@ -195,6 +196,13 @@ if (value instanceof Content) {
 %>
 </table>
 </form>
+<%
+Object self = request.getAttribute(Constants.THIS);
+if (self instanceof HashModificationTime) {
+%><fmt:message key="label.last.modified" bundle="${msg}"/> <%
+  java.util.Date d = new java.util.Date(((HashModificationTime)self).getModificationTime());
+  out.write(propertyConverter.getEditString(d));
+} // if%>
 (${contentClass.name} ${note})<br/>
 <cms:include bean="${self}" view="tangramEditorClasses" />
 <%@include file="../../../include/tangram-footer.jsp" %>
