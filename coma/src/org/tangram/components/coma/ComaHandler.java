@@ -130,6 +130,7 @@ public class ComaHandler extends AbstractRenderingBase {
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         linkHandlerRegistry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

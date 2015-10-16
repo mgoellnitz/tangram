@@ -380,6 +380,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         linkFactoryAggregator.registerFactory(this);
         classRepository.addListener(this);
         reset();

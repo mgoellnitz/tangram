@@ -244,6 +244,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         codeCache.addListener(this);
         reset();
     } // afterPropertiesSet()

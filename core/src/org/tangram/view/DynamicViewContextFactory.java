@@ -192,9 +192,12 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         // actually in real world scenarios this should always be true
         if (classRepository!=null) {
             classRepository.addListener(this);
+        } else {
+            LOG.error("afterPropertiesSet() no class repository present.");
         } // if
         reset();
     } // afterPropertiesSet()

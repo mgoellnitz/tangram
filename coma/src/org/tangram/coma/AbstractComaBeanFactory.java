@@ -521,6 +521,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         try {
             Class.forName(dbDriver).newInstance();
         } catch (RuntimeException|ClassNotFoundException|InstantiationException|IllegalAccessException ex) {

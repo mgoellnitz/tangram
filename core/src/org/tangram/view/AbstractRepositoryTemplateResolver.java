@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
@@ -36,6 +38,8 @@ import org.tangram.content.CodeResource;
  * @param <T> Type for the view technology in use e.g. Strings for filenames
  */
 public abstract class AbstractRepositoryTemplateResolver<T extends Object> extends AbstractTemplateResolver<T> implements BeanListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractRepositoryTemplateResolver.class);
 
     @Inject
     private CodeResourceCache codeResourceCache;
@@ -85,6 +89,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         codeResourceCache.addListener(this);
     } // afterPropertiesSet()
 

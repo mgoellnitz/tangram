@@ -217,6 +217,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         for (Class<? extends Content> c : getAllClasses()) {
             LOG.info("afterPropertiesSet() class {}", c.getName());
             serverConfig.addClass(c);

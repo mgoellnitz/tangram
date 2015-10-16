@@ -488,6 +488,7 @@ public class EditingHandler extends AbstractRenderingBase {
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         registry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

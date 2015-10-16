@@ -87,6 +87,7 @@ public class DefaultHandler extends AbstractRenderingBase implements InternalLin
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         registry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

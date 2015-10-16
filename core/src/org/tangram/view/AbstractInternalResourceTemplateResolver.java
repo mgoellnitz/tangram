@@ -94,6 +94,7 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         if (StringUtils.isBlank(filePathPrefix)) {
             LOG.error("afterPropertiesSet() path to lookup templates may not be null");
         } // if

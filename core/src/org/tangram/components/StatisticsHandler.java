@@ -64,6 +64,7 @@ public class StatisticsHandler {
 
     @PostConstruct
     public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet()");
         registry.registerLinkHandler(this);
     } // afterPropertiesSet()
 

@@ -65,10 +65,10 @@ public class FtpDirectory {
 
     @PostConstruct
     public void afterPropertiesSet() {
-        LOG.info("() initializing with code cache {}", codeResourceCache);
+        LOG.info("afterPropertiesSet() initializing with code cache {}", codeResourceCache);
         if (beanFactory instanceof MutableBeanFactory) {
             ftpServerStub = new TangramFtpServer((MutableBeanFactory) beanFactory, codeResourceCache);
-            LOG.info("() starting on port {}", ftpPort);
+            LOG.info("afterPropertiesSet() starting on port {}", ftpPort);
             ftpServerStub.setServerControlPort(ftpPort);
             ftpServerStub.start();
         } else {
