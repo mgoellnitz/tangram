@@ -27,11 +27,6 @@ buildscript {
   }
 }
 
-plugins {
-  // Code coverage reporting
-  id 'com.github.kt3k.coveralls' version '2.4.0x'
-}
-
 allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
   apply plugin: 'java'
@@ -63,12 +58,6 @@ allprojects {
   }
   test {
     useTestNG()
-  }
-  jacocoTestReport {
-    reports {
-      xml.enabled = true // coveralls plugin depends on xml format report
-      html.enabled = true
-    }
   }
 }
 
