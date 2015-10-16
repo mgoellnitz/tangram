@@ -53,7 +53,7 @@ public class TangramVersions {
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
 
-  String springframework = '4.2.1.RELEASE'
+  String springframework = '4.2.2.RELEASE'
 
   String weld = '2.3.0.Final'
   String openwebbeans = '1.6.1'
