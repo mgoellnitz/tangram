@@ -25,7 +25,7 @@ import org.tangram.content.Content;
 /**
  * Extension of the code resource interface to let attributes be written.
  */
-public interface MutableCode extends CodeResource, Content, HasModifactionTime {
+public interface MutableCode extends CodeResource, Content, HashModificationTime {
 
     void setAnnotation(String annotation);
 
