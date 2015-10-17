@@ -21,6 +21,7 @@ package org.tangram.components.mutable;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -178,6 +179,9 @@ public class ToolHandler {
     @LinkAction("/codes")
     public TargetDescriptor codeImport(@ActionParameter("zipfile") byte[] zipfile, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
+        if (zipfile == null) {
+            throw new Exception("You missed to select an input file.");
+        } // if
         ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(zipfile), Charset.forName("UTF-8"));
         for (ZipEntry entry = zip.getNextEntry(); entry!=null; entry = zip.getNextEntry()) {
             final String name = entry.getName();
@@ -189,13 +193,12 @@ public class ToolHandler {
                 } // if
                 if (CodeHelper.getCodeMimeTypes().contains(mimetype)) {
                     LOG.info("codeImport() {}: {} / {} ({}) ({}/{})", pathAndName[0], pathAndName.length>1 ? pathAndName[1] : "*", mimetype, entry.getComment(), entry.getCompressedSize(), entry.getSize());
-                    byte[] data = new byte[(int) entry.getSize()];
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     byte[] buffer = new byte[1024];
-                    int pos = 0;
                     for (int len = zip.read(buffer); len>=0; len = zip.read(buffer)) {
-                        System.arraycopy(buffer, 0, data, pos, len);
-                        pos += len;
+                        baos.write(buffer, 0, len);
                     } // for
+                    byte[] data = baos.toByteArray();
                     LOG.debug("codeImport() code {}", new String(data, "UTF-8"));
 
                     // TODO: Same as in ftp server
@@ -302,6 +305,9 @@ public class ToolHandler {
     @LinkAction("/import")
     public TargetDescriptor contentImport(@ActionParameter("xmlfile") byte[] xmlfile, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
+        if (xmlfile == null) {
+            throw new Exception("You missed to select an input file.");
+        } // if
         Reader input = new StringReader(new String(xmlfile, "UTF-8"));
 
         beanFactory.beginTransaction();
