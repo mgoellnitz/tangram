@@ -4,7 +4,7 @@
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
 %><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
 %><%@page import="org.tangram.Constants,org.tangram.components.editor.EditingHandler,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.mutable.HashModificationTime,org.tangram.content.Content,org.tangram.content.BeanFactory"
+%><%@page import="org.tangram.mutable.HasModificationTime,org.tangram.content.Content,org.tangram.content.BeanFactory"
 %><%@page import="org.tangram.annotate.Abstract,org.tangram.view.Utils,org.tangram.view.PropertyConverter"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
@@ -198,9 +198,9 @@ if (value instanceof Content) {
 </form>
 <div class="cms_editor_row"><%
 Object self = request.getAttribute(Constants.THIS);
-if (self instanceof HashModificationTime) {
+if (self instanceof HasModificationTime) {
 %><fmt:message key="label.last.modified" bundle="${msg}"/> <%
-  java.util.Date d = new java.util.Date(((HashModificationTime)self).getModificationTime());
+  java.util.Date d = new java.util.Date(((HasModificationTime)self).getModificationTime());
   out.write(propertyConverter.getEditString(d));
 } // if%>
 (${contentClass.name} ${note})</div>
