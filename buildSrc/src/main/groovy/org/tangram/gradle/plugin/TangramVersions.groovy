@@ -71,7 +71,7 @@ public class TangramVersions {
   // DataNucleus does not provide all artifacts for every released version.
   String datanucleus = '4.1.0-release'
 
-  String ebean = '6.9.1'
+  String ebean = '6.2.2' // 6.9.1 once we resolve issue with example applications
   String ebean_agent = '4.7.1'
 
   // Not used by tangram itself
