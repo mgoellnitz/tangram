@@ -196,14 +196,14 @@ if (value instanceof Content) {
 %>
 </table>
 </form>
-<%
+<div class="cms_editor_row"><%
 Object self = request.getAttribute(Constants.THIS);
 if (self instanceof HashModificationTime) {
 %><fmt:message key="label.last.modified" bundle="${msg}"/> <%
   java.util.Date d = new java.util.Date(((HashModificationTime)self).getModificationTime());
   out.write(propertyConverter.getEditString(d));
 } // if%>
-(${contentClass.name} ${note})<br/>
+(${contentClass.name} ${note})</div>
 <cms:include bean="${self}" view="tangramEditorClasses" />
 <%@include file="../../../include/tangram-footer.jsp" %>
 <script type="application/javascript">
