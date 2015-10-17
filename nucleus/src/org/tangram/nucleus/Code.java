@@ -44,7 +44,7 @@ public final class Code extends NucleusContent implements MutableCode {
     @Column(jdbcType = "clob")
     private String code;
 
-    private long modificationTime;
+    private Long modificationTime;
 
 
     @Override
@@ -84,7 +84,7 @@ public final class Code extends NucleusContent implements MutableCode {
 
     @Override
     public long getModificationTime() {
-        return modificationTime;
+        return modificationTime==null ? 0 : modificationTime;
     }
 
 
