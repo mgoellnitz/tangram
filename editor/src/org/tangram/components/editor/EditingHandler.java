@@ -49,7 +49,7 @@ import org.tangram.controller.AbstractRenderingBase;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
-import org.tangram.mutable.HasModifactionTime;
+import org.tangram.mutable.HasModificationTime;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.JavaBean;
@@ -166,7 +166,7 @@ public class EditingHandler extends AbstractRenderingBase {
             if (method.getName().startsWith("_ebean")) {
                 note = "EBean enhanced";
             } // if
-            if (method.getName().startsWith("jdo")) {
+            if (method.getName().startsWith("dn")) {
                 note = "DataNucleus JDO/JPA Enhanced";
             } // if
             if (method.getName().startsWith("pc")) {
@@ -274,7 +274,7 @@ public class EditingHandler extends AbstractRenderingBase {
             } // try/catch
         } // for
 
-        if (bean instanceof HasModifactionTime) {
+        if (bean instanceof HasModificationTime) {
             newValues.put("modificationTime", new Long(System.currentTimeMillis()));
         } // if
 
@@ -328,8 +328,8 @@ public class EditingHandler extends AbstractRenderingBase {
         authorizationService.throwIfNotAdmin(request, response, "Create should not be called directly");
         Class<? extends Content> cls = loadClass(typeName);
         Content content = getMutableBeanFactory().createBean(cls);
-        if (content instanceof HasModifactionTime) {
-            ((HasModifactionTime) content).setModificationTime(System.currentTimeMillis());
+        if (content instanceof HasModificationTime) {
+            ((HasModificationTime) content).setModificationTime(System.currentTimeMillis());
         } // if
         if (getMutableBeanFactory().persist(content)) {
             LOG.debug("create() content={}", content);

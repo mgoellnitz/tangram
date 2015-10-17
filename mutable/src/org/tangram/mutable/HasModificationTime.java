@@ -22,7 +22,7 @@ package org.tangram.mutable;
 /**
  * Interface indicating that implementing instances hold a writable modification date.
  */
-public interface HashModificationTime {
+public interface HasModificationTime {
 
     /**
      * Set modification timestamp.
