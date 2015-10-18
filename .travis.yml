@@ -3,4 +3,4 @@ sudo: false
 language: java
 
 after_success:
-  - gradle -Prelease build generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle -Prelease generatePomFileForMavenJavaPublication artifactoryPublish
