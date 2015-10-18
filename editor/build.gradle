@@ -112,6 +112,8 @@ localWar {
   }
 }
 
+assemble.dependsOn localWar
+
 publishing {
   publications {
     mavenJava(MavenPublication) {
