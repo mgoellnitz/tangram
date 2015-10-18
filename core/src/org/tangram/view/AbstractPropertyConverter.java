@@ -70,16 +70,20 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             } // if
             if (o instanceof List) {
                 StringBuilder result = new StringBuilder("");
-                List<? extends Object> list = (List<? extends Object>) o;
-                for (Object i : list) {
-                    if (i instanceof Content) {
-                        result.append(((Content) i).getId());
-                        result.append(", ");
-                    } else {
-                        result.append(i);
-                        result.append(',');
-                    } // if
-                } // for
+                try {
+                    List<? extends Object> list = (List<? extends Object>) o;
+                    for (Object i : list) {
+                        if (i instanceof Content) {
+                            result.append(((Content) i).getId());
+                            result.append(", ");
+                        } else {
+                            result.append(i);
+                            result.append(',');
+                        } // if
+                    } // for
+                } catch (Exception ex) {
+                    LOG.error("getEditString() Loss of references on editing a list. Be warned and check your content.", ex);
+                } // try/catch
                 return result.toString();
             } else if (o instanceof Boolean) {
                 return o.toString();
@@ -91,7 +95,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 return o.toString();
             } // if
         } catch (Exception e) {
-            LOG.error("getEditString() ", e);
+            LOG.error("getEditString()", e);
             return "error while converting "+o;
         } // try/catch
     } // getEditString()

@@ -9,8 +9,8 @@
 <html>
 <head><fmt:setBundle basename="org.tangram.Messages" var="msg"/>
 <title>Tangram - <c:choose><c:when test="${! empty self.localizedMessage}">${self.localizedMessage}</c:when
-  ><c:when test="${! empty self.message}">${self.message}</c:when
-  ><c:otherwise><%=request.getAttribute(Constants.THIS).getClass().getName()%></c:otherwise></c:choose></title>
+  ><c:when test="${! empty self.message}">'${self.message}'</c:when
+  ><c:otherwise>"<%=request.getAttribute(Constants.THIS).getClass().getName()%>"</c:otherwise></c:choose></title>
 <%@include file="../../../include/head-elements.jsp" %>
 </head>
 <body style="background-color: white;">

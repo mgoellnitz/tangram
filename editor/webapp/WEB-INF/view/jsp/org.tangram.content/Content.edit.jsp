@@ -160,9 +160,11 @@ if (value instanceof Collection) {
   request.setAttribute("propertyValue", value);
   request.setAttribute("elementClass", elementClass);
 %><c:if test="${! empty beanFactory.implementingClassesMap[elementClass]}">
-<br/><c:forEach items="${propertyValue}" var="item">
+<c:catch var ="descriptionException"><br/><c:forEach items="${propertyValue}" var="item">
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a>
 </c:forEach>
+</c:catch>
+<c:if test = "${descriptionException != null}">You want be able to store stuff in this field.</c:if>
 <select name="<%=EditingHandler.PARAMETER_CLASS_NAME%>" id="select<%=fid%>">
 <c:forEach items="${beanFactory.implementingClassesMap[elementClass]}" var="c"
 ><option value="${c.name}">${c.simpleName}</option>
