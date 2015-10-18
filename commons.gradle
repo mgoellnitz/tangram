@@ -116,15 +116,15 @@ class WrappedRuntimeUsage implements Usage {
       if (!result.contains(it)) {
         result.add(it)
       } else {
-        println "Ignoring another $it.group:$it.name:$it.version"
+        // println "Ignoring another $it.group:$it.name:$it.version"
       }
     }
     configuration.dependencies.each {
       if (!result.contains(it)) {
-        println "* Adding $it.group:$it.name:$it.version"
+        // println "* Adding $it.group:$it.name:$it.version"
         result.add(it)
       } else {
-        println "* Ignoring another $it.group:$it.name:$it.version"
+        // println "* Ignoring another $it.group:$it.name:$it.version"
       }
     }
     return result
