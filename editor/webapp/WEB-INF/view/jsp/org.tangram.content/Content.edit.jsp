@@ -164,7 +164,7 @@ if (value instanceof Collection) {
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a>
 </c:forEach>
 </c:catch>
-<c:if test = "${descriptionException != null}">You want be able to store stuff in this field.</c:if>
+<c:if test = "${descriptionException != null}"><fmt:message key="problematic.field" bundle="${msg}"/></c:if>
 <select name="<%=EditingHandler.PARAMETER_CLASS_NAME%>" id="select<%=fid%>">
 <c:forEach items="${beanFactory.implementingClassesMap[elementClass]}" var="c"
 ><option value="${c.name}">${c.simpleName}</option>
