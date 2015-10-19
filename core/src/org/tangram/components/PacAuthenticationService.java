@@ -222,7 +222,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         WebContext context = new J2EContext(request, response);
         Client<?, ?> client = getClients(request, response).findClient(provider);
         LOG.info("redirect() redirecting");
-        client.redirect(context, true, false);
+        client.redirect(context, true);
         return TargetDescriptor.DONE;
     } // redirect()
 

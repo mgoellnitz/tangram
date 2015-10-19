@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import com.google.inject.name.Names;
+import com.google.inject.name.Names
 import org.tangram.PersistentRestartCache
 import org.tangram.components.coma.ComaHandler
 import org.tangram.view.PropertyConverter

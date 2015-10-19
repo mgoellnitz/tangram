@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import com.google.inject.name.Names;
-import com.google.inject.TypeLiteral;
-import java.lang.reflect.Type;
+import com.google.inject.name.Names
+import com.google.inject.TypeLiteral
+import java.lang.reflect.Type
 import org.tangram.Constants
 import org.tangram.authentication.AuthenticationService
 import org.tangram.components.CodeResourceCache
@@ -52,7 +52,7 @@ import org.tangram.view.velocity.VelocityPatchBean
 import org.pac4j.http.client.BasicAuthClient
 import org.pac4j.http.client.FormClient
 import org.pac4j.http.profile.UsernameProfileCreator
-import org.pac4j.http.credentials.UsernamePasswordAuthenticator
+import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator
 
 log.info "starting"
 String dispatcherPath = config.getProperty("dispatcherPath", "/s")
@@ -161,7 +161,7 @@ module.bind(ClassRepository.class).toInstance(new GroovyClassRepository())
 log.info("configuring code exporter handler")
 module.bind(ViewContextFactory.class).toInstance(new DynamicViewContextFactory())
 
-log.info("configuring view utilities");
+log.info("configuring view utilities")
 ViewUtilities viewUtilities = new ServletViewUtilities()
 if (servletContext != null) {
   servletContext.setAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, viewUtilities)
@@ -187,7 +187,7 @@ repositoryTemplateResolver.setName("Velocity")
 repositoryTemplateResolver.setActivateCaching(true)
 module.addTemplateResolver(repositoryTemplateResolver)
 
-log.info("configuring meta servlet");
+log.info("configuring meta servlet")
 MetaServlet tangramMetaServlet = new MetaServlet()
 module.serve(dispatcherPath+"/*").with(tangramMetaServlet)
 module.serve(dispatcherPath).with(tangramMetaServlet)
