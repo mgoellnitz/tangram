@@ -150,12 +150,11 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
         List<T> result = new ArrayList<>();
         try {
             String shortTypeName = cls.getSimpleName();
-            com.avaje.ebean.Query<T> query = server.find(cls);
+            com.avaje.ebean.Query<T> query = queryString == null ? server.find(cls) : server.createQuery(cls, queryString);
             if (orderProperty!=null) {
-                String asc = (ascending==Boolean.TRUE) ? " asc" : " desc";
+                String asc = (ascending) ? " asc" : " desc";
                 query = query.orderBy(orderProperty+asc);
             } // if
-            // TODO: How to use query string
             // Default is no ordering - not even via IDs
             LOG.info("listBeansOfExactClass() looking up instances of {}{}", shortTypeName, (queryString==null ? "" : " with condition "+queryString));
             LOG.info("listBeansOfExactClass() ebean query object is {} ", query);
