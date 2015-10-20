@@ -50,7 +50,7 @@ import org.tangram.view.ViewContextFactory
 import org.tangram.view.ViewUtilities
 import org.tangram.view.velocity.VelocityPatchBean
 import org.pac4j.http.client.BasicAuthClient
-import org.pac4j.http.client.FormClient
+import org.pac4j.http.client.indirect.FormClient
 import org.pac4j.http.profile.UsernameProfileCreator
 import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator
 

@@ -41,7 +41,7 @@ import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.UserProfile;
-import org.pac4j.http.client.FormClient;
+import org.pac4j.http.client.indirect.FormClient;
 import org.pac4j.oauth.profile.google2.Google2Email;
 import org.pac4j.oauth.profile.google2.Google2Profile;
 import org.slf4j.Logger;
@@ -244,7 +244,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             Credentials credentials = client.getCredentials(context);
             LOG.info("callback() credentials: {}", credentials);
             UserProfile userProfile = client.getUserProfile(credentials, context);
-            Map<String, Object> attributes = new HashMap<String,Object>(userProfile.getAttributes());
+            Map<String, Object> attributes = new HashMap<>(userProfile.getAttributes());
             // Mail attribute hack for google
             if (userProfile instanceof Google2Profile) {
                 Google2Profile gp = (Google2Profile) userProfile;

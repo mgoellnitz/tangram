@@ -91,7 +91,7 @@
     <property name="profileCreator" ref="profileCreator"/>
   </bean>
 
-  <bean id="formLogin" class="org.pac4j.http.client.FormClient">
+  <bean id="formLogin" class="org.pac4j.http.client.indirect.FormClient">
     <property name="name" value="form"/>
     <property name="usernameParameter" value="username"/>
     <property name="passwordParameter" value="password"/>
