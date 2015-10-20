@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
+import org.tangram.content.Markdown;
 import org.tangram.util.SystemUtils;
 
 
@@ -192,6 +193,8 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             value = StringUtils.isNotBlank(valueString) ? Float.parseFloat(valueString) : null;
         } else if (cls==Boolean.class) {
             value = Boolean.parseBoolean(valueString);
+        } else if (cls==Markdown.class) {
+            value = new Markdown(valueString.toCharArray());
         } else if (cls==List.class) {
             LOG.debug("getStorableObject() splitting {}", valueString);
             String[] idStrings = valueString.split(",");

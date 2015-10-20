@@ -2,10 +2,10 @@
 %><?xml version="1.0" encoding="UTF-8" ?><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"
 %><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"
 %><%@taglib prefix="cms" uri="http://www.top-tangram.org/tags"
-%><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor"
-%><%@page import="org.tangram.Constants,org.tangram.components.editor.EditingHandler,org.tangram.util.JavaBean"
-%><%@page import="org.tangram.mutable.HasModificationTime,org.tangram.content.Content,org.tangram.content.BeanFactory"
-%><%@page import="org.tangram.annotate.Abstract,org.tangram.view.Utils,org.tangram.view.PropertyConverter"
+%><%@page import="java.util.Collection,java.lang.reflect.Modifier,java.beans.PropertyDescriptor,org.tangram.Constants"
+%><%@page import="org.tangram.view.Utils,org.tangram.util.JavaBean,org.tangram.content.Content,org.tangram.content.Markdown"
+%><%@page import="org.tangram.content.BeanFactory,org.tangram.annotate.Abstract,org.tangram.mutable.HasModificationTime"
+%><%@page import="org.tangram.components.editor.EditingHandler,org.tangram.view.PropertyConverter"
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><fmt:setBundle basename="org.tangram.editor.Messages" var="msg"/>
 <head>
@@ -15,10 +15,11 @@
 <link rel="stylesheet" href="${cmlibprefix}/codemirror.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/screen.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${prefix}/editor/print.css" type="text/css" media="print"/>
+<script type="application/javascript" src="${cmlibprefix}/codemirror.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/markdown/markdown.js"></script>
 <% if (!(request.getAttribute(Constants.THIS) instanceof org.tangram.content.CodeResource)) { %>
 <script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>
 <% } else { %>
-<script type="application/javascript" src="${cmlibprefix}/codemirror.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/groovy/groovy.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/xml/xml.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/javascript/javascript.js"></script>
@@ -97,12 +98,20 @@ for (PropertyDescriptor p : ps) {
 %></div><%
 } // if
 %></td><%
-if (propertyConverter.isBlobType(type)) {
-    long blobLength = propertyConverter.getBlobLength(bw.get(key));
+    if (propertyConverter.isBlobType(type)) {
+      long blobLength = propertyConverter.getBlobLength(bw.get(key));
 %><td class="cms_editor_field_value"><input class="cms_editor_blobfield" type="file" name="<%=key%>" /> (<%=blobLength%>)</td><%
     } else {
 %><td class="cms_editor_field_value">
 <%
+    if (type == Markdown.class) { %>
+<textarea id="md<%=key%>" class="cms_editor_textfield" cols="60" rows="5" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
+<script type="application/javascript">
+  var editor = CodeMirror.fromTextArea(document.getElementById("md<%=key%>"), {
+    height: "dynamic", continuousScanning: 500, mode: "markdown", lineNumbers: true
+  });
+</script>
+<%  } else {
     if (propertyConverter.isTextType(type)) {
       if (!("code".equals(key))) {
 %>
@@ -113,7 +122,7 @@ CKEDITOR.replace( 'ke<%=key%>');
 //]]>
 </script>
 <%
-    } else {
+      } else {
         String cmmode = "";
         try {
             String mimeType = ""+bw.get("mimeType");
@@ -146,7 +155,7 @@ CKEDITOR.replace( 'ke<%=key%>');
 </script>
 <%
         } // if
-    } // if
+      } // if
   } else {
 %>
 <input class="cms_editor_textfield" name="<%=key%>" value="<%=propertyConverter.getEditString(value)%>" />
@@ -189,12 +198,13 @@ if (value instanceof Content) {
 <a href="<cms:link bean="${item}" action="edit"/>">[<cms:include bean="${item}" view="description"/>]</a>
 <% } // if
    } // if
+   } // if
 %></td>
 <% } // if %>
 </tr><%
-            } // if
         } // if
-    } // for
+    } // if
+} // for
 %>
 </table>
 </form>

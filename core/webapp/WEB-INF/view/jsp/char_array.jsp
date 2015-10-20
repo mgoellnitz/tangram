@@ -1,6 +1,5 @@
-<%@page isELIgnored="false" language="java" session="false" pageEncoding="UTF-8" 
-%><%@page import="java.util.regex.Pattern,java.util.regex.Matcher"
-%><%@page import="java.util.List,java.util.ArrayList"
+<%@page isELIgnored="false" language="java" session="false" pageEncoding="UTF-8"
+%><%@page import="java.util.regex.Pattern,java.util.regex.Matcher,java.util.List,java.util.ArrayList"
 %><%@page import="org.tangram.Constants,org.tangram.view.Utils"
 %><%@page import="org.tangram.content.BeanFactory,org.tangram.link.LinkFactoryAggregator"
 %><%

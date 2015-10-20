@@ -34,6 +34,8 @@ dependencies {
   compile "commons-io:commons-io:2.4"
   compile "commons-collections:commons-collections:3.2.1"
 
+  compile 'com.github.rjeschke:txtmark:0.13'
+  // compile 'org.pegdown:pegdown:1.6.0'
   compile "org.apache.velocity:velocity:$versions.velocity"
   compile "org.codehaus.groovy:groovy:$versions.groovy"
   // Latest groovy version doesn't include this dependency which is in fact necessary
