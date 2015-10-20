@@ -26,7 +26,7 @@ import org.mockftpserver.stub.command.RetrCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.components.CodeResourceCache;
-import org.tangram.content.CodeHelper;
+import org.tangram.mutable.CodeHelper;
 import org.tangram.content.CodeResource;
 
 

@@ -16,15 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.content;
+package org.tangram.mutable;
 
 import java.util.HashSet;
 import java.util.Set;
 import org.tangram.Constants;
+import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeResource;
 
 
 /**
- * Constant string to be used as keys for the session store of an ftp session.
+ * Static helper methods to deal with CodeResource items.
  */
 public final class CodeHelper {
 
@@ -83,6 +85,15 @@ public final class CodeHelper {
     } // getExtension()
 
 
+    /**
+     * Get a pseudo folder name for a given mime type.
+     * Only mime types dealing with known code types to tangram are mapped.
+     * Other text mime types are mapped to their subtype, while all other types are mapped to
+     * themselves as a folder name
+     *
+     * @param mimeType mime type to map to a folder name.
+     * @return pseudo folder name
+     */
     public static String getFolder(String mimeType) {
         if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
             mimeType = "text/groovy";
@@ -103,6 +114,14 @@ public final class CodeHelper {
     } // getFolder()
 
 
+    /**
+     * Get mime type from pseudo directory name.
+     * There are no directories in the repository, so a fixed set of directory names directly describes a folder.
+     * All other folder names are mapped to text/plain.
+     *
+     * @param directoryName one of a fixed set of directory names
+     * @return mime type for a code resource
+     */
     public static String getMimetype(String directoryName) {
         String result = "text/plain";
 
@@ -128,6 +147,9 @@ public final class CodeHelper {
 
     /**
      * derives annotation from pseudo filename.
+     *
+     * @param filename pseudo file name for code resource
+     * @return annotation value for a code resource derived from the filename
      */
     public static String getAnnotation(String filename) {
         int idx = filename.lastIndexOf('.');
@@ -150,5 +172,34 @@ public final class CodeHelper {
         } // if
         return filename;
     } // getAnnotation()
+
+
+    /**
+     * Update or create a code entry in the repository.
+     *
+     * This one really takes too many parameters, but presents common code for ftp access and tool handler to deal
+     * with updating of codes.
+     *
+     * @param beanFactory mutable bean factory to be used
+     * @param codeResourceCache code resource cache instance to fetch existing items from
+     * @param mimetype mimetype of the code item
+     * @param filename filename of the file describing the code item
+     * @param contents contents in UTF-8 encoded characters
+     * @param modificationTime time of last modification of the code item in milliseconds since the epoche
+     * @throws Exception IO and class lookup related exceptions may occur but are unlikely
+     */
+    public static void updateCode(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache, String mimetype, String filename, byte[] contents, long modificationTime) throws Exception {
+        // This hopefully is one really just one class effectively
+        final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
+        String annotation = CodeHelper.getAnnotation(filename);
+        CodeResource lookup = codeResourceCache.get(mimetype, annotation);
+        MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
+        beanFactory.beginTransaction();
+        code.setAnnotation(annotation);
+        code.setCode(new String(contents, "UTF-8").toCharArray());
+        code.setMimeType(mimetype);
+        code.setModificationTime(modificationTime);
+        beanFactory.persist(code);
+    } // updateCode()
 
 } // CodeHelper

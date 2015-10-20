@@ -24,7 +24,7 @@ import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.RntoCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.content.CodeHelper;
+import org.tangram.mutable.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
 

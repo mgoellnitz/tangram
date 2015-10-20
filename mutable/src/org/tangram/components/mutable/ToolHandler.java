@@ -48,14 +48,13 @@ import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.components.CodeResourceCache;
-import org.tangram.content.CodeHelper;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.monitor.Statistics;
 import org.tangram.mutable.AppEngineXStream;
+import org.tangram.mutable.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
-import org.tangram.mutable.MutableCode;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.SystemUtils;
 import org.tangram.view.TargetDescriptor;
@@ -200,21 +199,7 @@ public class ToolHandler {
                     } // for
                     byte[] data = baos.toByteArray();
                     LOG.debug("codeImport() code {}", new String(data, "UTF-8"));
-
-                    // TODO: Same as in ftp server
-                    // This hopefully is one really just one class effectively
-                    final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
-
-                    String annotation = CodeHelper.getAnnotation(pathAndName[1]);
-                    CodeResource lookup = codeResourceCache.get(mimetype, annotation);
-
-                    MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
-                    beanFactory.beginTransaction();
-                    code.setAnnotation(annotation);
-                    code.setCode(new String(data, "UTF-8").toCharArray());
-                    code.setMimeType(mimetype);
-                    code.setModificationTime(entry.getTime());
-                    beanFactory.persist(code);
+                    CodeHelper.updateCode(beanFactory, codeResourceCache, mimetype, pathAndName[1], data, entry.getTime());
                 } else {
                     LOG.info("codeImport() ignoring {} for its mime type {}.", name, mimetype);
                 } // if

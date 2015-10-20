@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.content.test;
+package org.tangram.mutable.test;
 
-import org.tangram.content.CodeHelper;
+import org.tangram.mutable.CodeHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
