@@ -40,7 +40,9 @@ log.info "configuring property converter"
 module.bind(PropertyConverter.class).toInstance(new GaePropertyConverter())
 
 log.info "configuring bean factory"
+Set<String> basePackages = SystemUtils.stringSetFromParameterString(config.getProperty("basePackages", "org.tangram"))
 BeanFactory beanFactory = new GaeBeanFactory()
+beanFactory.setBasePackages(basePackages)
 module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
