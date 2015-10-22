@@ -20,6 +20,7 @@ package org.tangram.components.editor;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -243,8 +244,9 @@ public class EditingHandler extends AbstractRenderingBase {
                     } // if
 
                     Class<? extends Object> cls = wrapper.getType(key);
+                    Type type = wrapper.getGenericType(key);
                     String valueString = values.length==1 ? values[0] : "";
-                    Object value = propertyConverter.getStorableObject(bean, valueString, cls, request);
+                    Object value = propertyConverter.getStorableObject(bean, valueString, cls, type, request);
                     LOG.info("store() value={}", value);
                     if (!(Content.class.isAssignableFrom(cls)&&value==null)) {
                         newValues.put(key, value);

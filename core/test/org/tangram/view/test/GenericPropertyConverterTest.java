@@ -67,13 +67,13 @@ public class GenericPropertyConverterTest {
     @Test
     public void testStorableObjects() {
         GenericPropertyConverter c = new GenericPropertyConverter();
-        Assert.assertEquals(c.getStorableObject(null, "123", Integer.class, null), 123, "should be an interger value");
-        Assert.assertEquals(c.getStorableObject(null, "123.456", Float.class, null), (float) 123.456, "should be a float value");
-        Assert.assertEquals(c.getStorableObject(null, "false", Boolean.class, null), false, "should be a boolean value");
-        Assert.assertEquals(c.getStorableObject(null, "true", Boolean.class, null), true, "should be a boolean value");
-        Assert.assertEquals(c.getStorableObject(null, "error", Boolean.class, null), false, "should be a boolean value");
-        Assert.assertEquals(c.getStorableObject(null, "11:45:30 01.07.2014 GMT", Date.class, null), new Date(1404215130000L), "should be a date value");
-        Assert.assertEquals(c.getStorableObject(null, "Hallo", String.class, null), "Hallo", "should be string  value");
+        Assert.assertEquals(c.getStorableObject(null, "123", Integer.class, null, null), 123, "should be an interger value");
+        Assert.assertEquals(c.getStorableObject(null, "123.456", Float.class, null, null), (float) 123.456, "should be a float value");
+        Assert.assertEquals(c.getStorableObject(null, "false", Boolean.class, null, null), false, "should be a boolean value");
+        Assert.assertEquals(c.getStorableObject(null, "true", Boolean.class, null, null), true, "should be a boolean value");
+        Assert.assertEquals(c.getStorableObject(null, "error", Boolean.class, null, null), false, "should be a boolean value");
+        Assert.assertEquals(c.getStorableObject(null, "11:45:30 01.07.2014 GMT", Date.class, null, null), new Date(1404215130000L), "should be a date value");
+        Assert.assertEquals(c.getStorableObject(null, "Hallo", String.class, null, null), "Hallo", "should be string  value");
     } // testStorableObjects()
 
 

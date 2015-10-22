@@ -19,6 +19,8 @@
 package org.tangram.view;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -102,12 +104,23 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // getEditString()
 
 
+    /**
+     * Obtain a list of content objects from their respective renderings with the view 'description'.
+     * This view is shown in the editor and thus it seems a good idea to let the user enter it.
+     * We need a viewing context in the form of a request to do this.
+     *
+     * @param <T> class constraint of the objects to return
+     * @param c class of the objects to return
+     * @param title substring of the description to look for
+     * @param request viewing context for rendering the description template
+     * @return list of contents of type T
+     */
     private <T extends Content> List<T> getObjectsViaDescription(Class<T> c, String title, ServletRequest request) {
         List<T> result = new ArrayList<>();
 
         if (StringUtils.isNotBlank(title)) {
             List<T> beans = beanFactory.listBeans(c);
-            LOG.debug("getObjectsViaDescription({}) checking {}", title, beans);
+            LOG.debug("getObjectsViaDescription({} :{}) checking {}", title, c.getSimpleName(), beans);
             for (T bean : beans) {
                 try {
                     LOG.debug("getObjectsViaDescription() checking bean {}", bean);
@@ -142,7 +155,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
 
     /**
-     * Create an ID matcher from ID_PATTERN to get ids from input strings
+     * Create an ID matcher from ID_PATTERN to get ids from input strings.
      *
      * @param idString string which might contain a valid content id
      * @return Matcher instance from given string and ID_PATTERN
@@ -171,7 +184,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
 
     @Override
-    public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
+    public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, Type type, ServletRequest request) {
         if (valueString==null) {
             return null;
         } // if
@@ -212,7 +225,17 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                             elements.add(bean);
                         } // if
                     } else {
-                        List<Content> results = getObjectsViaDescription(Content.class, idString, request);
+                        ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
+                        LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
+                        Class<? extends Content> elementClass = Content.class;
+                        if ((parameterizedType!=null)&&(parameterizedType.getActualTypeArguments().length==1)) {
+                            Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
+                            LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
+                            if (actualTypeArgument instanceof Class) {
+                                elementClass = (Class) actualTypeArgument;
+                            } // if
+                        } // if
+                        List<? extends Content> results = getObjectsViaDescription(elementClass, idString, request);
                         if (results.size()>0) {
                             elements.addAll(results);
                         } // if
@@ -226,6 +249,12 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
             value = (client!=null)&&client.equals(referenceValue) ? null : referenceValue;
         } // if
         return value;
+    } // getStorableObject()
+
+
+    @Override
+    public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
+        return getStorableObject(client, valueString, cls, null, request);
     } // getStorableObject()
 
 

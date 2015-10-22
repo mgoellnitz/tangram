@@ -18,6 +18,7 @@
  */
 package org.tangram.view;
 
+import java.lang.reflect.Type;
 import javax.servlet.ServletRequest;
 import org.tangram.content.Content;
 
@@ -53,6 +54,22 @@ public interface PropertyConverter {
      * @return object representation of valueString
      */
     Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request);
+
+
+    /**
+     *
+     * Convert a string in a request and environment context in to an object.
+     *
+     * Passed over client bean is never part of the result to avoid circular dependencies
+     *
+     * @param client content beans this conversion is done for - e.g. wanting to store the result in a property - may be null
+     * @param valueString string describing an object
+     * @param cls class expected for the result
+     * @param type optional type descriptor for cls
+     * @param request request used when passing the string to convert
+     * @return object representation of valueString
+     */
+    Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, Type type, ServletRequest request);
 
 
     /**

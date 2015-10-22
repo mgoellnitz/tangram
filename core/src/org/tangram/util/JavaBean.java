@@ -25,6 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -97,7 +98,7 @@ public class JavaBean {
 
 
     /**
-     * Tell if a property of the underlying bean is readable
+     * Tell if a property of the underlying bean is readable.
      *
      * @param name name of the property to check
      * @return true of the given property has a read method
@@ -126,7 +127,7 @@ public class JavaBean {
 
 
     /**
-     * Tell if a property of the underlying bean is writable
+     * Tell if a property of the underlying bean is writable.
      *
      * @param name name of the property to check
      * @return true if the given property has a write method
@@ -137,7 +138,7 @@ public class JavaBean {
 
 
     /**
-     * return the type of the property
+     * return the type of the property.
      *
      * @param name name of the property
      * @return class for the given property
@@ -148,13 +149,24 @@ public class JavaBean {
 
 
     /**
-     * Return the type of collection elements. The given property must be of any collectio type!
+     * return the generic type of the property.
+     *
+     * @param name name of the property
+     * @return class for the given property
+     */
+    public Type getGenericType(String name) {
+        return descriptors.get(name).getReadMethod().getGenericReturnType();
+    } // getType()
+
+
+    /**
+     * Return the type of collection elements. The given property must be of some collection type!
      *
      * @param name name of the property holding a collection
      * @return type of the elements of the collection
      */
     public Class<? extends Object> getCollectionType(String name) {
-        ParameterizedType returnType = (ParameterizedType) (descriptors.get(name).getReadMethod().getGenericReturnType());
+        ParameterizedType returnType = (ParameterizedType) (getGenericType(name));
         return (Class<? extends Object>) returnType.getActualTypeArguments()[0];
     } // getCollectionType()
 

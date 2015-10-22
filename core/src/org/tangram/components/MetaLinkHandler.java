@@ -21,6 +21,7 @@ package org.tangram.components;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,10 +140,12 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             List<Object> parameters = new ArrayList<>();
             Annotation[][] allAnnotations = method.getParameterAnnotations();
             Class<? extends Object>[] parameterTypes = method.getParameterTypes();
+            Type[] genericParameterTypes = method.getGenericParameterTypes();
             RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
             for (int typeIndex = 0; typeIndex<parameterTypes.length; typeIndex++) {
                 Annotation[] annotations = allAnnotations[typeIndex];
                 Class<? extends Object> type = parameterTypes[typeIndex];
+                Type genericType = genericParameterTypes[typeIndex];
                 if (type.equals(HttpServletRequest.class)) {
                     parameters.add(request);
                 } // if
@@ -153,7 +156,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     if (annotation instanceof LinkPart) {
                         String valueString = matcher.group(((LinkPart) annotation).value());
                         LOG.debug("callAction() parameter #{}='{}' should be of type {}", typeIndex, valueString, type.getName());
-                        parameters.add(propertyConverter.getStorableObject(null, valueString, type, request));
+                        parameters.add(propertyConverter.getStorableObject(null, valueString, type, genericType, request));
                     } // if
                     if (annotation instanceof ActionParameter) {
                         String parameterName = ((ActionParameter) annotation).value();
@@ -162,7 +165,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                         } // if
                         LOG.debug("callAction() parameter {} should be of type {} {}", parameterName, type.getSimpleName(), type.getName());
                         boolean isBlob = "byte[]".equals(type.getSimpleName());
-                        Object value = isBlob ? parameterAccess.getData(parameterName) : propertyConverter.getStorableObject(null, request.getParameter(parameterName), type, request);
+                        Object value = isBlob ? parameterAccess.getData(parameterName) : propertyConverter.getStorableObject(null, request.getParameter(parameterName), type, genericType, request);
                         parameters.add(value);
                     } // if
                     if (annotation instanceof ActionForm) {
@@ -172,8 +175,9 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                             for (String propertyName : wrapper.propertyNames()) {
                                 String valueString = request.getParameter(propertyName);
                                 Class<? extends Object> t = wrapper.getType(propertyName);
+                                Type gt = wrapper.getGenericType(propertyName);
                                 boolean isBlob = "byte[]".equals(t.getSimpleName());
-                                Object value = isBlob ? parameterAccess.getData(propertyName) : propertyConverter.getStorableObject(null, valueString, t, request);
+                                Object value = isBlob ? parameterAccess.getData(propertyName) : propertyConverter.getStorableObject(null, valueString, t, gt, request);
                                 wrapper.set(propertyName, value);
                             } // for
                             parameters.add(form);
