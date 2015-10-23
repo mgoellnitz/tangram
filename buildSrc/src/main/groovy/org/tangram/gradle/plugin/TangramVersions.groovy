@@ -39,8 +39,8 @@ public class TangramVersions {
   String xstream = '1.4.8'
   String pac4j = '1.7.1'
   String tomcat = '7.0.63'
-  String codemirror = '5.5'
-  String ckeditor = '4.5.2'
+  String codemirror = '5.8'
+  String ckeditor = '4.5.4'
 
   // For testing purposes
   String junit = '4.12'
@@ -61,7 +61,7 @@ public class TangramVersions {
   String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
 
   String openjpa = '2.4.0'
-  String eclipselink = '2.6.0'
+  String eclipselink = '2.6.1'
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
   String hibernate = '5.0.0.Final' // '5.0.2.Final'
   String hibernate_ogm = '4.2.0.Final'
@@ -73,7 +73,7 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.9.1'
+  String ebean = '6.2.2' // 6.9.1 once we resolve issue with example applications https://github.com/ebean-orm/avaje-ebeanorm/issues/435
   String ebean_agent = '4.7.1'
 
   String appengine = '1.9.27'
