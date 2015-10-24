@@ -54,6 +54,7 @@
 
   <bean id="persistentRestartCache" class="org.tangram.util.FileRestartCache">
     <property name="filename" value="${tangram.restart.cache.file}"/>
+    <property name="markerResourceName" value="${tangram.restart.cache.marker}"/>
   </bean>
   
   <bean id="propertyConverter" class="org.tangram.view.GenericPropertyConverter">
