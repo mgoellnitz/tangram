@@ -39,7 +39,7 @@ beanFactory.setBasePackages(basePackages)
 String overridesName = "guicy/jdoConfigOverrides.properties"
 InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(overridesName)
 Properties configOverrides = new Properties()
-configOverrides.load(resource)
+configOverrides.load((InputStream)resource)
 beanFactory.setConfigOverrides(configOverrides)
 module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
