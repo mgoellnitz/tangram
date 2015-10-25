@@ -174,7 +174,7 @@ public class EditingHandler extends AbstractRenderingBase {
                 note = "OpenJPA Enhanced";
             } // if
             if (method.getName().startsWith("_persistence")) {
-                note = "EclipseLink Woven (Weaved)";
+                note = "EclipseLink Woven";
             } // if
             if (method.getName().startsWith("$$_hibernate")) {
                 note = "Hibernate Enhanced";

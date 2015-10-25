@@ -114,7 +114,7 @@ public class FileRestartCache implements PersistentRestartCache {
         String hashValue = "";
         try {
             LOG.info("afterPropertiesSet() looking up {}", markerResourceName);
-            URL packageUrl = getClass().getClassLoader().getResource(markerResourceName);
+            URL packageUrl = Thread.currentThread().getContextClassLoader().getResource(markerResourceName);
             if (packageUrl!=null) {
                 LOG.info("afterPropertiesSet() package url is {}", packageUrl);
                 File markerFile = null;
@@ -138,8 +138,8 @@ public class FileRestartCache implements PersistentRestartCache {
             } else {
                 LOG.warn("afterPropertiesSet() no resource found for {}", markerResourceName);
             } // if
-        } catch (MalformedURLException|URISyntaxException use) {
-            ;
+        } catch (MalformedURLException|URISyntaxException e) {
+            LOG.info("afterPropertiesSet() url syntax error which you are not expected to see.", e);
         } // try/catch
 
         LOG.info("afterPropertiesSet({})", filename);
