@@ -21,7 +21,9 @@ import org.tangram.components.editor.EditingHandler
 log.info "starting"
 
 log.info "configuring editing handler"
-module.bind(EditingHandler.class).toInstance(new EditingHandler())
+EditingHandler editingHandler = new EditingHandler()
+editingHandler.deleteMethodEnabled=(config.getProperty("editor.allows.delete", "true").equals("true"))
+module.bind(EditingHandler.class).toInstance(editingHandler)
 
 log.info "done."
 println "editor done."
