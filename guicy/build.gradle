@@ -33,7 +33,4 @@ dependencies {
   }
 
   testCompile "org.testng:testng:$versions.testng"
-
-  // Redundancy to keep groovy google guice init script compilation in netbeans calm.
-  providedCompile project (':tangram-servlet')
 }
