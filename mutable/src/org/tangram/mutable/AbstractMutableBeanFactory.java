@@ -426,17 +426,23 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     @Override
     public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
         if (implementingClassesMap==null) {
-            implementingClassesMap = new HashMap<>();
+            synchronized (this) {
+                implementingClassesMap = new HashMap<>();
 
-            // Add the very basic root classes directly here - they won't get auto detected otherwise
-            implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
-//            implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
-            implementingClassesMap.put(CodeResource.class, getImplementingClassesForModelClass(CodeResource.class));
-//            implementingClassesMap.put(MutableCode.class, getImplementingClassesForModelClass(MutableCode.class));
-            for (Class<? extends Content> c : getAllClasses()) {
-                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
-            } // for
-            LOG.info("getImplementingClassesMap() {}", implementingClassesMap);
+                // Add the very basic root classes directly here - they won't get auto detected otherwise
+                implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
+                for (Class<? extends Content> c : getAllClasses()) {
+                    implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
+                } // for
+                if (!implementingClassesMap.containsKey(CodeResource.class)) {
+                    implementingClassesMap.put(CodeResource.class, getImplementingClassesForModelClass(CodeResource.class));
+                } // if
+                if (!implementingClassesMap.containsKey(MutableCode.class)) {
+                    implementingClassesMap.put(MutableCode.class, getImplementingClassesForModelClass(MutableCode.class));
+                } // if
+                // implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
+                LOG.info("getImplementingClassesMap() {}", implementingClassesMap);
+            } // synchronized
         } // if
         return implementingClassesMap;
     } // getImplementingClassMap()

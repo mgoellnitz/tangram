@@ -190,7 +190,7 @@ public final class CodeHelper {
      */
     public static void updateCode(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache, String mimetype, String filename, byte[] contents, long modificationTime) throws Exception {
         // This hopefully is one really just one class effectively
-        final Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
+        Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
         String annotation = CodeHelper.getAnnotation(filename);
         CodeResource lookup = codeResourceCache.get(mimetype, annotation);
         MutableCode code = (lookup==null) ? beanFactory.createBean(codeClass) : beanFactory.getBean(codeClass, lookup.getId());
