@@ -195,7 +195,7 @@ public class ServletViewUtilities implements ViewUtilities {
                         LOG.debug("render() setting character encoding for {}", responseWrapper.getCharacterEncoding());
                         final String contentType = responseWrapper.getContentType();
                         final String characterEncodingSuffix = "; charset="+responseWrapper.getCharacterEncoding();
-                        LOG.warn("render() original content type {}", contentType);
+                        LOG.info("render() original content type {}", contentType);
                         String contentHeader = ((contentType!=null)&&contentType.startsWith("text")&&(contentType.indexOf(';')<0)) ? contentType+characterEncodingSuffix : contentType;
                         response.setHeader("Content-Type", contentHeader);
                         responseWrapper.setHeader("Content-Type", contentHeader);
