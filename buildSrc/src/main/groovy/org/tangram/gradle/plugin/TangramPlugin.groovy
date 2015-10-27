@@ -38,85 +38,87 @@ class TangramPlugin implements Plugin<Project> {
 
     project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.")
 
-    def cjIterator = project.getTasksByName('compileJava', true).iterator()
-    if(cjIterator.hasNext()) {
-      def compileJava = cjIterator.next()
-      compileJava.doLast {
-        def jarPath = project.getConfigurations().getByName('runtime').asPath
-        def persistenceAPI = ''
-        def jpaBackend = ''
-        if (jarPath.indexOf('jdo-api') > 0) { persistenceAPI = 'jdo' }
-        if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
-        if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
-        if (jarPath.indexOf('datanucleus') > 0) { jpaBackend = 'datanucleus' }
-        // println "API: $persistenceAPI"
-        // println "JPA: $jpaBackend"
-        if (persistenceAPI == 'jpa') {
-          if (jpaBackend == 'datanucleus') {
-            println "Performing DataNucleus JPA byte code transformation."
-            utilities.nucleusJpaEnhance()
-          }
-        }
-        if (persistenceAPI == 'jdo') {
-          println "Performing DataNucleus JDO byte code transformation."
-          utilities.nucleusJdoEnhance()
-        }
-        if (persistenceAPI == 'ebean') {
-          println "Performing EBean byte code transformation."
-          utilities.ebeanEnhance()
-        }
-      }
-
-      def jar = project.getTasksByName('jar', true).iterator().next()
-      jar.enabled = true
-      jar.doFirst {
-        def jarPath = project.getConfigurations().getByName('runtime').asPath
-        def persistenceAPI = ''
-        def jpaBackend = ''
-        if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
-        if (jarPath.indexOf('org.eclipse.persistence.core') > 0) { jpaBackend = 'eclipselink' }
-        if (jarPath.indexOf('hibernate') > 0) { jpaBackend = 'hibernate' }
-        if (jarPath.indexOf('openjpa') > 0) {
-          persistenceAPI = 'jpa'
-          jpaBackend = 'openjpa'
-        }
-        def byteCodeTransform = enhancer.enabled
-        // println "API: $persistenceAPI"
-        // println "JPA: $jpaBackend"
-        // println "enhance: $byteCodeTransform"
-        if (persistenceAPI == 'jpa') {
-          if (byteCodeTransform) {
-            if (jpaBackend == 'eclipselink') {
-              println "Performing EclipseLink byte code transformation."
-              utilities.eclipselinkWeave()
-            }
-            if (jpaBackend == 'hibernate') {
-              println "Performing Hibernate byte code transformation."
-              utilities.hibernateEnhance()
-            }
-            if (jpaBackend == 'openjpa') {
-              println "Performing OpenJPA byte code transformation."
-              utilities.openjpaEnhance()
+    project.afterEvaluate {
+      def cjIterator = project.getTasksByName('compileJava', true).iterator()
+      if(cjIterator.hasNext()) {
+        def compileJava = cjIterator.next()
+        compileJava.doLast {
+          def jarPath = project.getConfigurations().getByName('runtime').asPath
+          def persistenceAPI = ''
+          def jpaBackend = ''
+          if (jarPath.indexOf('jdo-api') > 0) { persistenceAPI = 'jdo' }
+          if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
+          if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
+          if (jarPath.indexOf('datanucleus') > 0) { jpaBackend = 'datanucleus' }
+          // println "compileJava - API: $persistenceAPI"
+          // println "compileJava - JPA: $jpaBackend"
+          if (persistenceAPI == 'jpa') {
+            if (jpaBackend == 'datanucleus') {
+              println "Performing DataNucleus JPA byte code transformation."
+              utilities.nucleusJpaEnhance()
             }
           }
+          if (persistenceAPI == 'jdo') {
+            println "Performing DataNucleus JDO byte code transformation."
+            utilities.nucleusJdoEnhance()
+          }
+          if (persistenceAPI == 'ebean') {
+            println "Performing EBean byte code transformation."
+            utilities.ebeanEnhance()
+          }
+        }
+
+        def jar = project.getTasksByName('jar', true).iterator().next()
+        jar.enabled = true
+        jar.doFirst {
+          def jarPath = project.getConfigurations().getByName('runtime').asPath
+          def persistenceAPI = ''
+          def jpaBackend = ''
+          if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
+          if (jarPath.indexOf('org.eclipse.persistence.core') > 0) { jpaBackend = 'eclipselink' }
+          if (jarPath.indexOf('hibernate') > 0) { jpaBackend = 'hibernate' }
+          if (jarPath.indexOf('openjpa') > 0) {
+            persistenceAPI = 'jpa'
+            jpaBackend = 'openjpa'
+          }
+          def byteCodeTransform = enhancer.enabled
+          // println "jar - API: $persistenceAPI"
+          // println "jar - JPA: $jpaBackend"
+          // println "jar - enhance: $byteCodeTransform"
+          if (persistenceAPI == 'jpa') {
+            if (byteCodeTransform) {
+              if (jpaBackend == 'eclipselink') {
+                println "Performing EclipseLink byte code transformation."
+                utilities.eclipselinkWeave()
+              }
+              if (jpaBackend == 'hibernate') {
+                println "Performing Hibernate byte code transformation."
+                utilities.hibernateEnhance()
+              }
+              if (jpaBackend == 'openjpa') {
+                println "Performing OpenJPA byte code transformation."
+                utilities.openjpaEnhance()
+              }
+            }
+          }
         }
       }
-    }
 
-    def warIterator = project.getTasksByName('war', true).iterator()
-    if (warIterator.hasNext()) {
-      def war = warIterator.next()
-      war.doFirst() {
-        utilities.overlayWebapp(war)
-        utilities.minifyArchive(war)
+      def warIterator = project.getTasksByName('war', true).iterator()
+      if (warIterator.hasNext()) {
+        def war = warIterator.next()
+        war.doFirst() {
+          utilities.overlayWebapp(war)
+          utilities.minifyArchive(war)
+        }
       }
-    }
 
-    def jarIterator = project.getTasksByName('jar', true).iterator()
-    if (jarIterator.hasNext()) {
-      def j = jarIterator.next()
-      j.doFirst() {
-        utilities.minifyArchive(j)
+      def jarIterator = project.getTasksByName('jar', true).iterator()
+      if (jarIterator.hasNext()) {
+        def j = jarIterator.next()
+        j.doFirst() {
+          utilities.minifyArchive(j)
+        }
       }
     }
   } // apply()
