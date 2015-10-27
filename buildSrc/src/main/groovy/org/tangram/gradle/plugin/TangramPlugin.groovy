@@ -38,6 +38,7 @@ class TangramPlugin implements Plugin<Project> {
 
     project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.")
 
+    project.afterEvaluate {
     def cjIterator = project.getTasksByName('compileJava', true).iterator()
     if(cjIterator.hasNext()) {
       def compileJava = cjIterator.next()
@@ -49,8 +50,8 @@ class TangramPlugin implements Plugin<Project> {
         if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
         if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
         if (jarPath.indexOf('datanucleus') > 0) { jpaBackend = 'datanucleus' }
-        // println "API: $persistenceAPI"
-        // println "JPA: $jpaBackend"
+        // println "compileJava - API: $persistenceAPI"
+        // println "compileJava - JPA: $jpaBackend"
         if (persistenceAPI == 'jpa') {
           if (jpaBackend == 'datanucleus') {
             println "Performing DataNucleus JPA byte code transformation."
@@ -81,9 +82,9 @@ class TangramPlugin implements Plugin<Project> {
           jpaBackend = 'openjpa'
         }
         def byteCodeTransform = enhancer.enabled
-        // println "API: $persistenceAPI"
-        // println "JPA: $jpaBackend"
-        // println "enhance: $byteCodeTransform"
+        // println "jar - API: $persistenceAPI"
+        // println "jar - JPA: $jpaBackend"
+        // println "jar - enhance: $byteCodeTransform"
         if (persistenceAPI == 'jpa') {
           if (byteCodeTransform) {
             if (jpaBackend == 'eclipselink') {
@@ -118,6 +119,7 @@ class TangramPlugin implements Plugin<Project> {
       j.doFirst() {
         utilities.minifyArchive(j)
       }
+    }
     }
   } // apply()
 

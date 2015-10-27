@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 defaultTasks 'clean', 'publishToMavenLocal'
 
-version = '1.0.1'
+version = '1.0.5'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
