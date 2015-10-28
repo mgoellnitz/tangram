@@ -52,8 +52,8 @@ dependencies {
   compile "org.pac4j:pac4j-oauth:$versions.pac4j"
 
   testCompile "org.testng:testng:$versions.testng"
-  // logging at debug level through special log4j.properties for tests
-  testCompile "org.slf4j:slf4j-log4j12:$versions.slf4j"
+  // test logging at debug level through special logback.groovy
+  testCompile "ch.qos.logback:logback-classic:$versions.logback"
   testCompile "org.mockito:mockito-all:$versions.mockito"
   testCompile "org.springframework:spring-core:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"

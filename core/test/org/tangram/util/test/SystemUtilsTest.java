@@ -42,7 +42,7 @@ public class SystemUtilsTest {
     public void testResourceListing() throws Exception {
         Set<String> resourceListing = SystemUtils.getResourceListing("", "properties");
         Assert.assertEquals(resourceListing.size(), 1, "Unexpected number of resources listed");
-        Assert.assertEquals(resourceListing.toString(), "[/log4j.properties]", "Unexpected resources listed");
+        Assert.assertEquals(resourceListing.toString(), "[/for-test.properties]", "Unexpected resources listed");
     } // testResourceListing()
 
 

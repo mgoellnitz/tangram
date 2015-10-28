@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -13,18 +13,21 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-apply from: '../lib.gradle'
 
-dependencies {
-  compile project (':tangram-core')
+// Log configuration for test setup
+scan '3600 seconds'
 
-  testCompile "org.testng:testng:$versions.testng"
-  testCompile "org.mockito:mockito-all:$versions.mockito"
-  // more or less a dummy for the various autoscanned and auto injected beans
-  testCompile project(':tangram-dinistiq')
-  // test logging at debug level through special logback.groovy
-  testCompile "ch.qos.logback:logback-classic:$versions.logback"
+def appenders = []
+appender('CONSOLE', ConsoleAppender) {
+  encoder(PatternLayoutEncoder) {
+    pattern = '%-5level %logger{35}.%msg%n'
+  }
 }
+appenders.add('CONSOLE')
+
+root WARN, appenders
+logger "dinistiq", DEBUG, appenders, false
+logger "openjpa", DEBUG, appenders, false
