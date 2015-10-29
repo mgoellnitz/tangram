@@ -285,6 +285,15 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     } // getFactoryConfigOverrides()
 
 
+    protected void appendItem(StringBuffer result, String filterProperty, String filterValue) {
+        result.append('(');
+        result.append(filterProperty);
+        result.append(".indexOf(\"");
+        result.append(filterValue);
+        result.append("\") >= 0)");
+    } // appendItem()
+
+
     @Override
     public Object getManager() {
         return manager;

@@ -36,6 +36,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,11 +81,17 @@ public class EditingHandler extends AbstractRenderingBase {
 
     public static final String PARAMETER_CLASS_NAME = "cms.editor.class.name";
 
+    public static final String PARAMETER_FILTER_PROPERTY = "cms.editor.filter.property";
+
+    public static final String PARAMETER_FILTER_VALUE = "cms.editor.filter.value";
+
     public static final String PARAMETER_ID = "cms.editor.id";
 
     public static final String PARAMETER_PROPERTY = "cms.editor.property.name";
 
     public static final String ATTRIBUTE_WRAPPER = "wrapper";
+
+    public static final String ATTRIBUTE_FILTERS = "cms.editor.filters";
 
     /**
      * writable properties which should not be altered by the upper layers or persisted
@@ -342,8 +349,42 @@ public class EditingHandler extends AbstractRenderingBase {
     } // create()
 
 
+    private String getFilterQuery(HttpServletRequest request, String filterProperty, String filterValue, Class<? extends Content> cls, String filterQuery) {
+        HttpSession session = request.getSession(true);
+        Map<String, String[]> filters = (Map<String, String[]>) session.getAttribute(ATTRIBUTE_FILTERS);
+        if (filters==null) {
+            filters = new HashMap<>();
+            session.setAttribute(ATTRIBUTE_FILTERS, filters);
+            LOG.info("getFilterQuery() new set of filters");
+        } // if
+        if (filterProperty!=null) {
+            LOG.info("getFilterQuery() have filter parameters {}/{}", filterProperty, filterValue);
+            filterProperty = filterProperty.replaceAll("[^a-zA-Z0-9]", "");
+            if (StringUtils.isEmpty(filterValue)) {
+                filters.remove(cls.getName());
+            } else {
+                filterValue = filterValue.replaceAll("[^a-zA-Z0-9\\ ]", "");
+                String[] filter = new String[2];
+                filter[0] = filterProperty;
+                filter[1] = filterValue;
+                filters.put(cls.getName(), filter);
+            } // if
+        } // if
+        String[] filter = filters.get(cls.getName());
+        if (filter!=null) {
+            LOG.info("getFilterQuery() have filter query {} % '{}'", filter[0], filter[1]);
+            filterQuery = getMutableBeanFactory().getFilterQuery(cls,  filter[0], filter[1]);
+            request.setAttribute(PARAMETER_FILTER_PROPERTY, filter[0]);
+            request.setAttribute(PARAMETER_FILTER_VALUE, filter[1]);
+        } // if
+        return filterQuery;
+    } // getFilterQuery()
+
+
     @LinkAction("/list")
     public TargetDescriptor list(@ActionParameter(PARAMETER_CLASS_NAME) String typeName,
+            @ActionParameter(PARAMETER_FILTER_PROPERTY) String filterProperty,
+            @ActionParameter(PARAMETER_FILTER_VALUE) String filterValue,
             HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.info("list() listing instances of type '{}'", typeName);
         if (!authorizationService.isAdminUser(request, response)) {
@@ -366,7 +407,11 @@ public class EditingHandler extends AbstractRenderingBase {
 
         List<? extends Content> contents = Collections.emptyList();
         if (cls!=null) {
-            contents = beanFactory.listBeansOfExactClass(cls);
+            String filterQuery = null;
+            filterQuery = getFilterQuery(request, filterProperty, filterValue, cls, filterQuery);
+            LOG.info("list() filter query {} for {}", filterQuery, filterProperty);
+            contents = beanFactory.listBeansOfExactClass(cls, filterQuery, null, true);
+            // contents = beanFactory.listBeansOfExactClass(cls, filterQuery, filterProperty, true);
             try {
                 Collections.sort(contents);
             } catch (Exception e) {
@@ -464,7 +509,7 @@ public class EditingHandler extends AbstractRenderingBase {
         String typeName = bean.getClass().getName();
         getMutableBeanFactory().beginTransaction();
         getMutableBeanFactory().delete(bean);
-        return list(typeName, request, response);
+        return list(typeName, null, null, request, response);
     } // delete()
 
 

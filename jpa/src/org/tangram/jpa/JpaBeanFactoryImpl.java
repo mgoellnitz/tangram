@@ -239,6 +239,13 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
+    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
+        // return "select f from "+cls.getSimpleName()+" f, IN (f."+filterProperty+") as g where "+super.getFilterQuery(cls, "g", filterValues);
+        return "select f from "+cls.getSimpleName()+" f WHERE "+super.getFilterQuery(cls, "f."+filterProperty, filterValues);
+    } // getFilterQuery()
+
+
+    @Override
     public Object getManager() {
         return manager;
     } // getManager()

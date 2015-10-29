@@ -405,6 +405,30 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     } // getBean()
 
 
+    protected void appendItem(StringBuffer result, String filterProperty, String filterValue) {
+        result.append('(');
+        result.append(filterProperty);
+        result.append(" LIKE '%");
+        result.append(filterValue);
+        result.append("%')");
+    } // appendItem()
+
+
+    @Override
+    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
+        String[] values = filterValues.split(" ");
+        StringBuffer result = new StringBuffer(64);
+        appendItem(result, filterProperty, values[0]);
+        if (values.length>1) {
+            for (int i = 1; i<values.length; i++) {
+                result.append(" AND ");
+                appendItem(result, filterProperty, values[i]);
+            } // for
+        } // if
+        return result.toString();
+    } // getFilterQuery()
+
+
     protected List<Class<? extends Content>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
         List<Class<? extends Content>> result = new ArrayList<>();
 

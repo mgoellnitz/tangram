@@ -209,6 +209,12 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
 
     @Override
+    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
+        return "where "+super.getFilterQuery(cls, filterProperty, filterValues);
+    } // getFilterQuery()
+
+
+    @Override
     public Object getManager() {
         return server;
     } // getManager()

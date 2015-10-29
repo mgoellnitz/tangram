@@ -133,6 +133,19 @@ public interface MutableBeanFactory extends BeanFactory {
 
 
     /**
+     * Create a suitable query clause for filter expressions.
+     * Form a query string from a property name a a space separated list of possible values
+     * which should all be met as a substring of the property.
+     *
+     * @param cls class this resulting query is about
+     * @param filterProperty of the property to filter for
+     * @param filterValues space separated list of values which should all be met
+     * @return implementation specific query expression
+     */
+    String getFilterQuery(Class<?> cls, String filterProperty, String filterValues);
+
+
+    /**
      * clear caches for instances depending on the given type.
      *
      * Never dare to issue changes for abstract classes or interfaces!
