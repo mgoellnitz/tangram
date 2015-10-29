@@ -22,10 +22,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 /**
- * Flag holder for the JPA enhancing part.
+ * Flag holder a boolean option of the plugin.
  */
-class EnhancerFlags {
+class OptionFlag {
 
   public boolean enabled = true;
 
-} // EnhancerFlags
+} // OptionFlag

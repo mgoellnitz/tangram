@@ -33,8 +33,10 @@ class TangramPlugin implements Plugin<Project> {
     def utilities = new TangramUtilities(project)
     project.convention.plugins.utilities = utilities
     project.extensions.create('versions', TangramVersions)
-    EnhancerFlags enhancer = new EnhancerFlags()
+    OptionFlag enhancer = new OptionFlag()
+    OptionFlag overlay = new OptionFlag()
     project.extensions.add('enhancer', enhancer)
+    project.extensions.add('overlay', overlay)
 
     project.getConfigurations().create('webapp').setVisible(false).setDescription("Wars to be added.")
 
@@ -108,7 +110,10 @@ class TangramPlugin implements Plugin<Project> {
       if (warIterator.hasNext()) {
         def war = warIterator.next()
         war.doFirst() {
-          utilities.overlayWebapp(war)
+          if (overlay.enabled) {
+            println "Integrate underying webapps"
+            utilities.overlayWebapp(war)
+          }
           utilities.minifyArchive(war)
         }
       }
