@@ -217,24 +217,26 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 LOG.debug("getStorableObject() idString={}", idString);
                 if (StringUtils.isNotBlank(idString)) {
                     Matcher m = createIdMatcher(idString);
+                    ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
+                    Class<? extends Content> elementClass = Content.class;
+                    if ((parameterizedType!=null)&&(parameterizedType.getActualTypeArguments().length==1)) {
+                        Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
+                        LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
+                        if (actualTypeArgument instanceof Class) {
+                            elementClass = (Class) actualTypeArgument;
+                        } // if
+                    } // if
                     if (m.find()) {
                         idString = m.group(1);
                         LOG.info("getStorableObject() pattern match result {}", idString);
-                        final Content bean = beanFactory.getBean(idString);
+                        Content bean = beanFactory.getBean(idString);
                         if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
-                            elements.add(bean);
-                        } // if
-                    } else {
-                        ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
-                        LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
-                        Class<? extends Content> elementClass = Content.class;
-                        if ((parameterizedType!=null)&&(parameterizedType.getActualTypeArguments().length==1)) {
-                            Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
-                            LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
-                            if (actualTypeArgument instanceof Class) {
-                                elementClass = (Class) actualTypeArgument;
+                            if (bean.getClass().isAssignableFrom(elementClass)) {
+                                elements.add(bean);
                             } // if
                         } // if
+                    } else {
+                        LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
                         List<? extends Content> results = getObjectsViaDescription(elementClass, idString, request);
                         if (results.size()>0) {
                             elements.addAll(results);
