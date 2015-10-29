@@ -131,9 +131,8 @@ publishing {
       Object oneDependency = pom.runtimeDependencies.iterator().next()
       def theCopy = pom.runtimeDependencies.clone()
       theCopy.each {
-        println "$it.groupId $it.artifactId $it.version"
         if (it.groupId.equals('org.apache.openjpa')) {
-          println "removing dependency $it.groupId $it.artifactId $it.version"
+          // println "removing dependency $it.groupId $it.artifactId $it.version"
           pom.runtimeDependencies.remove(it)
         }
       }
