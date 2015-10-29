@@ -29,6 +29,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
@@ -115,7 +116,8 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
 
     @Override
     public TargetDescriptor getLoginTarget(HttpServletRequest request) {
-        String thisURL = request.getRequestURI();
+        String queryString = request.getQueryString();
+        String thisURL = request.getRequestURI()+(StringUtils.isEmpty(queryString) ? "" : "?"+queryString);
         LOG.info("getLoginTarget({}) {}", thisURL, loginProviders);
         request.getSession(true).setAttribute(Constants.ATTRIBUTE_RETURN_URL, thisURL);
         return authenticationService.getLoginTarget(loginProviders);
