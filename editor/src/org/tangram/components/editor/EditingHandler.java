@@ -167,7 +167,7 @@ public class EditingHandler extends AbstractRenderingBase {
      * @return note indicating the underlying ORM implementation and class modification state
      * @throws SecurityException
      */
-    public static String getOrmNote(Class<? extends Content> cls) throws SecurityException {
+    private final String getOrmNote(Class<? extends Content> cls) throws SecurityException {
         Method[] methods = cls.getMethods();
         String note = "Plain";
         for (Method method : methods) {
@@ -212,10 +212,19 @@ public class EditingHandler extends AbstractRenderingBase {
     /**
      * Add the most common stuff to the response and request on any view returning method.
      */
-    private void prepareView(HttpServletRequest request, HttpServletResponse response) {
+    private void prepareView(HttpServletRequest request, HttpServletResponse response, Class<? extends Content> cls) {
         request.setAttribute("editingHandler", this);
+        request.setAttribute("implementation", getMutableBeanFactory().getManager().getClass().getPackage().getName());
         request.setAttribute("classes", getMutableBeanFactory().getClasses());
         request.setAttribute("prefix", Utils.getUriPrefix(request));
+        if (cls!=null) {
+            String note = getOrmNote(cls);
+            Class<? extends Object> designClass = EditingHandler.getDesignClass(cls);
+            request.setAttribute("note", note);
+            request.setAttribute("contentClass", cls);
+            request.setAttribute("designClass", designClass);
+            request.setAttribute("designClassPackage", designClass.getPackage());
+        } // if
         response.setContentType(Constants.MIME_TYPE_HTML);
         response.setCharacterEncoding("UTF-8");
     } // prepareView()
@@ -373,7 +382,7 @@ public class EditingHandler extends AbstractRenderingBase {
         String[] filter = filters.get(cls.getName());
         if (filter!=null) {
             LOG.info("getFilterQuery() have filter query {} % '{}'", filter[0], filter[1]);
-            filterQuery = getMutableBeanFactory().getFilterQuery(cls,  filter[0], filter[1]);
+            filterQuery = getMutableBeanFactory().getFilterQuery(cls, filter[0], filter[1]);
             request.setAttribute(PARAMETER_FILTER_PROPERTY, filter[0]);
             request.setAttribute(PARAMETER_FILTER_VALUE, filter[1]);
         } // if
@@ -418,16 +427,11 @@ public class EditingHandler extends AbstractRenderingBase {
                 LOG.error("list() error while sorting", e);
             } // try/catch
         } // if
-        prepareView(request, response);
+        prepareView(request, response, cls);
         request.setAttribute(Constants.THIS, contents);
         request.setAttribute(Constants.ATTRIBUTE_REQUEST, request);
         request.setAttribute(Constants.ATTRIBUTE_RESPONSE, response);
         request.setAttribute("canDelete", deleteMethodEnabled);
-        if (cls!=null) {
-            Class<? extends Object> designClass = (cls.getName().indexOf('$')<0) ? cls : cls.getSuperclass();
-            request.setAttribute("designClass", designClass);
-            request.setAttribute("designClassPackage", designClass.getPackage());
-        } // if
         return new TargetDescriptor(contents, "tangramEditorList", null);
     } // list()
 
@@ -438,8 +442,9 @@ public class EditingHandler extends AbstractRenderingBase {
         if (!authorizationService.isAdminUser(request, response)) {
             return authorizationService.getLoginTarget(request);
         } // if
-        prepareView(request, response);
         Content content = beanFactory.getBean(id);
+        Class<? extends Content> cls = content.getClass();
+        prepareView(request, response, cls);
         if (content==null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
             return null;
@@ -453,13 +458,6 @@ public class EditingHandler extends AbstractRenderingBase {
         String prefix = Utils.getUriPrefix(request);
         request.setAttribute("cmprefix", prefix+"/editor/codemirror");
         request.setAttribute("ckprefix", prefix+"/editor/ckeditor");
-        Class<? extends Content> cls = content.getClass();
-        String note = getOrmNote(cls);
-        Class<? extends Object> designClass = getDesignClass(cls);
-        request.setAttribute("note", note);
-        request.setAttribute("contentClass", cls);
-        request.setAttribute("designClass", designClass);
-        request.setAttribute("designClassPackage", designClass.getPackage());
 
         return new TargetDescriptor(content, "edit", null);
     } // edit()
