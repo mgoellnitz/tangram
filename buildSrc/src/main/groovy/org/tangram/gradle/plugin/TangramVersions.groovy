@@ -76,6 +76,6 @@ public class TangramVersions {
   String ebean = '6.2.2' // 6.9.1 once we resolve issue with example applications https://github.com/ebean-orm/avaje-ebeanorm/issues/435
   String ebean_agent = '4.7.1'
 
-  String appengine = '1.9.27'
+  String appengine = '1.9.28'
 
 } // TangramVersions
