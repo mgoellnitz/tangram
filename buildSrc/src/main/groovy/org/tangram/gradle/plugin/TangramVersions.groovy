@@ -56,7 +56,7 @@ public class TangramVersions {
 
   String springframework = '4.2.2.RELEASE'
 
-  String weld = '2.3.0.Final'
+  String weld = '2.3.1.Final'
   String openwebbeans = '1.6.1'
 
   // Storage options
@@ -65,14 +65,14 @@ public class TangramVersions {
 
   String openjpa = '2.4.0'
   String eclipselink = '2.6.1'
-  String hibernate = '5.0.0.Final' // '5.0.2.Final'
+  String hibernate = '5.0.3.Final'
   String hibernate_ogm = '4.2.0.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
   String datanucleus = '4.1.0-release'
 
-  String ebean = '6.2.2' // 6.10.1 once we resolve issue with example applications https://github.com/ebean-orm/avaje-ebeanorm/issues/435
+  String ebean = '6.10.2'
   String ebean_agent = '4.7.1'
 
   // Not used by tangram itself
