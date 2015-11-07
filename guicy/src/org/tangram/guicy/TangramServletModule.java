@@ -47,7 +47,7 @@ import org.tangram.view.TemplateResolver;
 
 
 /**
- * All elements generically needed for tangram in guice scanerios are collected here.
+ * All elements generically needed for tangram in guice scenarios are collected here.
  *
  * This class calls any *.groovy script in the guicy/ resource folder with its self bound to the name module,
  * a decent log bound to the name log and the net configuration as properties loaded from "/guicy/defaults.properties"
@@ -61,7 +61,7 @@ public class TangramServletModule extends ServletModule {
     public static final String DISPATCHER_PATH = "tangram.dispatcher.path";
 
     /**
-     * Resource base path for the configuration of the Google Guice itnegration.
+     * Resource base path for the configuration of the Google Guice integration.
      */
     public static final String GUICY_BASE = "guicy";
 
@@ -122,7 +122,7 @@ public class TangramServletModule extends ServletModule {
     /**
      * Obtain Type Literal descriptor for Map<String, String>.
      *
-     * @return type litaral instance
+     * @return type literal instance
      * @throws NoSuchFieldException should in fact not happen
      */
     public TypeLiteral<?> getStringStringMap() throws NoSuchFieldException {
@@ -134,10 +134,15 @@ public class TangramServletModule extends ServletModule {
     } // getStringStringMap()
 
 
+    /**
+     * Create a groovy shell with our current class loader.
+     *
+     * @return groovy shell instance
+     */
     private GroovyShell createShell() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         return new GroovyShell(classLoader, new Binding(), new CompilerConfiguration());
-    }
+    } // createShell()
 
 
     @Override
@@ -174,9 +179,9 @@ public class TangramServletModule extends ServletModule {
 
         for (final String name : scripts) {
             try {
-                LOG.info("configure() loading "+name);
+                LOG.info("configureServlets() loading "+name);
                 URL resource = Thread.currentThread().getContextClassLoader().getResource(name);
-                LOG.info("configure() loading "+resource);
+                LOG.info("configureServlets() loading "+resource);
                 Script s = shell.parse(new GroovyCodeSource(resource));
                 s.setProperty("config", configuration);
                 s.setProperty("module", this);

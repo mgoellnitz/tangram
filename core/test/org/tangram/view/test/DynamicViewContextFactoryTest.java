@@ -36,6 +36,9 @@ import org.testng.annotations.Test;
 
 public class DynamicViewContextFactoryTest {
 
+    /**
+     * Derived test class to avoid dependencies.
+     */
     private class TestFactory extends DynamicViewContextFactory {
 
         @Override

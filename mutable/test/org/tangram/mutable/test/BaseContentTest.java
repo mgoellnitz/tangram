@@ -35,6 +35,9 @@ import org.testng.annotations.Test;
 
 public abstract class BaseContentTest {
 
+    private static final String CLASS_CODE = "package org.tangram.example; import javax.inject.Named; @Named public class Test { public String s; }";
+
+
     /**
      * Check if any of the method's names starts with a given prefix.
      *
@@ -174,8 +177,7 @@ public abstract class BaseContentTest {
         codeResource = beanFactory.createBean(codeClass);
         codeResource.setAnnotation("org.tangram.example.Test");
         codeResource.setMimeType("application/x-groovy");
-        final String classCode = "package org.tangram.example; import javax.inject.Named; @Named public class Test { public String s; }";
-        codeResource.setCode(classCode.toCharArray());
+        codeResource.setCode(CLASS_CODE.toCharArray());
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals(codes.size(), 2, "We have one code instance");

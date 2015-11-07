@@ -31,6 +31,9 @@ public class JavaBeanTest {
     public static final String STRING_VALUE = "Hallo";
 
 
+    /**
+     * Some test bean implementation to test its use via Java Bean handling.
+     */
     private class TestBean {
 
         private String value;
