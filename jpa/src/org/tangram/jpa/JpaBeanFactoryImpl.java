@@ -86,10 +86,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     /**
+     * Override Entity Manager Factory properties given in persistence.xml.
+     * The values added here override and add to the values from persistence.xml.
+     * The details of the values are to be taken from the documentation of the JPA implementation.
      *
-     * Override Entity Manager Factory properties given in persistence.xml
-     *
-     * @param configOverrides
+     * @param configOverrides name value pair mapping with values for the given JPA implementation.
      */
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
