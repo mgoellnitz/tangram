@@ -37,6 +37,8 @@ dependencies {
   compile project(':tangram-mutable')
 
   testCompile "org.testng:testng:$versions.testng"
+  // test logging at debug level through special logback.groovy
+  testCompile "ch.qos.logback:logback-classic:$versions.logback"
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
