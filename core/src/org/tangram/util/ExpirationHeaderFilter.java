@@ -50,17 +50,17 @@ import org.slf4j.LoggerFactory;
  * mapping extensions to caching times in seconds. Exensons don't include the dot in this case. All times have
  * to be issued in seconds.
  *
- *  &lt;filter>
+ *  &lt;filter&gt;
  *    &lt;filter-name&gt;expiryFilter&lt;/filter-name&gt;
  *    &lt;filter-class&gt;org.tangram.util.ExpirationHeaderFilter&lt;/filter-class&gt;
  *    &lt;init-param&gt;
- *      &lt;param-name&gt;expirations</param-name&gt;
+ *      &lt;param-name&gt;expirations&lt;/param-name&gt;
  *      &lt;param-value&gt;css=604800,js=604800,gif=604800,ico=604800,html=0,DEFAULT=86400&lt;/param-value&gt;
  *    &lt;/init-param&gt;
  *  &lt;/filter&gt;
  *  &lt;filter-mapping&gt;
  *    &lt;filter-name&gt;expiryFilter&lt;/filter-name&gt;
- *    &lt;url-pattern>&gt;/*&lt;/url-pattern&gt;
+ *    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
  *  &lt;/filter-mapping&gt;
  *
  */

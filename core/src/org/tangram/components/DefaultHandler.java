@@ -44,9 +44,9 @@ import org.tangram.view.Utils;
  *
  * The basic format is
  *
- * /&lt;prefix&gt;/id_&lt;id&gt(/view_&lt;view&gt)
+ * /&lt;prefix&gt;/id_&lt;id&gt;(/view_&lt;view&gt;)
  *
- * URLs of this format are not generted here.
+ * URLs of this format are not generated here.
  */
 @Named("defaultHandler")
 @Singleton
