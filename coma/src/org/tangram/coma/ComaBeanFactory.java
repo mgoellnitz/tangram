@@ -74,6 +74,6 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
     @Override
     public void addListener(Class<? extends Content> cls, BeanListener listener) {
         // Since we don't have any changes, we don't need to register listeners
-    }
+    } // addListener()
 
 } // ComaBeanFactory

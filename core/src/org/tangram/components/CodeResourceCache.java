@@ -203,15 +203,15 @@ public class CodeResourceCache implements BeanListener {
     public void addListener(BeanListener listener) {
         synchronized (attachedListeners) {
             attachedListeners.add(listener);
-        } // sync
-    } // attachListener()
+        } // synchronized
+        listener.reset();
+    } // addListener()
 
 
     @PostConstruct
     public void afterPropertiesSet() {
         LOG.debug("afterPropertiesSet()");
         factory.addListener(CodeResource.class, this);
-        reset();
     } // afterPropertiesSet()
 
 } // CodeResourceCache

@@ -87,7 +87,6 @@ public class ClassRepositoryEnhancer implements BeanListener {
     public void afterPropertiesSet() {
         LOG.debug("afterPropertiesSet()");
         classRepository.addListener(this);
-        reset();
     } // afterPropertiesSet()
 
 } // ClassRepositoryEnhancer

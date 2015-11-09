@@ -387,7 +387,6 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         LOG.debug("afterPropertiesSet()");
         linkFactoryAggregator.registerFactory(this);
         classRepository.addListener(this);
-        reset();
     } // afterPropertiesSet()
 
 } // MetaLinkHandler

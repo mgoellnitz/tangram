@@ -198,8 +198,8 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
             classRepository.addListener(this);
         } else {
             LOG.error("afterPropertiesSet() no class repository present.");
+            reset(); // just do this once.
         } // if
-        reset();
     } // afterPropertiesSet()
 
 } // DynamicViewContextFactory

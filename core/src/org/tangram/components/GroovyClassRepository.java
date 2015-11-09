@@ -229,8 +229,9 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     public void addListener(BeanListener listener) {
         synchronized (attachedListeners) {
             attachedListeners.add(listener);
-        } // sync
-    } // attachMapToChanges()
+        } // synchronized
+        listener.reset();
+    } // addListener()
 
 
     @Override
@@ -239,14 +240,13 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
         for (BeanListener listener : attachedListeners) {
             listener.reset();
         } // for
-    } // reset();
+    } // reset()
 
 
     @PostConstruct
     public void afterPropertiesSet() {
         LOG.debug("afterPropertiesSet()");
         codeCache.addListener(this);
-        reset();
     } // afterPropertiesSet()
 
 } // GroovyClassRepository

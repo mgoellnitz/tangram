@@ -263,7 +263,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     /**
      * Get class name from query cache key.
-     * Keys are supposed to be in the form of <classname>:<query>
+     * Keys are supposed to be in the form of &lt;classname&gt;:&lt;query&gt;
      *
      * @param <T>
      * @param key
@@ -335,6 +335,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
             } // if
             listeners.add(listener);
         } // synchronized
+        listener.reset();
         LOG.info("addListener() {}: {}", cls.getSimpleName(), attachedListeners.get(cls).size());
     } // addListener()
 

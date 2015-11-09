@@ -188,7 +188,6 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
     public void afterPropertiesSet() {
         LOG.debug("afterPropertiesSet()");
         codeResourceCache.addListener(this);
-        reset();
     } // afterPropertiesSet()
 
 } // GenericAuthorizationService
