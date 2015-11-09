@@ -92,6 +92,10 @@ public abstract class AbstractInternalResourceTemplateResolver<T extends Object>
     } // checkJspExists()
 
 
+    /**
+     * post construct method to initialize the template resolver.
+     * the file path prefix is set after construction of this instance so do this check here.
+     */
     @PostConstruct
     public void afterPropertiesSet() {
         LOG.debug("afterPropertiesSet()");

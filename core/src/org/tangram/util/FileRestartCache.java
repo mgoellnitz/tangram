@@ -108,6 +108,10 @@ public class FileRestartCache implements PersistentRestartCache {
     } // put()
 
 
+    /**
+     * post construct method to initialize the cache.
+     * filename and marker resource are set after construction of this instance so do this here.
+     */
     @PostConstruct
     public void afterPropertiesSet() {
         // determine build date
