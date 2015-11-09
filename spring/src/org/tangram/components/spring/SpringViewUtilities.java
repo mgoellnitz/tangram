@@ -86,10 +86,11 @@ public class SpringViewUtilities implements ViewUtilities {
 
 
     /**
-     * Creates a spring request blob wrapper.
+     * Creates a spring request parameter access instance.
      *
-     * @param request
+     * @param request the request instance to collect parameters from
      * @return request blob wrapper for the given request
+     * @throws Exception generic exception marker from the interface may mostly result in IOExceptions here
      */
     @Override
     public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
@@ -109,7 +110,7 @@ public class SpringViewUtilities implements ViewUtilities {
      * We consider it a bug that spring's model and view is not an interfaces which would
      * make things a little bit easier and leaner to implement.
      *
-     * @param viewContext
+     * @param viewContext the tangram view context to be transformed to spring's ModelAndView
      * @return spring model and view describing exactly the same
      */
     public static ModelAndView createModelAndView(ViewContext viewContext) {

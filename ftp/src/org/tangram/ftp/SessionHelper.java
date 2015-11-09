@@ -31,15 +31,16 @@ public final class SessionHelper {
     public static final String RENAME_ID = "tangram.id.to.rename";
 
     public static final String USER = "tangram.user.name";
-    
+
     private SessionHelper() {
     }
 
 
     /**
-     * get current working directory for ftp serivce.
+     * get current working directory for ftp service.
      *
-     * avoids null results
+     * @param session server session for a client to discover current working directory for
+     * @return working director of the given session - avoids null results
      */
     public static String getCwd(Session session) {
         Object attributeValue = session.getAttribute(CURRENT_DIR);
