@@ -33,7 +33,7 @@ public class TangramVersions {
   String groovy = '2.4.5'
   String asm = '4.0'
   String velocity = '1.7'
-  String slf4j = '1.7.12'
+  String slf4j = '1.7.13'
   String log4j = '1.2.17'
   String logback = '1.1.3'
   String yui = '2.4.7'
