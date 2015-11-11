@@ -263,7 +263,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     } // registerInterfaceHandler()
 
 
-    private void registerLinkHandler(Object handler, boolean immutable) {
+    private void registerLinkHandler(Object handler, boolean isAnnotated, boolean immutable) {
         if (handler instanceof BeanFactoryAware) {
             ((BeanFactoryAware) handler).setBeanFactory(beanFactory);
         } // if
@@ -272,7 +272,8 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
             registerInterfaceHandler(linkHandler, immutable);
             staticLinkHandlers.put(handler.getClass().getName(), linkHandler);
             handlers.put(handler.getClass().getName(), linkHandler);
-        } else {
+        } // if
+        if (isAnnotated) {
             Class<? extends Object> handlerClass = handler.getClass();
             registerAtHandler(handlerClass, handler, immutable);
         } // if
@@ -281,7 +282,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
     @Override
     public void registerLinkHandler(Object handler) {
-        registerLinkHandler(handler, true);
+        registerLinkHandler(handler, handler.getClass().getAnnotation(org.tangram.annotate.LinkHandler.class)!=null, true);
     } // registerLinkHandler()
 
 
@@ -303,14 +304,14 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         handlers.putAll(staticLinkHandlers);
         for (Map.Entry<String, Class<Object>> entry : classRepository.getAnnotated(org.tangram.annotate.LinkHandler.class).entrySet()) {
             try {
-                registerLinkHandler(createInstance(entry.getValue()), false);
+                registerLinkHandler(createInstance(entry.getValue()), true, false);
             } catch (InstantiationException|IllegalAccessException e) {
                 LOG.error("reset()", e);
             } // try/catch
         } // for
         for (Map.Entry<String, Class<LinkHandler>> entry : classRepository.get(LinkHandler.class).entrySet()) {
             try {
-                registerLinkHandler(createInstance(entry.getValue()), false);
+                registerLinkHandler(createInstance(entry.getValue()), false, false);
             } catch (IllegalAccessException|InstantiationException e) {
                 LOG.error("reset()", e);
             } // try/catch
