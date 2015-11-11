@@ -61,6 +61,9 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     private final Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<>();
 
+    /**
+     * A set of Java package names used as base packages for model bean discovery.
+     */
     private Set<String> basePackages;
 
     /**
@@ -74,11 +77,22 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     protected Map<String, Content> cache = new HashMap<>();
 
+    /**
+     * Beans obtained from this factory should be held in memory.
+     */
     private boolean activateCaching = false;
 
     protected Map<String, List<String>> queryCache = new HashMap<>();
 
+    /**
+     * query results should be cached in memory.
+     */
     private boolean activateQueryCaching = false;
+
+    /**
+     * Issue filter query with regex like .* instead of sql like %.
+     */
+    private boolean regexFilterQuery = false;
 
 
     public AbstractMutableBeanFactory() {
@@ -114,6 +128,16 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
     public void setActivateQueryCaching(boolean activateQueryCaching) {
         this.activateQueryCaching = activateQueryCaching;
+    }
+
+
+    public boolean isRegexFilterQuery() {
+        return regexFilterQuery;
+    }
+
+
+    public void setRegexFilterQuery(boolean regexFilterQuery) {
+        this.regexFilterQuery = regexFilterQuery;
     }
 
 
@@ -407,11 +431,14 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     protected void appendItem(StringBuffer result, String filterProperty, String filterValue) {
+        String likePattern = isRegexFilterQuery() ? ".*" : "%";
         result.append('(');
         result.append(filterProperty);
-        result.append(" LIKE '%");
+        result.append(" LIKE '");
+        result.append(likePattern);
         result.append(filterValue);
-        result.append("%')");
+        result.append(likePattern);
+        result.append("')");
     } // appendItem()
 
 

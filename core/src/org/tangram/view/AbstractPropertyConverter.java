@@ -65,6 +65,9 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // setDateFormat()
 
 
+    /**
+     * @see PropertyConverter#getEditString(java.lang.Object)
+     */
     @Override
     public String getEditString(Object o) {
         try {
@@ -128,7 +131,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                     viewUtilties.render(r.getWriter(), bean, "description", request, r);
                     String description = r.getContents();
                     LOG.debug("getObjectsViaDescription({}) {} has description {}", description.indexOf(title), bean, description);
-                    if (description.indexOf(title)>=0) {
+                    if (description.contains(title)) {
                         result.add(bean);
                     } // if
                 } catch (IOException ioe) {
@@ -166,7 +169,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
 
     private Content getReferenceValue(Class<? extends Content> cls, ServletRequest request, String valueString) {
-        Content value = null;
+        Content value;
         Matcher m = createIdMatcher(valueString);
         if (m.find()) {
             valueString = m.group(1);
@@ -183,101 +186,112 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     } // getReferenceValue()
 
 
+    /**
+     * @see PropertyConverter#getStorableObject(org.tangram.content.Content, java.lang.String, java.lang.Class, java.lang.reflect.Type, javax.servlet.ServletRequest)
+     */
     @Override
     public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, Type type, ServletRequest request) {
-        if (valueString==null) {
-            return null;
-        } // if
         Object value = null;
-        LOG.debug("getStorableObject() required type is {}", cls.getName());
-        if (cls==String.class) {
-            value = StringUtils.isNotBlank(valueString) ? valueString : null;
-        } else if (cls==Date.class) {
-            try {
-                value = dateFormat.parseObject(valueString);
-            } catch (ParseException pe) {
-                LOG.error("getStorableObject() cannot parse as Date: "+valueString);
-            } // try/catch
-        } else if (cls==Long.class) {
-            value = StringUtils.isNotBlank(valueString) ? Long.parseLong(valueString) : null;
-        } else if (cls==Integer.class) {
-            value = StringUtils.isNotBlank(valueString) ? Integer.parseInt(valueString) : null;
-        } else if (cls==Float.class) {
-            value = StringUtils.isNotBlank(valueString) ? Float.parseFloat(valueString) : null;
-        } else if (cls==Boolean.class) {
-            value = Boolean.parseBoolean(valueString);
-        } else if (cls==Markdown.class) {
-            value = new Markdown(valueString.toCharArray());
-        } else if (cls==List.class) {
-            LOG.debug("getStorableObject() splitting {}", valueString);
-            String[] idStrings = valueString.split(",");
-            List<Object> elements = new ArrayList<>();
-            for (String idString : idStrings) {
-                idString = idString.trim();
-                LOG.debug("getStorableObject() idString={}", idString);
-                if (StringUtils.isNotBlank(idString)) {
-                    Matcher m = createIdMatcher(idString);
-                    ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
-                    Class<? extends Content> elementClass = Content.class;
-                    if ((parameterizedType!=null)&&(parameterizedType.getActualTypeArguments().length==1)) {
-                        Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
-                        LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
-                        if (actualTypeArgument instanceof Class) {
-                            elementClass = (Class) actualTypeArgument;
-                        } // if
-                    } // if
-                    if (m.find()) {
-                        idString = m.group(1);
-                        LOG.info("getStorableObject() pattern match result {}", idString);
-                        Content bean = beanFactory.getBean(idString);
-                        if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
-                            if (bean.getClass().isAssignableFrom(elementClass)) {
-                                elements.add(bean);
+        if (valueString!=null) {
+            LOG.debug("getStorableObject() required type is {}", cls.getName());
+            if (cls==String.class) {
+                value = StringUtils.isNotBlank(valueString) ? valueString : null;
+            } else if (cls==Date.class) {
+                try {
+                    value = dateFormat.parseObject(valueString);
+                } catch (ParseException pe) {
+                    LOG.error("getStorableObject() cannot parse as Date: "+valueString);
+                } // try/catch
+            } else if (cls==Long.class) {
+                value = StringUtils.isNotBlank(valueString) ? Long.parseLong(valueString) : null;
+            } else if (cls==Integer.class) {
+                value = StringUtils.isNotBlank(valueString) ? Integer.parseInt(valueString) : null;
+            } else if (cls==Float.class) {
+                value = StringUtils.isNotBlank(valueString) ? Float.parseFloat(valueString) : null;
+            } else if (cls==Boolean.class) {
+                value = Boolean.parseBoolean(valueString);
+            } else if (cls==Markdown.class) {
+                value = new Markdown(valueString.toCharArray());
+            } else if (cls==List.class) {
+                LOG.debug("getStorableObject() splitting {}", valueString);
+                String[] idStrings = valueString.split(",");
+                List<Object> elements = new ArrayList<>();
+                for (String idString : idStrings) {
+                    idString = idString.trim();
+                    LOG.debug("getStorableObject() idString={}", idString);
+                    if (StringUtils.isNotBlank(idString)) {
+                        Matcher m = createIdMatcher(idString);
+                        ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
+                        Class<? extends Content> elementClass = Content.class;
+                        if ((parameterizedType!=null)&&(parameterizedType.getActualTypeArguments().length==1)) {
+                            Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
+                            LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
+                            if (actualTypeArgument instanceof Class) {
+                                elementClass = (Class) actualTypeArgument;
                             } // if
                         } // if
-                    } else {
-                        LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
-                        List<? extends Content> results = getObjectsViaDescription(elementClass, idString, request);
-                        if (results.size()>0) {
-                            elements.addAll(results);
+                        if (m.find()) {
+                            idString = m.group(1);
+                            LOG.info("getStorableObject() pattern match result {}", idString);
+                            Content bean = beanFactory.getBean(idString);
+                            if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
+                                if (bean.getClass().isAssignableFrom(elementClass)) {
+                                    elements.add(bean);
+                                } // if
+                            } // if
+                        } else {
+                            LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
+                            List<? extends Content> results = getObjectsViaDescription(elementClass, idString, request);
+                            if (results.size()>0) {
+                                elements.addAll(results);
+                            } // if
                         } // if
                     } // if
-                } // if
-            } // for
-            value = elements;
-        } else if (Content.class.isAssignableFrom(cls)) {
-            Class<? extends Content> cc = SystemUtils.convert(cls);
-            Content referenceValue = getReferenceValue(cc, request, valueString);
-            value = (client!=null)&&client.equals(referenceValue) ? null : referenceValue;
+                } // for
+                value = elements;
+            } else if (Content.class.isAssignableFrom(cls)) {
+                Class<? extends Content> cc = SystemUtils.convert(cls);
+                Content referenceValue = getReferenceValue(cc, request, valueString);
+                value = (client!=null)&&client.equals(referenceValue) ? null : referenceValue;
+            } // if
         } // if
         return value;
     } // getStorableObject()
 
 
+    /**
+     * @see PropertyConverter#getStorableObject(org.tangram.content.Content, java.lang.String, java.lang.Class, javax.servlet.ServletRequest)
+     */
     @Override
     public Object getStorableObject(Content client, String valueString, Class<? extends Object> cls, ServletRequest request) {
         return getStorableObject(client, valueString, cls, null, request);
     } // getStorableObject()
 
 
+    /**
+     * @see PropertyConverter#isBlobType(java.lang.Class)
+     */
     @Override
     public abstract boolean isBlobType(Class<?> cls);
 
 
     /**
-     * if o is of class getBlobClass() it returns the blob size
-     *
-     * @param o
-     * @return blob's size
+     * @see PropertyConverter#getBlobLength(java.lang.Object)
      */
     @Override
     public abstract long getBlobLength(Object o);
 
 
+    /**
+     * @see PropertyConverter#isTextType(java.lang.Class)
+     */
     @Override
     public abstract boolean isTextType(Class<?> cls);
 
 
+    /**
+     * @see PropertyConverter#createBlob(byte[])
+     */
     @Override
     public abstract Object createBlob(byte[] octets);
 

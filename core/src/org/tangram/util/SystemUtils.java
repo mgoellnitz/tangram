@@ -117,7 +117,8 @@ public final class SystemUtils {
      * Generate a string readable hash value through a SHA256 message digest.
      *
      * SHA256 values can be manually generated via
-     * http://www.xorbin.com/tools/sha256-hash-calculator
+     * http://www.xorbin.com/tools/sha256-hash-calculator or
+     * http://hashgenerator.de/
      *
      * @param value text value to generate hash for
      * @return readable hash
