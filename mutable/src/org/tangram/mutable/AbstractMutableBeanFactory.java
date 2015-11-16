@@ -151,6 +151,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * of some sort at hand.
      *
      * common case to check for persisting and deleting instanced though highly API specific in detail.
+     *
+     * @return tell if manager instance is available in this bean factory instance
      */
     protected abstract boolean hasManager();
 
@@ -159,8 +161,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * Wrap API specific persistence call.
      * Higher level methods in this class in turn deal with exception and cachce handling.
      *
-     * @param <T>
-     * @param bean
+     * @param <T> Type constraint for the content to be persisted
+     * @param bean bean of the above type
      */
     protected abstract <T extends Content> void apiPersist(T bean);
 
@@ -169,8 +171,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * Wrap API specific deletion call.
      * Higher level methods in this class in turn deal with exception and cachce handling.
      *
-     * @param <T>
-     * @param bean
+     * @param <T> Type constraint for the content to be deleted
+     * @param bean bean of the above type
      */
     protected abstract <T extends Content> void apiDelete(T bean);
 
@@ -180,8 +182,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      *
      * @param <T> type of bean to create
      * @param cls instance of that type
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @throws IllegalAccessException some method for the creation of this bean may not be called
+     * @throws InstantiationException bean cannot be instantiated
      */
     @Override
     public <T extends Content> T createBean(Class<T> cls) throws InstantiationException, IllegalAccessException {
@@ -289,8 +291,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * Get class name from query cache key.
      * Keys are supposed to be in the form of &lt;classname&gt;:&lt;query&gt;
      *
-     * @param <T>
-     * @param key
+     * @param <T> Type constraint for the class to be derived from the given key
+     * @param key cache key to get content class for
      * @return Class for the given key or null if the key does not map to any class
      */
     protected <T extends Content> Class<T> getKeyClass(String key) {
@@ -346,8 +348,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      * attach a listener for any changes dealing with classes of the given type.
      *
-     * @param cls
-     * @param listener
+     * @param cls class to be notified when instances of that class have been changed
+     * @param listener listener to be notified about changes
      */
     @Override
     public void addListener(Class<? extends Content> cls, BeanListener listener) {
@@ -369,10 +371,10 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      *
      * No instances of subclasses are inserted into the filtered result.
      *
-     * @param <T>
+     * @param <T> type constraint for the class to filter for
      * @param cls type to filter for
-     * @param rawList
-     * @param filteredList
+     * @param rawList list to filter
+     * @param filteredList result list
      */
     @SuppressWarnings("unchecked")
     protected <T extends Content> void filterExactClass(Class<T> cls, List<? extends Object> rawList, List<T> filteredList) {
@@ -503,8 +505,8 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      * Get the classes implementing a given baseClass.
      *
-     * @param <T>
-     * @param baseClass
+     * @param <T> type constraint for the class to get implementing classes for
+     * @param baseClass class or interface to get implementing classes for
      * @return list of non-abstract classes that can be assigned to the given base class
      */
     @Override
@@ -519,7 +521,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+queryString;
+        return cls.getName()+":"+orderProperty+":"+(ascending ? "asc" : "desc")+":"+queryString;
     } // getCacheKey()
 
 

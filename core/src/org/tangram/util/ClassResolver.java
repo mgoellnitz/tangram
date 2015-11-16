@@ -140,10 +140,10 @@ public class ClassResolver {
     /**
      * Helper method to keep areas with suppressed warnings small.
      *
-     * @param <T>
-     * @param className
+     * @param <T> Type constraint for the result class
+     * @param className name of the classes to be loaded
      * @return class instance for given class name
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException of course the given class may be unavailable
      */
     @SuppressWarnings("unchecked")
     public static final <T extends Object> Class<T> loadClass(String className) throws ClassNotFoundException {
@@ -153,6 +153,10 @@ public class ClassResolver {
 
     /**
      * Get classes from underlying packages satisfying the given superclass.
+     *
+     * @param c class to get sub classes of
+     * @param <T> Type constraint for the above class
+     * @return set of classes being sub class of c
      */
     public <T extends Object> Set<Class<T>> getSubclasses(Class<T> c) {
         Set<Class<T>> result = new HashSet<>();
@@ -173,6 +177,11 @@ public class ClassResolver {
     /**
      * Get classes from underlying packages satisfying the given annotation and superclass.
      * Interfaces are excluded.
+     *
+     * @param c class to get annotated sub classes for
+     * @param <T> Type constraint for the above class
+     * @param annotation annotation to find annotated classes for
+     * @return set of classes annotated with the given annotation and subclass of c
      */
     public <T extends Object> Set<Class<T>> getAnnotatedSubclasses(Class<T> c, Class<? extends Annotation> annotation) {
         Set<Class<T>> result = new HashSet<>();

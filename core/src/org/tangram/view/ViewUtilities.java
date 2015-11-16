@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -46,7 +46,7 @@ public interface ViewUtilities {
     /**
      * create a new request blob mapper instance for the given request.
      *
-     * @param request
+     * @param request http request instance parameter are prepared for reading from
      * @throws Exception when trouble with the parameters occured like to large blobs
      * @return request blob wrapper suitable for the request
      */
@@ -61,7 +61,7 @@ public interface ViewUtilities {
      * @param writer (response or nested) writer
      * @param model map of named objects resembling the model
      * @param view view name to be used for rendering the model
-     * @throws IOException
+     * @throws IOException rendering may induce some IO problems
      */
     void render(Writer writer, Map<String, Object> model, String view) throws IOException;
 
@@ -74,7 +74,7 @@ public interface ViewUtilities {
      * @param view view name to use for rendering
      * @param request request to do rendering for
      * @param response response used for rendering
-     * @throws IOException
+     * @throws IOException rendering may induce some IO problems
      */
     void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException;
 

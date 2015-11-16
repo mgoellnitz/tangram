@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2013 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.logic;
@@ -39,8 +39,10 @@ public interface ClassRepository {
      */
     ClassLoader getClassLoader();
 
+
     /**
      * Get a set of names of classes available in this repository.
+     *
      * @return class names
      */
     Set<String> get();
@@ -48,6 +50,7 @@ public interface ClassRepository {
 
     /**
      * Get classes from this repository being subclasses of a given class.
+     *
      * @param <T> Type to look for
      * @param annotation class level annotation the resulting classes must have
      * @return map code resource annotation to class instance
@@ -57,8 +60,9 @@ public interface ClassRepository {
 
     /**
      * Get classes from this repository being subclasses with a given annotation.
-     * @param <T>
+     *
      * @param cls base class for the result
+     * @param <T> Type constraint for the class above
      * @return map code resource annotation to class instance
      */
     <T extends Object> Map<String, Class<T>> get(Class<? extends T> cls);
@@ -66,6 +70,7 @@ public interface ClassRepository {
 
     /**
      * Get a class from this repository.
+     *
      * @param className fully qualified class name
      * @return class instance
      */
@@ -74,6 +79,7 @@ public interface ClassRepository {
 
     /**
      * Get a class from this repository.
+     *
      * @param className fully qualified class name
      * @return class instance
      */
@@ -82,7 +88,9 @@ public interface ClassRepository {
 
     /**
      * Override bytecode for class.
-     * @param className
+     *
+     * @param className name of the class to override implementation
+     * @param bytes byte code to be used for the given class name subsequently
      */
     void overrideClass(String className, byte[] bytes);
 
@@ -90,6 +98,7 @@ public interface ClassRepository {
     /**
      * Get all compilation errors from last update of this repository.
      * Annotations are mapped to their respective textual compilation error.
+     *
      * @return map annotation to error text
      */
     Map<String, String> getCompilationErrors();
@@ -97,7 +106,8 @@ public interface ClassRepository {
 
     /**
      * Attach a consuming listener to this repository being notified of updates.
-     * @param listener
+     *
+     * @param listener listener instance to be added
      */
     void addListener(BeanListener listener);
 

@@ -49,10 +49,10 @@ public final class SystemUtils {
     /**
      * Split a String - say servlet init parameter - at each ',' and trim the result.
      *
-     * Actually very generic utility fuction. Trimming is used so that line breaks and spaces can be used
+     * Actually very generic utility function. Trimming is used so that line breaks and spaces can be used
      * to format the input in config files.
      *
-     * @param parameter
+     * @param parameter comma separated list of string items
      * @return set of string taken from the input parameter
      */
     public static Set<String> stringSetFromParameterString(String parameter) {
@@ -99,8 +99,8 @@ public final class SystemUtils {
      * @param prefix prefix of the names in the result set including path and name prefix
      * @param suffix suffix of the names in the result set including e.g. and extension or naming convention
      * @return set of file names to be used for getResource()
-     * @throws URISyntaxException
-     * @throws IOException
+     * @throws URISyntaxException unlikely case that we might come across some invalid URLs during resource lookup
+     * @throws IOException IO problems may occur during resource lookup
      */
     public static Set<String> getResourceListing(String prefix, String suffix) throws URISyntaxException, IOException {
         Set<String> result = new HashSet<>();
@@ -144,7 +144,7 @@ public final class SystemUtils {
      * Small helper method to keep areas with suppressed warnings small.
      *
      * @param <T> intended type of result
-     * @param bean
+     * @param bean bean to be cast to the given type
      * @return converted result
      */
     @SuppressWarnings("unchecked")
@@ -156,7 +156,7 @@ public final class SystemUtils {
     /**
      * Small helper method to keep areas with suppressed warnings small.
      *
-     * @param contents
+     * @param contents item to be cast to a list of contents
      * @return type casted input parameter
      */
     @SuppressWarnings("unchecked")

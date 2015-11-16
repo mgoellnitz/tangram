@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -75,16 +75,16 @@ public interface PropertyConverter {
     /**
      * Does the underlying implementation consider the given type to be a blob.
      *
-     * @param cls
+     * @param cls class to check if its the blob class of this implementation
      * @return true if cls is considered a blob representation
      */
     boolean isBlobType(Class<?> cls);
 
 
     /**
-     * if o is of class getBlobClass() it returns the blob size
+     * If o is of class getBlobClass() it returns the blob size.
      *
-     * @param o
+     * @param o object to obtain blob size for
      * @return blob's size
      */
     long getBlobLength(Object o);
@@ -93,7 +93,7 @@ public interface PropertyConverter {
     /**
      * Does the underlying implementation consider the given type to be a (long, structured) text.
      *
-     * @param cls
+     * @param cls class tell if its considered a text representation for this implementation
      * @return true if cls is considered a text representation
      */
     boolean isTextType(Class<?> cls);

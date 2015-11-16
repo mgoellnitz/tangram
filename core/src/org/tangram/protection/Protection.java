@@ -27,7 +27,7 @@ public interface Protection extends ProtectedContent {
 
     /**
      * A site wide unique key for the protection.
-     * 
+     *
      * @return protection key
      */
     String getProtectionKey();
@@ -36,7 +36,7 @@ public interface Protection extends ProtectedContent {
     /**
      * Protections point to the contents they protect.
      * Not the other way around.
-     * 
+     *
      * @return list of content items protected by thi instance.
      */
     List<? extends Content> getProtectedContents();
@@ -44,17 +44,28 @@ public interface Protection extends ProtectedContent {
 
     /**
      * Handle a login request for the given protection
-     * @param request
-     * @param response
+     * @param request http request to handle login in
+     * @param response http response to be used while handling login
      * @return String describing the login state of this protection to be stored in the current session
-     * @throws Exception
+     * @throws Exception mostlyIO exceptions
      */
     String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 
+    /**
+     * Tell if content requested is visible.
+     * @param request http request to check
+     * @return true if the content requested with the given http request is visible in this context
+     * @throws Exception mostly IO related
+     */
     boolean isContentVisible(HttpServletRequest request) throws Exception;
 
 
+    /**
+     * Tell if request needs authorization before being handled.
+     * @param request http request to check
+     * @return true if an authorization is needed before this request can show some content
+     */
     boolean needsAuthorization(HttpServletRequest request);
 
 } // Protection

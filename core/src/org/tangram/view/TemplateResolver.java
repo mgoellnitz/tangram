@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ public interface TemplateResolver<T extends Object> extends Comparable<TemplateR
      * @param model map to take one item from and use its type for the object oriented view method lookup
      * @param locale current local - ignored by all known implementations
      * @return view represented in a suitable type of the underlying implementation
-     * @throws IOException
+     * @throws IOException IO related problems may occur on resolution of templates regardless of storage type for the templates
      */
     T resolveTemplate(String viewName, Map<String, Object> model, Locale locale) throws IOException;
 

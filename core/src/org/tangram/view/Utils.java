@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -77,9 +77,9 @@ public final class Utils {
     /**
      * transform a title into a URL conform UTF-8 encoded string
      *
-     * @param title
+     * @param title string to be transformed into a URL readable form
      * @return the URL form of the title
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException unlikely encoding exception
      */
     public static String urlize(String title) throws UnsupportedEncodingException {
         if (StringUtils.isEmpty(title)) {
