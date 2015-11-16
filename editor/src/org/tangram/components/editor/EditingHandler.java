@@ -167,7 +167,7 @@ public class EditingHandler extends AbstractRenderingBase {
      * @return note indicating the underlying ORM implementation and class modification state
      * @throws SecurityException
      */
-    private final String getOrmNote(Class<? extends Content> cls) throws SecurityException {
+    private String getOrmNote(Class<? extends Content> cls) throws SecurityException {
         Method[] methods = cls.getMethods();
         String note = "Plain";
         for (Method method : methods) {
@@ -293,7 +293,7 @@ public class EditingHandler extends AbstractRenderingBase {
         } // for
 
         if (bean instanceof HasModificationTime) {
-            newValues.put("modificationTime", new Long(System.currentTimeMillis()));
+            newValues.put("modificationTime", System.currentTimeMillis());
         } // if
 
         getMutableBeanFactory().beginTransaction();
@@ -443,7 +443,7 @@ public class EditingHandler extends AbstractRenderingBase {
             return authorizationService.getLoginTarget(request);
         } // if
         Content content = beanFactory.getBean(id);
-        Class<? extends Content> cls = content.getClass();
+        Class<? extends Content> cls = (content==null ? null : content.getClass());
         prepareView(request, response, cls);
         if (content==null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
