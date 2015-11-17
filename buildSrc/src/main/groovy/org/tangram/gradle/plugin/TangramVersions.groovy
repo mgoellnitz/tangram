@@ -54,7 +54,7 @@ public class TangramVersions {
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
 
-  String springframework = '4.2.2.RELEASE'
+  String springframework = '4.2.3.RELEASE'
 
   String weld = '2.3.1.Final'
   String openwebbeans = '1.6.2'
@@ -72,7 +72,7 @@ public class TangramVersions {
   // DataNucleus does not provide all artifacts for every released version.
   String datanucleus = '4.1.0-release'
 
-  String ebean = '6.10.3'
+  String ebean = '6.10.4'
   String ebean_agent = '4.7.1'
 
   // Not used by tangram itself
