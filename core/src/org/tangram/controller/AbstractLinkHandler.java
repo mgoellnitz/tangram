@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -24,23 +24,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
-import org.tangram.content.Content;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.ViewContextFactory;
 
+
 /**
  * base class for spring MVC @controllers used for rendering something in the outcome.
  *
  * Just provides convenience methods.
  *
- * Now independent of any spring classes to be able ot support other frameworks and environments
+ * Now independent of any spring classes to be able to support other frameworks and environments
  * in the future.
  *
  */
-public abstract class AbstractRenderingBase implements LinkFactory {
+public abstract class AbstractLinkHandler implements LinkFactory {
 
     @Inject
     protected BeanFactory beanFactory;
@@ -50,8 +50,8 @@ public abstract class AbstractRenderingBase implements LinkFactory {
 
     private LinkFactoryAggregator linkFactory;
 
-    @Inject
     private MetaLinkHandler metaLinkHandler;
+
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
@@ -71,11 +71,20 @@ public abstract class AbstractRenderingBase implements LinkFactory {
     }
 
 
+    // do autowiring here so the registration can be done automagically
+    @Inject
+    public void setMetaLinkHandler(MetaLinkHandler metaLinkHandler) {
+        this.metaLinkHandler = metaLinkHandler;
+        this.metaLinkHandler.registerLinkHandler(this);
+    }
+
+
     /**
      * Creates model from a common set of parameters.
      *
      * Uses the meta link handler and thus also calls any registered hooks.
      *
+     * @param descriptor description of the model to wrap
      * @param request
      * @param response
      * @return map resembling the model
@@ -85,17 +94,6 @@ public abstract class AbstractRenderingBase implements LinkFactory {
             throws Exception {
         return metaLinkHandler.createModel(descriptor, request, response);
     } // createModel()
-
-
-    public static Link createDefaultLink(Object bean, String action, String view) {
-        Link result = null;
-        if ((bean instanceof Content) && (action==null)) {
-            String url = "/id_"+((Content)bean).getId()+(view==null ? "" : "/view_"+view);
-            result = new Link(url);
-            result.setTarget("_tangram_view");
-        } // if
-        return result;
-    } // createDefaultLink()
 
 
     @Override

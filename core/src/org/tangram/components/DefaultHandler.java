@@ -19,8 +19,6 @@
 package org.tangram.components;
 
 import java.io.IOException;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -31,10 +29,9 @@ import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.content.Content;
-import org.tangram.controller.AbstractRenderingBase;
+import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.InternalLinkFactory;
 import org.tangram.link.Link;
-import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 
@@ -51,13 +48,9 @@ import org.tangram.view.Utils;
 @Named("defaultHandler")
 @Singleton
 @LinkHandler
-public class DefaultHandler extends AbstractRenderingBase implements InternalLinkFactory {
+public class DefaultHandler extends AbstractLinkHandler implements InternalLinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultHandler.class);
-
-    @Inject
-    private LinkHandlerRegistry registry;
-
 
     @LinkAction("/id_([A-Z][a-zA-Z]+:[0-9]+)/view_([a-zA-Z0-9]+)")
     public TargetDescriptor render(@LinkPart(1) String id, @LinkPart(2) String view, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -81,14 +74,13 @@ public class DefaultHandler extends AbstractRenderingBase implements InternalLin
 
     @Override
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
-        return AbstractRenderingBase.createDefaultLink(bean, action, view);
+        Link result = null;
+        if ((bean instanceof Content)&&(action==null)) {
+            String url = "/id_"+((Content) bean).getId()+(view==null ? "" : "/view_"+view);
+            result = new Link(url);
+            result.setTarget("_tangram_view");
+        } // if
+        return result;
     } // createLink()
-
-
-    @PostConstruct
-    public void afterPropertiesSet() {
-        LOG.debug("afterPropertiesSet()");
-        registry.registerLinkHandler(this);
-    } // afterPropertiesSet()
 
 } // DefaultHandler

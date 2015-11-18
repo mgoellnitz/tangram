@@ -20,7 +20,6 @@ package org.tangram.components.coma;
 
 import java.io.IOException;
 import java.util.Set;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -35,9 +34,8 @@ import org.tangram.annotate.LinkPart;
 import org.tangram.coma.ComaBeanPopulator;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
-import org.tangram.controller.AbstractRenderingBase;
+import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.Link;
-import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.view.TargetDescriptor;
 
 
@@ -49,15 +47,12 @@ import org.tangram.view.TargetDescriptor;
 @Named
 @Singleton
 @LinkHandler
-public class ComaHandler extends AbstractRenderingBase {
+public class ComaHandler extends AbstractLinkHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 
     @Inject
     private Set<ComaBeanPopulator> populators;
-
-    @Inject
-    private LinkHandlerRegistry linkHandlerRegistry;
 
 
     @LinkAction("/content/(.*)")
@@ -126,12 +121,5 @@ public class ComaHandler extends AbstractRenderingBase {
         } // if
         return null;
     } // createLink()
-
-
-    @PostConstruct
-    public void afterPropertiesSet() {
-        LOG.debug("afterPropertiesSet()");
-        linkHandlerRegistry.registerLinkHandler(this);
-    } // afterPropertiesSet()
 
 } // ComaHandler

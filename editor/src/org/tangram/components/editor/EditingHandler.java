@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -47,9 +46,8 @@ import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
-import org.tangram.controller.AbstractRenderingBase;
+import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.Link;
-import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.HasModificationTime;
 import org.tangram.mutable.MutableBeanFactory;
@@ -71,7 +69,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 @Singleton
 @LinkHandler
-public class EditingHandler extends AbstractRenderingBase {
+public class EditingHandler extends AbstractLinkHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(EditingHandler.class);
 
@@ -107,9 +105,6 @@ public class EditingHandler extends AbstractRenderingBase {
      * editing actions triggered only by parameters passed in http post requests.
      */
     public static final Collection<String> PARAMETER_ACTIONS = new ArrayList<>();
-
-    @Inject
-    private LinkHandlerRegistry registry;
 
     @Inject
     private PropertyConverter propertyConverter;
@@ -538,12 +533,5 @@ public class EditingHandler extends AbstractRenderingBase {
         } // if
         return result;
     } // createLink()
-
-
-    @PostConstruct
-    public void afterPropertiesSet() {
-        LOG.debug("afterPropertiesSet()");
-        registry.registerLinkHandler(this);
-    } // afterPropertiesSet()
 
 } // EditingHandler
