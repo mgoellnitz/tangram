@@ -521,7 +521,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        return cls.getName()+":"+orderProperty+":"+(ascending ? "asc" : "desc")+":"+queryString;
+        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+queryString;
     } // getCacheKey()
 
 
