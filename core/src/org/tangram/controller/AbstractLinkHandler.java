@@ -19,9 +19,12 @@
 package org.tangram.controller;
 
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.link.Link;
@@ -42,6 +45,8 @@ import org.tangram.view.ViewContextFactory;
  */
 public abstract class AbstractLinkHandler implements LinkFactory {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractLinkHandler.class);
+
     @Inject
     protected BeanFactory beanFactory;
 
@@ -50,6 +55,7 @@ public abstract class AbstractLinkHandler implements LinkFactory {
 
     private LinkFactoryAggregator linkFactory;
 
+    @Inject
     private MetaLinkHandler metaLinkHandler;
 
 
@@ -68,14 +74,6 @@ public abstract class AbstractLinkHandler implements LinkFactory {
     public void setLinkFactory(LinkFactoryAggregator linkFactory) {
         this.linkFactory = linkFactory;
         this.linkFactory.registerFactory(this);
-    }
-
-
-    // do autowiring here so the registration can be done automagically
-    @Inject
-    public void setMetaLinkHandler(MetaLinkHandler metaLinkHandler) {
-        this.metaLinkHandler = metaLinkHandler;
-        this.metaLinkHandler.registerLinkHandler(this);
     }
 
 
@@ -98,5 +96,13 @@ public abstract class AbstractLinkHandler implements LinkFactory {
 
     @Override
     public abstract Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
+
+
+
+    @PostConstruct
+    public void afterPropertiesSet() {
+        LOG.debug("afterPropertiesSet() {}", getClass().getSimpleName());
+        this.metaLinkHandler.registerLinkHandler(this);
+    } // afterPropertiesSet()
 
 } // AbstractRenderingBase
