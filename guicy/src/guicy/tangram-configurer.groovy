@@ -153,7 +153,9 @@ log.info("configuring statistics handler")
 module.bind(StatisticsHandler.class).toInstance(new StatisticsHandler())
 
 log.info("configuring default handler")
-module.bind(DefaultHandler.class).toInstance(new DefaultHandler())
+DefaultHandler defaultHandler = new DefaultHandler()
+defaultHandler.maxInlinedBlobSize = Integer.parseInt(config.getProperty("maxInlinedBlobSize", "768"))
+module.bind(DefaultHandler.class).toInstance(defaultHandler)
 
 log.info("configuring class repository")
 module.bind(ClassRepository.class).toInstance(new GroovyClassRepository())

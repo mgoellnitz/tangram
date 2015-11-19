@@ -19,6 +19,7 @@
 package org.tangram.components;
 
 import java.io.IOException;
+import java.util.Base64;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.content.Content;
+import org.tangram.content.blob.MimedBlob;
 import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.InternalLinkFactory;
 import org.tangram.link.Link;
@@ -51,6 +53,20 @@ import org.tangram.view.Utils;
 public class DefaultHandler extends AbstractLinkHandler implements InternalLinkFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultHandler.class);
+
+    private int maxInlinedBlobSize = 1024;
+
+
+    /**
+     * Set maximum size of blobs to be inlined into their respective URL as data scheme, base64 encoded mimed blobs.
+     *
+     * @param maxInlinedBlobSize maximum size in bytes
+     */
+    public void setMaxInlinedBlobSize(int maxInlinedBlobSize) {
+        this.maxInlinedBlobSize = maxInlinedBlobSize;
+        LOG.info("setMaxInlinedBlobSize() max size is {}", this.maxInlinedBlobSize);
+    } // setMaxInlinedBlobSize()
+
 
     @LinkAction("/id_([A-Z][a-zA-Z]+:[0-9]+)/view_([a-zA-Z0-9]+)")
     public TargetDescriptor render(@LinkPart(1) String id, @LinkPart(2) String view, HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -76,9 +92,30 @@ public class DefaultHandler extends AbstractLinkHandler implements InternalLinkF
     public Link createLink(HttpServletRequest request, HttpServletResponse r, Object bean, String action, String view) {
         Link result = null;
         if ((bean instanceof Content)&&(action==null)) {
-            String url = "/id_"+((Content) bean).getId()+(view==null ? "" : "/view_"+view);
-            result = new Link(url);
-            result.setTarget("_tangram_view");
+            if ((view==null)&&(bean instanceof MimedBlob)) {
+                MimedBlob blob = (MimedBlob) bean;
+                LOG.debug("createLink() mimed blob link for {}", blob);
+                StringBuilder url = new StringBuilder(maxInlinedBlobSize);
+                byte[] bytes = blob.getBytes();
+                if (bytes.length<maxInlinedBlobSize) {
+                    url.append("data:");
+                    url.append(blob.getMimeType());
+                    url.append(";base64,");
+                    url.append(Base64.getEncoder().encodeToString(blob.getBytes()));
+                } else {
+                    url.append("/id_");
+                    url.append(((Content) bean).getId());
+                    if (view!=null) {
+                        url.append("/view_");
+                        url.append(view);
+                    } // if
+                } // if
+                result = new Link(url.toString());
+            } else {
+                String url = "/id_"+((Content) bean).getId()+(view==null ? "" : "/view_"+view);
+                result = new Link(url);
+                result.setTarget("_tangram_view");
+            } // if
         } // if
         return result;
     } // createLink()
