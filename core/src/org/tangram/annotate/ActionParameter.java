@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2012-2013 Martin Goellnitz
+ * Copyright 2012-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.annotate;
@@ -34,7 +34,9 @@ import java.lang.annotation.Target;
 public @interface ActionParameter {
 
     /**
-     * Name of the parameter. 
+     * Name of the parameter.
+     *
+     * @return name of the parameter
      */
     String value() default "--empty--";
 

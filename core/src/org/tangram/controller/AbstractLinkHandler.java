@@ -83,10 +83,10 @@ public abstract class AbstractLinkHandler implements LinkFactory {
      * Uses the meta link handler and thus also calls any registered hooks.
      *
      * @param descriptor description of the model to wrap
-     * @param request
-     * @param response
+     * @param request request context to create model in
+     * @param response response context to create model in
      * @return map resembling the model
-     * @throws Exception
+     * @throws Exception no exceptions are expected but any can occur
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {

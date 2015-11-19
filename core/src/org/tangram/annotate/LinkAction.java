@@ -35,6 +35,8 @@ public @interface LinkAction {
 
     /**
      * URI part after the context name and the servlet part of the URL to trigger the annotated method.
+     *
+     * @return regular expression pattern describing the URL format and groups to be used as parameters
      */
     String value() default "";
 

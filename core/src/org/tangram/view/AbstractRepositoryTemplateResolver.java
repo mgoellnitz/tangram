@@ -68,7 +68,7 @@ public abstract class AbstractRepositoryTemplateResolver<T extends Object> exten
      * @param path the path translates to the annotation in the code resource cache
      * @param locale the locale is ignored
      * @return CodeResource with one of the supported mime types and the given path as annotation
-     * @throws Exception
+     * @throws Exception during resolution mostly IO related exception might occur
      */
     protected CodeResource resolveTemplate(String path, Locale locale) throws Exception {
         CodeResource template = null;
