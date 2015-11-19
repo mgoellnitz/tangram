@@ -19,11 +19,11 @@
 package org.tangram.components;
 
 import java.io.IOException;
-import java.util.Base64;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.annotate.LinkAction;
@@ -101,7 +101,9 @@ public class DefaultHandler extends AbstractLinkHandler implements InternalLinkF
                     url.append("data:");
                     url.append(blob.getMimeType());
                     url.append(";base64,");
-                    url.append(Base64.getEncoder().encodeToString(blob.getBytes()));
+                    // TODO: Java8 has this internal in java.util
+                    // url.append(Base64.getEncoder().encodeToString(bytes));
+                    url.append(Base64.encodeBase64String(bytes));
                 } else {
                     url.append("/id_");
                     url.append(((Content) bean).getId());
