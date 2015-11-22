@@ -246,8 +246,12 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                     methods.put(pathPattern, m);
                     atHandlers.put(pathPattern, handler);
                     if (immutable) {
-                        staticMethods.put(pathPattern, m);
-                        staticAtHandlers.put(pathPattern, handler);
+                        if (!staticMethods.containsKey(pathPattern)) {
+                            staticMethods.put(pathPattern, m);
+                        } // if
+                        if (!staticAtHandlers.containsKey(pathPattern)) {
+                            staticAtHandlers.put(pathPattern, handler);
+                        } // if
                     } // if
                 } // if
             } // if
@@ -270,8 +274,10 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
         if (handler instanceof LinkHandler) {
             LinkHandler linkHandler = (LinkHandler) handler;
             registerInterfaceHandler(linkHandler, immutable);
-            staticLinkHandlers.put(handler.getClass().getName(), linkHandler);
-            handlers.put(handler.getClass().getName(), linkHandler);
+            if (!staticLinkHandlers.containsValue(linkHandler)) {
+                staticLinkHandlers.put(handler.getClass().getName(), linkHandler);
+                handlers.put(handler.getClass().getName(), linkHandler);
+            } // if
         } // if
         if (isAnnotated) {
             Class<? extends Object> handlerClass = handler.getClass();
