@@ -99,6 +99,28 @@ gradle clean publishToMavenLocal
 
 and then you can build and use your projects using tangram or the examples.
 
+If you need to set a runtime library to e.g. compile with Java 8 for target
+systems with Java 7 you can provide a JDK pointer:
+
+```bash
+gradle -Pjdk=/opt/jdk1.7.0_80 clean build publishToMavenLocal
+```
+
+Packaging source code and API documentation is triggered by the "release" switch.
+
+```bash
+gradle -Prelease clean build publishToMavenLocal
+```
+
+Test coverage is checked with the Jacoco plugin. To obtain a combined view of
+the test coverage of all modules, you need to call the jacocoCominbedReport
+task at the root level. The jacocoTestReport task only works for the individual
+modules.
+
+```bash
+gradle -Prelease clean build jacocoCombinedReport publishToMavenLocal
+```
+
 Optionally you might need Google App Engine but just if you want to use it
 for your target systems (Yes, you will want to install ths Java AND python version)
 

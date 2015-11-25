@@ -23,6 +23,7 @@ import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.internal.java.JavaLibrary
 import org.gradle.api.internal.component.Usage
 import org.gradle.api.internal.component.SoftwareComponentInternal
+import org.gradle.api.tasks.compile.AbstractCompile
 import groovy.util.Node
 
 version = '1.1-SNAPSHOT'
@@ -43,6 +44,11 @@ repositories {
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+
+def bootClasspathStr = "${project.hasProperty('jdk') ? jdk : System.env.JAVA_HOME}/jre/lib/rt.jar"
+project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
+    ac.options.bootClasspath = bootClasspathStr
+})
 
 // Project specific default output directory
 eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/classes/main") }
