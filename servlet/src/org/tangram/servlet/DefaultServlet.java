@@ -127,8 +127,10 @@ public class DefaultServlet extends HttpServlet implements InternalLinkFactory {
                 return;
             } // if
             Map<String, Object> model = metaLinkHandler.createModel(new TargetDescriptor(content, view, null), request, response);
-            LOG.debug("doGet() model={}", model);
-            viewUtilities.render(null, model, view);
+            if (model!=null) {
+                LOG.debug("doGet() model={}", model);
+                viewUtilities.render(null, model, view);
+            } // if
             LOG.debug("doGet() done {} on {}", response.getContentType(), response.getClass().getName());
         } catch (Exception e) {
             ViewContext context = viewContextFactory.createViewContext(e, request, response);
