@@ -25,7 +25,7 @@ import org.gradle.api.internal.component.Usage
 import org.gradle.api.internal.component.SoftwareComponentInternal
 import groovy.util.Node
 
-version = '1.0.1'
+version = '1.0-SNAPSHOT'
 
 def release = project.hasProperty('release')
 
