@@ -51,24 +51,24 @@ public class DefaultViewContextFactory implements ViewContextFactory {
         model.put(Constants.ATTRIBUTE_REQUEST, request);
         model.put(Constants.ATTRIBUTE_RESPONSE, response);
         return model;
-    } // createModelAndView()
+    } // createModel()
 
 
     @Override
     public ViewContext createViewContext(Map<String, Object> model, String view) {
         return model==null ? null : (new SimpleViewContext(view==null ? Constants.DEFAULT_VIEW : view, model));
-    } // createModelAndView()
+    } // createViewContext()
 
 
     @Override
     public ViewContext createViewContext(Object bean, String view, ServletRequest request, ServletResponse response) {
         return createViewContext(createModel(bean, request, response), view);
-    } // createModelAndView()
+    } // createViewContext()
 
 
     @Override
     public ViewContext createViewContext(Object bean, ServletRequest request, ServletResponse response) {
         return createViewContext(bean, null, request, response);
-    } // createModelAndView()
+    } // createViewContext()
 
 } // DefaultViewContextFactory
