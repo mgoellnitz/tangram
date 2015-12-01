@@ -64,6 +64,11 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     private Map<Object, Object> configOverrides = null;
 
 
+    public JpaBeanFactoryImpl() {
+        LOG.info("()");
+    } // ()
+
+
     protected void setEntityManagerFactory(EntityManagerFactory factory) {
         managerFactory = factory;
     } // setEntityManagerFactory()
@@ -202,39 +207,37 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
     @Override
     public Collection<Class<? extends Content>> getAllClasses() {
-        synchronized (this) {
-            if (allClasses==null) {
-                allClasses = new ArrayList<>();
-                try {
-                    List<String> classNames = SystemUtils.convert(startupCache.get(getClassNamesCacheKey(), List.class));
-                    if (classNames==null) {
-                        ClassResolver resolver = new ClassResolver(getBasePackages());
-                        classNames = new ArrayList<>();
-                        Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
-                        resolvedClasses.addAll(resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class));
-                        resolvedClasses.addAll(resolver.getSubclasses(Content.class));
-                        for (Class<? extends Content> cls : resolvedClasses) {
-                            LOG.info("getAllClasses() * {}", cls.getName());
-                            if (!allClasses.contains(cls)) {
-                                classNames.add(cls.getName());
-                                allClasses.add(cls);
-                            } // if
-                        } // for
-                        LOG.info("getAllClasses() # class names {}", classNames.size());
-                        startupCache.put(getClassNamesCacheKey(), classNames);
-                    } else {
-                        // re-fill runtimes caches from persistence startup cache
-                        for (String beanClassName : classNames) {
-                            Class<? extends Content> cls = ClassResolver.loadClass(beanClassName);
-                            LOG.info("getAllClasses() # {}", cls.getName());
+        if (allClasses==null) {
+            allClasses = new ArrayList<>();
+            try {
+                List<String> classNames = SystemUtils.convert(startupCache.get(getClassNamesCacheKey(), List.class));
+                if (classNames==null) {
+                    ClassResolver resolver = new ClassResolver(getBasePackages());
+                    classNames = new ArrayList<>();
+                    Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
+                    resolvedClasses.addAll(resolver.getAnnotatedSubclasses(getBaseClass(), Entity.class));
+                    resolvedClasses.addAll(resolver.getSubclasses(Content.class));
+                    for (Class<? extends Content> cls : resolvedClasses) {
+                        LOG.info("getAllClasses() * {}", cls.getName());
+                        if (!allClasses.contains(cls)) {
+                            classNames.add(cls.getName());
                             allClasses.add(cls);
-                        } // for
-                    } // if
-                } catch (Exception e) {
-                    LOG.error("getAllClasses() outer", e);
-                } // try/catch
-            } // if
-        } // synchronized
+                        } // if
+                    } // for
+                    LOG.info("getAllClasses() # class names {}", classNames.size());
+                    startupCache.put(getClassNamesCacheKey(), classNames);
+                } else {
+                    // re-fill runtimes caches from persistence startup cache
+                    for (String beanClassName : classNames) {
+                        Class<? extends Content> cls = ClassResolver.loadClass(beanClassName);
+                        LOG.info("getAllClasses() # {}", cls.getName());
+                        allClasses.add(cls);
+                    } // for
+                } // if
+            } catch (Exception e) {
+                LOG.error("getAllClasses() outer", e);
+            } // try/catch
+        } // if
         return allClasses;
     } // getAllClasses()
 
@@ -259,7 +262,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     /**
      * Initializes the bean factory after JPA manager and factory have been obtained.
      *
-     * intializes the queryCache from the startupCache if possible and re-calibrates the available entity list.
+     * initializes the queryCache from the startupCache if possible and re-calibrates the available entity list.
      */
     protected void initFactory() {
         LOG.info("initFactory() manager factory: {}", managerFactory.getClass().getName());
@@ -287,7 +290,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
     @PostConstruct
     public void afterPropertiesSet() {
         Map<? extends Object, ? extends Object> overrides = getFactoryConfigOverrides();
-        LOG.info("afterPropertiesSet() using overrides for entity manager factory: {}", overrides);
+        LOG.debug("afterPropertiesSet() using overrides for entity manager factory: {}", overrides);
 
         // OpenJPA specific class handling to be able to handle classes from the class repository
         StringBuilder classList = new StringBuilder(256);
