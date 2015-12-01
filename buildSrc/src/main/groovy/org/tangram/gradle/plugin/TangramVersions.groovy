@@ -76,6 +76,6 @@ public class TangramVersions {
   String ebean = '6.12.1'
   String ebean_agent = '4.7.1'
 
-  String appengine = '1.9.29'
+  String appengine = '1.9.28' // 1.9.30 is not available from maven repos
 
 } // TangramVersions
