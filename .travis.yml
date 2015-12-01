@@ -2,5 +2,8 @@ sudo: false
 
 language: java
 
+jdk:
+  - oraclejdk7
+
 after_success:
   - gradle -Prelease generatePomFileForMavenJavaPublication artifactoryPublish
