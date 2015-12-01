@@ -40,13 +40,13 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.8'
   String pac4j = '1.8.0'
-  String tomcat = '7.0.63'
-  String codemirror = '5.8'
-  String ckeditor = '4.5.4'
+  String tomcat = '7.0.65'
+  String codemirror = '5.9'
+  String ckeditor = '4.5.5'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.3.1' // Gradle 2.8 has 6.3.1 - tests fail with other versions - latest is 6.9.9
+  String testng = '6.3.1' // Gradle 2.9 has 6.3.1 - tests fail with other versions - latest is 6.9.9
 
   // The dependency injection options
   String dinistiq = '0.5'
@@ -72,7 +72,7 @@ public class TangramVersions {
   // DataNucleus does not provide all artifacts for every released version.
   String datanucleus = '4.1.0-release'
 
-  String ebean = '6.10.4'
+  String ebean = '6.12.1'
   String ebean_agent = '4.7.1'
 
   // Not used by tangram itself
