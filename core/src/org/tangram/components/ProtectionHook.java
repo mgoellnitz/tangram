@@ -52,7 +52,10 @@ public class ProtectionHook implements ControllerHook {
     private BeanFactory beanFactory;
 
     /**
-     * Return which protections (mapped by key) must be adhered when calling the given congent.
+     * Return which protections (mapped by key) must be adhered when calling the given content.
+     *
+     * @param content content items to get required protection instances for
+     * @return map of protection keys mapping to protection instances required for the gven content
      */
     public Map<String, Protection> getRequiredProtections(ProtectedContent content) {
         Map<String, Protection> result = Collections.emptyMap();

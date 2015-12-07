@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,6 +29,8 @@ public interface MutableBeanFactory extends BeanFactory {
 
     /**
      * Returns the root class of all content classes handled by the implementing instance - may be null;
+     *
+     * @return base class for this bean factory implementing the content interface
      */
     Class<? extends Content> getBaseClass();
 
@@ -56,8 +58,10 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * The beans hast to be persisted in a subsequent step! The call of persist() is mandatory after using this call.
      *
-     * @param cls class to reate a persistable instance for
+     * @param cls class to create a persistable instance for
+     * @param <T> Type constraint for the above class
      * @return newly created instance
+     * @throws Exception mostly IO and DB storage related exceptions
      */
     <T extends Content> T createBean(Class<T> cls) throws Exception;
 
@@ -65,8 +69,8 @@ public interface MutableBeanFactory extends BeanFactory {
     /**
      * Persist a given bean and don't close the open transaction.
      *
-     * @param <T>
-     * @param bean
+     * @param <T> Type constraint for the given bean
+     * @param bean bean to persist without committing the running transaction
      * @return true if persisting could be completed successfully
      */
     <T extends Content> boolean persistUncommitted(T bean);
@@ -75,8 +79,8 @@ public interface MutableBeanFactory extends BeanFactory {
     /**
      * Persist a given bean.
      *
-     * @param <T>
-     * @param bean
+     * @param <T> Type constraint for the given bean
+     * @param bean bean to persist
      * @return true if persisting could be completed successfully
      */
     <T extends Content> boolean persist(T bean);
@@ -86,8 +90,8 @@ public interface MutableBeanFactory extends BeanFactory {
      * Delete a given bean from persistence storage.
      * This method uses a transaction and closes it or does a roll back.
      *
-     * @param <T>
-     * @param bean
+     * @param <T> Type constraint for the given bean
+     * @param bean bean to delete from persistent storage
      * @return true if deleting could be completed successfully
      */
     <T extends Content> boolean delete(T bean);
@@ -137,9 +141,9 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * Never dare to issue changes for abstract classes or interfaces!
      * (You cannot have instances of those types anyway)
-     * The calll is only relevant for the attached listeners.
+     * The call is only relevant for the attached listeners.
      *
-     * @param cls
+     * @param cls class to trigger listeners for
      */
     void clearCacheFor(Class<? extends Content> cls);
 
@@ -150,6 +154,8 @@ public interface MutableBeanFactory extends BeanFactory {
      * Unspecified type instance of the implementing backend.
      * This is e.g. a JDO PersistenceManager instance or a JPA
      * EntitiyManager instance.
+     *
+     * @return implementation specific manager instance
      */
     Object getManager();
 

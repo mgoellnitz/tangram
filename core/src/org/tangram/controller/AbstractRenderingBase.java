@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -76,10 +76,11 @@ public abstract class AbstractRenderingBase implements LinkFactory {
      *
      * Uses the meta link handler and thus also calls any registered hooks.
      *
-     * @param request
-     * @param response
+     * @param descriptor description of the model to wrap
+     * @param request request context to create model in
+     * @param response response context to create model in
      * @return map resembling the model
-     * @throws Exception
+     * @throws Exception no exceptions are expected but any can occur
      */
     protected Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {

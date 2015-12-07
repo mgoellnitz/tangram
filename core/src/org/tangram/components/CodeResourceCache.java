@@ -142,11 +142,11 @@ public class CodeResourceCache implements BeanListener {
 
 
     /**
-     * Get a code resource for a id from the code resource cache.
+     * Get a code resource for an id from the code resource cache.
      *
      * Quite similar to a getBean() in the bean factory
      *
-     * @param id
+     * @param id content id of the code resource instance to obtain
      * @return code resource for the id if found or null otherwise
      */
     public CodeResource get(String id) {
@@ -179,7 +179,7 @@ public class CodeResourceCache implements BeanListener {
      *
      * Since thois anotations are used like filenames this is something like a listing for the given mimetype
      *
-     * @param mimeType
+     * @param mimeType mimetype of the code resource instances to collect annotation string from
      * @return list of annotations for the given mimetype - maybe empty but nut null
      */
     public Collection<String> getAnnotations(String mimeType) {
@@ -191,7 +191,7 @@ public class CodeResourceCache implements BeanListener {
     /**
      * Return the cache portion for a given mimetype.
      *
-     * @param mimeType
+     * @param mimeType mime type of the code resources to include into result mapping
      * @return annotation to code resource map for the given mimetype - maybe empty but not null
      */
     public Map<String, CodeResource> getTypeCache(String mimeType) {

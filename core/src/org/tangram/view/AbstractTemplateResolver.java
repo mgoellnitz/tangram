@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2014 Martin Goellnitz
+ * Copyright 2013-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -132,6 +132,13 @@ public abstract class AbstractTemplateResolver<T extends Object> implements Temp
 
 
     /**
+     * Traverses type hierarchy of given content item for look up a view for the given parameter set.
+     *
+     * @param viewName name of the view to look up - may be null for the default view
+     * @param locale locale of the current rendering situation
+     * @param content instance to find view for
+     * @param key cache key for the lookup - used to avoid too many lookups of the same view situation
+     * @return resulting view or null if no view is found
      * @throws IOException - in subclasses not this one
      */
     protected T lookupView(String viewName, Locale locale, Object content, String key) throws IOException {

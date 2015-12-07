@@ -44,6 +44,12 @@ public final class CodeHelper {
     }
 
 
+    /**
+     * Derive filename extension from mime type.
+     *
+     * @param mimeType mime type to get extension for
+     * @return filename extension
+     */
     public static String getExtension(String mimeType) {
         if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
             mimeType = "text/groovy";
@@ -67,6 +73,15 @@ public final class CodeHelper {
     } // getExtension()
 
 
+    /**
+     * Get a pseudo folder name for a given mime type.
+     * Only mime types dealing with known code types to tangram are mapped.
+     * Other text mime types are mapped to their subtype, while all other types are mapped to
+     * themselves as a folder name
+     *
+     * @param mimeType mime type to map to a folder name.
+     * @return pseudo folder name
+     */
     public static String getFolder(String mimeType) {
         if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
             mimeType = "text/groovy";
@@ -87,6 +102,14 @@ public final class CodeHelper {
     } // getFolder()
 
 
+    /**
+     * Get mime type from pseudo directory name.
+     * There are no directories in the repository, so a fixed set of directory names directly describes a folder.
+     * All other folder names are mapped to text/plain.
+     *
+     * @param directoryName one of a fixed set of directory names
+     * @return mime type for a code resource
+     */
     public static String getMimetype(String directoryName) {
         String result = "text/plain";
 
@@ -111,7 +134,10 @@ public final class CodeHelper {
 
 
     /**
-     * derives annotation from pseudo filename.
+     * Derive annotation from pseudo filename.
+     *
+     * @param filename pseudo file name for code resource
+     * @return annotation value for a code resource derived from the filename
      */
     public static String getAnnotation(String filename) {
         int idx = filename.lastIndexOf('.');

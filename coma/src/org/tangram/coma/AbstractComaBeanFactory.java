@@ -46,7 +46,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractComaBeanFactory.class);
 
     /**
-     * desribe which type are derived from which others - via documenttype definitions
+     * describe which type are derived from which others - via documenttype definitions.
      */
     private Map<String, String> parents = new HashMap<>();
 
@@ -76,6 +76,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
     /**
      * Set mapping from document type name to its parent's document type name.
      * Must resemble the document type relationship of the underlying CMS repository DB.
+     *
+     * @param parents map pointing from a document type name to the parents document type name
      */
     public void setParents(Map<String, String> parents) {
         this.parents = parents;
@@ -208,8 +210,9 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
      *
      * The instance "id" must be of type "type" otherwise the method will fail!
      *
-     * @param type
-     * @param id
+     * @param factory should be this bean - erm
+     * @param type document type name to fetch properties map for
+     * @param id id of the content to fetch properties map for
      * @return map mapping the property names to their respective values
      */
     public Map<String, Object> getProperties(BeanFactory factory, String type, String id) {

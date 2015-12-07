@@ -69,6 +69,7 @@ public interface AuthenticationService {
      * @param request current request
      * @param response response instance for the request
      * @param providers set of allowed providers for this login
+     * @throws IOException IO related problems may occur on redirection
      */
     void redirectToLogin(HttpServletRequest request, HttpServletResponse response, Set<String> providers) throws IOException;
 

@@ -227,10 +227,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
 
 
     /**
-     * if o is of class getBlobClass() it returns the blob size
-     *
-     * @param o
-     * @return blob's size
+     * @see PropertyConverter#getBlobLength(java.lang.Object)
      */
     @Override
     public abstract long getBlobLength(Object o);

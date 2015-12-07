@@ -66,10 +66,11 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     /**
-     *
      * Override Persistence Manager Factory properties given in jdoconfig.xml file.
+     * The values added here override and add to the values from jdoconfig.xml.
+     * The details of the values are to be taken from the documentation of the JDO implementation.
      *
-     * @param configOverrides
+     * @param configOverrides name value pair mapping with values for the given JDO implementation.
      */
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
@@ -89,7 +90,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
     /**
      * Override the default id when obtaining the persistence factory.
      *
-     * @param factoryName
+     * @param factoryName persistence factory name to be used subsequently.
      */
     public void setFactoryName(String factoryName) {
         this.factoryName = factoryName;

@@ -106,10 +106,10 @@ public class TangramServletModule extends ServletModule {
 
 
     /**
-     * Obtain Type Literal descriptor for Map<String, String>.
+     * Obtain Type Literal descriptor for Map&lt;String, String&gt;.
      *
-     * @return type litaral instance
-     * @throws NoSuchFieldException should in fact not happen
+     * @return type literal instance
+     * @throws NoSuchFieldException should actually not happen
      */
     public TypeLiteral<?> getStringStringMap() throws NoSuchFieldException {
         Object mapVehicle = new Object() {

@@ -32,6 +32,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface LinkFactoryAggregator {
 
+    /**
+     * Get URI prefix for requests handled by tangram view dispatching.
+     * @param request current request context
+     * @return URI prefix string
+     */
     String getPrefix(HttpServletRequest request);
 
 
@@ -54,11 +59,12 @@ public interface LinkFactoryAggregator {
     /**
      * Create a link for the given bean, action, and view in the context of a request and response.
      *
-     * @param request
-     * @param response
-     * @param bean
-     * @param action
-     * @param view
+     * Create a link instance if this link instance is responsible for the given context or null otherwise.
+     * @param request request context this link creation takes place in
+     * @param response response currently in creation to answer the request
+     * @param bean content instance to create a link for
+     * @param action action to describe in the created link - may be null
+     * @param view view to show the given content item in - may be null for default view
      * @return link instance for the given parameters
      */
     Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view);
@@ -67,8 +73,8 @@ public interface LinkFactoryAggregator {
     /**
      * Find the method for the given target object.
      *
-     * @param target
-     * @param methodName
+     * @param target instance to find method in
+     * @param methodName name of the method to find
      * @return method instance or null
      */
     Method findMethod(Object target, String methodName);

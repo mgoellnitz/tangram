@@ -44,10 +44,10 @@ public interface Protection extends ProtectedContent {
 
     /**
      * Handle a login request for the given protection
-     * @param request
-     * @param response
+     * @param request http request to handle login in
+     * @param response http response to be used while handling login
      * @return String describing the login state of this protection to be stored in the current session
-     * @throws Exception
+     * @throws Exception mostlyIO exceptions
      */
     String handleLogin(HttpServletRequest request, HttpServletResponse response) throws Exception;
 

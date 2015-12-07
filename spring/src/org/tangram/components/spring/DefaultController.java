@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,7 +39,7 @@ import org.tangram.view.ViewContext;
 /**
  * This controller implementation provides a default URL format
  *
- * /&lt;prefix&gt;/id_&lt;id&gt(/view_&lt;view&gt)
+ * /&lt;prefix&gt;/id_&lt;id&gt;(/view_&lt;view&gt;)
  *
  * and a way to handle those urls passing the content id and optionally the view name to the content and
  * view layers of the framework.

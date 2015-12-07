@@ -111,10 +111,11 @@ public class ServletViewUtilities implements ViewUtilities {
 
 
     /**
-     * Creates a plain servlet api based request blob wrapper.
+     * Creates a plain servlet api based request parameter access instance.
      *
-     * @param request
-     * @return request blob wrapper suitable for the given request
+     * @param request the request instance to collect parameters from
+     * @return request parameter access helper instance suitable for the given request
+     * @throws Exception generic exception marker from the interface may mostly result in IOExceptions here
      */
     @Override
     public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {

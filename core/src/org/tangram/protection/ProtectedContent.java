@@ -28,9 +28,11 @@ public interface ProtectedContent extends Content {
 
     /**
      * Present a content hierarchy under which the protection of this content is calculated.
-     * 
+     *
      * If any of the contents in the list is protected by some protection this content is considered protected
      * by this protection instance.
+     *
+     * @return path of content items relevant for the protection of this item
      */
     List<? extends Content> getProtectionPath();
 
