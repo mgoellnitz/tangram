@@ -29,6 +29,7 @@ import java.util.Map;
 public interface TemplateResolver<T extends Object> extends Comparable<TemplateResolver<T>> {
 
     /**
+     * Resolve a valid view for the given context of model, view and locale.
      *
      * @param viewName name of the view ("view method" - since this is an object oriented lookup)
      * @param model map to take one item from and use its type for the object oriented view method lookup

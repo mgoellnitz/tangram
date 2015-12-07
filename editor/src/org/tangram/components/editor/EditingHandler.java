@@ -158,9 +158,9 @@ public class EditingHandler extends AbstractLinkHandler {
     /**
      * Returns a string note about the ORM class state.
      *
-     * @param cls
+     * @param cls model class to obtain a descriptive string for.
      * @return note indicating the underlying ORM implementation and class modification state
-     * @throws SecurityException
+     * @throws SecurityException thrown when we are not able to analyse the methods of the class - should actually never happen.
      */
     private String getOrmNote(Class<? extends Content> cls) throws SecurityException {
         Method[] methods = cls.getMethods();

@@ -201,7 +201,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
     /**
      * Cache key for the persistent cache to store all class names.
      * The stored values are taken from the class path package scan and
-     * asumed to be persistent over re-starts of the applicaion.
+     * assumed to be persistent over re-starts of the application.
      *
      * @return String to be used as a cache key
      */
@@ -346,7 +346,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
 
 
     /**
-     * attach a listener for any changes dealing with classes of the given type.
+     * Attach a listener for any changes dealing with classes of the given type.
      *
      * @param cls class to be notified when instances of that class have been changed
      * @param listener listener to be notified about changes

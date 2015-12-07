@@ -32,7 +32,7 @@ import org.tangram.view.TargetDescriptor;
 public interface LinkHandler extends LinkFactory {
 
     /**
-     * return the id of the object to be show, null otherwise
+     * Return the id of the object to be show, null otherwise.
      *
      * @param url string to parse as a url
      * @param response for error handling

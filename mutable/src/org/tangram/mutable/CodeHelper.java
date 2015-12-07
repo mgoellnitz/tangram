@@ -57,11 +57,22 @@ public final class CodeHelper {
     }
 
 
+    /**
+     * Return the set of mime types known and handled by this class.
+     * 
+     * @return set of mime types
+     */
     public static Set<String> getCodeMimeTypes() {
         return MIME_TYPES;
     } // getCodeMimeTypes()
 
 
+    /**
+     * Derive filename extension from mime type.
+     *
+     * @param mimeType mime type to get extension for
+     * @return filename extension
+     */
     public static String getExtension(String mimeType) {
         if (Constants.MIME_TYPE_GROOVY.equals(mimeType)) {
             mimeType = "text/groovy";
@@ -146,7 +157,7 @@ public final class CodeHelper {
 
 
     /**
-     * derives annotation from pseudo filename.
+     * Derive annotation from pseudo filename.
      *
      * @param filename pseudo file name for code resource
      * @return annotation value for a code resource derived from the filename

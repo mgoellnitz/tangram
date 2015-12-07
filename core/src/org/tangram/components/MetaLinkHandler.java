@@ -108,7 +108,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
 
 
     /**
-     * creates a model and also calls any registered controller hooks.
+     * Create a model and also calls any registered controller hooks.
      *
      * @param descriptor target descriptor to generate model map from
      * @param request currently handled request

@@ -25,7 +25,7 @@ import java.util.List;
 public abstract class AbstractBeanFactory implements BeanFactory {
 
     /**
-     * small helper method to keep areas with suppressed warnings small.
+     * Helper method to keep areas with suppressed warnings small.
      *
      * @param <T> intended type of result
      * @param cls class instance for the given type
