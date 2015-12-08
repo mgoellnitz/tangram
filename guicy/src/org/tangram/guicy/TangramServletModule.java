@@ -127,7 +127,7 @@ public class TangramServletModule extends ServletModule {
      */
     public TypeLiteral<?> getStringStringMap() throws NoSuchFieldException {
         Object mapVehicle = new Object() {
-            Map<String, String> map;
+            public Map<String, String> map;
         };
         Type interimType = mapVehicle.getClass().getDeclaredField("map").getGenericType();
         return TypeLiteral.get(interimType);

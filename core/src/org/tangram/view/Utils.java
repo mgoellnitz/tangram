@@ -75,7 +75,7 @@ public final class Utils {
 
 
     /**
-     * transform a title into a URL conform UTF-8 encoded string
+     * Transform a title into a URL conform UTF-8 encoded string.
      *
      * @param title string to be transformed into a URL readable form
      * @return the URL form of the title
