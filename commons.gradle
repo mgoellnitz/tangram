@@ -58,7 +58,7 @@ if (release) {
     ruleSets = []
     ruleSetFiles = files("$project.rootProject.projectDir/pmd.xml")
     sourceSets = [sourceSets.main]
-    toolVersion = '5.1.1' // We'd love to have a later version like 5.4.0 but travis seems to have a probem with this.
+    toolVersion = '5.1.1' // We'd love to have a later version like 5.4.1 but travis seems to have a probem with this.
   }
 }
 
