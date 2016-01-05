@@ -54,7 +54,7 @@ public class TangramVersions {
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
 
-  String springframework = '4.2.3.RELEASE'
+  String springframework = '4.2.4.RELEASE'
 
   String weld = '2.3.2.Final'
   String openwebbeans = '1.6.2'
@@ -65,14 +65,14 @@ public class TangramVersions {
 
   String openjpa = '2.4.0'
   String eclipselink = '2.6.1'
-  String hibernate = '5.0.5.Final'
+  String hibernate = '5.0.6.Final'
   String hibernate_ogm = '4.2.0.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
   String datanucleus = '4.1.0-release'
 
-  String ebean = '6.13.5'
+  String ebean = '6.14.1'
   String ebean_agent = '4.7.1'
 
   // Not used by tangram itself

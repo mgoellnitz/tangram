@@ -389,10 +389,6 @@ class TangramUtilities {
       public boolean isLazyLoadable(CtField field) {
         return true
       }
-      @Override
-      public boolean doFieldAccessEnhancement(CtClass classDescriptor) {
-        return  true
-      }
     };
     final Enhancer enhancer = new Enhancer(enhancementContext)
     final ClassPool classPool = new ClassPool(false)
