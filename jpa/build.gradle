@@ -71,8 +71,24 @@ eclipselinkJar.doFirst {
   eclipselinkWeave("$buildDir/classes/eclipselink")
 }
 
+// For Hibernate - must be the last in the que
+task hibernateJar(type: Jar, dependsOn: eclipselinkJar) {
+  classifier = 'hibernate'
+  from "$buildDir/classes/hibernate"
+  from "$buildDir/resources/main"
+}
+
+hibernateJar.doFirst {
+  copy {
+    from "$buildDir/classes/main"
+    into "$buildDir/classes/hibernate"
+    include '**/**'
+  }
+  hibernateEnhance("$buildDir/classes/hibernate")
+}
+
 // For Datanucleus
-task nucleusJar(type: Jar, dependsOn: eclipselinkJar) {
+task nucleusJar(type: Jar, dependsOn: hibernateJar) {
   classifier = 'nucleus'
   from "$buildDir/classes/nucleus"
   from "$buildDir/resources/main"
@@ -106,23 +122,7 @@ openjpaJar.doFirst {
   openjpaEnhance("$buildDir/classes/openjpa")
 }
 
-// For Hibernate - must be the last in the que
-task hibernateJar(type: Jar, dependsOn: openjpaJar) {
-  classifier = 'hibernate'
-  from "$buildDir/classes/hibernate"
-  from "$buildDir/resources/main"
-}
-
-hibernateJar.doFirst {
-  copy {
-    from "$buildDir/classes/main"
-    into "$buildDir/classes/hibernate"
-    include '**/**'
-  }
-  hibernateEnhance("$buildDir/classes/hibernate")
-}
-
-assemble.dependsOn hibernateJar
+assemble.dependsOn openjpaJar
 
 publishing {
   publications {
@@ -137,11 +137,11 @@ publishing {
         }
       }
 
-      artifact jeeJar
       artifact eclipselinkJar
+      artifact hibernateJar
+      artifact jeeJar
       artifact nucleusJar
       artifact openjpaJar
-      artifact hibernateJar
     }
   }
 }

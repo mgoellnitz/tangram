@@ -39,7 +39,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
-  String pac4j = '1.8.1'
+  String pac4j = '1.8.3'
   String tomcat = '7.0.65'
   String codemirror = '5.9'
   String ckeditor = '4.5.5'
@@ -61,19 +61,22 @@ public class TangramVersions {
 
   // Storage options
   String jdo_api = 'javax.jdo:jdo-api:3.1'
-  String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
+  // There is no official source for a JPA API jar so we decide to use one of them
+  // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
+  String persistence_api = 'org.datanucleus:javax.persistence:2.1.1'
 
   String openjpa = '2.4.0'
-  String eclipselink = '2.6.1'
+  String eclipselink = '2.6.2'
   String hibernate = '5.0.6.Final'
   String hibernate_ogm = '4.2.0.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
-  String datanucleus = '4.1.0-release'
+  // String datanucleus = '4.1.0-release'
+  String datanucleus = '[4.1,4.2)'
 
-  String ebean = '6.14.1'
-  String ebean_agent = '4.7.1'
+  String ebean = '6.15.1'
+  String ebean_agent = '4.8.1'
 
   // Not used by tangram itself
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
