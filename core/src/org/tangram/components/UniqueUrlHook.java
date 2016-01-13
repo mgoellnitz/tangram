@@ -35,7 +35,8 @@ import org.tangram.view.TargetDescriptor;
 
 
 /**
- * Controller hook to check on every request if it is delivered through a unique URL and it gets redirected
+ * Controller hook to ensure a unique URL usage on every request.
+ * It checks every request if it is delivered through a unique URL and triggers a redirect
  * if the content described by this URL should be delivered through another one.
  */
 @Named
@@ -63,10 +64,10 @@ public class UniqueUrlHook implements ControllerHook {
             String queryString = request.getQueryString();
             queryString = StringUtils.isBlank(queryString) ? "" : "?"+queryString;
             // If you run into trouble with encodings, this might be a place to search
-            // String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8")+queryString;
             // String decodedUrl = link.getUrl()+queryString;
+            // String requestURI = request.getRequestURI()+queryString;
             String decodedUrl = URLDecoder.decode(link.getUrl(), "UTF-8")+queryString;
-            String requestURI = request.getRequestURI()+queryString;
+            String requestURI = URLDecoder.decode(request.getRequestURI(), "UTF-8")+queryString;
             if (!decodedUrl.equals(requestURI)) {
                 LOG.info("intercept() sending redirect for {} to {}", requestURI, decodedUrl);
                 response.setHeader("Location", link.getUrl());
