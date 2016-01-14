@@ -237,7 +237,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                             LOG.debug("getStorableObject() bean={}", bean);
                             if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
                                 LOG.debug("getStorableObject() bean class {} element class {}", bean.getClass(), elementClass);
-                                if (bean.getClass().isAssignableFrom(elementClass)) {
+                                if (elementClass.isAssignableFrom(bean.getClass())) {
                                     LOG.debug("getStorableObject() add");
                                     elements.add(bean);
                                 } // if
