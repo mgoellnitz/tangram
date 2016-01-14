@@ -234,8 +234,11 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                             idString = m.group(1);
                             LOG.info("getStorableObject() pattern match result {}", idString);
                             Content bean = beanFactory.getBean(idString);
+                            LOG.debug("getStorableObject() bean={}", bean);
                             if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
+                                LOG.debug("getStorableObject() bean class {} element class {}", bean.getClass(), elementClass);
                                 if (bean.getClass().isAssignableFrom(elementClass)) {
+                                    LOG.debug("getStorableObject() add");
                                     elements.add(bean);
                                 } // if
                             } // if
