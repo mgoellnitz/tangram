@@ -169,6 +169,7 @@
         tangram.resource.loader.cachingOn=true
         tangram.resource.loader.modificationCheckInterval=30
         userdirective=org.tangram.view.velocity.IncludeDirective,org.tangram.view.velocity.LinkDirective
+        runtime.log.logsystem.class=org.tangram.view.velocity.VelocityLog
       </value>
     </property>
   </bean>
