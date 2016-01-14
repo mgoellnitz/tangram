@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -388,10 +388,6 @@ class TangramUtilities {
       @Override
       public boolean isLazyLoadable(CtField field) {
         return true
-      }
-      @Override
-      public boolean doFieldAccessEnhancement(CtClass classDescriptor) {
-        return  true
       }
     };
     final Enhancer enhancer = new Enhancer(enhancementContext)

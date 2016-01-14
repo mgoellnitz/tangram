@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -51,19 +51,21 @@ public class TangramVersions {
 
   String springframework = '4.2.3.RELEASE'
 
-  String weld = '2.3.1.Final'
+  String weld = '2.3.2.Final'
   String openwebbeans = '1.6.2'
 
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
 
   String jdo_api = 'javax.jdo:jdo-api:3.1'
-  String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.0'
+  // There is no official source for a JPA API jar so we decide to use one of them
+  // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
+  String persistence_api = 'org.datanucleus:javax.persistence:2.1.1'
 
   String openjpa = '2.4.0'
-  String eclipselink = '2.6.1'
+  String eclipselink = '2.6.2'
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
-  String hibernate = '5.0.5.Final'
+  String hibernate = '5.0.6.Final'
   String hibernate_ogm = '4.2.0.Final'
 
   // Datanucleus Version limited to 3.1.x by Google App Engine plugin for now
@@ -73,8 +75,8 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.13.1'
-  String ebean_agent = '4.7.1'
+  String ebean = '6.15.1'
+  String ebean_agent = '4.8.1'
 
   String appengine = '1.9.30'
 
