@@ -232,13 +232,10 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                         } // if
                         if (m.find()) {
                             idString = m.group(1);
-                            LOG.info("getStorableObject() pattern match result {}", idString);
                             Content bean = beanFactory.getBean(idString);
-                            LOG.debug("getStorableObject() bean={}", bean);
+                            LOG.info("getStorableObject() pattern match result {} ({})", idString, bean);
                             if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
-                                LOG.debug("getStorableObject() bean class {} element class {}", bean.getClass(), elementClass);
                                 if (elementClass.isAssignableFrom(bean.getClass())) {
-                                    LOG.debug("getStorableObject() add");
                                     elements.add(bean);
                                 } // if
                             } // if
