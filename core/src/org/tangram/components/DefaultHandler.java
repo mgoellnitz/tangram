@@ -47,7 +47,7 @@ import org.tangram.view.Utils;
  *
  * URLs of this format are not generated here.
  */
-@Named("defaultHandler")
+@Named
 @Singleton
 @LinkHandler
 public class DefaultHandler extends AbstractLinkHandler implements InternalLinkFactory {

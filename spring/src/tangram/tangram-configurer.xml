@@ -156,7 +156,7 @@
   </bean>
 
   <!--
-    path resolver s only used when velocity is used with classpath loading which results in too many exception when it falls
+    path resolver is only used when velocity is used with classpath loading which results in too many exception when it falls
     back to JSP views
   -->
   <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
