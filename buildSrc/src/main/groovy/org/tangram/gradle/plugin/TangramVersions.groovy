@@ -32,24 +32,24 @@ public class TangramVersions {
   String groovy = '2.4.5'
   String asm = '4.0'
   String velocity = '1.7'
-  String slf4j = '1.7.13'
+  String slf4j = '1.7.14'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
   String pac4j = '1.7.1'
-  String tomcat = '7.0.65'
-  String codemirror = '5.9'
-  String ckeditor = '4.5.5'
+  String tomcat = '7.0.67'
+  String codemirror = '5.11'
+  String ckeditor = '4.5.6'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.3.1' // Gradle 2.6 has 6.3.1 - tests fail with other versions - latest is 6.9.9
+  String testng = '6.3.1' // Gradle 2.10 has 6.3.1 - tests fail with other versions - latest is 6.9.10
   String testspring = '2.5' // Google app engine is quite outdated with Servlet APIs
 
   String dinistiq = '0.4'
 
-  String springframework = '4.2.3.RELEASE'
+  String springframework = '4.2.4.RELEASE'
 
   String weld = '2.3.2.Final'
   String openwebbeans = '1.6.2'
