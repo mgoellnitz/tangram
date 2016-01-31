@@ -75,7 +75,7 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.15.1'
+  String ebean = '6.16.2'
   String ebean_agent = '4.8.1'
 
   String appengine = '1.9.31'

@@ -36,19 +36,22 @@ public class BaseClass extends EContent implements BaseInterface {
 
     private String title;
 
-    private List<? extends BaseClass> peers;
+    private List<BaseClass> peers;
 
 
+    @Override
     public String getTitle() {
         return title;
     }
 
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
 
 
+    @Override
     public List<? extends BaseInterface> getPeers() {
         return peers;
     }
