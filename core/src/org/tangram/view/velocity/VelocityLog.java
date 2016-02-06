@@ -34,7 +34,7 @@ public class VelocityLog implements LogChute {
 
     @Override
     public void init(RuntimeServices rs) throws Exception {
-        LOGGER.info("Log Chute initialized");
+        LOGGER.debug("Log Chute initialized");
     } // init()
 
 

@@ -38,10 +38,12 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public long getLastModified(Resource resource) {
+        CodeResource code = codeResourceCache.get(resource.getName());
+        long update = code.getModificationTime()>99 ? code.getModificationTime() : codeResourceCache.getLastUpdate();
         if (LOG.isInfoEnabled()) {
-            LOG.info("getLastModified() "+resource.getName()+" "+new Date(codeResourceCache.getLastUpdate()));
+            LOG.info("getLastModified({}) {}", resource.getName(), new Date(update));
         } // if
-        return codeResourceCache.getLastUpdate();
+        return update;
     } // getLastModified()
 
 
@@ -71,11 +73,11 @@ public class VelocityResourceLoader extends ResourceLoader {
 
     @Override
     public boolean isSourceModified(Resource resource) {
+        long update = getLastModified(resource);
         if (LOG.isInfoEnabled()) {
-            LOG.info("isSourceModified() "+resource.getName()+" "+new Date(resource.getLastModified())+" "
-                    +new Date(codeResourceCache.getLastUpdate()));
+            LOG.info("isSourceModified({}) {} {}", resource.getName(), new Date(resource.getLastModified()), new Date(update));
         } // if
-        return (codeResourceCache.getLastUpdate()>resource.getLastModified());
+        return (update>resource.getLastModified());
     } // isSourceModified()
 
 

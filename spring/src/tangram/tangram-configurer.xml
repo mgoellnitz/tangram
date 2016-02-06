@@ -155,11 +155,36 @@
     <property name="activateCaching" value="true" />
   </bean>
 
+  <bean id="velocityLog" class="org.tangram.view.velocity.VelocityLog"/>
+
   <!--
     path resolver is only used when velocity is used with classpath loading which results in too many exception when it falls
     back to JSP views
+  <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <property name="velocityPropertiesMap">
+      <map>
+        <entry key="runtime.log.logsystem" value-ref="velocityLog"/>
+        <entry key="input.encoding" value="UTF-8"/>
+        <entry key="output.encoding" value="UTF-8"/>
+        <entry key="resource.loader" value="tangram"/>
+        <entry key="tangram.resource.loader.class" value="org.tangram.view.velocity.VelocityResourceLoader"/>
+        <entry key="tangram.resource.loader.cachingOn" value="true"/>
+        <entry key="tangram.resource.loader.modificationCheckInterval" value="30"/>
+      </map>
+    </property>
+  </bean>
+  -->
+
+  <!--
+    path resolver is only used when velocity is used with classpath loading which results in too
+    many exceptions when it falls back to JSP views.
   -->
   <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+    <property name="velocityPropertiesMap">
+      <map>
+        <entry key="runtime.log.logsystem" value-ref="velocityLog"/>
+      </map>
+    </property>
     <property name="velocityProperties">
       <value>
         input.encoding=UTF-8
@@ -169,7 +194,6 @@
         tangram.resource.loader.cachingOn=true
         tangram.resource.loader.modificationCheckInterval=30
         userdirective=org.tangram.view.velocity.IncludeDirective,org.tangram.view.velocity.LinkDirective
-        runtime.log.logsystem.class=org.tangram.view.velocity.VelocityLog
       </value>
     </property>
   </bean>
