@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,7 @@
  */
 package org.tangram.content;
 
+import com.github.rjeschke.txtmark.Processor;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -46,8 +47,9 @@ public class TransientCode implements CodeResource, Serializable {
 
     public TransientCode(String annotation, String mimeType, String id, String codeText, long modificationTime) {
         this.annotation = annotation;
-        this.mimeType = mimeType;
-        this.codeText = codeText;
+        boolean md = "text/x-markdown".equals(mimeType);
+        this.codeText = md ? Processor.process(codeText) : codeText;
+        this.mimeType = md ? "text/html" : mimeType;
         this.modificationTime = modificationTime;
         this.id = id;
     } // TransientCodeResource()

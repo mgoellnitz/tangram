@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -158,11 +158,7 @@ public class ServletViewUtilities implements ViewUtilities {
                 LOG.debug("render() setting content type from {} to {} on {}", response.getContentType(), codeResource.getMimeType(), response.getClass().getName());
                 response.setContentType(codeResource.getMimeType());
                 response.setCharacterEncoding("UTF-8");
-                if (writer==null) {
-                    response.getWriter().flush();
-                } else {
-                    writer.flush();
-                } // if
+                (writer == null ? response.getWriter() : writer).flush();
                 VelocityContext context = new VelocityContext(model);
                 if (!context.containsKey(Constants.ATTRIBUTE_VIEW_UTILITIES)) {
                     context.put(Constants.ATTRIBUTE_VIEW_UTILITIES, this);

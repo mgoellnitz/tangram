@@ -52,6 +52,8 @@ public final class Constants {
 
     public static final String MIME_TYPE_PLAIN = "text/plain";
 
+    public static final String MIME_TYPE_MARKDOWN = "text/x-markdown";
+
     /**
      * Default date format string for http headers and the like.
      */

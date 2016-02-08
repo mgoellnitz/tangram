@@ -141,6 +141,9 @@ CKEDITOR.replace( 'ke<%=key%>');
             if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
                 cmmode = "htmlmixed";
             } // if
+            if (Constants.MIME_TYPE_MARKDOWN.equals(mimeType)) {
+                cmmode = "markdown";
+            } // if
         } catch (Exception e) {
 
         } // try/catch

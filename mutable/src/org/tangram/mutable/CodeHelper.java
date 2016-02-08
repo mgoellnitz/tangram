@@ -31,7 +31,7 @@ import org.tangram.content.CodeResource;
 public final class CodeHelper {
 
     /**
-     * a set of ignorable extensions. Tweaked for use with NetBeans FTP uploader
+     * a set of ignorable extensions. Tweaked for use with NetBeans FTP uploader.
      */
     private static final Set<String> EXTENSION_TO_CUT = new HashSet<>();
 
@@ -54,12 +54,13 @@ public final class CodeHelper {
         MIME_TYPES.add(Constants.MIME_TYPE_CSS);
         MIME_TYPES.add(Constants.MIME_TYPE_JS);
         MIME_TYPES.add(Constants.MIME_TYPE_GROOVY);
+        MIME_TYPES.add(Constants.MIME_TYPE_MARKDOWN);
     }
 
 
     /**
      * Return the set of mime types known and handled by this class.
-     * 
+     *
      * @return set of mime types
      */
     public static Set<String> getCodeMimeTypes() {
@@ -85,6 +86,9 @@ public final class CodeHelper {
         } // if
         if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
+        } // if
+        if (Constants.MIME_TYPE_MARKDOWN.equals(mimeType)) {
+            mimeType = "text/md";
         } // if
         if (Constants.MIME_TYPE_PLAIN.equals(mimeType)) {
             mimeType = "";
@@ -117,6 +121,9 @@ public final class CodeHelper {
         } // if
         if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
+        } // if
+        if (Constants.MIME_TYPE_MARKDOWN.equals(mimeType)) {
+            mimeType = "text/markdown";
         } // if
         if (mimeType.startsWith("text/")) {
             mimeType = mimeType.substring(5);
@@ -151,6 +158,9 @@ public final class CodeHelper {
         if ("groovy".equals(directoryName)) {
             result = Constants.MIME_TYPE_GROOVY;
         } // if
+        if ("markdown".equals(directoryName)) {
+            result = Constants.MIME_TYPE_MARKDOWN;
+        } // if
 
         return result;
     } // getMimetype()
@@ -179,6 +189,9 @@ public final class CodeHelper {
             filename = filename.substring(0, idx);
         } // if
         if (filename.endsWith(".groovy")) {
+            filename = filename.substring(0, idx);
+        } // if
+        if (filename.endsWith(".md")) {
             filename = filename.substring(0, idx);
         } // if
         return filename;
