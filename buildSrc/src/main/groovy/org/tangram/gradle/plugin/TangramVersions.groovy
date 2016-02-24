@@ -30,7 +30,7 @@ public class TangramVersions {
   String lombok = '1.16.6'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
-  String groovy = '2.4.5'
+  String groovy = '2.4.6'
   String asm = '4.0'
   String velocity = '1.7'
   String slf4j = '1.7.16'
@@ -39,8 +39,8 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
-  String pac4j = '1.8.4'
-  String tomcat = '7.0.67'
+  String pac4j = '1.8.6'
+  String tomcat = '7.0.68'
   String codemirror = '5.11'
   String ckeditor = '4.5.7'
 
@@ -65,7 +65,7 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.1'
 
-  String openjpa = '2.4.0'
+  String openjpa = '2.4.1'
   String eclipselink = '2.6.2'
   String hibernate = '5.1.0.Final'
   String hibernate_ogm = '4.2.0.Final'
@@ -75,7 +75,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '6.17.3'
+  String ebean = '6.18.1'
   String ebean_agent = '4.8.1'
 
   // Not used by tangram itself
