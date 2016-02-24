@@ -29,7 +29,7 @@ public class TangramVersions {
   String lombok = '1.16.6'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.4.5'
+  String groovy = '2.4.6'
   String asm = '4.0'
   String velocity = '1.7'
   String slf4j = '1.7.16'
@@ -38,7 +38,7 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.8'
   String pac4j = '1.7.1'
-  String tomcat = '7.0.67'
+  String tomcat = '7.0.68'
   String codemirror = '5.11'
   String ckeditor = '4.5.7'
 
@@ -62,7 +62,7 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.1'
 
-  String openjpa = '2.4.0'
+  String openjpa = '2.4.1'
   String eclipselink = '2.6.2'
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
   String hibernate = '5.1.0.Final'
@@ -75,7 +75,7 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.17.3'
+  String ebean = '6.18.1'
   String ebean_agent = '4.8.1'
 
   String appengine = '1.9.32'
