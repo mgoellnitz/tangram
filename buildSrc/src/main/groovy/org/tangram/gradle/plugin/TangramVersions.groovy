@@ -75,8 +75,8 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '6.18.1'
-  String ebean_agent = '4.8.1'
+  String ebean = '7.1.1'
+  String ebean_agent = '4.9.1'
 
   // Not used by tangram itself
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
