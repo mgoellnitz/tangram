@@ -39,7 +39,7 @@ public class TangramVersions {
   String xstream = '1.4.8'
   String pac4j = '1.7.1'
   String tomcat = '7.0.68'
-  String codemirror = '5.11'
+  String codemirror = '5.12'
   String ckeditor = '4.5.7'
 
   // For testing purposes
@@ -75,8 +75,8 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '6.18.1'
-  String ebean_agent = '4.8.1'
+  String ebean = '7.1.1'
+  String ebean_agent = '4.9.1'
 
   String appengine = '1.9.32'
 
