@@ -20,6 +20,8 @@
 <% if (!(request.getAttribute(Constants.THIS) instanceof org.tangram.content.CodeResource)) { %>
 <script type="application/javascript" src="${ckprefix}/ckeditor.js"></script>
 <% } else { %>
+<script type="application/javascript" src="${cmprefix}/addon/mode/overlay.js"></script>
+<script type="application/javascript" src="${cmprefix}/mode/velocity/velocity.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/groovy/groovy.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/xml/xml.js"></script>
 <script type="application/javascript" src="${cmprefix}/mode/javascript/javascript.js"></script>
@@ -136,10 +138,10 @@ CKEDITOR.replace( 'ke<%=key%>');
                 cmmode = "css";
             } // if
             if (Constants.MIME_TYPE_XML.equals(mimeType)) {
-                cmmode = "xml";
+                cmmode = "velocityxml"; // "xml";
             } // if
             if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
-                cmmode = "htmlmixed";
+                cmmode = "velocityhtml"; // "htmlmixed";
             } // if
             if (Constants.MIME_TYPE_MARKDOWN.equals(mimeType)) {
                 cmmode = "markdown";
@@ -152,6 +154,13 @@ CKEDITOR.replace( 'ke<%=key%>');
         } else {
 %><textarea id="code" class="cms_editor_textfield" name="<%=key%>"><%=propertyConverter.getEditString(value)%></textarea>
 <script type="application/javascript">
+  CodeMirror.defineMode("velocityhtml", function(config, parserConfig) {
+    return CodeMirror.overlayMode(CodeMirror.getMode(config, "htmlmixed"), CodeMirror.getMode(config, "velocity"));
+  });
+  CodeMirror.defineMode("velocityxml", function(config, parserConfig) {
+    return CodeMirror.overlayMode(CodeMirror.getMode(config, "xml"), CodeMirror.getMode(config, "velocity"));
+  });
+
   var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     height: "dynamic", continuousScanning: 500, mode: "<%=cmmode%>", lineNumbers: true
   });
