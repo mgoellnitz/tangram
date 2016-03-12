@@ -40,7 +40,7 @@ public interface CodeResourceCache extends BeanListener {
      *
      * @return last time of scanning for code resources
      */
-    public long getLastUpdate();
+    long getLastUpdate();
 
 
     /**

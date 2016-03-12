@@ -24,6 +24,7 @@ import org.tangram.authentication.AuthenticationService
 import org.tangram.content.CodeResourceCache
 import org.tangram.components.DefaultHandler
 import org.tangram.components.GenericAuthorizationService
+import org.tangram.components.GenericCodeResourceCache
 import org.tangram.components.GroovyClassRepository
 import org.tangram.components.MetaLinkHandler
 import org.tangram.components.PacAuthenticationService
@@ -136,7 +137,7 @@ log.info("configuring authorization service")
 module.bind(AuthorizationService.class).toInstance(new GenericAuthorizationService())
 
 log.info("configuring code resource cache")
-CodeResourceCache codeResourceCache = new CodeResourceCache()
+CodeResourceCache codeResourceCache = new GenericCodeResourceCache()
 module.bind(CodeResourceCache.class).toInstance(codeResourceCache)
 
 log.info("configuring velocity patch bean")

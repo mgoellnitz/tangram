@@ -36,6 +36,7 @@ import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.content.TransientCode;
 import org.tangram.util.SystemUtils;
 
@@ -48,9 +49,9 @@ import org.tangram.util.SystemUtils;
  * the values in this cache are not supposed to change between restarts.
  *
  */
-@Named
+@Named("codeResourceCache")
 @Singleton
-public class GenericCodeResourceCache implements BeanListener {
+public class GenericCodeResourceCache implements CodeResourceCache {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
