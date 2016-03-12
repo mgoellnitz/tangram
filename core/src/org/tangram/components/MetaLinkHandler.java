@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -110,13 +110,15 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     /**
      * Create a model and also calls any registered controller hooks.
      *
+     * TODO: This is duplicate code from abstract link handler
+     *
      * @param descriptor target descriptor to generate model map from
      * @param request currently handled request
      * @param response response to answer given request
      * @return map resembling the model
      * @throws Exception no exception is expected but anything can happen from the controller hooks
      */
-    public Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
+    private Map<String, Object> createModel(TargetDescriptor descriptor, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         Map<String, Object> model = viewContextFactory.createModel(descriptor.bean, request, response);
         for (ControllerHook controllerHook : controllerHooks) {
