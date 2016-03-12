@@ -21,7 +21,7 @@ import com.google.inject.TypeLiteral
 import java.lang.reflect.Type
 import org.tangram.Constants
 import org.tangram.authentication.AuthenticationService
-import org.tangram.components.CodeResourceCache
+import org.tangram.content.CodeResourceCache
 import org.tangram.components.DefaultHandler
 import org.tangram.components.GenericAuthorizationService
 import org.tangram.components.GroovyClassRepository
@@ -110,6 +110,8 @@ basicAuthClient.name='basic'
 basicAuthClient.authenticator = authenticator
 basicAuthClient.profileCreator = profileCreator
 module.addClient(basicAuthClient)
+// Fall Back Client
+// module.bind(FormClient.class).toInstance(formClient)
 
 log.info("configuring provider specific id attributes for external users")
 Map<String,String> mapping = new HashMap<>()

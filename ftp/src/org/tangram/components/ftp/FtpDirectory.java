@@ -24,8 +24,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanFactory;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.ftp.TangramFtpServer;
 import org.tangram.mutable.MutableBeanFactory;
 

@@ -21,8 +21,8 @@ package org.tangram.mutable;
 import java.util.HashSet;
 import java.util.Set;
 import org.tangram.Constants;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 
 
 /**

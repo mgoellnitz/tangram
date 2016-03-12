@@ -50,7 +50,7 @@ import org.mockftpserver.stub.command.SystCommandHandler;
 import org.mockftpserver.stub.command.TypeCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.CodeResourceCache;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.mutable.MutableBeanFactory;
 
 

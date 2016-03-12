@@ -26,8 +26,8 @@ import org.mockftpserver.core.session.Session;
 import org.mockftpserver.stub.command.PassCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.util.SystemUtils;
 
 
