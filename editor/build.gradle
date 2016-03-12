@@ -90,7 +90,7 @@ localWar.doFirst() {
         from zipTree("${codemirrorFile}")
         // We could also include themes and keymaps.
         // include "${codemirrorBasename}/lib/**", "${codemirrorBasename}/mode/**", "${codemirrorBasename}/keymap/**", "${codemirrorBasename}/theme/**"
-        include "${codemirrorBase}/lib/**", "${codemirrorBase}/mode/*/*.js"
+        include "${codemirrorBase}/lib/**", "${codemirrorBase}/addon/mode/*.js", "${codemirrorBase}/mode/*/*.js"
       }
     }
   }
