@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -57,7 +57,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     private static final Logger LOG = LoggerFactory.getLogger(GroovyClassRepository.class);
 
     @Inject
-    private CodeResourceCache codeCache;
+    private GenericCodeResourceCache codeCache;
 
     @Inject
     private PersistentRestartCache startupCache;

@@ -45,16 +45,16 @@ import org.tangram.util.SystemUtils;
  *
  * The cache is filled with transient implementations of the code resource interfaces resembling contents taken
  * from the bean factory by query. The persistent restart cache is used to support much faster restart since
- * the values in this cache are not supposed to change betweetn restarts.
+ * the values in this cache are not supposed to change between restarts.
  *
  */
 @Named
 @Singleton
-public class CodeResourceCache implements BeanListener {
+public class GenericCodeResourceCache implements BeanListener {
 
     private static final String CODE_RESOURCE_CACHE_KEY = "tangram.code.resource.cache";
 
-    private static final Logger LOG = LoggerFactory.getLogger(CodeResourceCache.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenericCodeResourceCache.class);
 
     @Inject
     private PersistentRestartCache startupCache;

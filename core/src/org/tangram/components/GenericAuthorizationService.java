@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -77,7 +77,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private CodeResourceCache codeResourceCache;
+    private GenericCodeResourceCache codeResourceCache;
 
     @Inject
     @Named("freeUrls")

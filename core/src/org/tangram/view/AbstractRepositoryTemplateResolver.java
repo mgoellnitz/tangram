@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,9 +26,9 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;
-import org.tangram.components.CodeResourceCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 
 
 /**
