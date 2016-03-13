@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
- Copyright 2011-2015 Martin Goellnitz
+ Copyright 2011-2016 Martin Goellnitz
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
@@ -45,8 +45,6 @@
   <!--  generic base for dynamic velocity  -->
 
   <bean id="velocityPatch" class="org.tangram.view.velocity.VelocityPatchBean" />
-
-  <!-- really spring specific stuff -->
 
   <!--
        just a small set if URLs which don't need performance measurement and logins.
@@ -98,6 +96,10 @@
     <property name="authenticator" ref="usernamePasswordAuthenticator"/>
     <property name="profileCreator" ref="profileCreator"/>
   </bean>
+
+  <!-- really spring specific stuff starts here -->
+
+  <bean id="viewUtilities" class="org.tangram.spring.view.SpringViewUtilities"/>
 
   <bean id="measureTimeInterceptor" class="org.tangram.spring.MeasureTimeInterceptor"/>
 
@@ -213,7 +215,5 @@
   <bean id="multipartResolver" class="org.tangram.spring.StreamingMultipartResolver">
     <property name="maxUploadSize" value="${tangram.max.upload.size}" />
   </bean>
-
-  <!-- really spring specific stuff end -->
 
 </beans>
