@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ import org.tangram.content.blob.MimedBlob;
 import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.InternalLinkFactory;
 import org.tangram.link.Link;
-import org.tangram.view.TargetDescriptor;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.view.Utils;
 
 

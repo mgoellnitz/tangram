@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.tangram.components.MetaLinkHandler;
+import org.tangram.spring.view.SpringViewUtilities;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
 

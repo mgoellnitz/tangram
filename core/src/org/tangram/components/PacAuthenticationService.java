@@ -58,7 +58,7 @@ import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.util.SystemUtils;
-import org.tangram.view.TargetDescriptor;
+import org.tangram.link.TargetDescriptor;
 
 
 /**

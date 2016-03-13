@@ -41,7 +41,7 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.SystemUtils;
-import org.tangram.view.TargetDescriptor;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.view.Utils;
 
 

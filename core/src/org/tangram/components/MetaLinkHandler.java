@@ -55,7 +55,7 @@ import org.tangram.logic.ClassRepository;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
-import org.tangram.view.TargetDescriptor;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;

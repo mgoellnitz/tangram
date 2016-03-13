@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -48,6 +48,7 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.Link;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.HasModificationTime;
 import org.tangram.mutable.MutableBeanFactory;
@@ -56,7 +57,6 @@ import org.tangram.util.JavaBean;
 import org.tangram.util.SystemUtils;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
-import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewUtilities;
 

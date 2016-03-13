@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,7 +31,7 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
-import org.tangram.view.TargetDescriptor;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.view.ViewContextFactory;
 
 
@@ -81,18 +81,9 @@ public abstract class AbstractLinkHandler implements LinkFactory {
 
 
     /**
-     * Creates model from a common set of parameters.
+     * Create a model from a commonly used set of parameters and also calls any registered controller hooks.
      *
-     * Uses the meta link handler and thus also calls any registered hooks.
-     *
-     * @param descriptor description of the model to wrap
-     * @param request request context to create model in
-     * @param response response context to create model in
-     * @return map resembling the model
-     * @throws Exception no exceptions are expected but any can occur
-     */
-    /**
-     * Create a model and also calls any registered controller hooks.
+     * TODO: This is duplicate code as in meta link handler
      *
      * @param descriptor target descriptor to generate model map from
      * @param request currently handled request

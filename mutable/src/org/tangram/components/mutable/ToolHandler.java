@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -51,13 +51,13 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.content.Content;
 import org.tangram.link.LinkHandlerRegistry;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.monitor.Statistics;
 import org.tangram.mutable.AppEngineXStream;
 import org.tangram.mutable.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.SystemUtils;
-import org.tangram.view.TargetDescriptor;
 import org.tangram.view.Utils;
 
 
@@ -178,7 +178,7 @@ public class ToolHandler {
     @LinkAction("/codes")
     public TargetDescriptor codeImport(@ActionParameter("zipfile") byte[] zipfile, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
-        if (zipfile == null) {
+        if (zipfile==null) {
             throw new Exception("You missed to select an input file.");
         } // if
         ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(zipfile), Charset.forName("UTF-8"));
@@ -290,7 +290,7 @@ public class ToolHandler {
     @LinkAction("/import")
     public TargetDescriptor contentImport(@ActionParameter("xmlfile") byte[] xmlfile, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
-        if (xmlfile == null) {
+        if (xmlfile==null) {
             throw new Exception("You missed to select an input file.");
         } // if
         Reader input = new StringReader(new String(xmlfile, "UTF-8"));

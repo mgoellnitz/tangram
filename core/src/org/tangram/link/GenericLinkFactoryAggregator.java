@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.annotate.LinkAction;
 import org.tangram.monitor.Statistics;
-import org.tangram.view.TargetDescriptor;
 
 
 /**

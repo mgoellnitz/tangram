@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -36,7 +36,7 @@ import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
 import org.tangram.controller.AbstractLinkHandler;
 import org.tangram.link.Link;
-import org.tangram.view.TargetDescriptor;
+import org.tangram.link.TargetDescriptor;
 
 
 /**
