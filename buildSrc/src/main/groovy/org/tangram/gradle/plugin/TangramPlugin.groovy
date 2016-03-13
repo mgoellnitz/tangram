@@ -51,7 +51,7 @@ class TangramPlugin implements Plugin<Project> {
           if (jarPath.indexOf('jdo-api') > 0) { persistenceAPI = 'jdo' }
           if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
           if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
-          if (jarPath.indexOf('datanucleus') > 0) { jpaBackend = 'datanucleus' }
+          if (jarPath.indexOf('datanucleus-core') > 0) { jpaBackend = 'datanucleus' }
           // println "compileJava - API: $persistenceAPI"
           // println "compileJava - JPA: $jpaBackend"
           if (persistenceAPI == 'jpa') {
