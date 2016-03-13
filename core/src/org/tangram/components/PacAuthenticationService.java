@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -70,7 +70,7 @@ import org.tangram.view.TargetDescriptor;
  * be shorter than their default counterparts.
  */
 @LinkHandler
-@Named
+@Named("authenticationService")
 @Singleton
 public class PacAuthenticationService implements AuthenticationService, LinkFactory {
 
@@ -90,6 +90,10 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     @SuppressWarnings("rawtypes")
     private Set<Client> clientSet;
 
+    // TODO: Experimental stuff for JEE CDI test
+    // final private Set<Client> clientSet = new HashSet<>();
+    // @Inject
+    // private FormClient formLogin;
     @Inject
     private LinkHandlerRegistry registry;
 
@@ -102,7 +106,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     @Override
     public Set<String> getProviderNames() {
         Set<String> providerNames = new HashSet<>();
-        LOG.info("getProviderNames() login provider {}", loginProviders);
+        LOG.info("getProviderNames() login providers {}", loginProviders);
         LOG.debug("getProviderNames() client set {}", clientSet);
         for (Client<?, ?> client : clientSet) {
             if (loginProviders.contains(client.getName())) {
@@ -229,7 +233,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
 
     @LinkAction("/callback")
     public TargetDescriptor callback(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        LOG.warn("callback()");
+        LOG.info("callback()");
         HttpSession session = request.getSession(true);
         Set<User> users = SystemUtils.convert(session.getAttribute(Constants.ATTRIBUTE_USERS));
         LOG.info("callback() logged in users {}", users);
@@ -306,6 +310,11 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         registry.registerLinkHandler(this);
         linkFactoryAggregator.registerFactory(this);
         LOG.debug("afterPropertiesSet() collecting clients");
+        // TODO: Experimental JEE CDI Stuff
+        // if (clientSet.isEmpty()) {
+        //     LOG.info("afterPropertiesSet() adding single fall back client {}", formLogin.getName());
+        //     clientSet.add(formLogin);
+        // } // if
         for (Client<?, ?> client : clientSet) {
             LOG.info("afterPropertiesSet() client {}", client.getName());
         } // for
