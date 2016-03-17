@@ -32,7 +32,7 @@ public class TangramVersions {
   String groovy = '2.4.6'
   String asm = '4.0'
   String velocity = '1.7'
-  String slf4j = '1.7.18'
+  String slf4j = '1.7.19'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String mockito = '1.10.19'
@@ -78,6 +78,6 @@ public class TangramVersions {
   String ebean = '7.1.1'
   String ebean_agent = '4.9.2'
 
-  String appengine = '1.9.32'
+  String appengine = '1.9.34'
 
 } // TangramVersions
