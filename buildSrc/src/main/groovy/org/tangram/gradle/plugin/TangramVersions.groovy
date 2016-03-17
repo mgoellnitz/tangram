@@ -27,19 +27,19 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.6'
+  String lombok = '1.16.8'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String groovy = '2.4.6'
   String asm = '4.0'
   String velocity = '1.7'
-  String slf4j = '1.7.18'
+  String slf4j = '1.7.19'
   String log4j = '1.2.17'
   String logback = '1.1.6'
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.8'
-  String pac4j = '1.8.6'
+  String pac4j = '1.8.7'
   String tomcat = '7.0.68'
   String codemirror = '5.12'
   String ckeditor = '4.5.7'
