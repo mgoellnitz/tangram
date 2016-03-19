@@ -31,6 +31,7 @@ import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.util.SystemUtils;
 
 
@@ -51,7 +52,7 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
     private Map<String, String> usernamePasswordMapping;
 
     @Inject
-    private GenericCodeResourceCache codeResourceCache;
+    private CodeResourceCache codeResourceCache;
 
 
     @Override

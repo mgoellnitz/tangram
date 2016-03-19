@@ -39,6 +39,7 @@ import org.tangram.Constants;
 import org.tangram.PersistentRestartCache;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.logic.ClassRepository;
 import org.tangram.util.SystemUtils;
 
@@ -57,7 +58,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
     private static final Logger LOG = LoggerFactory.getLogger(GroovyClassRepository.class);
 
     @Inject
-    private GenericCodeResourceCache codeCache;
+    private CodeResourceCache codeCache;
 
     @Inject
     private PersistentRestartCache startupCache;

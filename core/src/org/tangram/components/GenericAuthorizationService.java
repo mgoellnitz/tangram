@@ -37,11 +37,12 @@ import org.tangram.authentication.AuthenticationService;
 import org.tangram.authentication.User;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.link.Link;
 import org.tangram.link.LinkFactoryAggregator;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.util.SystemUtils;
-import org.tangram.link.TargetDescriptor;
 import org.tangram.view.Utils;
 
 
@@ -77,7 +78,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private GenericCodeResourceCache codeResourceCache;
+    private CodeResourceCache codeResourceCache;
 
     @Inject
     @Named("freeUrls")
