@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -46,6 +46,7 @@ public class GenericPropertyConverterTest {
             public int compareTo(Content o) {
                 return 0;
             }
+
         };
         Assert.assertEquals(c.getEditString(Boolean.TRUE), "true", "should be a readable true value");
         Assert.assertEquals(c.getEditString(content), "Test:123", "should be a number value string");
@@ -61,6 +62,8 @@ public class GenericPropertyConverterTest {
         List<Content> contentList = new ArrayList<>();
         contentList.add(content);
         Assert.assertEquals(c.getEditString(contentList), "Test:123, ", "should be a list with just one content ID");
+        String caString = "A String as a char array";
+        Assert.assertEquals(c.getEditString(caString.toCharArray()), caString, "char array should be its string");
     } // testEditStrings()
 
 
@@ -73,7 +76,8 @@ public class GenericPropertyConverterTest {
         Assert.assertEquals(c.getStorableObject(null, "true", Boolean.class, null, null), true, "should be a boolean value");
         Assert.assertEquals(c.getStorableObject(null, "error", Boolean.class, null, null), false, "should be a boolean value");
         Assert.assertEquals(c.getStorableObject(null, "11:45:30 01.07.2014 GMT", Date.class, null, null), new Date(1404215130000L), "should be a date value");
-        Assert.assertEquals(c.getStorableObject(null, "Hallo", String.class, null, null), "Hallo", "should be string  value");
+        Assert.assertEquals(c.getStorableObject(null, "Hallo", String.class, null, null), "Hallo", "should be a string value");
+        Assert.assertEquals(c.getStorableObject(null, "Hallo", char[].class, null, null), "Hallo".toCharArray(), "should be a char[] value");
     } // testStorableObjects()
 
 
@@ -81,7 +85,19 @@ public class GenericPropertyConverterTest {
     public void testTypeChecks() {
         GenericPropertyConverter c = new GenericPropertyConverter();
         Assert.assertTrue(c.isBlobType(byte[].class), "should be recognized as blob type");
+        Assert.assertFalse(c.isBlobType(String.class), "should not be recognized as blob type");
         Assert.assertTrue(c.isTextType(char[].class), "should be recognized as text type");
-    } // testStorableObjects()
+        Assert.assertFalse(c.isTextType(String.class), "should not be recognized as text type");
+    } // testTypeChecks()()
+
+
+    @Test
+    public void testConversions() {
+        GenericPropertyConverter c = new GenericPropertyConverter();
+        byte[] blob = new byte[123];
+        Assert.assertEquals(c.createBlob(blob), blob, "standard blobs should be their byte[] representation");
+        Assert.assertEquals(c.getBlobLength(blob), 123, "Unexpected blob length");
+        Assert.assertEquals(c.getBlobLength(""), 0, "Unexpected blob length");
+    } // testConversions()
 
 } // GenericPropertyConverterTest

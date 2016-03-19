@@ -34,7 +34,7 @@ import org.tangram.link.TargetDescriptor;
  * host name in the calling URLs.
  *
  * In many scenarios there are alternate names for the delivering components so it is possible to configure
- * a hook of this class and select the unique host to be used un URL - accepted and generated.
+ * a hook of this class and select the unique host to be used in URLs - accepted and generated.
  */
 public class UniqueHostHook implements ControllerHook {
 
@@ -55,9 +55,9 @@ public class UniqueHostHook implements ControllerHook {
     public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
-        LOG.debug("intercept() serverName={}", request.getServerName());
         boolean isOnLocalhost = request.getServerName().equals("localhost");
-        if (!(request.getServerName().equals(primaryDomain)||(isOnLocalhost))) {
+        LOG.debug("intercept() serverName={} isOnLocalhost={}", request.getServerName(), isOnLocalhost);
+        if ((isOnLocalhost)||!(request.getServerName().equals(primaryDomain))) {
             Link redirectLink = linkFactoryAggregator.createLink(request, response, descriptor.bean, descriptor.action, descriptor.view);
             response.setHeader("Location", "http://"+primaryDomain+redirectLink.getUrl());
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
@@ -66,4 +66,4 @@ public class UniqueHostHook implements ControllerHook {
         return false;
     } // intercept()
 
-} // UniqueUrlHook
+} // UniqueHostHook

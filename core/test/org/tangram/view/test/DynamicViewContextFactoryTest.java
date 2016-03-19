@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -59,11 +59,22 @@ public class DynamicViewContextFactoryTest {
         factory.afterPropertiesSet();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
         BeanClass bean = new BeanClass();
 
         Map<String, Object> shims = factory.getShims(request, bean);
-        Assert.assertEquals(shims.size(), 2, "Expected no shims at all");
+        Assert.assertEquals(shims.size(), 2, "Unexpected number of shims");
+        for (Object so : shims.values()) {
+            if (so instanceof Shim) {
+                Shim s = (Shim) so;
+                Assert.assertEquals(s.getId(), "BeanClass:42", "Unexpected mock bean id");
+                if (s instanceof ViewShim) {
+                    ViewShim vs = (ViewShim) s;
+                    Assert.assertEquals(vs.getRequest(), request, "Unexpected mock bean id");
+                    Assert.assertNull(vs.getSession(), "Unexpected session found");
+                } // if
+            } // if
+        } // for
+        MockHttpServletResponse response = new MockHttpServletResponse();
         ViewContext viewContext = factory.createViewContext(bean, request, response);
         Assert.assertEquals(viewContext.getViewName(), Constants.DEFAULT_VIEW, "Null view expected");
         Assert.assertEquals(viewContext.getModel().size(), 6, "Unexpected number of beans in model");
