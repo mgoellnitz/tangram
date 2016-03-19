@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -60,7 +60,7 @@ public class EbeanContentTest extends BaseContentTest {
         Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
-        Assert.assertNotNull(dinistiq, "need test dinistiq instance");
+        Assert.assertNotNull(dinistiq, "Need dinistiq instance for execute tests.");
         return dinistiq.findBean(type);
     } // getInstance()
 
@@ -110,7 +110,7 @@ public class EbeanContentTest extends BaseContentTest {
     @Test(priority = 0)
     public void test0IsEnhanced() {
         Method[] methods = Code.class.getMethods();
-        Assert.assertTrue(checkMethodPrefixOccurs(methods, "_ebean"), "Classes not enhanced");
+        Assert.assertTrue(checkMethodPrefixOccurs(methods, "_ebean"), "Classes were not enhanced.");
     } // test0IsEnhanced()
 
 } // EbeanContentTest

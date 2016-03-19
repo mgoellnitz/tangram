@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,11 +52,11 @@ public class ExpirationHeaderFilterTest {
                 HttpServletResponse response = new MockHttpServletResponse();
                 Mockito.when(request.getRequestURI()).thenReturn(url);
                 filter.doFilter(request, response, chain);
-                Assert.assertEquals(response.containsHeader("Expires"), expected, "Unexpected occurence of expiry header "+url);
+                Assert.assertEquals(response.containsHeader("Expires"), expected, "Unexpected occurence of expiry header "+url+" discovered.");
                 expected = true;
             } // for
         } catch (ServletException|IOException e) {
-            Assert.fail("Exception initializing and executing filter "+e.getMessage());
+            Assert.fail("Exception on initialization or execution of filter occured.", e);
         } // try/catch
         filter.destroy();
     } // testFilterHandling()

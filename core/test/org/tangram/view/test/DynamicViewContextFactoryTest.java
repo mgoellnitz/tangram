@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.tangram.Constants;
 import org.tangram.content.test.BeanClass;
 import org.tangram.logic.Shim;
@@ -59,25 +60,30 @@ public class DynamicViewContextFactoryTest {
         factory.afterPropertiesSet();
 
         MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
         BeanClass bean = new BeanClass();
 
         Map<String, Object> shims = factory.getShims(request, bean);
-        Assert.assertEquals(shims.size(), 2, "Unexpected number of shims");
+        Assert.assertEquals(shims.size(), 2, "Unexpected number of shims discovered.");
         for (Object so : shims.values()) {
             if (so instanceof Shim) {
                 Shim s = (Shim) so;
-                Assert.assertEquals(s.getId(), "BeanClass:42", "Unexpected mock bean id");
+                Assert.assertEquals(s.getId(), "BeanClass:42", "Unexpected mock bean id discovered.");
                 if (s instanceof ViewShim) {
                     ViewShim vs = (ViewShim) s;
-                    Assert.assertEquals(vs.getRequest(), request, "Unexpected mock bean id");
-                    Assert.assertNull(vs.getSession(), "Unexpected session found");
+                    Assert.assertEquals(vs.getRequest(), request, "Unexpected mock bean id discovered.");
+                    Assert.assertNull(vs.getSession(), "Unexpected session found.");
+                    vs.setSession(session);
+                    Assert.assertEquals(vs.getSession(), session, "Unexpected session found.");
+                    vs.setRequest(request);
+                    Assert.assertNull(vs.getSession(), "Unexpected session found.");
                 } // if
             } // if
         } // for
         MockHttpServletResponse response = new MockHttpServletResponse();
         ViewContext viewContext = factory.createViewContext(bean, request, response);
-        Assert.assertEquals(viewContext.getViewName(), Constants.DEFAULT_VIEW, "Null view expected");
-        Assert.assertEquals(viewContext.getModel().size(), 6, "Unexpected number of beans in model");
+        Assert.assertEquals(viewContext.getViewName(), Constants.DEFAULT_VIEW, "Null view expected.");
+        Assert.assertEquals(viewContext.getModel().size(), 6, "Unexpected number of beans in model discovered.");
     } // testViewContextCreation()
 
 } // DynamicViewContextFactoryTest

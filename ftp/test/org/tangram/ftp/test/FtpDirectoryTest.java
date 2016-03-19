@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ public class FtpDirectoryTest {
         packages.add("org.tangram.components");
         Dinistiq dinistiq = new Dinistiq(packages);
         FtpDirectory ftp = dinistiq.findBean(FtpDirectory.class);
-        Assert.assertNotNull(ftp, "Could not find ftp directory instance");
+        Assert.assertNotNull(ftp, "Could not find an ftp directory instance.");
     } // testFtpComponent()
 
 } // FtpDirectoryTest

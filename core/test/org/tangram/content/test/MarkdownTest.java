@@ -33,8 +33,8 @@ public class MarkdownTest {
         String source = "#Markdown Test\n\nGreat, isn't it?";
         String html = "<h1>Markdown Test</h1>\n<p>Great, isn't it?</p>\n";
         Markdown md = new Markdown(source.toCharArray());
-        Assert.assertEquals(String.valueOf(md.getContent()), source, "Unexpected source returned");
-        Assert.assertEquals(String.valueOf(md.getMarkup()), html, "Unexpected markup returned");
+        Assert.assertEquals(String.valueOf(md.getContent()), source, "Unexpected source returned.");
+        Assert.assertEquals(String.valueOf(md.getMarkup()), html, "Unexpected markup returned.");
     } // testMarkDown()
 
 } // MarkdownTest

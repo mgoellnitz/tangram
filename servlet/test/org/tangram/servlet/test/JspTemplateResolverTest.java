@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -54,17 +54,17 @@ public class JspTemplateResolverTest {
             packages.add(SimpleStatistics.class.getPackage().getName());
             Dinistiq d = new Dinistiq(packages, initialBeans);
             JspTemplateResolver jspTemplateResolver = d.findBean(JspTemplateResolver.class);
-            Assert.assertNotNull(jspTemplateResolver, "Have no JSP template resolver to test");
+            Assert.assertNotNull(jspTemplateResolver, "Have no JSP template resolver to test.");
             Map<String, Object> model = new HashMap<>();
             Statistics statistics = d.findBean(Statistics.class);
-            Assert.assertNotNull(jspTemplateResolver, "Have no object to lookup template for");
+            Assert.assertNotNull(jspTemplateResolver, "Have no object to lookup template for.");
             model.put(Constants.THIS, statistics);
             String template = jspTemplateResolver.resolveTemplate("test", model, Locale.GERMANY);
-            Assert.assertEquals(template, "/WEB-INF/view/jsp/org.tangram.monitor/Statistics.test.jsp", "There should be a template called test.jsp");
+            Assert.assertEquals(template, "/WEB-INF/view/jsp/org.tangram.monitor/Statistics.test.jsp", "There should be a template called test.jsp.");
             String noTemplate = jspTemplateResolver.resolveTemplate("fail", model, Locale.GERMANY);
-            Assert.assertNull(noTemplate, "There should be not template");
+            Assert.assertNull(noTemplate, "There should be no template.");
         } catch (Exception ex) {
-            Assert.fail(ex.getMessage());
+            Assert.fail("This exception should not have occured", ex);
         } // try/catch
     } // testJspLookup()
 

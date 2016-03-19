@@ -73,25 +73,25 @@ public class UniqueHostHookTest {
         String exptectedUrl = "http://"+DOMAIN+link.getUrl();
         try {
             boolean intercepted = hook.intercept(descriptor, model, request, response);
-            Assert.assertEquals(intercepted, true, "Expected interception of this request for redirect to new domain");
-            Assert.assertEquals(response.getHeader("Location"), exptectedUrl, "Unexpected redirect URL");
+            Assert.assertEquals(intercepted, true, "Expected interception of this request for redirect to new domain.");
+            Assert.assertEquals(response.getHeader("Location"), exptectedUrl, "Unexpected redirect URL discovered.");
         } catch (Exception ex) {
-            Assert.fail("Exception thrown while test", ex);
+            Assert.fail("Exception thrown while test.", ex);
         } // try/catch
 
         try {
             boolean intercepted = hook.intercept(descriptor, model, localRequest, response);
-            Assert.assertEquals(intercepted, true, "Local requests should be intercepted");
-            Assert.assertEquals(response.getHeader("Location"), exptectedUrl, "Unexpected redirect URL");
+            Assert.assertEquals(intercepted, true, "Local requests should be intercepted.");
+            Assert.assertEquals(response.getHeader("Location"), exptectedUrl, "Unexpected redirect URL discovered.");
         } catch (Exception ex) {
-            Assert.fail("Exception thrown while test", ex);
+            Assert.fail("Exception thrown while test.", ex);
         } // try/catch
 
         try {
             boolean intercepted = hook.intercept(descriptor, model, correctRequest, response);
-            Assert.assertEquals(intercepted, false, "Correct requests should not be intercepted");
+            Assert.assertEquals(intercepted, false, "Correct requests should not be intercepted.");
         } catch (Exception ex) {
-            Assert.fail("Exception thrown while test", ex);
+            Assert.fail("Exception thrown while test.", ex);
         } // try/catch
     } // testUniqueHostHook
 

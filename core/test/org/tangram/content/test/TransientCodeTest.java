@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -82,12 +82,14 @@ public class TransientCodeTest {
         };
         TransientCode t = new TransientCode(c);
         TransientCode tc = new TransientCode("screen", "text/css", "CodeResource:2", "// empty css", 12345);
-        Assert.assertEquals(t.getId(), "CodeResource:12", "id");
-        Assert.assertEquals(t.getMimeType(), "text/html", "mime type");
-        Assert.assertEquals(t.getAnnotation(), "org.tangram.example.Topic.name", "annotation");
-        Assert.assertEquals(t.getSize(), 13, "size");
-        Assert.assertEquals(t.getModificationTime(), 1234, "modification time");
-        Assert.assertEquals(tc.toString(), "screen (text/css)", "toString() to empty css");
+        TransientCode mdc = new TransientCode("org.tangram.example.Topic", "text/x-markdown", "CodeResource:4", "#Title", 15432);
+        Assert.assertEquals(t.getId(), "CodeResource:12", "Found wrong value in code id.");
+        Assert.assertEquals(t.getMimeType(), "text/html", "Found wrong value in code mime type.");
+        Assert.assertEquals(t.getAnnotation(), "org.tangram.example.Topic.name", "Found wrong value in code annotation.");
+        Assert.assertEquals(t.getSize(), 13, "Found wrong code size.");
+        Assert.assertEquals(t.getModificationTime(), 1234, "Found wrong modification time for code.");
+        Assert.assertEquals(tc.toString(), "screen (text/css)", "Wrong result of toString() for empty css discovered.");
+        Assert.assertTrue(t.compareTo(mdc)>0, "Codes should not be equal.");
     } // testTransientCode()
 
 } // TransientCodeTest

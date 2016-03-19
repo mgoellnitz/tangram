@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -88,7 +88,7 @@ public class NucleusContentTest extends BaseContentTest {
 
     @Test(priority = 0)
     public void test0IsEnhanced() {
-        Assert.assertTrue(checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "dn"), "Classes not enhanced");
+        Assert.assertTrue(checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "dn"), "Classes were not enhanced.");
     } // test1IsEnhanced()
 
 
@@ -96,8 +96,8 @@ public class NucleusContentTest extends BaseContentTest {
     public void testStringConversion() throws Exception {
         SubClass subBean = new SubClass();
         String testString = "justateststringtouseforconversiontesting";
-        Assert.assertEquals(subBean.checkConversion(testString), testString, "Nucleus specific conversion methods failed");
-        Assert.assertNull(subBean.checkConversion(null), "Nucleus specific conversion methods failed");
+        Assert.assertEquals(subBean.checkConversion(testString), testString, "Nucleus specific conversion methods failed.");
+        Assert.assertNull(subBean.checkConversion(null), "Nucleus specific conversion methods failed.");
     } // testStringConversion()
 
 } // NucleusContentTest

@@ -30,7 +30,7 @@ public class ConstantsTest {
 
     @Test
     public void testConstants() {
-        Assert.assertEquals(Constants.VERSIONS.size(), 1, "Unexpected number of module versions");
+        Assert.assertEquals(Constants.VERSIONS.size(), 1, "Unexpected number of module versions discovered.");
     } // testConstants()
 
 } // ConstantsTest

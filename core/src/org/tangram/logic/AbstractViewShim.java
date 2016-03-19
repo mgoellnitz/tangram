@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,11 +9,11 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 package org.tangram.logic;
@@ -21,6 +21,7 @@ package org.tangram.logic;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.tangram.content.Content;
+
 
 /**
  *
@@ -42,7 +43,7 @@ public class AbstractViewShim<T extends Content> extends AbstractShim<T> impleme
 
 
     @Override
-	public HttpSession getSession() {
+    public HttpSession getSession() {
         return session;
     }
 
@@ -53,13 +54,14 @@ public class AbstractViewShim<T extends Content> extends AbstractShim<T> impleme
 
 
     @Override
-	public HttpServletRequest getRequest() {
+    public HttpServletRequest getRequest() {
         return request;
     }
 
 
     public void setRequest(HttpServletRequest request) {
         this.request = request;
+        this.session = request.getSession(false);
     }
 
 } // AbstractViewShim

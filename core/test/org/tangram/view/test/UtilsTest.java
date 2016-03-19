@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,8 +38,8 @@ public class UtilsTest {
         } catch (UnsupportedEncodingException uee) {
             Assert.fail("Unpectedtedly even the encoding of the test's text didn't work.");
         } // try/catchg
-        Assert.assertNotNull(urlPart, "Encoding not supported");
-        Assert.assertEquals(urlPart, "hello-dear-user--we-d-like-to-test-some-german-umlauts-like-oeaeuessoeaeue-done.", "Special characters and spaces should be transcoded");
+        Assert.assertNotNull(urlPart, "This encoding is not supported.");
+        Assert.assertEquals(urlPart, "hello-dear-user--we-d-like-to-test-some-german-umlauts-like-oeaeuessoeaeue-done.", "Special characters and spaces should be transcoded.");
     } // testUrlize()
 
 
@@ -50,8 +50,8 @@ public class UtilsTest {
         request.addHeader("Accept-Language", "de-de,en");
         Utils.setPrimaryBrowserLanguageForJstl(request);
         Object locale = Config.get(request, Config.FMT_LOCALE);
-        Assert.assertNotNull(locale, "Could not find encoding");
-        // Assert.assertEquals("Unexpected locale", Locale.GERMAN, locale);
+        Assert.assertNotNull(locale, "Could not find encoding.");
+        // Assert.assertEquals(locale, Locale.GERMAN, "Unexpected locale discovered.");
     } // testSetLocale()
 
 } // UtilsTest

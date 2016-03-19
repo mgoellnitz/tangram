@@ -59,13 +59,13 @@ public class GenericUserTest {
 
         Assert.assertFalse(genericUser.equals(null), "Users should not be equal to null users.");
         Assert.assertFalse(genericUser.equals(user), "Users should not be equal.");
-        Assert.assertTrue(genericUser.equals(genericUser), "Users should be equal to themselves");
-        Assert.assertEquals(genericUser.hashCode(), -677480973, "Check for specific hash code failed");
-        Assert.assertEquals(genericUser.getId(), "form:me", "Unexpected compound user id");
+        Assert.assertTrue(genericUser.equals(genericUser), "Users should be equal to themselves.");
+        Assert.assertEquals(genericUser.hashCode(), -677480973, "Check for specific hash code failed.");
+        Assert.assertEquals(genericUser.getId(), "form:me", "Unexpected compound user id discovered.");
         Assert.assertEquals(genericUser.getId(), genericUser.toString(), "toString() should return just the id.");
-        Assert.assertEquals(genericUser.getProvider(), "form", "Unexpected provider for user");
-        Assert.assertEquals(genericUser.getProperty("testproperty"), "testvalue", "Unexpected property value");
-        Assert.assertNull(genericUser.getProperty("otherproperty"), "Unpextected property value");
+        Assert.assertEquals(genericUser.getProvider(), "form", "Unexpected provider for user discovered.");
+        Assert.assertEquals(genericUser.getProperty("testproperty"), "testvalue", "Unexpected property value discovered.");
+        Assert.assertNull(genericUser.getProperty("otherproperty"), "Unpextected property value discovered.");
     } // testGenericUser()
 
 } // GenericUserTest

@@ -34,16 +34,17 @@ public class LinkTest {
         link.setTarget("new");
         link.addHandler("onclick", "clock");
         link.addHandler("onload", "save");
-        Assert.assertEquals(link.getHandlers().size(), 2, "Unexpected number of handlers");
+        Assert.assertEquals(link.getHandlers().size(), 2, "Unexpected number of handlers discovered.");
         link.addHandler("onremove", "gone");
-        Assert.assertEquals(link.getHandlers().size(), 3, "Unexpected number of handlers");
+        Assert.assertEquals(link.getHandlers().size(), 3, "Unexpected number of handlers discovered.");
         link.removeHandler("onremove");
-        Assert.assertEquals(link.getHandlers().size(), 2, "Unexpected number of handlers");
-        Assert.assertEquals(link.getTarget(), "new", "Unexpected target found");
+        Assert.assertEquals(link.getHandlers().size(), 2, "Unexpected number of handlers discovered.");
+        Assert.assertEquals(link.getTarget(), "new", "Unexpected target found.");
         link.setUrl("http://www.example.com/");
-        Assert.assertEquals(link.getUrl(), "http://www.example.com/", "Unexpected url found");
+        Assert.assertEquals(link.getUrl(), "http://www.example.com/", "Unexpected url found.");
+        // TODO: Doesn't work on travis CI but locally
         // String expected = "http://www.example.com/@new: {onclick=clock, onload=save}";
-        // Assert.assertEquals(link.toString(), expected, "Unexpected string representation found");
+        // Assert.assertEquals(link.toString(), expected, "Unexpected string representation found.");
     } // testLink()
 
 } // LinkTest

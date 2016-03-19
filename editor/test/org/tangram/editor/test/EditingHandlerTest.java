@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -51,14 +51,14 @@ public class EditingHandlerTest {
 
         for (String a : EditingHandler.PARAMETER_ACTIONS) {
             Link link = handler.createLink(null, null, handler, a, null);
-            Assert.assertNotNull(link, "generation of "+a+" action link failed");
-            Assert.assertEquals(link.getUrl(), "/"+a, "generation of "+a+" action link with strange result");
+            Assert.assertNotNull(link, "The generation of "+a+" action link failed.");
+            Assert.assertEquals(link.getUrl(), "/"+a, "The generation of "+a+" action link with strange result.");
         } // for
 
         for (String a : EditingHandler.ID_URL_ACTIONS) {
             Link link = handler.createLink(null, null, c, a, null);
-            Assert.assertNotNull(link, "generation of "+a+" action link failed");
-            Assert.assertEquals(link.getUrl(), "/"+a+"/id_"+DUMMY_ID, "generation of "+a+" action link with strange result");
+            Assert.assertNotNull(link, "The generation of "+a+" action link failed.");
+            Assert.assertEquals(link.getUrl(), "/"+a+"/id_"+DUMMY_ID, "The generation of "+a+" action link with strange result.");
         } // for
     } // testUrlGeneration()
 

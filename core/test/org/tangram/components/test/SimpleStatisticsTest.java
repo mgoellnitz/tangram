@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,8 +35,8 @@ public class SimpleStatisticsTest {
         s.avg("avg", 4);
         s.avg("avg", 6);
         Map<String, Long> counter = s.getCounter();
-        Assert.assertEquals((long) counter.get("test"), 2, "we tried to count two events");
-        Assert.assertEquals((long) counter.get("avg"), 4, "average value should be 4");
+        Assert.assertEquals((long) counter.get("test"), 2, "We tried to count two events.");
+        Assert.assertEquals((long) counter.get("avg"), 4, "The average value should be 4.");
     } // testSimpleStatistics()
 
 } // SimpleStatisticsTest
