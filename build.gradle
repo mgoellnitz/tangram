@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -120,5 +120,5 @@ jacocoCombinedReport.dependsOn {
 
 coveralls {
   sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
-  // jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+  // jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 }
