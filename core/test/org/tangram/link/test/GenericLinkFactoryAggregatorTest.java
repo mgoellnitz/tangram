@@ -19,7 +19,22 @@
 package org.tangram.link.test;
 
 import java.lang.reflect.Method;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletContext;
+import org.tangram.annotate.LinkAction;
+import org.tangram.components.SimpleStatistics;
 import org.tangram.link.GenericLinkFactoryAggregator;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactory;
+import org.tangram.link.TargetDescriptor;
+import org.tangram.monitor.Statistics;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,13 +44,63 @@ import org.testng.annotations.Test;
  */
 public class GenericLinkFactoryAggregatorTest {
 
+    @Mock
+    private final Statistics statistics = new SimpleStatistics();
+
+    @InjectMocks
+    private final GenericLinkFactoryAggregator linkFactoryAggregator = new GenericLinkFactoryAggregator();
+
+
+    @LinkAction("/test")
+    public TargetDescriptor linkAction() {
+        return null;
+    } // linkAction()
+
+
     @Test
     public void testGenericLinkFactoryAggregator() {
-        GenericLinkFactoryAggregator linkFactoryAggregator = new GenericLinkFactoryAggregator();
-        Method method = linkFactoryAggregator.findMethod(this, "testGenericLinkFactoryAggregator");
+        statistics.increase("dummy");
+        MockitoAnnotations.initMocks(this);
+        linkFactoryAggregator.setDispatcherPath("/x");
+
+        Method method = linkFactoryAggregator.findMethod(this, "linkAction");
         Assert.assertNotNull(method, "Didn't find expected method.");
-        Assert.assertEquals(method.getName(), "testGenericLinkFactoryAggregator", "Found unexpected method name.");
-        Assert.assertEquals(method.getParameterCount(), 0, "Discovered unexpected parameter count.");
+        Assert.assertEquals(method.getName(), "linkAction", "Found unexpected method name.");
+        Assert.assertEquals(method.getParameters().length, 0, "Discovered unexpected parameter count.");
+        // Trigger cached lookup and get same result
+        Method cachedMethod = linkFactoryAggregator.findMethod(this, "linkAction");
+        Assert.assertEquals(cachedMethod, method, "Both lookups should return the same result.");
+
+        HttpServletRequest request = new MockHttpServletRequest();
+        HttpServletResponse response = new MockHttpServletResponse();
+        boolean result = false;
+        try {
+            linkFactoryAggregator.createLink(request, response, null, null, null);
+        } catch (RuntimeException e) {
+            result = true;
+        } // try/catch
+        Assert.assertTrue(result, "Creating links for null beans should throw an exception.");
+
+        MockServletContext context = new MockServletContext();
+        context.setContextPath("/");
+        request = new MockHttpServletRequest(context);
+
+        String uri = "/id_46";
+        Link expectedLink = new Link(linkFactoryAggregator.getDispatcherPath()+uri);
+        LinkFactory linkFactory = Mockito.mock(LinkFactory.class);
+        Mockito.when(linkFactory.createLink(request, response, this, null, null)).thenReturn(expectedLink);
+        linkFactoryAggregator.registerFactory(linkFactory);
+        Link l = linkFactoryAggregator.createLink(request, response, this, null, null);
+        Assert.assertEquals(l, expectedLink, "We discovered an unexpected link.");
+
+        linkFactoryAggregator.unregisterFactory(linkFactory);
+        result = false;
+        try {
+            linkFactoryAggregator.createLink(request, response, this, null, null);
+        } catch (RuntimeException e) {
+            result = true;
+        } // try/catch
+        Assert.assertTrue(result, "An empty collection of link factories should not generate any link.");
     } // testGenericLinkFactoryAggregator()
 
-} // GenericLinkFactoryAggregatorTest()
+} // GenericLinkFactoryAggregatorTest
