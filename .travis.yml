@@ -6,4 +6,4 @@ jdk:
   - oraclejdk7
 
 after_success:
-  - gradle -Prelease generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle -Prelease build jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
