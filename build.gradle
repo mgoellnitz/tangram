@@ -117,3 +117,8 @@ task jacocoCombinedReport(type: JacocoReport) {
 jacocoCombinedReport.dependsOn {
   subprojects*.test
 }
+
+coveralls {
+  sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+  // jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+}
