@@ -19,6 +19,7 @@
 package org.tangram.util.test;
 
 import java.beans.IntrospectionException;
+import java.util.Set;
 import org.tangram.util.JavaBean;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,9 +35,11 @@ public class JavaBeanTest {
     /**
      * Some test bean implementation to test its use via Java Bean handling.
      */
-    private class TestBean {
+    public class TestBean {
 
         private String value;
+
+        private Set<String> values;
 
 
         public String getValue() {
@@ -49,8 +52,13 @@ public class JavaBeanTest {
         }
 
 
-        public String getStuff() {
-            return "stuff";
+        public Set<String> getValues() {
+            return values;
+        }
+
+
+        public void setStuff(String stuff) {
+            // Not needed for testing.
         }
 
     } // TestBean
@@ -69,13 +77,16 @@ public class JavaBeanTest {
         Assert.assertTrue(jb.propertyNames().contains(PROPERTY_NAME), "Property 'value' should be available.");
         Assert.assertTrue(jb.isReadable(PROPERTY_NAME), "Property 'value' should be readable.");
         Assert.assertTrue(jb.isWritable(PROPERTY_NAME), "Property 'value' should be writable.");
-        Assert.assertTrue(jb.isReadable("stuff"), "Property 'stuff' should be readable.");
-        Assert.assertFalse(jb.isWritable("stuff"), "Property 'stuff' should not be writable.");
-        Assert.assertFalse(jb.isReadable("test"), "Unavailable property value should not be readable.");
-        jb.set(PROPERTY_NAME, STRING_VALUE);
+        Assert.assertFalse(jb.isReadable("stuff"), "Property 'stuff' should not be readable.");
+        Assert.assertTrue(jb.isWritable("stuff"), "Property 'stuff' should be writable.");
+        Assert.assertFalse(jb.isReadable("test"), "Unavailable property 'test' should not be readable.");
+        Assert.assertFalse(jb.isWritable("test"), "Unavailable property 'test' should not be writable.");
+        Assert.assertTrue(jb.isReadable("values"), "Collection property 'values' should be readable.");
+        Assert.assertFalse(jb.isWritable("values"), "Collection property 'values' should not be writable.");
         Assert.assertEquals(jb.getType(PROPERTY_NAME), String.class, "Property 'value' should be of type String.");
-        // TODO: exceptions occur
-        // Assert.assertEquals(jb.get(PROPERTY_NAME), STRING_VALUE, "Property value should meet the value set previously.");
+        Assert.assertEquals(jb.getCollectionType("values"), String.class, "Expected to get a collection of Strings.");
+        jb.set(PROPERTY_NAME, STRING_VALUE);
+        Assert.assertEquals(jb.get(PROPERTY_NAME), STRING_VALUE, "Property value should meet the value set previously.");
     } // testJavaBean()
 
 } // JavaBeanTest

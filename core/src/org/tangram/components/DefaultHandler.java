@@ -107,10 +107,12 @@ public class DefaultHandler extends AbstractLinkHandler implements InternalLinkF
                 } else {
                     url.append("/id_");
                     url.append(((Content) bean).getId());
+                    /* how should this be possible in this very branch?
                     if (view!=null) {
                         url.append("/view_");
                         url.append(view);
                     } // if
+                    */
                 } // if
                 result = new Link(url.toString());
             } else {

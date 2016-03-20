@@ -30,6 +30,25 @@ public class EditingHandlerTest {
     private static final String DUMMY_ID = "pling:plong";
 
 
+    /**
+     * Mock the name pattern of generated ORM classes.
+     */
+    private class Content$Test implements Content {
+
+        @Override
+        public String getId() {
+            return "";
+        }
+
+
+        @Override
+        public int compareTo(Content o) {
+            return 0;
+        }
+
+    }
+
+
     @Test
     public void testUrlGeneration() {
         Content c = new Content() {
@@ -48,6 +67,8 @@ public class EditingHandlerTest {
         };
 
         EditingHandler handler = new EditingHandler();
+        Assert.assertEquals(EditingHandler.getDesignClass(Content.class), Content.class, "Content is no generated class.");
+        Assert.assertEquals(EditingHandler.getDesignClass(Content$Test.class), Object.class, "Simulated ORM class should issue design class.");
 
         for (String a : EditingHandler.PARAMETER_ACTIONS) {
             Link link = handler.createLink(null, null, handler, a, null);
