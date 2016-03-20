@@ -109,7 +109,7 @@ task jacocoCombinedReport(type: JacocoReport) {
     xml.enabled true
     xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     html.enabled true
-    html.destination "${buildDir}/reports/jacoco/test/html"
+    html.destination "${projectDir}/jacoco"
     csv.enabled false
   }
 }

@@ -53,7 +53,7 @@ public class ComaHandler extends AbstractLinkHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 
     @Inject
-    private Set<ComaBeanPopulator> populators = Collections.EMPTY_SET;
+    private Set<ComaBeanPopulator> populators = Collections.EMPTY_SET; // NOPMD - this value cannot be final except for test
 
 
     @LinkAction("/content/(.*)")
