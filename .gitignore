@@ -13,3 +13,4 @@
 /editor/expanded*
 /editor/codemirror*
 /editor/ckeditor*
+/jacoco
