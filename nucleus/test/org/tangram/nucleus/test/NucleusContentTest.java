@@ -67,6 +67,12 @@ public class NucleusContentTest extends BaseContentTest {
 
 
     @Override
+    protected String getCondition() {
+        return "subtitle == 'great'";
+    }
+
+
+    @Override
     protected void setPeers(BaseInterface base, SubInterface peer) {
         List<BaseClass> peers = new ArrayList<>();
         peers.add((BaseClass) peer);

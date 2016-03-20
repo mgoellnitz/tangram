@@ -100,6 +100,14 @@ public abstract class BaseContentTest {
     protected abstract Class<? extends BaseInterface> getBaseClass();
 
 
+    /**
+     * Return the query element to retrieve the subinterface instance.
+     *
+     * @return implementation specific condition string
+     */
+    protected abstract String getCondition();
+
+
     protected abstract void setPeers(BaseInterface base, SubInterface sub);
 
 
@@ -107,7 +115,7 @@ public abstract class BaseContentTest {
 
 
     /**
-     * Return expetect number of available classes in our test configuration.
+     * Return expected number of available classes in our test configuration.
      *
      * @return Number of classes excluding interfaces and abstract classes
      */
@@ -124,6 +132,7 @@ public abstract class BaseContentTest {
         int numberOfClasses = getNumberOfClasses();
         Assert.assertEquals(beanFactory.getClasses().size(), numberOfClasses, "Discovered unexpected number of non abstract model classes.");
         SubInterface beanA = createSubBean(beanFactory);
+        beanA.setSubtitle("great");
         Assert.assertNotNull(beanA, "Could not create bean.");
         beanFactory.persist(beanA);
         beanFactory.commitTransaction();
@@ -141,12 +150,14 @@ public abstract class BaseContentTest {
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals(allBeans.size(), 2, "We have prepared a fixed number of beans.");
-        List<SubInterface> subBeans = beanFactory.listBeans(SubInterface.class);
+        List<SubInterface> subBeans = beanFactory.listBeans(SubInterface.class, getCondition(), "subtitle", true);
         Assert.assertEquals(subBeans.size(), 1, "We have prepared a fixed number of sub beans.");
         // this contains is necessary due to possible subclassing in some of the APIs
         Assert.assertTrue(subBeans.get(0).getClass().getSimpleName().contains("SubClass"), "Peer of base beans is a sub bean.");
         List<? extends Content> baseBeans = beanFactory.listBeansOfExactClass(getBaseClass());
         Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans.");
+        BaseInterface bean = beanFactory.getBean(getBaseClass(), baseBeans.get(0).getId());
+        Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
     } // test2Components()
 
 

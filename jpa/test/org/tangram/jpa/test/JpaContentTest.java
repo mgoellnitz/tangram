@@ -68,6 +68,12 @@ public class JpaContentTest extends BaseContentTest {
 
 
     @Override
+    protected String getCondition() {
+        return "select x from SubClass x where x.subtitle = 'great'";
+    }
+
+
+    @Override
     protected void setPeers(BaseInterface base, SubInterface peer) {
         List<BaseClass> peers = new ArrayList<>();
         peers.add((BaseClass) peer);
