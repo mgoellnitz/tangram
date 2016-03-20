@@ -190,7 +190,10 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
             queryString = queryString==null ? "select x from "+simpleName+" x" : queryString;
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
-                queryString += " order by "+orderProperty+(ascending ? " asc" : " desc");
+                String boundName = queryString.substring(7);
+                int idx = boundName.indexOf(' ');
+                boundName = boundName.substring(0, idx);
+                queryString += " order by "+boundName+"."+orderProperty+(ascending ? " asc" : " desc");
             } // if
             LOG.info("listBeansOfExactClass() looking up instances of {} with condition {}", simpleName, queryString);
             Query query = manager.createQuery(queryString, cls);
