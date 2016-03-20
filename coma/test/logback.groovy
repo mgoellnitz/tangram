@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2016 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,18 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-apply from: '../webapp.gradle'
 
-dependencies {
-  compile project(':tangram-core')
+// Log configuration for test setup
+scan '3600 seconds'
 
-  providedCompile "$versions.servlet_api"
-  providedCompile "$versions.jsp_api"
-
-  testCompile "org.testng:testng:$versions.testng"
-  // test logging at debug level through special logback.groovy
-  testCompile "ch.qos.logback:logback-classic:$versions.logback"
-  testCompile "org.mockito:mockito-all:$versions.mockito"
-  testCompile "org.springframework:spring-test:$versions.springframework"
-  testCompile "org.springframework:spring-web:$versions.springframework"
+def appenders = []
+appender('CONSOLE', ConsoleAppender) {
+  encoder(PatternLayoutEncoder) {
+    pattern = '%-5level %logger{35}.%msg%n'
+  }
 }
+appenders.add('CONSOLE')
+
+root WARN, appenders
+logger "org.tangram", DEBUG, appenders, false

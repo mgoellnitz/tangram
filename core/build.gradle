@@ -57,7 +57,6 @@ dependencies {
   // test logging at debug level through special logback.groovy
   testCompile "ch.qos.logback:logback-classic:$versions.logback"
   testCompile "org.mockito:mockito-all:$versions.mockito"
-  // testCompile "org.springframework:spring-core:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile "org.springframework:spring-web:$versions.springframework"
 
