@@ -66,7 +66,7 @@ public class GenericLinkFactoryAggregatorTest {
         Method method = linkFactoryAggregator.findMethod(this, "linkAction");
         Assert.assertNotNull(method, "Didn't find expected method.");
         Assert.assertEquals(method.getName(), "linkAction", "Found unexpected method name.");
-        Assert.assertEquals(method.getParameters().length, 0, "Discovered unexpected parameter count.");
+        Assert.assertEquals(method.getParameterTypes().length, 0, "Discovered unexpected parameter count.");
         // Trigger cached lookup and get same result
         Method cachedMethod = linkFactoryAggregator.findMethod(this, "linkAction");
         Assert.assertEquals(cachedMethod, method, "Both lookups should return the same result.");
