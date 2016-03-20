@@ -55,4 +55,10 @@ public class Markdown {
         return (obj instanceof Markdown) ? toString().equals(obj.toString()) : false;
     } // equals()
 
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    } // hashCode()
+
 } // Markdown
