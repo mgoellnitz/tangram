@@ -90,7 +90,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Set<ControllerHook> controllerHooks = new HashSet<>();
+    private Set<ControllerHook> controllerHooks = new HashSet<>(); // NOPMD - this is just the default for tests.
 
     @Inject
     private PropertyConverter propertyConverter;
