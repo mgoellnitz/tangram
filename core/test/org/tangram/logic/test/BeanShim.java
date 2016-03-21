@@ -19,16 +19,16 @@
 
 package org.tangram.logic.test;
 
-import org.tangram.content.test.BeanClass;
+import org.tangram.content.test.MockContent;
 import org.tangram.logic.AbstractShim;
 
 
 /**
  * Minimalistic mock view shim for mock bean class.
  */
-public class BeanShim extends AbstractShim<BeanClass> {
+public class BeanShim extends AbstractShim<MockContent> {
 
-    public BeanShim(BeanClass delegate) {
+    public BeanShim(MockContent delegate) {
         super(delegate);
     } // BeanShim
 

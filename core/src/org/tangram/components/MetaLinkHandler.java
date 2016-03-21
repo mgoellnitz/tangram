@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,11 +52,11 @@ import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandler;
 import org.tangram.link.LinkHandlerRegistry;
+import org.tangram.link.TargetDescriptor;
 import org.tangram.logic.ClassRepository;
 import org.tangram.util.JavaBean;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.RequestParameterAccess;
-import org.tangram.link.TargetDescriptor;
 import org.tangram.view.Utils;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewContextFactory;
@@ -89,7 +90,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Set<ControllerHook> controllerHooks;
+    private Set<ControllerHook> controllerHooks = new HashSet<>();
 
     @Inject
     private PropertyConverter propertyConverter;

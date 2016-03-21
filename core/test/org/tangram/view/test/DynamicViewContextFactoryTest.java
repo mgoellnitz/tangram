@@ -24,7 +24,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.tangram.Constants;
-import org.tangram.content.test.BeanClass;
+import org.tangram.content.test.MockContent;
 import org.tangram.logic.Shim;
 import org.tangram.logic.test.BeanShim;
 import org.tangram.logic.test.ViewShim;
@@ -47,8 +47,8 @@ public class DynamicViewContextFactoryTest {
             super.afterPropertiesSet();
             Constructor<Shim> beanShim = SystemUtils.convert(BeanShim.class.getConstructors()[0]);
             Constructor<Shim> viewShim = SystemUtils.convert(ViewShim.class.getConstructors()[0]);
-            this.defineBeanShim(BeanClass.class, beanShim);
-            this.defineViewShim(BeanClass.class, viewShim);
+            this.defineBeanShim(MockContent.class, beanShim);
+            this.defineViewShim(MockContent.class, viewShim);
         } // afterPropertiesSet()
 
     } // TestFactory
@@ -61,7 +61,7 @@ public class DynamicViewContextFactoryTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpSession session = new MockHttpSession();
-        BeanClass bean = new BeanClass();
+        MockContent bean = new MockContent();
 
         Map<String, Object> shims = factory.getShims(request, bean);
         Assert.assertEquals(shims.size(), 2, "Unexpected number of shims discovered.");

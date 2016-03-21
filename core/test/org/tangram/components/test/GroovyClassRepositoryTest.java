@@ -18,17 +18,14 @@
  */
 package org.tangram.components.test;
 
-import java.util.Map;
+import groovy.lang.GroovyClassLoader;
+import javax.inject.Singleton;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
-import org.tangram.components.GenericCodeResourceCache;
-import org.tangram.content.CodeResource;
+import org.tangram.components.GroovyClassRepository;
 import org.tangram.content.CodeResourceCache;
-import org.tangram.content.TransientCode;
 import org.tangram.content.test.MockBeanFactory;
 import org.tangram.util.DummyRestartCache;
 import org.testng.Assert;
@@ -37,11 +34,9 @@ import org.testng.annotations.Test;
 
 
 /**
- * Test code resource cache behaviour.
+ * Test some aspects of the groovy class repository.
  */
-public class GenericCodeResourceCacheTest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GenericCodeResourceCacheTest.class);
+public class GroovyClassRepositoryTest {
 
     @Spy
     private final PersistentRestartCache restartCache = new DummyRestartCache();
@@ -49,55 +44,55 @@ public class GenericCodeResourceCacheTest {
     @Spy
     private final MockBeanFactory factory = new MockBeanFactory();
 
+    @Spy
+    private CodeResourceCache codeCache;
+
     @InjectMocks
-    private final GenericCodeResourceCache codeResourceCache = new GenericCodeResourceCache();
+    private final GroovyClassRepository repository = new GroovyClassRepository();
 
 
     @BeforeClass
     public void init() throws Exception {
+        GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest();
+        codeCacheTest.init();
+        codeCache = codeCacheTest.getInstance();
         MockitoAnnotations.initMocks(this);
         factory.init();
-        codeResourceCache.afterPropertiesSet();
+        repository.afterPropertiesSet();
     } // init()
 
 
     /**
      * Return the instance in test with every mock needed for other tests to include a working instance.
      *
-     * @return code resource cache to be used in other tests
+     * @return class repository to be used in other tests
      */
-    public CodeResourceCache getInstance() {
-        return codeResourceCache;
+    public GroovyClassRepository getInstance() {
+        return repository;
     } // getInstance()
-
-
-    @Test
-    public void testInit() {
-        boolean isInInterval = (System.currentTimeMillis()-codeResourceCache.getLastUpdate())<20;
-        Assert.assertTrue(isInInterval, "Modification time of cache should be initialized.");
-    } // testInit()
 
 
     @Test
     public void testListenerHandling() {
         MockBeanListener beanListener = new MockBeanListener();
         Assert.assertFalse(beanListener.isResult(), "Bean listener should not have been called.");
-        codeResourceCache.addListener(beanListener);
+        repository.addListener(beanListener);
         Assert.assertTrue(beanListener.isResult(), "Bean listener should be called.");
         beanListener.rewind();
         Assert.assertFalse(beanListener.isResult(), "Bean listener should not have been called.");
-        codeResourceCache.reset();
+        repository.reset();
         Assert.assertTrue(beanListener.isResult(), "Bean listener should be called.");
     } // testListenerHandling()
 
 
     @Test
-    public void testGenericCodeResourceCache() {
-        TransientCode referenceCode = factory.getBean(TransientCode.class, "CodeResource:42");
-        Assert.assertEquals(codeResourceCache.get("CodeResource:42"), referenceCode, "Expected to find reference code.");
-        Map<String, CodeResource> typeCache = codeResourceCache.getTypeCache("application/x-groovy");
-        Assert.assertNotNull(typeCache, "The should be some groovy codes.");
-        Assert.assertEquals(typeCache.size(), 5, "The should be some groovy codes.");
-    } // testGenericCodeResourceCache()
+    public void testGroovyClassRepository() {
+        Assert.assertEquals(repository.getClassLoader().getClass(), GroovyClassLoader.class, "Must be a groovy class loader.");
+        Assert.assertNotNull(repository.getBytes("org.tangram.test.GroovyTest"), "Expected to find byte code for test class.");
+        Assert.assertEquals(repository.getBytes("org.tangram.test.GroovyTest").length, 2419, "Expected to find byte code for test class.");
+        Assert.assertEquals(repository.get(Object.class).size(), 4, "Expected to find exactly fixed number of test classes.");
+        Assert.assertEquals(repository.getAnnotated(Singleton.class).size(), 1, "Expected to find fixed number of annotated test classes.");
+        Assert.assertEquals(repository.getCompilationErrors().size(), 1, "We have one intentional error in the test codes.");
+    } // testGroovyClassRepository()
 
-} // GenericCodeResourceCacheTest
+} // GroovyClassRepositoryTest
