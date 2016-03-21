@@ -59,9 +59,11 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
     public void validate(UsernamePasswordCredentials upc) {
         LOG.info("validate() {} in {}", upc.getUsername(), usernamePasswordMapping);
         try {
+            LOG.debug("validate() {}", codeResourceCache.getTypeCache("text/plain"));
             CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
             Properties p = new Properties();
             try {
+                LOG.debug("validate() {}", code);
                 if (code!=null) {
                     p.load(code.getStream());
                 } // ifF
@@ -71,6 +73,7 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
             p.putAll(usernamePasswordMapping);
             String hash = SystemUtils.getSha256Hash(upc.getPassword());
             Object storedHash = p.get(upc.getUsername());
+            LOG.debug("validate() {} in {} ({})", upc.getUsername(), p, storedHash);
             if ((storedHash==null)||!storedHash.equals(hash)) {
                 throw new RuntimeException("wrong credentials");
             } // if
