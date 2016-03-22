@@ -18,17 +18,36 @@
  */
 package org.tangram.view.test;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.tangram.Constants;
+import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.content.Markdown;
+import org.tangram.content.test.MockBeanFactory;
 import org.tangram.view.GenericPropertyConverter;
+import org.tangram.view.RequestParameterAccess;
+import org.tangram.view.ViewContextFactory;
+import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -37,9 +56,56 @@ import org.testng.annotations.Test;
  */
 public class GenericPropertyConverterTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GenericPropertyConverterTest.class);
+
+    @Spy
+    private final MockBeanFactory beanFactory = new MockBeanFactory();
+
+    @Spy
+    private ViewUtilities viewUtilities = new ViewUtilities() {
+
+        @Override
+        public ViewContextFactory getViewContextFactory() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+
+        @Override
+        public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+
+        @Override
+        public void render(Writer writer, Map<String, Object> model, String view) throws IOException {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+
+        @Override
+        public void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
+            if ((bean instanceof CodeResource)&&("description".equals(view))) {
+                writer.write(((CodeResource)bean).getAnnotation());
+            }
+        }
+
+    };
+
+    @InjectMocks
+    private GenericPropertyConverter c = new GenericPropertyConverter();
+
+    private List<CodeResource> referenceProperty = new ArrayList<>();
+
+
+    @BeforeClass
+    public void init() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        beanFactory.init();
+    } // init()
+
+
     @Test
     public void testEditStrings() {
-        GenericPropertyConverter c = new GenericPropertyConverter();
         Content content = new Content() {
             public String getId() {
                 return "Test:123";
@@ -75,13 +141,12 @@ public class GenericPropertyConverterTest {
 
     @Test
     public void testStorableObjects() {
-        GenericPropertyConverter c = new GenericPropertyConverter();
         Assert.assertNull(c.getStorableObject(null, null, Object.class, null, null), "Null values should always return null.");
         Assert.assertEquals(c.getStorableObject(null, "Hallo", String.class, null, null), "Hallo", "This should be a string value.");
         Assert.assertNull(c.getStorableObject(null, "", String.class, null, null), "Empty values should return null.");
         Assert.assertNull(c.getStorableObject(null, " ", String.class, null, null), "Empty strings should return null.");
         Assert.assertNull(c.getStorableObject(null, "\t", String.class, null, null), "Empty strings should return null.");
-        final Date exptectedDate = new Date(1404215130000L);
+        Date exptectedDate = new Date(1404215130000L);
         Assert.assertEquals(c.getStorableObject(null, "11:45:30 01.07.2014 GMT", Date.class, null), exptectedDate, "This should be a date value.");
         Assert.assertNull(c.getStorableObject(null, "11:45:30 01.12.2014 GxT", Date.class, null), "Wrong date format should result in a null value.");
         Assert.assertEquals(c.getStorableObject(null, "Hallo", char[].class, null, null), "Hallo".toCharArray(), "This should be a char[] value.");
@@ -102,7 +167,6 @@ public class GenericPropertyConverterTest {
 
     @Test
     public void testTypeChecks() {
-        GenericPropertyConverter c = new GenericPropertyConverter();
         Assert.assertTrue(c.isBlobType(byte[].class), "This should be recognized as blob type.");
         Assert.assertFalse(c.isBlobType(String.class), "This should not be recognized as blob type.");
         Assert.assertTrue(c.isTextType(char[].class), "This should be recognized as text type.");
@@ -111,12 +175,28 @@ public class GenericPropertyConverterTest {
 
 
     @Test
-    public void testConversions() {
-        GenericPropertyConverter c = new GenericPropertyConverter();
+    public void testConversions() throws Exception {
         byte[] blob = new byte[123];
         Assert.assertEquals(c.createBlob(blob), blob, "Standard blobs should be their byte[] representation.");
         Assert.assertEquals(c.getBlobLength(blob), 123, "Unexpected blob length discovered.");
         Assert.assertEquals(c.getBlobLength(""), 0, "Unexpected blob length discovered.");
+
+        HttpServletRequest request = new MockHttpServletRequest();
+        List<CodeResource> resources = new ArrayList<>();
+
+        Object codes = c.getStorableObject(null, "CodeResource:12", List.class, resources.getClass(), request);
+        Assert.assertNotNull(codes, "We expected at least some result for the list conversion.");
+        LOG.debug("testConversions() codes types {}", codes.getClass().getName());
+        Assert.assertTrue(codes instanceof List<?>, "We expected a list of content elements.");
+        List<Object> codeList = (List) codes;
+        Assert.assertEquals(codeList.size(), 1, "We expected a fixed number of elements.");
+
+        Type type = GenericPropertyConverterTest.class.getDeclaredField("referenceProperty").getGenericType();
+        codes = c.getStorableObject(null, "org.tangram.content.Content", List.class, type, request);
+        Assert.assertNotNull(codes, "We expected at least some result for the list conversion.");
+        Assert.assertTrue(codes instanceof List<?>, "We expected a list of content elements.");
+        codeList = (List) codes;
+        Assert.assertEquals(codeList.size(), 1, "We expected a fixed number of elements.");
     } // testConversions()
 
 } // GenericPropertyConverterTest
