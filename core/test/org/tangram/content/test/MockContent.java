@@ -26,9 +26,22 @@ import org.tangram.content.Content;
  */
 public class MockContent implements Content {
 
+    private String id;
+
+
+    public MockContent(String id) {
+        this.id = id;
+    }
+
+
+    public MockContent() {
+        this("BeanClass:42");
+    }
+
+
     @Override
     public String getId() {
-        return "BeanClass:42";
+        return id;
     }
 
 

@@ -39,6 +39,11 @@ dependencies {
   testCompile "org.testng:testng:$versions.testng"
   // test logging at debug level through special logback.groovy
   testCompile "ch.qos.logback:logback-classic:$versions.logback"
+  testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.springframework:spring-test:$versions.springframework"
+  testCompile "org.springframework:spring-web:$versions.springframework"
+  testCompile project (':tangram-core').sourceSets.test.output
+  testCompile project (':tangram-mutable').sourceSets.test.output
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"

@@ -71,9 +71,13 @@ public class MockBeanFactory extends AbstractBeanFactory {
     @Override
     public <T extends Content> T getBean(Class<T> cls, String id) {
         T result = null;
-        for (Content c : contents.get(cls)) {
-            if (c.getId().equals(id)) {
-                result = (T) c;
+        for (Class<? extends Content> c : contents.keySet()) {
+            if (cls.isAssignableFrom(c)) {
+                for (Content content : contents.get(c)) {
+                    if (content.getId().equals(id)) {
+                        result = (T) content;
+                    } // if
+                } // for
             } // if
         } // for
         return result;

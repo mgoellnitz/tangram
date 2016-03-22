@@ -1,6 +1,6 @@
-/**
+/*
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,19 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-apply from: '../webapp.gradle'
+package org.tangram.mock;
 
-dependencies {
-  compile project(':tangram-core')
 
-  compile "com.thoughtworks.xstream:xstream:$versions.xstream"
+/**
+ * Just an empty marker class to be used as a mock for orm managers.
+ */
+public class MockOrmManager {
 
-  testCompile "org.testng:testng:$versions.testng"
-  // Used for mocking some things
-  testCompile "org.springframework:spring-core:$versions.springframework"
-  testCompile "org.springframework:spring-test:$versions.springframework"
-  testCompile project (':tangram-core').sourceSets.test.output
-
-  providedCompile "$versions.servlet_api"
-  providedCompile "$versions.jsp_api"
-}
+} // MockOrmManager()
