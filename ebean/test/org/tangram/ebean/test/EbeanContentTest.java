@@ -106,13 +106,13 @@ public class EbeanContentTest extends BaseContentTest {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 13;
+        return 14;
     }
 
 
     @Override
     protected int getNumberOfClasses() {
-        return 3;
+        return 4;
     }
 
 

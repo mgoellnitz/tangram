@@ -89,13 +89,13 @@ public class JpaContentTest extends BaseContentTest {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 15;
+        return 16;
     }
 
 
     @Override
     protected int getNumberOfClasses() {
-        return 4;
+        return 5;
     }
 
 

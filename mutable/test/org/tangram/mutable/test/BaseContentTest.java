@@ -19,6 +19,7 @@
 package org.tangram.mutable.test;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,9 +142,11 @@ public abstract class BaseContentTest {
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         int numberOfAllClasses = getNumberOfAllClasses();
         // Assert.assertEquals(beanFactory.getAllClasses().toString(), "[interface org.tangram.feature.protection.Protection, interface org.tangram.feature.protection.ProtectedContent, interface org.tangram.mutable.test.content.SubInterface, interface org.tangram.mutable.MutableCode, interface org.tangram.content.CodeResource, class org.tangram.ebean.EContent, interface org.tangram.mutable.test.content.BaseInterface, class org.tangram.content.TransientCode, class org.tangram.ebean.Code, interface org.tangram.content.Content, class org.tangram.ebean.test.content.BaseClass, class org.tangram.ebean.test.content.SubClass]", "Discovered strange list of classes as strings.");
-        Assert.assertEquals(beanFactory.getAllClasses().size(), numberOfAllClasses, "Have an unexpected tital number of classes and interfaces available.");
+        Assert.assertEquals(beanFactory.getAllClasses().size(), numberOfAllClasses, "Have an unexpected total number of classes and interfaces available.");
         int numberOfClasses = getNumberOfClasses();
-        Assert.assertEquals(beanFactory.getClasses().size(), numberOfClasses, "Discovered unexpected number of non abstract model classes.");
+        Collection<Class<? extends Content>> ormClasses = beanFactory.getClasses();
+        LOG.info("test1CreateTestContent() non abstract model classes {}", ormClasses);
+        Assert.assertEquals(ormClasses.size(), numberOfClasses, "Discovered unexpected number of non abstract model classes.");
         SubInterface beanA = createSubBean(beanFactory);
         beanA.setSubtitle("great");
         Assert.assertNotNull(beanA, "Could not create bean.");
@@ -207,7 +210,12 @@ public abstract class BaseContentTest {
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals(codes.size(), 2, "We have one code instance.");
-        TransientCode bean = beanFactory.getBean(TransientCode.class, codeResource.getId());
+        TransientCode bean = new TransientCode("a", "m", "TransientCode:42", "", System.currentTimeMillis());
+        try {
+            bean = beanFactory.getBean(TransientCode.class, codeResource.getId());
+        } catch (Exception e) {
+            LOG.info("test3Code() exception occured - onyl relevant for ebean AFAIK", e);
+        } // try/catch
         Assert.assertNull(bean, "Despite the correc ID there should have been not code result.");
     } // test3Code()
 
