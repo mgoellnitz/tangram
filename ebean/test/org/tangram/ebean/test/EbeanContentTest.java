@@ -55,6 +55,7 @@ public class EbeanContentTest extends BaseContentTest {
         return result;
     }
 
+
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
         Set<String> packages = new HashSet<>();
@@ -63,7 +64,6 @@ public class EbeanContentTest extends BaseContentTest {
         Assert.assertNotNull(dinistiq, "Need dinistiq instance for execute tests.");
         return dinistiq.findBean(type);
     } // getInstance()
-
 
 
     @Override
@@ -81,6 +81,12 @@ public class EbeanContentTest extends BaseContentTest {
     @Override
     protected Class<? extends BaseInterface> getBaseClass() {
         return BaseClass.class;
+    }
+
+
+    @Override
+    protected String getManagerPrefix() {
+        return "com.avaje.ebean";
     }
 
 

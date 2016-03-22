@@ -67,6 +67,12 @@ public class NucleusContentTest extends BaseContentTest {
 
 
     @Override
+    protected String getManagerPrefix() {
+        return "org.datanucleus";
+    }
+
+
+    @Override
     protected String getCondition() {
         return "subtitle == 'great'";
     }

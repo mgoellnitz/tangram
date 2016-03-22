@@ -38,6 +38,7 @@ dependencies {
   testCompile "ch.qos.logback:logback-classic:$versions.logback"
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-guicy')
+  testCompile "org.slf4j:jul-to-slf4j:$versions.slf4j"
 
   testCompile project (':tangram-mutable').sourceSets.test.output
   testCompile "org.springframework:spring-core:$versions.springframework"

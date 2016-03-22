@@ -29,5 +29,9 @@ appender('CONSOLE', ConsoleAppender) {
 appenders.add('CONSOLE')
 
 root WARN, appenders
-logger "dinistiq", DEBUG, appenders, false
+logger "guicy", DEBUG, appenders, false
+// logger "org.tangram.components", INFO, appenders, false
+// logger "org.tangram.guicy", DEBUG, appenders, false
+logger "org.tangram.mutable", DEBUG, appenders, false
+logger "org.tangram.jpa", DEBUG, appenders, false
 logger "openjpa", DEBUG, appenders, false

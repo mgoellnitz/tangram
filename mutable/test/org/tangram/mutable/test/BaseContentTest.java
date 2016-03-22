@@ -23,7 +23,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
+import org.tangram.content.TransientCode;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
@@ -34,6 +37,8 @@ import org.testng.annotations.Test;
 
 
 public abstract class BaseContentTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BaseContentTest.class);
 
     private static final String CLASS_CODE = "package org.tangram.example; import javax.inject.Named; @Named public class Test { public String s; }";
 
@@ -101,6 +106,14 @@ public abstract class BaseContentTest {
 
 
     /**
+     * Get package prefix of the package the manager instance resides in.
+     *
+     * @return java package name
+     */
+    protected abstract String getManagerPrefix();
+
+
+    /**
      * Return the query element to retrieve the subinterface instance.
      *
      * @return implementation specific condition string
@@ -158,6 +171,8 @@ public abstract class BaseContentTest {
         Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans.");
         BaseInterface bean = beanFactory.getBean(getBaseClass(), baseBeans.get(0).getId());
         Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
+        Content content = beanFactory.getBean(bean.getId());
+        Assert.assertEquals(bean, content, "Untyped content should result in the same bean.");
     } // test2Components()
 
 
@@ -192,6 +207,8 @@ public abstract class BaseContentTest {
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals(codes.size(), 2, "We have one code instance.");
+        TransientCode bean = beanFactory.getBean(TransientCode.class, codeResource.getId());
+        Assert.assertNull(bean, "Despite the correc ID there should have been not code result.");
     } // test3Code()
 
 
@@ -212,5 +229,18 @@ public abstract class BaseContentTest {
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
     } // test4ObtainCode()
+
+
+    @Test(priority = 5)
+    public void test5Factory() throws Exception {
+        LOG.info("test5Factory()");
+        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
+        Assert.assertNotNull(beanFactory, "Need factory for beans.");
+        Object manager = beanFactory.getManager();
+        Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
+        String managerClassName = manager.getClass().getName();
+        LOG.info("test5Factory() managerClassName={}", managerClassName);
+        Assert.assertTrue(managerClassName.startsWith(getManagerPrefix()), "The factory should have a correctly typed manager instance.");
+    } // test5Factory()
 
 } // BaseContentTest
