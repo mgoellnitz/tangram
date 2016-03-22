@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -185,7 +185,7 @@ public class TangramServletModule extends ServletModule {
                 Script s = shell.parse(new GroovyCodeSource(resource));
                 s.setProperty("config", configuration);
                 s.setProperty("module", this);
-                s.setProperty("log", LoggerFactory.getLogger(name.replace('.', '_').replace('/', '.')));
+                s.setProperty("log", LoggerFactory.getLogger(name.replace(".groovy", "").replace('/', '.')));
                 s.run();
             } catch (IOException e) {
                 throw new Error("Failed to configure module via "+name, e);
