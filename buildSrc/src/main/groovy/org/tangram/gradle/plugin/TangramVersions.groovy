@@ -37,7 +37,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.9'
-  String pac4j = '1.7.1'
+  String pac4j = '1.7.2'
   String tomcat = '7.0.68'
   String codemirror = '5.12'
   String ckeditor = '4.5.7'
@@ -75,7 +75,7 @@ public class TangramVersions {
   // Latest version presented by google is 2.1.2
   String datanucleus_appengine = '2.1.2'
 
-  String ebean = '7.2.1'
+  String ebean = '7.2.2'
   String ebean_agent = '4.9.2'
 
   String appengine = '1.9.34'
