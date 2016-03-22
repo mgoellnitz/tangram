@@ -75,7 +75,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.2.1'
+  String ebean = '7.2.2'
   String ebean_agent = '4.9.2'
 
   // Not used by tangram itself
