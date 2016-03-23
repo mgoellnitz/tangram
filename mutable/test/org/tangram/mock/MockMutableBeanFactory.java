@@ -18,12 +18,20 @@
  */
 package org.tangram.mock;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.content.test.MockBeanFactory;
+import org.tangram.content.test.MockContent;
 import org.tangram.mutable.MutableBeanFactory;
+import org.tangram.mutable.MutableCode;
 
 
 /**
@@ -31,30 +39,34 @@ import org.tangram.mutable.MutableBeanFactory;
  */
 public class MockMutableBeanFactory extends MockBeanFactory implements MutableBeanFactory {
 
-    private Object manager = new MockOrmManager();
+    private static final Logger LOG = LoggerFactory.getLogger(MockMutableBeanFactory.class);
+
+    private final Object manager = new MockOrmManager();
+
+    private final Collection<Class<? extends Content>> clearedClasses = new HashSet<>();
 
 
     @Override
     public Class<? extends Content> getBaseClass() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return MockContent.class;
     }
 
 
     @Override
     public void beginTransaction() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // empty mock
     }
 
 
     @Override
     public void commitTransaction() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // empty mock
     }
 
 
     @Override
     public void rollbackTransaction() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // empty mock
     }
 
 
@@ -84,20 +96,60 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public Collection<Class<? extends Content>> getAllClasses() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getContents().keySet();
     }
 
 
+    protected List<Class<? extends Content>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
+        List<Class<? extends Content>> result = new ArrayList<>();
+
+        for (Class<? extends Content> c : getClasses()) {
+            if (baseClass.isAssignableFrom(c)) {
+                result.add(c);
+            } // if
+        } // for
+
+        return result;
+    } // getImplementingClassesForModelClass()
+
+
+    /**
+     * just to support JSP's weak calling of methods. It does not allow any parameters.
+     *
+     * @return map to map abstract classes to all non-abstract classes implementing/extending them
+     */
     @Override
     public Map<Class<? extends Content>, List<Class<? extends Content>>> getImplementingClassesMap() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        Map<Class<? extends Content>, List<Class<? extends Content>>> implementingClassesMap = null;
+        synchronized (this) {
+            implementingClassesMap = new HashMap<>();
+
+            // Add the very basic root classes directly here - they won't get auto detected otherwise
+            implementingClassesMap.put(getBaseClass(), getImplementingClassesForModelClass(getBaseClass()));
+            for (Class<? extends Content> c : getAllClasses()) {
+                implementingClassesMap.put(c, getImplementingClassesForModelClass(c));
+            } // for
+            if (!implementingClassesMap.containsKey(CodeResource.class)) {
+                implementingClassesMap.put(CodeResource.class, getImplementingClassesForModelClass(CodeResource.class));
+            } // if
+            if (!implementingClassesMap.containsKey(MutableCode.class)) {
+                implementingClassesMap.put(MutableCode.class, getImplementingClassesForModelClass(MutableCode.class));
+            } // if
+            // implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
+            LOG.info("getImplementingClassesMap() {}", implementingClassesMap);
+        } // synchronized
+        return implementingClassesMap;
+    } // getImplementingClassMap()
 
 
     @Override
-    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> c) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
+        List<Class<T>> result = new ArrayList<>();
+        for (Class<? extends Content> c : getImplementingClassesMap().get(baseClass)) {
+            result.add((Class<T>) c);
+        } // for
+        return result;
+    } // getImplementingClasses()
 
 
     @Override
@@ -108,8 +160,15 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public void clearCacheFor(Class<? extends Content> cls) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        clearedClasses.add(cls);
+    } // clearCacheFor()
+
+
+    public Collection<Class<? extends Content>> getClearedCacheClasses() {
+        Collection<Class<? extends Content>> result = clearedClasses;
+        clearedClasses.clear();
+        return result;
+    } // getClearedCacheClasses()
 
 
     @Override

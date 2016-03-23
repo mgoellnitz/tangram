@@ -56,10 +56,10 @@ public class MetaLinkHandlerTest {
     private static final Logger LOG = LoggerFactory.getLogger(MetaLinkHandlerTest.class);
 
     @Spy
-    private final Statistics statistics = new SimpleStatistics();
+    private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
 
     @Spy
-    private final PropertyConverter propertyConverter = new GenericPropertyConverter();
+    private final PropertyConverter propertyConverter = new GenericPropertyConverter(); // NOPMD - this field is not really unused
 
     @Spy
     @InjectMocks
@@ -70,15 +70,18 @@ public class MetaLinkHandlerTest {
     private final GenericLinkFactoryAggregator aggregator = new GenericLinkFactoryAggregator();
 
     @Spy
-    private ClassRepository repository;
+    private ClassRepository repository; // NOPMD - this field is not really unused
 
     @Mock
-    private ViewUtilities viewUtilities = null;
+    private ViewUtilities viewUtilities; // NOPMD - this field is not really unused
 
     @InjectMocks
     private final MetaLinkHandler metaLinkHandler = new MetaLinkHandler();
 
 
+    /**
+     *  Test implementation for a statically registered handler using annotations.
+     */
     @LinkHandler
     public class AtHandler {
 
@@ -90,12 +93,15 @@ public class MetaLinkHandlerTest {
     } // AtHandler
 
 
+    /**
+     *  Test implementation for a statically registered handler using interface implementation.
+     */
     public class TestHandler implements org.tangram.link.LinkHandler {
 
         @Override
         public TargetDescriptor parseLink(String url, HttpServletResponse response) {
             LOG.debug("TestHandler.parseLink() {}", url);
-            return url.equals("/testhandler") ? new TargetDescriptor(response, "linkHandler", null) : null;
+            return "/testhandler".equals(url) ? new TargetDescriptor(response, "linkHandler", null) : null;
         }
 
 

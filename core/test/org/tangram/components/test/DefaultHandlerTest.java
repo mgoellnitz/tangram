@@ -43,10 +43,10 @@ import org.testng.annotations.Test;
 public class DefaultHandlerTest {
 
     @Mock
-    private BeanFactory beanFactory = null;
+    private BeanFactory beanFactory; // NOPMD - this field is not really unused
 
     @InjectMocks
-    private DefaultHandler defaultHandler = new DefaultHandler();
+    private final DefaultHandler defaultHandler = new DefaultHandler();
 
     private interface BlobContent extends MimedBlob, Content {
 

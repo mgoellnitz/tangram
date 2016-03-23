@@ -39,8 +39,6 @@ import org.testng.annotations.Test;
  */
 public class UniqueUrlHookTest {
 
-    private static final String DOMAIN = "www.example.org";
-
     private static final String URI = "/s/id_96";
 
     @Mock

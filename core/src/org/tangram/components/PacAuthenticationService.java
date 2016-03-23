@@ -57,8 +57,8 @@ import org.tangram.link.Link;
 import org.tangram.link.LinkFactory;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
-import org.tangram.util.SystemUtils;
 import org.tangram.link.TargetDescriptor;
+import org.tangram.util.SystemUtils;
 
 
 /**
@@ -88,7 +88,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
 
     @Inject
     @SuppressWarnings("rawtypes")
-    private Set<Client> clientSet;
+    private Set<Client> clientSet = new HashSet<>(); // NOPMD - this field cannot be final it is referenced via injection
 
     // TODO: Experimental stuff for JEE CDI test
     // final private Set<Client> clientSet = new HashSet<>();
@@ -242,7 +242,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             session.setAttribute(Constants.ATTRIBUTE_USERS, users);
         } // if
         WebContext context = new J2EContext(request, response);
-        final Client<Credentials, UserProfile> client = SystemUtils.convert(getClients(request, response).findClient(context));
+        Client<Credentials, UserProfile> client = SystemUtils.convert(getClients(request, response).findClient(context));
         LOG.info("callback() client: {}", client);
         try {
             Credentials credentials = client.getCredentials(context);

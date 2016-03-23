@@ -39,13 +39,13 @@ import org.testng.annotations.Test;
 public class GroovyClassRepositoryTest {
 
     @Spy
-    private final PersistentRestartCache restartCache = new DummyRestartCache();
+    private final PersistentRestartCache restartCache = new DummyRestartCache(); // NOPMD - this field is not really unused
 
     @Spy
     private final MockBeanFactory factory = new MockBeanFactory();
 
     @Spy
-    private CodeResourceCache codeCache;
+    private CodeResourceCache codeCache; // NOPMD - this field is not really unused
 
     @InjectMocks
     private final GroovyClassRepository repository = new GroovyClassRepository();

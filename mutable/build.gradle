@@ -25,7 +25,8 @@ dependencies {
 
   testCompile "org.testng:testng:$versions.testng"
   // Used for mocking some things
-  testCompile "org.springframework:spring-core:$versions.springframework"
+  testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.springframework:spring-web:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile project (':tangram-core').sourceSets.test.output
 

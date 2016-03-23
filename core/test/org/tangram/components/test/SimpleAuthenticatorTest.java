@@ -45,7 +45,7 @@ public class SimpleAuthenticatorTest {
     private Map<String, String> usernamePasswordMapping;
 
     @Mock
-    private CodeResourceCache codeCache = Mockito.mock(CodeResourceCache.class);
+    private final CodeResourceCache codeCache = Mockito.mock(CodeResourceCache.class);
 
     @InjectMocks
     private final SimpleAuthenticator simpleAuthenticator = new SimpleAuthenticator();

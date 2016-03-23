@@ -62,7 +62,7 @@ public class GenericPropertyConverterTest {
     private final MockBeanFactory beanFactory = new MockBeanFactory();
 
     @Spy
-    private ViewUtilities viewUtilities = new ViewUtilities() {
+    private final ViewUtilities viewUtilities = new ViewUtilities() { // NOPMD - this field is not really unused
 
         @Override
         public ViewContextFactory getViewContextFactory() {
@@ -85,16 +85,16 @@ public class GenericPropertyConverterTest {
         @Override
         public void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
             if ((bean instanceof CodeResource)&&("description".equals(view))) {
-                writer.write(((CodeResource)bean).getAnnotation());
+                writer.write(((CodeResource) bean).getAnnotation());
             }
         }
 
     };
 
     @InjectMocks
-    private GenericPropertyConverter c = new GenericPropertyConverter();
+    private final GenericPropertyConverter c = new GenericPropertyConverter();
 
-    private List<CodeResource> referenceProperty = new ArrayList<>();
+    public List<CodeResource> referenceProperty = new ArrayList<>();
 
 
     @BeforeClass

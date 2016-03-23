@@ -68,6 +68,11 @@ public class MockBeanFactory extends AbstractBeanFactory {
     } // ()
 
 
+    public Map<Class<? extends Content>, List<Content>> getContents() {
+        return contents;
+    }
+
+
     @Override
     public <T extends Content> T getBean(Class<T> cls, String id) {
         T result = null;
@@ -99,9 +104,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
 
 
     public Collection<Class<? extends Content>> getClasses() {
-        List<Class<? extends Content>> result = new ArrayList<>();
-        result.add(TransientCode.class);
-        return result;
+        return contents.keySet();
     } // getClasses()
 
 

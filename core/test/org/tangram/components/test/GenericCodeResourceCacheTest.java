@@ -22,8 +22,6 @@ import java.util.Map;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
 import org.tangram.components.GenericCodeResourceCache;
 import org.tangram.content.CodeResource;
@@ -41,10 +39,8 @@ import org.testng.annotations.Test;
  */
 public class GenericCodeResourceCacheTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GenericCodeResourceCacheTest.class);
-
     @Spy
-    private final PersistentRestartCache restartCache = new DummyRestartCache();
+    private final PersistentRestartCache restartCache = new DummyRestartCache(); // NOPMD - this field is not really unused
 
     @Spy
     private final MockBeanFactory factory = new MockBeanFactory();

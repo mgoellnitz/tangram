@@ -18,6 +18,8 @@
  */
 package org.tangram.link;
 
+import java.util.Objects;
+
 
 /**
  *
@@ -68,5 +70,18 @@ public class TargetDescriptor {
     public String toString() {
         return "["+bean+"]:"+view+":"+action;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj==null) {
+            return false;
+        }
+        if (getClass()!=obj.getClass()) {
+            return false;
+        }
+        TargetDescriptor other = (TargetDescriptor) obj;
+        return Objects.equals(this.bean, other.bean)&&Objects.equals(this.view, other.view)&&Objects.equals(this.action, other.action);
+    } // equals()
 
 } // TargetDescriptor

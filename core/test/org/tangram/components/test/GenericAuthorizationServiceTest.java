@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -32,6 +31,7 @@ import org.tangram.authentication.AuthenticationService;
 import org.tangram.components.GenericAuthorizationService;
 import org.tangram.content.CodeResourceCache;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -41,25 +41,29 @@ import org.testng.annotations.Test;
 public class GenericAuthorizationServiceTest {
 
     @Mock
-    private final AuthenticationService authenticationService = Mockito.mock(AuthenticationService.class);
+    private AuthenticationService authenticationService;  // NOPMD - this field is not really unused
 
     @Mock
-    private final CodeResourceCache codeResourceCache = Mockito.mock(CodeResourceCache.class);
+    private CodeResourceCache codeResourceCache; // NOPMD - this field is not really unused
 
     @Mock(name = "adminUsers")
-    private final Set<String> adminUsers = new HashSet<>();
+    private final Set<String> adminUsers = new HashSet<>(); // NOPMD - this field is not really unused
 
     @InjectMocks
     private final GenericAuthorizationService authorizationService = new GenericAuthorizationService();
 
 
-    @Test
-    public void testGenericAuthorizationService() {
+    @BeforeClass
+    public void init() throws Exception {
         MockitoAnnotations.initMocks(this);
         authorizationService.afterPropertiesSet();
+    } // init()
+
+
+    @Test
+    public void testGenericAuthorizationService() {
         // TODO:
         // authorizationService.reset();
-
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
         Assert.assertFalse(authorizationService.isAdminUser(request, response), "Dummy request don't belong to admin users.");

@@ -52,28 +52,28 @@ public class EditingHandlerTest {
     private static final String DUMMY_ID = "pling:plong";
 
     @Spy
-    private PropertyConverter propertyConverter = new GenericPropertyConverter();
+    private final PropertyConverter propertyConverter = new GenericPropertyConverter();
 
     @Mock
     private AuthorizationService authorizationService;
 
     @Mock
-    private LinkHandlerRegistry linkHandlerRegistry;
+    private LinkHandlerRegistry linkHandlerRegistry; // NOPMD - this field is not really unused
 
     @Spy
-    private MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
+    private final MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
 
     @Spy
-    private ClassRepository repository;
+    private ClassRepository repository; // NOPMD - this field is not really unused
 
     @InjectMocks
-    private EditingHandler handler = new EditingHandler();
+    private final EditingHandler handler = new EditingHandler();
 
 
     /**
      * Mock the name pattern of generated ORM classes.
      */
-    private class Content$Test extends MockContent {
+    private class Content$Test extends MockContent { // NOPMD - We need this strange name
 
     }
 
