@@ -18,7 +18,7 @@
  */
 package org.tangram.editor.test;
 
-import java.util.List;
+import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -136,10 +136,10 @@ public class EditingHandlerTest {
 
         Object ormClasses = request.getAttribute("classes");
         Assert.assertNotNull(ormClasses, "There should be some classes list object.");
-        Assert.assertEquals(((List<?>) ormClasses).size(), 1, "Fixed number of classes in list expected.");
+        Assert.assertEquals(((Collection<?>) ormClasses).size(), 1, "Fixed number of classes in list expected.");
         Object me = request.getAttribute(Constants.THIS);
         Assert.assertNotNull(me, "There should be some instances list object..");
-        Assert.assertEquals(((List<?>) me).size(), 6, "Fixed number of instances in list expected.");
+        Assert.assertEquals(((Collection<?>) me).size(), 6, "Fixed number of instances in list expected.");
     } // testList()
 
 
