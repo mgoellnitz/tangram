@@ -57,7 +57,7 @@ public class GenericUserTest {
 
         };
 
-        Assert.assertNull(genericUser, "Users should not be equal to null users.");
+        Assert.assertNotNull(genericUser, "Users should not be equal to null users.");
         Assert.assertFalse(genericUser.equals(user), "Users should not be equal.");
         Assert.assertTrue(genericUser.equals(genericUser), "Users should be equal to themselves.");
         Assert.assertEquals(genericUser.hashCode(), -677480973, "Check for specific hash code failed.");
