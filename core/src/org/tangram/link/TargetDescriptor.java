@@ -73,6 +73,14 @@ public class TargetDescriptor {
 
 
     @Override
+    public int hashCode() {
+        int hash = 37*7+Objects.hashCode(this.bean);
+        hash = 37*hash+Objects.hashCode(this.view);
+        return 37*hash+Objects.hashCode(this.action);
+    } // hashCode()
+
+
+    @Override
     public boolean equals(Object obj) {
         if (obj==null) {
             return false;
