@@ -41,7 +41,7 @@ import org.tangram.Constants;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.content.Markdown;
-import org.tangram.content.test.MockBeanFactory;
+import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;

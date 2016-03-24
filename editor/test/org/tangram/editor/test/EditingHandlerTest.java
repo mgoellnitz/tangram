@@ -32,13 +32,14 @@ import org.tangram.components.editor.EditingHandler;
 import org.tangram.components.test.GroovyClassRepositoryTest;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
-import org.tangram.content.test.MockContent;
+import org.tangram.mock.content.MockContent;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.link.TargetDescriptor;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mock.MockMutableBeanFactory;
 import org.tangram.mock.MockOrmManager;
+import org.tangram.mutable.components.test.ToolHandlerTest;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.PropertyConverter;
@@ -50,6 +51,8 @@ import org.testng.annotations.Test;
 public class EditingHandlerTest {
 
     private static final String DUMMY_ID = "pling:plong";
+
+    private static final TargetDescriptor DUMMY_LOGIN = new TargetDescriptor(ToolHandlerTest.class, "dummy", "login");
 
     @Spy
     private final PropertyConverter propertyConverter = new GenericPropertyConverter();
@@ -102,14 +105,17 @@ public class EditingHandlerTest {
         for (String a : EditingHandler.PARAMETER_ACTIONS) {
             Link link = handler.createLink(null, null, handler, a, null);
             Assert.assertNotNull(link, "The generation of "+a+" action link failed.");
-            Assert.assertEquals(link.getUrl(), "/"+a, "The generation of "+a+" action link with strange result.");
+            Assert.assertEquals(link.getUrl(), "/"+a, "Generation of "+a+" action link with strange result.");
         } // for
 
         for (String a : EditingHandler.ID_URL_ACTIONS) {
             Link link = handler.createLink(null, null, c, a, null);
             Assert.assertNotNull(link, "The generation of "+a+" action link failed.");
-            Assert.assertEquals(link.getUrl(), "/"+a+"/id_"+DUMMY_ID, "The generation of "+a+" action link with strange result.");
+            Assert.assertEquals(link.getUrl(), "/"+a+"/id_"+DUMMY_ID, "Generation of "+a+" action link with strange result.");
         } // for
+        Link link = handler.createLink(null, null, c, null, "edit");
+        Assert.assertNotNull(link, "The generation of edit view link failed.");
+        Assert.assertEquals(link.getUrl(), "/edit/id_"+DUMMY_ID, "Generation of edit view link with strange result.");
     } // testUrlGeneration()
 
 
@@ -120,7 +126,7 @@ public class EditingHandlerTest {
         HttpServletResponse response = new MockHttpServletResponse();
         Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
         try {
-            handler.list(TransientCode.class.getName(), null, null, request, response);
+            handler.list(TransientCode.class.getName(), "annotation", "org.tangram", request, response);
         } catch (Exception e) {
             Assert.fail("No exception expected on listing resources.", e);
         } // try/catch
@@ -136,7 +142,7 @@ public class EditingHandlerTest {
 
         Object ormClasses = request.getAttribute("classes");
         Assert.assertNotNull(ormClasses, "There should be some classes list object.");
-        Assert.assertEquals(((Collection<?>) ormClasses).size(), 1, "Fixed number of classes in list expected.");
+        Assert.assertEquals(((Collection<?>) ormClasses).size(), 7, "Fixed number of classes in list expected.");
         Object me = request.getAttribute(Constants.THIS);
         Assert.assertNotNull(me, "There should be some instances list object..");
         Assert.assertEquals(((Collection<?>) me).size(), 6, "Fixed number of instances in list expected.");
@@ -149,11 +155,11 @@ public class EditingHandlerTest {
         request.setContextPath("/testapp");
         HttpServletResponse response = new MockHttpServletResponse();
         Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
-        TargetDescriptor edit = null;
         String resourceId = "CodeResource:8";
         Content bean = beanFactory.getBean(Content.class, resourceId);
+        TargetDescriptor target = null;
         try {
-            edit = handler.edit(resourceId, request, response);
+            target = handler.edit(resourceId, request, response);
         } catch (Exception e) {
             Assert.fail("No exception expected on editing a content element.", e);
         } // try/catch
@@ -161,9 +167,94 @@ public class EditingHandlerTest {
         Assert.assertEquals(request.getAttribute("cmprefix"), "/testapp/editor/codemirror", "URI path to codemirror expected.");
         Assert.assertEquals(request.getAttribute("ckprefix"), "/testapp/editor/ckeditor", "URI path to codemirror expected.");
         Assert.assertEquals(request.getAttribute("propertyConverter"), propertyConverter, "Property converter expected.");
-        Assert.assertEquals(edit.bean, bean, "Prepared bean expected.");
-        Assert.assertEquals(edit.action, null, "No action expected.");
-        Assert.assertEquals(edit.view, "edit", "Edit view expected.");
-    } // testList()
+        Assert.assertEquals(target.bean, bean, "Prepared bean expected.");
+        Assert.assertEquals(target.action, null, "No action expected.");
+        Assert.assertEquals(target.view, "edit", "Edit view expected.");
+        try {
+            target = handler.edit("NotValid:13", request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on editing a content element.", e);
+        } // try/catch
+        Assert.assertNull(target, "Editing of non existent content instance should return null result.");
+        Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_NOT_FOUND, "Editing of non existen content instance should issue NOT FOUND.");
+    } // testEdit()
+
+
+    @Test
+    public void testDelete() {
+        String resourceId = "CodeResource:8";
+        Content bean = beanFactory.getBean(Content.class, resourceId);
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/delete/id_"+bean.getId());
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
+        TargetDescriptor target = null;
+        try {
+            target = handler.delete(bean.getId(), request, response);
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(), "Object deletion not activated", "Expected error since deletion is deactivated.");
+        } // try/catch
+        handler.setDeleteMethodEnabled(true);
+        try {
+            target = handler.delete(bean.getId(), request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on editing a content element.", e);
+        } // try/catch
+        Assert.assertNotNull(target, "Non null target descriptor expected after deletion.");
+        Assert.assertNotNull(target.bean, "Non null result list expected after returning from deletion.");
+        Assert.assertEquals(target.action, null, "No action expected.");
+        Assert.assertEquals(target.view, "tangramEditorList", "List view expected.");
+        Assert.assertEquals(((Collection<?>) (target.bean)).size(), 6, "Unexpected list of contents to display.");
+    } // testDelete()
+
+
+    @Test
+    public void testCreate() throws Exception {
+        String resourceId = "CodeResource:8";
+        Content bean = beanFactory.getBean(Content.class, resourceId);
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/delete/id_"+bean.getId());
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        TargetDescriptor target = null;
+        try {
+            target = handler.create(MockContent.class.getName(), request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on creating a content element.", e);
+        } // try/catch
+        Assert.assertNotNull(target, "Non null target descriptor expected after deletion.");
+        Assert.assertNotNull(target.bean, "Non null result list expected after returning from deletion.");
+        Assert.assertEquals(target.action, "edit", "Edit action expected.");
+        Assert.assertEquals(target.view, null, "No view expected.");
+        Assert.assertEquals(((MockContent) target.bean).getId(), "MockContent:42", "Unexpected list of contents to display.");
+    } // testCreate()
+
+
+    @Test
+    public void testNoAdminCall() {
+        String[] urls = {"delete", "edit", "list"};
+        for (String url : urls) {
+            MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/"+url);
+            request.setContextPath("/testapp");
+            HttpServletResponse response = new MockHttpServletResponse();
+            Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(false);
+            Mockito.when(authorizationService.getLoginTarget(request)).thenReturn(DUMMY_LOGIN);
+            TargetDescriptor tool = null;
+            String id = "CodeResource:8";
+            try {
+                if ("delete".equals(url)) {
+                    tool = handler.delete(id, request, response);
+                } // if
+                if ("edit".equals(url)) {
+                    tool = handler.edit(id, request, response);
+                } // if
+                if ("list".equals(url)) {
+                    tool = handler.list(TransientCode.class.getName(), null, null, request, response);
+                } // if
+            } catch (Exception e) {
+                Assert.fail("Editing handler should not issue exceptions when redirecting to login for "+url+".", e);
+            } // try/catch
+            Assert.assertEquals(tool, DUMMY_LOGIN, "Non logged in calls should issue login redirect for "+url+".");
+        } // for
+    } // testNoAdminCall()
 
 } // EditingHandlerTest

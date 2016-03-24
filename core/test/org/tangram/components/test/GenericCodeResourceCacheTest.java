@@ -27,7 +27,7 @@ import org.tangram.components.GenericCodeResourceCache;
 import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.content.TransientCode;
-import org.tangram.content.test.MockBeanFactory;
+import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.util.DummyRestartCache;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

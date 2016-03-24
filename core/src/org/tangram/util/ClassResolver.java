@@ -108,6 +108,7 @@ public class ClassResolver {
 
 
     public ClassResolver(Set<String> packageNames) {
+        LOG.debug("getClassNames() packageNames={}", packageNames);
         this.packageNames = packageNames;
         this.classNames = new HashSet<>();
         Set<String> paths = new HashSet<>();

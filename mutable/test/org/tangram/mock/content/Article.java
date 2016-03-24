@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2011-2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,38 +16,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.content.test;
-
-import org.tangram.content.Content;
+package org.tangram.mock.content;
 
 
-/**
- * Mock content class for tests.
- */
-public class MockContent implements Content {
+public class Article extends Linkable {
 
-    private String id;
+    private char[] text;
 
 
-    public MockContent(String id) {
-        this.id = id;
+    public char[] getText() {
+        return text;
     }
 
 
-    public MockContent() {
-        this("BeanClass:42");
+    public void setText(char[] text) {
+        this.text = text;
     }
 
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-
-    @Override
-    public int compareTo(Content o) {
-        return 1;
-    }
-
-} // MockContent
+} // Article

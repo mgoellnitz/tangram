@@ -16,23 +16,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.content.test;
+package org.tangram.mock.content;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.annotate.Abstract;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
+import org.tangram.util.ClassResolver;
 import org.tangram.util.SystemUtils;
 
 
@@ -50,7 +56,21 @@ public class MockBeanFactory extends AbstractBeanFactory {
 
     public void init() throws FileNotFoundException {
         XStream xstream = new XStream(new StaxDriver());
-        xstream.alias(TransientCode.class.getSimpleName(), TransientCode.class);
+        Set<String> basePackages = new HashSet<>();
+        basePackages.add("org.tangram.mock.content");
+        basePackages.add("org.tangram.content");
+        allClasses = new ArrayList<>();
+        ClassResolver resolver = new ClassResolver(basePackages);
+        Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
+        resolvedClasses.add(TransientCode.class);
+        resolvedClasses.addAll(resolver.getSubclasses(MockContent.class));
+        for (Class<? extends Content> cls : resolvedClasses) {
+            LOG.info("getAllClasses() * {}", cls.getName());
+            if (!allClasses.contains(cls)) {
+                allClasses.add(cls);
+                xstream.alias(cls.getSimpleName(), cls);
+            } // if
+        } // for
         Object mockContents = xstream.fromXML(this.getClass().getResource("/mock-content.xml"));
         LOG.debug("() {}", mockContents);
         if (mockContents instanceof List) {
@@ -102,9 +122,26 @@ public class MockBeanFactory extends AbstractBeanFactory {
         return result;
     } // getBean()
 
+    protected List<Class<? extends Content>> allClasses = null;
+
 
     public Collection<Class<? extends Content>> getClasses() {
-        return contents.keySet();
+        Collection<Class<? extends Content>> modelClasses = new ArrayList<>();
+        for (Class<? extends Content> cls : allClasses) {
+            if ((cls.getAnnotation(Abstract.class)==null)&&(!cls.isInterface())&&((cls.getModifiers()&Modifier.ABSTRACT)==0)) {
+                modelClasses.add(cls);
+            } // if
+        } // for
+        Comparator<Class<?>> comp = new Comparator<Class<?>>() {
+
+            @Override
+            public int compare(Class<?> o1, Class<?> o2) {
+                return o1.getName().compareTo(o2.getName());
+            } // compareTo()
+
+        };
+        // Collections.sort(modelClasses, comp);
+        return modelClasses;
     } // getClasses()
 
 

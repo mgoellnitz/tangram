@@ -19,7 +19,7 @@
 package org.tangram.logic.test;
 
 import javax.servlet.http.HttpServletRequest;
-import org.tangram.content.test.MockContent;
+import org.tangram.mock.content.MockContent;
 import org.tangram.logic.AbstractViewShim;
 
 

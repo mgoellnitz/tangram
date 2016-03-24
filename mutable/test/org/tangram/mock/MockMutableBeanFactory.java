@@ -28,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
-import org.tangram.content.test.MockBeanFactory;
-import org.tangram.content.test.MockContent;
+import org.tangram.mock.content.MockBeanFactory;
+import org.tangram.mock.content.MockContent;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
 
@@ -72,31 +72,32 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public <T extends Content> T createBean(Class<T> cls) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return cls.newInstance();
     }
 
 
     @Override
     public <T extends Content> boolean persistUncommitted(T bean) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
 
     @Override
     public <T extends Content> boolean persist(T bean) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
 
     @Override
     public <T extends Content> boolean delete(T bean) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // TODO: Really delete this
+        return true;
     }
 
 
     @Override
     public Collection<Class<? extends Content>> getAllClasses() {
-        return getContents().keySet();
+        return allClasses;
     }
 
 
@@ -154,7 +155,7 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return "<mock mutable bean factory does not do query expressions>";
     }
 
 

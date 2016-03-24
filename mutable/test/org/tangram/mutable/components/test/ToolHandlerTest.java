@@ -231,7 +231,7 @@ public class ToolHandlerTest {
                     tool = toolHandler.importer(request, response);
                 } // if
             } catch (Exception e) {
-                Assert.fail("Tool handler should not issue exceptions when exporting codes.", e);
+                Assert.fail("Tool handler should not issue exceptions when redirecting to login.", e);
             } // try/catch
             Assert.assertEquals(tool, DUMMY_LOGIN, "Non logged in calls should issue login redirect.");
         } // for
