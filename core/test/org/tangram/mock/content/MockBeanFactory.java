@@ -43,7 +43,7 @@ import org.tangram.util.SystemUtils;
 
 
 /**
- * Mock a bean factory returning some instances to provides means for other components's tests.
+ * Mock a bean factory returning some instances to provides means for other component's tests.
  */
 public class MockBeanFactory extends AbstractBeanFactory {
 
