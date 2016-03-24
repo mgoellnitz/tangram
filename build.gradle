@@ -28,7 +28,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.github.kt3k.coveralls' version '2.4.0x'
+  id 'com.github.kt3k.coveralls' version '2.6.3'
 }
 
 allprojects {
@@ -102,7 +102,10 @@ task jacocoCombinedReport(type: JacocoReport) {
 
   // Add all relevant sourcesets from the subprojects
   subprojects.each {
-    sourceSets it.sourceSets.main
+    // Don't include plugin in test coverage report
+    if (!it.name.endsWith("buildSrc")) {
+      sourceSets it.sourceSets.main
+    }
   }
 
   reports {
