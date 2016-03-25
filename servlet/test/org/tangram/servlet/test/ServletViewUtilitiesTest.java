@@ -33,6 +33,7 @@ import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.monitor.Statistics;
 import org.tangram.servlet.JspTemplateResolver;
 import org.tangram.view.DefaultViewContextFactory;
+import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,7 +45,7 @@ import org.testng.annotations.Test;
 public class ServletViewUtilitiesTest {
 
     @Spy
-    private final Statistics statistics = new SimpleStatistics();
+    private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
 
     @InjectMocks
     private final JspTemplateResolver jspTemplateResolver = new JspTemplateResolver();
@@ -75,7 +76,19 @@ public class ServletViewUtilitiesTest {
         Map<String, Object> model = viewContextFactory.createModel(bean, request, response);
 
         servletViewUtilities.render(null, model, null);
-        Assert.assertEquals(response.getContentAsString(), "", "");
+        Assert.assertEquals(response.getContentAsString(), "", "The result is empty for mock instances.");
     } // testServletViewUtilities()
+
+
+    @Test
+    public void testCreateParameterAccess() throws Exception {
+        ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/id_RootTopic:1");
+        request.setContextPath("/testapp");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setContentType("text/html");
+        RequestParameterAccess parameterAccess = servletViewUtilities.createParameterAccess(request);
+        Assert.assertNotNull(parameterAccess, "Access instance should have been created.");
+    } // testCreateParameterAccess()
 
 } // ServletViewUtilitiesTest

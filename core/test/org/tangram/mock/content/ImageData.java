@@ -21,6 +21,9 @@ package org.tangram.mock.content;
 import org.tangram.content.blob.MimedBlob;
 
 
+/**
+ * Image blob colder class for the data model used in tests.
+ */
 public class ImageData extends Linkable implements MimedBlob {
 
     private byte[] data;

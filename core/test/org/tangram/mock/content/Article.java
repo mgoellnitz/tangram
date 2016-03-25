@@ -19,6 +19,9 @@
 package org.tangram.mock.content;
 
 
+/**
+ * Text base article for the data model used in tests.
+ */
 public class Article extends Linkable {
 
     private char[] text;

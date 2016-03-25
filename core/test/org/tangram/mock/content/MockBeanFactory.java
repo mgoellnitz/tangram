@@ -25,7 +25,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -137,15 +136,6 @@ public class MockBeanFactory extends AbstractBeanFactory {
                 modelClasses.add(cls);
             } // if
         } // for
-        Comparator<Class<?>> comp = new Comparator<Class<?>>() {
-
-            @Override
-            public int compare(Class<?> o1, Class<?> o2) {
-                return o1.getName().compareTo(o2.getName());
-            } // compareTo()
-
-        };
-        // Collections.sort(modelClasses, comp);
         return modelClasses;
     } // getClasses()
 

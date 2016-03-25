@@ -62,7 +62,7 @@ public class EditingHandlerTest {
     private final PropertyConverter propertyConverter = new GenericPropertyConverter();
 
     @Spy
-    private final ViewUtilities viewUtilities = new ServletViewUtilities();
+    private final ViewUtilities viewUtilities = new ServletViewUtilities(); // NOPMD - this field is not really unused
 
     @Mock
     private AuthorizationService authorizationService;

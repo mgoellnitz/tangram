@@ -21,6 +21,9 @@ package org.tangram.mock.content;
 import org.tangram.content.Content;
 
 
+/**
+ * Root content type for the data model used in tests so that every item has a title, keywords, and a short title.
+ */
 public abstract class Linkable extends MockContent {
 
     private String title;

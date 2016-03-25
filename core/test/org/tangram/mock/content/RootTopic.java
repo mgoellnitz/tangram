@@ -22,6 +22,9 @@ import com.sun.org.apache.bcel.internal.classfile.Code;
 import java.util.List;
 
 
+/**
+ * Root navigation topic - thus for real site a singleton - for the data model used in tests.
+ */
 public class RootTopic extends Topic {
 
     private List<Topic> bottomLinks;

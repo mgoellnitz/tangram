@@ -26,7 +26,7 @@ import org.tangram.content.Content;
  */
 public class MockContent implements Content {
 
-    private String id;
+    private final String id;
 
 
     public MockContent(String id) {

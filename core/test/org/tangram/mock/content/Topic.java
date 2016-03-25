@@ -27,6 +27,9 @@ import org.tangram.content.Content;
 import org.tangram.protection.ProtectedContent;
 
 
+/**
+ * Navigation topic for the data model used in tests.
+ */
 public class Topic extends Linkable implements ProtectedContent {
 
     private static final Logger LOG = LoggerFactory.getLogger(Topic.class);

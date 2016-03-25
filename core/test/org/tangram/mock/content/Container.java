@@ -21,6 +21,9 @@ package org.tangram.mock.content;
 import java.util.List;
 
 
+/**
+ * Topic containers to be placed on other topics as contents for the data model used in tests.
+ */
 public class Container extends Linkable {
 
     private List<Topic> contents;
