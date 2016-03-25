@@ -24,10 +24,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.tangram.Constants;
-import org.tangram.mock.content.MockContent;
 import org.tangram.logic.Shim;
 import org.tangram.logic.test.BeanShim;
 import org.tangram.logic.test.ViewShim;
+import org.tangram.mock.content.MockContent;
 import org.tangram.util.SystemUtils;
 import org.tangram.view.DynamicViewContextFactory;
 import org.tangram.view.ViewContext;
@@ -68,7 +68,7 @@ public class DynamicViewContextFactoryTest {
         for (Object so : shims.values()) {
             if (so instanceof Shim) {
                 Shim s = (Shim) so;
-                Assert.assertEquals(s.getId(), "MockContent:42", "Unexpected mock bean id discovered.");
+                Assert.assertTrue(s.getId().startsWith("MockContent:1"), "Unexpected mock bean id discovered.");
                 if (s instanceof ViewShim) {
                     ViewShim vs = (ViewShim) s;
                     Assert.assertEquals(vs.getRequest(), request, "Unexpected mock bean id discovered.");
