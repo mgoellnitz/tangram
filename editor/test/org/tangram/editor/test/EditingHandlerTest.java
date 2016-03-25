@@ -29,20 +29,24 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.Constants;
 import org.tangram.components.editor.EditingHandler;
+import org.tangram.components.servlet.ServletViewUtilities;
 import org.tangram.components.test.GroovyClassRepositoryTest;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
-import org.tangram.mock.content.MockContent;
 import org.tangram.link.Link;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.link.TargetDescriptor;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mock.MockMutableBeanFactory;
 import org.tangram.mock.MockOrmManager;
+import org.tangram.mock.content.MockContent;
+import org.tangram.mock.content.RootTopic;
+import org.tangram.mock.content.Topic;
 import org.tangram.mutable.components.test.ToolHandlerTest;
 import org.tangram.protection.AuthorizationService;
 import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.PropertyConverter;
+import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -56,6 +60,9 @@ public class EditingHandlerTest {
 
     @Spy
     private final PropertyConverter propertyConverter = new GenericPropertyConverter();
+
+    @Spy
+    private final ViewUtilities viewUtilities = new ServletViewUtilities();
 
     @Mock
     private AuthorizationService authorizationService;
@@ -181,6 +188,45 @@ public class EditingHandlerTest {
 
 
     @Test
+    public void testLink() {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/link");
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        String resourceId = "RootTopic:1";
+        TargetDescriptor target = null;
+        try {
+            target = handler.link(Topic.class.getName(), resourceId, "bottomLinks", request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on linking a content element.", e);
+        } // try/catch
+        Assert.assertEquals(target.bean.getClass(), Topic.class, "Bean of given class bean expected.");
+        Assert.assertEquals(target.action, "edit", "Edit action expected.");
+        Assert.assertEquals(target.view, null, "No view expected.");
+    } // testLink()
+
+
+    @Test
+    public void testStore() {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/store");
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        String resourceId = "RootTopic:1";
+        TargetDescriptor target = null;
+        request.addParameter("title", "Test root topic");
+        request.addParameter("teaser", "<p>Never mind!</p>");
+        request.addParameter("logo", "");
+        try {
+            target = handler.store(resourceId, request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on storing a content element.", e);
+        } // try/catch
+        Assert.assertEquals(target.bean.getClass(), RootTopic.class, "Bean of given class bean expected.");
+        Assert.assertEquals(target.action, "edit", "Edit action expected.");
+        Assert.assertEquals(target.view, null, "No view expected.");
+    } // testStore()
+
+
+    @Test
     public void testDelete() {
         String resourceId = "CodeResource:8";
         Content bean = beanFactory.getBean(Content.class, resourceId);
@@ -225,7 +271,7 @@ public class EditingHandlerTest {
         Assert.assertNotNull(target.bean, "Non null result list expected after returning from deletion.");
         Assert.assertEquals(target.action, "edit", "Edit action expected.");
         Assert.assertEquals(target.view, null, "No view expected.");
-        Assert.assertEquals(((MockContent) target.bean).getId(), "MockContent:42", "Unexpected list of contents to display.");
+        Assert.assertTrue(((MockContent) target.bean).getId().startsWith("MockContent:"), "Unexpected id for created instance.");
     } // testCreate()
 
 

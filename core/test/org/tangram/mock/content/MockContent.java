@@ -35,7 +35,7 @@ public class MockContent implements Content {
 
 
     public MockContent() {
-        this("MockContent:42");
+        id = getClass().getSimpleName()+":"+System.currentTimeMillis();
     }
 
 

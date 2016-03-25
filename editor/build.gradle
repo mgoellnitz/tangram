@@ -44,6 +44,7 @@ dependencies {
   testCompile "org.springframework:spring-web:$versions.springframework"
   testCompile project (':tangram-core').sourceSets.test.output
   testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile project (':tangram-servlet').sourceSets.main.output
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
