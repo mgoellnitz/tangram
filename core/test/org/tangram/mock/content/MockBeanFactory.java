@@ -54,7 +54,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
     private final Map<Class<? extends Content>, List<Content>> contents = new HashMap<>();
 
 
-    public void init() throws FileNotFoundException {
+    public void init(String resourceName) throws FileNotFoundException {
         XStream xstream = new XStream(new StaxDriver());
         Set<String> basePackages = new HashSet<>();
         basePackages.add("org.tangram.mock.content");
@@ -71,7 +71,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
                 xstream.alias(cls.getSimpleName(), cls);
             } // if
         } // for
-        Object mockContents = xstream.fromXML(this.getClass().getResource("/mock-content.xml"));
+        Object mockContents = xstream.fromXML(this.getClass().getResource(resourceName));
         LOG.debug("() {}", mockContents);
         if (mockContents instanceof List) {
             List<? extends Content> list = SystemUtils.convertList(mockContents);
@@ -86,6 +86,11 @@ public class MockBeanFactory extends AbstractBeanFactory {
             } // for
         } // if
     } // ()
+
+
+    public void init() throws FileNotFoundException {
+        init("/mock-content.xml");
+    }
 
 
     public Map<Class<? extends Content>, List<Content>> getContents() {
