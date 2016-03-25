@@ -42,6 +42,7 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.content.Markdown;
 import org.tangram.mock.content.MockBeanFactory;
+import org.tangram.mock.content.RootTopic;
 import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
@@ -162,6 +163,8 @@ public class GenericPropertyConverterTest {
         Markdown expectedMarkdown = new Markdown("Hallo".toCharArray());
         Assert.assertEquals(c.getStorableObject(null, "Hallo", Markdown.class, null, null).getClass(), Markdown.class, "This should be a markdown instance.");
         Assert.assertEquals(c.getStorableObject(null, "Hallo", Markdown.class, null, null), expectedMarkdown, "This should be a markdown instance.");
+        Content bean = beanFactory.getBean("RootTopic:1");
+        Assert.assertEquals(c.getStorableObject(null, "RootTopic:1", RootTopic.class, null, null), bean, "This should be root topic instance.");
     } // testStorableObjects()
 
 

@@ -38,4 +38,4 @@ public class VelocityLogTest {
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.WARN_ID), "Level warn should be enabled during test.");
     } // testVelocityLog()
 
-} // VelocityLogTest()
+} // VelocityLogTest

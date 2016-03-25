@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -172,7 +172,7 @@ public class LinkTag implements Tag, Serializable {
         Writer out = context.getOut();
         HttpServletRequest request = (HttpServletRequest) (context.getRequest());
         HttpServletResponse response = (HttpServletResponse) (context.getResponse());
-        final ServletContext servletContext = context.getServletContext();
+        ServletContext servletContext = context.getServletContext();
         LinkFactoryAggregator builder = (LinkFactoryAggregator) servletContext.getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
         render(builder, request, response, out, getBean(), getAction(), getView(), isHref(), isTarget(), isHandlers());
         return EVAL_PAGE;
