@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,19 +21,15 @@ apply from: '../lib.gradle'
 dependencies {
   compile project (':tangram-mutable')
 
-  compile "org.mockftpserver:MockFtpServer:2.4"
+  compile "org.mockftpserver:MockFtpServer:$versions.mockftpserver"
 
   testCompile "org.testng:testng:$versions.testng"
-  // bean wire up for test cases is done via dinistiq
-  testCompile "dinistiq:dinistiq:$versions.dinistiq"
   // test logging at debug level through special logback.groovy
   testCompile "ch.qos.logback:logback-classic:$versions.logback"
-  // more or less a dummy for the various autoscanned and auto injected beans
-  testCompile project (':tangram-dinistiq')
-  testCompile project (':tangram-jpa')
+  testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.springframework:spring-test:$versions.springframework"
+  testCompile "org.springframework:spring-web:$versions.springframework"
 
   testCompile project (':tangram-mutable').sourceSets.test.output
-  testCompile "org.springframework:spring-core:$versions.springframework"
-  testCompile "org.springframework:spring-test:$versions.springframework"
-  testCompile "hsqldb:hsqldb:1.8.0.10"
+  testCompile project (':tangram-core').sourceSets.test.output
 }

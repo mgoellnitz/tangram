@@ -18,23 +18,17 @@
  */
 package org.tangram.ftp.test;
 
-import dinistiq.Dinistiq;
-import java.util.HashSet;
-import java.util.Set;
 import org.tangram.components.ftp.FtpDirectory;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
 public class FtpDirectoryTest {
 
     @Test
-    public void testFtpComponent() throws Exception {
-        Set<String> packages = new HashSet<>();
-        packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages);
-        FtpDirectory ftp = dinistiq.findBean(FtpDirectory.class);
-        Assert.assertNotNull(ftp, "Could not find an ftp directory instance.");
-    } // testFtpComponent()
+    public void testFtpDirectoryInit() throws Exception {
+        FtpDirectory ftpDirectory = new FtpDirectory();
+        ftpDirectory.setFtpPort(10021);
+        ftpDirectory.afterPropertiesSet();
+    } // testFtpDirectoryInit()
 
 } // FtpDirectoryTest

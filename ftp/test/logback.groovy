@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,18 @@ appender('CONSOLE', ConsoleAppender) {
 }
 appenders.add('CONSOLE')
 
+appender('FILE', RollingFileAppender) {
+  file = "build/dinistiq-test.log"
+  append = true
+  rollingPolicy(TimeBasedRollingPolicy) {
+    fileNamePattern = "${logDir}/${logFileName}-%d{yyyy-MM-dd_HH}.log"
+    maxHistory = 7
+  }
+  encoder(PatternLayoutEncoder) {
+    pattern = '%-5level %logger{35}.%msg%n'
+  }
+}
+appenders.add('FILE')
+
 root WARN, appenders
-logger "dinistiq", DEBUG, appenders, false
-logger "openjpa", DEBUG, appenders, false
 logger "org.tangram", DEBUG, appenders, false

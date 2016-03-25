@@ -65,6 +65,7 @@ public class TangramFtpServer extends AbstractFtpServer {
 
     private final Map<String, AbstractTrackingCommandHandler> commands = new HashMap<>();
 
+
     /**
      * Create a new instance. Initialize the default command handlers and reply text ResourceBundle.
      *
@@ -118,7 +119,12 @@ public class TangramFtpServer extends AbstractFtpServer {
     @Override
     protected void initializeCommandHandler(CommandHandler commandHandler) {
         ReplyTextBundleUtil.setReplyTextBundleIfAppropriate(commandHandler, getReplyTextBundle());
-    }
+    } // initializeCommandHandler()
+
+
+    public Map<String, AbstractTrackingCommandHandler> getCommands() {
+        return commands;
+    } // getCommands()
 
 
     @Override
