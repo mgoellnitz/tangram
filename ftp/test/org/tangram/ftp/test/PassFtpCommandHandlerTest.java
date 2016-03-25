@@ -18,10 +18,8 @@
  */
 package org.tangram.ftp.test;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.components.test.GenericCodeResourceCacheTest;
 import org.tangram.content.CodeResourceCache;
-import org.tangram.ftp.ListFtpCommandHandler;
+import org.tangram.ftp.PassFtpCommandHandler;
 import org.tangram.ftp.SessionHelper;
 import org.tangram.ftp.TangramFtpServer;
 import org.tangram.mock.MockMutableBeanFactory;
@@ -44,15 +42,15 @@ import org.testng.annotations.Test;
 
 
 /**
- * Test aspects of the ftp command handler for listing folders.
+ * Test aspects of the ftp command handler for password authentication.
  */
-public class ListFtpCommandHandlerTest {
+public class PassFtpCommandHandlerTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ListFtpCommandHandlerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PassFtpCommandHandlerTest.class);
 
 
     @Test
-    public void testListFtpCommandHandler() throws Exception {
+    public void testPassFtpCommandHandler() throws Exception {
         MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
         beanFactory.init();
         GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest();
@@ -60,12 +58,13 @@ public class ListFtpCommandHandlerTest {
         CodeResourceCache codeCache = codeCacheTest.getInstance();
         TangramFtpServer ftpServer = new TangramFtpServer(beanFactory, codeCache);
         Map<String, AbstractTrackingCommandHandler> commands = ftpServer.getCommands();
-        ListFtpCommandHandler listFtpCommandHandler = (ListFtpCommandHandler) commands.get(CommandNames.LIST);
+        PassFtpCommandHandler listFtpCommandHandler = (PassFtpCommandHandler) commands.get(CommandNames.PASS);
         List<String> params = new ArrayList<>();
+        params.add("testpassword");
         Command command = new Command(CommandNames.LIST, params);
         Socket socket = Mockito.mock(Socket.class);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        ByteArrayInputStream input = new ByteArrayInputStream("list\r\n".getBytes("UTF-8"));
+        ByteArrayInputStream input = new ByteArrayInputStream("pass\r\n".getBytes("UTF-8"));
         InetAddress me = InetAddress.getByName("localhost");
         Mockito.when(socket.getInetAddress()).thenReturn(me);
         Mockito.when(socket.getLocalAddress()).thenReturn(me);
@@ -77,20 +76,16 @@ public class ListFtpCommandHandlerTest {
         t.start();
         Thread.sleep(100);
         LOG.debug("testListFtpCommandHandler() list");
-        listFtpCommandHandler.handleCommand(command, session);
-        session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
+        session.setAttribute(SessionHelper.USER, "testuser");
         listFtpCommandHandler.handleCommand(command, session);
         LOG.debug("testListFtpCommandHandler() close");
         session.close();
         LOG.debug("testListFtpCommandHandler() join");
         t.join(5000);
-        BufferedReader reader = new BufferedReader(new StringReader(session.getContent()));
-        String line = reader.readLine();
-        while (line!=null) {
-            Assert.assertTrue(line.startsWith("-rw-r--r--   1 tangram tangram"), "Error in line format discovered.");
-            Assert.assertTrue(line.endsWith(".groovy"), "Error in line format discovered.");
-            line = reader.readLine();
-        } // while
-    } // testListFtpCommandHandler()
+        String result = new String(output.toByteArray(), "UTF-8");
+        Assert.assertTrue(result.length()>32, "Not enough output read for correct result.");
+        result = result.substring(result.length()-30, result.length()-2);
+        Assert.assertEquals(result, "230 User logged in, proceed.", "Error login response.");
+    } // testPassFtpCommandHandler()
 
 } // ListFtpCommandHandlerTest

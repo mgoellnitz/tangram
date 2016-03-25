@@ -1,6 +1,14 @@
 <?xml version="1.0" ?>
 <list>
 <TransientCode>
+<id>CodeResource:2</id>
+<annotation>ftp-users.properties</annotation>
+<mimeType>text/plain</mimeType>
+<codeText>testuser=9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05
+</codeText>
+<modificationTime>11235432</modificationTime>
+</TransientCode>
+<TransientCode>
 <id>CodeResource:4</id>
 <annotation>org.tangram.example.Topic</annotation>
 <mimeType>text/html</mimeType>

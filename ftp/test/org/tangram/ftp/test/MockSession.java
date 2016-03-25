@@ -21,14 +21,12 @@ package org.tangram.ftp.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Map;
 import org.mockftpserver.core.MockFtpServerException;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.session.DefaultSession;
-import org.mockftpserver.core.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +38,9 @@ public class MockSession extends DefaultSession {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockSession.class);
 
-    private InputStream dataInputStream;
+    private ByteArrayInputStream dataInputStream;
 
-    private OutputStream dataOutputStream;
+    private ByteArrayOutputStream dataOutputStream;
 
 
     /**
@@ -54,7 +52,7 @@ public class MockSession extends DefaultSession {
      */
     public MockSession(Socket controlSocket, Map commandHandlers) {
         super(controlSocket, commandHandlers);
-    }
+    } // ()
 
 
     /**
@@ -68,7 +66,7 @@ public class MockSession extends DefaultSession {
         } catch (IOException e) {
             throw new MockFtpServerException(e);
         }
-    }
+    } // openDataConnection()
 
 
     /**
@@ -83,7 +81,16 @@ public class MockSession extends DefaultSession {
         } catch (IOException e) {
             LOG.error("closeDataConnection() Error closing client data socket", e);
         }
-    }
+    } // closeDataConnection()
+
+
+    public String getContent() {
+        try {
+            return dataOutputStream.toString("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return e.getMessage();
+        } /// try/catch
+    } // getBytest()
 
 
     /**
@@ -91,13 +98,8 @@ public class MockSession extends DefaultSession {
      */
     public void sendData(byte[] data, int numBytes) {
         LOG.debug("sendData()");
-        Assert.notNull(data, "data");
-        try {
-            dataOutputStream.write(data, 0, numBytes);
-        } catch (IOException e) {
-            throw new MockFtpServerException(e);
-        }
-    }
+        dataOutputStream.write(data, 0, numBytes);
+    } // sendData()
 
 
     /**
@@ -106,7 +108,7 @@ public class MockSession extends DefaultSession {
     public byte[] readData() {
         LOG.debug("readData()");
         return readData(Integer.MAX_VALUE);
-    }
+    } // readData()
 
 
     /**
@@ -116,19 +118,15 @@ public class MockSession extends DefaultSession {
         LOG.debug("readData() bytes={}", numBytes);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         int numBytesRead = 0;
-        try {
-            while (numBytesRead<numBytes) {
-                int b = dataInputStream.read();
-                if (b==-1) {
-                    break;
-                }
-                bytes.write(b);
-                numBytesRead++;
+        while (numBytesRead<numBytes) {
+            int b = dataInputStream.read();
+            if (b==-1) {
+                break;
             }
-            return bytes.toByteArray();
-        } catch (IOException e) {
-            throw new MockFtpServerException(e);
+            bytes.write(b);
+            numBytesRead++;
         }
-    }
+        return bytes.toByteArray();
+    } // readData()
 
 } // MockSession
