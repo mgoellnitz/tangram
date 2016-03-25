@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+ Copyright 2016 Martin Goellnitz
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+  <bean id="persistentRestartCache" class="org.tangram.util.DummyRestartCache" />
+
+  <bean id="propertyConverter" class="org.tangram.view.GenericPropertyConverter" />
+
+  <bean id="beanFactory" class="org.tangram.mock.content.MockBeanFactory" init-method="init" />
+
+  <util:map id="usernamePasswordMapping" key-type="java.lang.String" value-type="java.lang.String">
+    <entry key="user" value="04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb" />
+    <entry key="admin" value="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" />
+  </util:map>
+
+</beans>
