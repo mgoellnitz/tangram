@@ -28,5 +28,18 @@ appender('CONSOLE', ConsoleAppender) {
 }
 appenders.add('CONSOLE')
 
+appender('FILE', RollingFileAppender) {
+  file = "build/dinistiq-test.log"
+  append = true
+  rollingPolicy(TimeBasedRollingPolicy) {
+    fileNamePattern = "${logDir}/${logFileName}-%d{yyyy-MM-dd_HH}.log"
+    maxHistory = 7
+  }
+  encoder(PatternLayoutEncoder) {
+    pattern = '%-5level %logger{35}.%msg%n'
+  }
+}
+appenders.add('FILE')
+
 root WARN, appenders
 logger "org.tangram", DEBUG, appenders, false

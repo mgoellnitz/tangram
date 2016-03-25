@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.view.jsp.test;
+package org.tangram.coma.test;
 
 import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletContext;
@@ -30,11 +30,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
+import org.tangram.coma.tags.IncludeTag;
+import org.tangram.coma.tags.LinkTag;
 import org.tangram.content.Content;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.view.ViewUtilities;
-import org.tangram.view.jsp.IncludeTag;
-import org.tangram.view.jsp.LinkTag;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -61,13 +61,13 @@ public class IncludeTagTest {
         includeTag.setView("view");
         Assert.assertEquals(includeTag.getView(), "view", "Setting the view not recognized.");
         Object bean = new Object();
-        includeTag.setBean(bean);
-        Assert.assertEquals(includeTag.getBean(), bean, "Setting the bean not recognized.");
+        includeTag.setSelf(bean);
+        Assert.assertEquals(includeTag.getSelf(), bean, "Setting the beannot recognized.");
         Tag parent = new LinkTag();
         includeTag.setParent(parent);
         Assert.assertEquals(includeTag.getParent(), parent, "Setting the parent not recognized.");
         includeTag.release();
-        Assert.assertNull(includeTag.getBean(), "No default bean expected");
+        Assert.assertNull(includeTag.getSelf(), "No default bean expected");
         Assert.assertNull(includeTag.getParent(), "No default parent expected");
         Assert.assertNull(includeTag.getView(), "No default view expected");
     } // testRelease()
@@ -92,7 +92,7 @@ public class IncludeTagTest {
         String id = "RootTopic:1";
         Content bean = beanFactory.getBean(id);
         Assert.assertNotNull(bean, "Bean to be used for test should not be null.");
-        includeTag.setBean(bean);
+        includeTag.setSelf(bean);
 
         ServletContext app = new MockServletContext();
         String url = "/testapp/id_"+id;

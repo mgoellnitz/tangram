@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.view.jsp.test;
+package org.tangram.coma.test;
 
 import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletContext;
@@ -30,20 +30,20 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
+import org.tangram.coma.tags.LinkTag;
 import org.tangram.content.Content;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.mock.content.MockBeanFactory;
-import org.tangram.view.ViewUtilities;
-import org.tangram.view.jsp.IncludeTag;
-import org.tangram.view.jsp.LinkTag;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 /**
- * Test aspects of the include tag for jsp templates.
+ * Test aspects of the link tag for jsp templates.
  */
-public class IncludeTagTest {
+public class LinkTagTest {
 
     private final MockBeanFactory beanFactory = new MockBeanFactory();
 
@@ -56,29 +56,28 @@ public class IncludeTagTest {
 
     @Test
     public void testRelease() {
-        IncludeTag includeTag = new IncludeTag();
-        includeTag.setPageContext(new MockPageContext());
-        includeTag.setView("view");
-        Assert.assertEquals(includeTag.getView(), "view", "Setting the view not recognized.");
+        LinkTag linkTag = new LinkTag();
+        linkTag.setView("view");
+        Assert.assertEquals(linkTag.getView(), "view", "Setting the view not recognized.");
         Object bean = new Object();
-        includeTag.setBean(bean);
-        Assert.assertEquals(includeTag.getBean(), bean, "Setting the bean not recognized.");
+        linkTag.setTarget(bean);
+        Assert.assertEquals(linkTag.getTarget(), bean, "Setting the target not recognized.");
         Tag parent = new LinkTag();
-        includeTag.setParent(parent);
-        Assert.assertEquals(includeTag.getParent(), parent, "Setting the parent not recognized.");
-        includeTag.release();
-        Assert.assertNull(includeTag.getBean(), "No default bean expected");
-        Assert.assertNull(includeTag.getParent(), "No default parent expected");
-        Assert.assertNull(includeTag.getView(), "No default view expected");
+        linkTag.setParent(parent);
+        Assert.assertEquals(linkTag.getParent(), parent, "Setting the parent not recognized.");
+        linkTag.release();
+        Assert.assertNull(linkTag.getTarget(), "No default target expected");
+        Assert.assertNull(linkTag.getParent(), "No default parent expected");
+        Assert.assertNull(linkTag.getView(), "No default view expected");
     } // testRelease()
 
 
     @Test
     public void testTagStart() {
-        IncludeTag includeTag = new IncludeTag();
+        LinkTag linkTag = new LinkTag();
         int doStartTag = 0;
         try {
-            doStartTag = includeTag.doStartTag();
+            doStartTag = linkTag.doStartTag();
         } catch (JspException e) {
             Assert.fail("doStartTag() should not issue an exception.", e);
         } // try/catch
@@ -88,62 +87,39 @@ public class IncludeTagTest {
 
     @Test
     public void testTagEnd() {
-        IncludeTag includeTag = new IncludeTag();
+        LinkTag linkTag = new LinkTag();
         String id = "RootTopic:1";
         Content bean = beanFactory.getBean(id);
         Assert.assertNotNull(bean, "Bean to be used for test should not be null.");
-        includeTag.setBean(bean);
+        linkTag.setTarget(bean);
 
         ServletContext app = new MockServletContext();
         String url = "/testapp/id_"+id;
         HttpServletRequest request = new MockHttpServletRequest(app, "GET", url);
         MockHttpServletResponse response = new MockHttpServletResponse();
         PageContext context = new MockPageContext(app, request, response);
-        ViewUtilities factory = Mockito.mock(ViewUtilities.class);
-        app.setAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES, factory);
-        includeTag.setPageContext(context);
+
+        LinkFactoryAggregator aggregator = Mockito.mock(LinkFactoryAggregator.class);
+        Link link = new Link(url);
+        link.addHandler("onclick", "click();");
+        Mockito.when(aggregator.createLink(request, response, bean, null, null)).thenReturn(link);
+        app.setAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR, aggregator);
+        linkTag.setPageContext(context);
 
         int doEndTag = 0;
         try {
-            doEndTag = includeTag.doEndTag();
+            doEndTag = linkTag.doEndTag();
         } catch (JspException e) {
             Assert.fail("doEndTag() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(doEndTag, Tag.EVAL_PAGE, "Include tag should eval page.");
+        Assert.assertEquals(doEndTag, Tag.EVAL_PAGE, "Link tag should eval page.");
         String tagContent = null;
         try {
             tagContent = response.getContentAsString();
         } catch (UnsupportedEncodingException e) {
             Assert.fail("getContentAsString() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(tagContent, "", "Include tag rendering failed");
+        Assert.assertEquals(tagContent, url, "Link tag rendering failed");
     } // testTagEnd()
 
-
-    @Test
-    public void testNullBean() {
-        IncludeTag includeTag = new IncludeTag();
-
-        ServletContext app = new MockServletContext();
-        HttpServletRequest request = new MockHttpServletRequest(app);
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        PageContext context = new MockPageContext(app, request, response);
-        includeTag.setPageContext(context);
-
-        int doEndTag = 0;
-        try {
-            doEndTag = includeTag.doEndTag();
-        } catch (JspException e) {
-            Assert.fail("doEndTag() should not issue an exception.", e);
-        } // try/catch
-        Assert.assertEquals(doEndTag, Tag.EVAL_PAGE, "Include tag should eval page.");
-        String tagContent = null;
-        try {
-            tagContent = response.getContentAsString();
-        } catch (UnsupportedEncodingException e) {
-            Assert.fail("getContentAsString() should not issue an exception.", e);
-        } // try/catch
-        Assert.assertEquals(tagContent, "", "Include tag rendering failed");
-    } // testNullBean()
-
-} // IncludeTagTest
+} // LinkTagTest

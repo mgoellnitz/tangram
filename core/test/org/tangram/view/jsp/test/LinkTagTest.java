@@ -85,7 +85,7 @@ public class LinkTagTest {
         Assert.assertEquals(linkTag.getView(), "view", "Setting the view not recognized.");
         Object bean = new Object();
         linkTag.setBean(bean);
-        Assert.assertEquals(linkTag.getBean(), bean, "Setting the view not recognized.");
+        Assert.assertEquals(linkTag.getBean(), bean, "Setting the bean not recognized.");
         Tag parent = new LinkTag();
         linkTag.setParent(parent);
         Assert.assertEquals(linkTag.getParent(), parent, "Setting the parent not recognized.");
