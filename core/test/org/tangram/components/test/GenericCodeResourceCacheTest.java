@@ -49,11 +49,16 @@ public class GenericCodeResourceCacheTest {
     private final GenericCodeResourceCache codeResourceCache = new GenericCodeResourceCache();
 
 
+    public void init(String contentResource) throws Exception {
+        MockitoAnnotations.initMocks(this);
+        factory.init(contentResource);
+        codeResourceCache.afterPropertiesSet();
+    } // init()
+
+
     @BeforeClass
     public void init() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        factory.init();
-        codeResourceCache.afterPropertiesSet();
+        init("/mock-content.xml");
     } // init()
 
 
