@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.tangram.annotate.ActionParameter;
 import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
@@ -80,21 +81,21 @@ public class MetaLinkHandlerTest {
 
 
     /**
-     *  Test implementation for a statically registered handler using annotations.
+     * Test implementation for a statically registered handler using annotations.
      */
     @LinkHandler
     public class AtHandler {
 
         @LinkAction("/athandler/(.*)")
-        public TargetDescriptor render(@LinkPart(1) String view, HttpServletRequest request, HttpServletResponse response) {
-            return new TargetDescriptor(request.getAttribute("self"), view, null);
+        public TargetDescriptor render(@LinkPart(1) String view, @ActionParameter(value = "a") String action, HttpServletRequest request, HttpServletResponse response) {
+            return new TargetDescriptor(request.getAttribute("self"), view+action, null);
         } // render
 
     } // AtHandler
 
 
     /**
-     *  Test implementation for a statically registered handler using interface implementation.
+     * Test implementation for a statically registered handler using interface implementation.
      */
     public class TestHandler implements org.tangram.link.LinkHandler {
 
@@ -153,8 +154,9 @@ public class MetaLinkHandlerTest {
 
     @Test
     public void testAtHandler() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/athandler/viewit");
-        request.setAttribute("self", "Hallo");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/athandler/Hallo");
+        request.setAttribute("self", "viewit");
+        request.setParameter("a", "Tangram");
         HttpServletResponse response = new MockHttpServletResponse();
         ViewContext context = null;
         try {
@@ -163,8 +165,8 @@ public class MetaLinkHandlerTest {
             Assert.fail("Cannot handle request.", t);
         } // try/catch
         Assert.assertNotNull(context, "We expected to get a view context result instance.");
-        Assert.assertEquals(context.getViewName(), "viewit", "Didn't find expected view context.");
-        Assert.assertEquals(context.getModel().get("self"), "Hallo", "Didn't find expected view context.");
+        Assert.assertEquals(context.getViewName(), "HalloTangram", "Didn't find expected view name.");
+        Assert.assertEquals(context.getModel().get("self"), "viewit", "Didn't find expected model bean.");
     } // testAtHandler()
 
 
