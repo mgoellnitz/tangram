@@ -108,7 +108,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
         Set<User> users = authenticationService.getUsers(request, response);
         boolean result = false;
         for (User user : users) {
-            LOG.info("isAdminUser() {} in {}?", user, adminUsers);
+            LOG.info("isAdminUser() {} in {}?", user, effectiveAdminUsers);
             result = result||effectiveAdminUsers.contains(user.getId());
         } // for
         return result;
@@ -138,6 +138,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
         String thisURL = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         LOG.debug("handleRequest({}) detected URI {}", this, thisURL);
         LOG.debug("handleRequest() allowed users {} ({})", allowedUsers, allowedUsers.size());
+        LOG.debug("handleRequest() free urls {}", freeUrls != null);
         LOG.debug("handleRequest() free urls {} ({})", freeUrls, freeUrls.size());
         if (!freeUrls.contains(thisURL)) {
             Set<User> users = authenticationService.getUsers(request, response);
