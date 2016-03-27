@@ -69,7 +69,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
 
     private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<? extends Content> beanClass, Constructor<Shim> shimClass, int constructorParameterCount) {
-        if (shimClass.getParameterCount()!=constructorParameterCount) {
+        if (shimClass.getParameterTypes().length!=constructorParameterCount) {
             return;
         } // if
         List<Constructor<Shim>> shims = definedShims.get(beanClass.getName());
