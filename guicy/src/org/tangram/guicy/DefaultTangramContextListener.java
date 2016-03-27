@@ -52,7 +52,7 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
         if (StringUtils.isNotBlank(servletModuleClassName)) {
             try {
                 Class<?> forName = Class.forName(servletModuleClassName);
-                servletModule = (ServletModule) forName.getConstructors()[0].newInstance(new Object[0]);
+                servletModule = (ServletModule) forName.getConstructors()[0].newInstance();
             } catch (Exception e) {
                 LOG.error("contextInitialized() cannot obtain servlet module", e);
             } // try/catch
