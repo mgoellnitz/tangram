@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,19 +16,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.logic.test;
-
-import org.tangram.logic.AbstractShim;
-import org.tangram.mock.content.MockContent;
+package org.tangram.logic;
 
 
 /**
- * Minimalistic mock shim for mock bean class.
+ * Indicator interface to show that implementing instances need a shim provider.
  */
-public class BeanShim extends AbstractShim<MockContent> {
+public interface ShimProviderAware {
 
-    public BeanShim(MockContent delegate) {
-        super(delegate);
-    } // BeanShim
+    /**
+     * Set the shim provider to be used by implementing instances.
+     *
+     * @param shimProvider shim provider instance
+     */
+    void setShimProvider(ShimProvider shimProvider);
 
-} // BeanShim
+} // ShimProviderAware

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,19 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.logic.test;
+package org.tangram.logic;
 
-import org.tangram.logic.AbstractShim;
-import org.tangram.mock.content.MockContent;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * Minimalistic mock shim for mock bean class.
+ * Instances of this interface provide access to shims for given ebans.
  */
-public class BeanShim extends AbstractShim<MockContent> {
+public interface ShimProvider {
 
-    public BeanShim(MockContent delegate) {
-        super(delegate);
-    } // BeanShim
+    /**
+     * Provide a map of shims for a given instance.
+     *
+     * @param request request context for this call
+     * @param bean bean to provide the shims and view shims for
+     * @return map mapping shim names to shim implementations
+     */
+    Map<String, Object> getShims(HttpServletRequest request, Object bean);
 
-} // BeanShim
+} // ShimProvider

@@ -26,7 +26,11 @@ import org.springframework.mock.web.MockHttpSession;
 import org.tangram.Constants;
 import org.tangram.logic.Shim;
 import org.tangram.logic.test.BeanShim;
+import org.tangram.logic.test.ProviderAwareBeanShim;
+import org.tangram.logic.test.ProviderAwareViewShim;
 import org.tangram.logic.test.ViewShim;
+import org.tangram.logic.test.WrongConstructorBeanShim;
+import org.tangram.logic.test.WrongConstructorViewShim;
 import org.tangram.mock.content.MockContent;
 import org.tangram.util.SystemUtils;
 import org.tangram.view.DynamicViewContextFactory;
@@ -49,6 +53,14 @@ public class DynamicViewContextFactoryTest {
             Constructor<Shim> viewShim = SystemUtils.convert(ViewShim.class.getConstructors()[0]);
             this.defineBeanShim(MockContent.class, beanShim);
             this.defineViewShim(MockContent.class, viewShim);
+            beanShim = SystemUtils.convert(WrongConstructorBeanShim.class.getConstructors()[0]);
+            viewShim = SystemUtils.convert(WrongConstructorViewShim.class.getConstructors()[0]);
+            this.defineBeanShim(MockContent.class, beanShim);
+            this.defineViewShim(MockContent.class, viewShim);
+            beanShim = SystemUtils.convert(ProviderAwareBeanShim.class.getConstructors()[0]);
+            viewShim = SystemUtils.convert(ProviderAwareViewShim.class.getConstructors()[0]);
+            this.defineBeanShim(MockContent.class, beanShim);
+            this.defineViewShim(MockContent.class, viewShim);
         } // afterPropertiesSet()
 
     } // TestFactory
@@ -64,8 +76,10 @@ public class DynamicViewContextFactoryTest {
         MockContent bean = new MockContent();
 
         Map<String, Object> shims = factory.getShims(request, bean);
-        Assert.assertEquals(shims.size(), 2, "Unexpected number of shims discovered.");
+        Assert.assertEquals(shims.size(), 4, "Unexpected number of shims discovered.");
         for (Object so : shims.values()) {
+            Assert.assertFalse(so instanceof WrongConstructorBeanShim, "Those instances should have been left out.");
+            Assert.assertFalse(so instanceof WrongConstructorViewShim, "Those instances should have been left out.");
             if (so instanceof Shim) {
                 Shim s = (Shim) so;
                 Assert.assertTrue(s.getId().startsWith("MockContent:1"), "Unexpected mock bean id discovered.");
@@ -77,13 +91,21 @@ public class DynamicViewContextFactoryTest {
                     Assert.assertEquals(vs.getSession(), session, "Unexpected session found.");
                     vs.setRequest(request);
                     Assert.assertNull(vs.getSession(), "Unexpected session found.");
+                    if (s instanceof ProviderAwareViewShim) {
+                        ProviderAwareViewShim pavs = (ProviderAwareViewShim) s;
+                        Assert.assertEquals(pavs.getShimProvider(), factory, "Factory should be the shim provider for instances.");
+                    } // if
+                } // if
+                if (s instanceof ProviderAwareBeanShim) {
+                    ProviderAwareBeanShim pabs = (ProviderAwareBeanShim) s;
+                    Assert.assertEquals(pabs.getShimProvider(), factory, "Factory should be the shim provider for instances.");
                 } // if
             } // if
         } // for
         MockHttpServletResponse response = new MockHttpServletResponse();
         ViewContext viewContext = factory.createViewContext(bean, request, response);
         Assert.assertEquals(viewContext.getViewName(), Constants.DEFAULT_VIEW, "Null view expected.");
-        Assert.assertEquals(viewContext.getModel().size(), 6, "Unexpected number of beans in model discovered.");
+        Assert.assertEquals(viewContext.getModel().size(), 8, "Unexpected number of beans in model discovered.");
     } // testViewContextCreation()
 
 } // DynamicViewContextFactoryTest

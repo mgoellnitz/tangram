@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,17 +18,14 @@
  */
 package org.tangram.logic.test;
 
-import org.tangram.logic.AbstractShim;
-import org.tangram.mock.content.MockContent;
-
 
 /**
- * Minimalistic mock shim for mock bean class.
+ * Minimalistic mock shim for mock bean class but with a no argument constructor.
  */
-public class BeanShim extends AbstractShim<MockContent> {
+public class WrongConstructorBeanShim extends BeanShim {
 
-    public BeanShim(MockContent delegate) {
-        super(delegate);
+    public WrongConstructorBeanShim() {
+        super(null);
     } // BeanShim
 
 } // BeanShim

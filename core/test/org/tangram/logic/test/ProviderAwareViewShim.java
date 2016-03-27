@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2015 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,17 +18,33 @@
  */
 package org.tangram.logic.test;
 
-import org.tangram.logic.AbstractShim;
+import javax.servlet.http.HttpServletRequest;
+import org.tangram.logic.ShimProvider;
+import org.tangram.logic.ShimProviderAware;
 import org.tangram.mock.content.MockContent;
 
 
 /**
- * Minimalistic mock shim for mock bean class.
+ * Minimalistic mock view shim for mock bean class.
  */
-public class BeanShim extends AbstractShim<MockContent> {
+public class ProviderAwareViewShim extends ViewShim implements ShimProviderAware {
 
-    public BeanShim(MockContent delegate) {
-        super(delegate);
-    } // BeanShim
+    private ShimProvider shimProvider;
 
-} // BeanShim
+
+    public ProviderAwareViewShim(HttpServletRequest request, MockContent delegate) {
+        super(request, delegate);
+    } // ViewShim
+
+
+    public ShimProvider getShimProvider() {
+        return shimProvider;
+    }
+
+
+    @Override
+    public void setShimProvider(ShimProvider shimProvider) {
+        this.shimProvider = shimProvider;
+    }
+
+} // ViewShim

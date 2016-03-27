@@ -36,6 +36,8 @@ import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
 import org.tangram.logic.ClassRepository;
 import org.tangram.logic.Shim;
+import org.tangram.logic.ShimProvider;
+import org.tangram.logic.ShimProviderAware;
 import org.tangram.logic.ViewShim;
 import org.tangram.util.SystemUtils;
 
@@ -50,7 +52,7 @@ import org.tangram.util.SystemUtils;
  * The implementing classes are taken from a classRepository which may be dynamically filled.
  *
  */
-public class DynamicViewContextFactory extends DefaultViewContextFactory implements BeanListener {
+public class DynamicViewContextFactory extends DefaultViewContextFactory implements BeanListener, ShimProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(DynamicViewContextFactory.class);
 
@@ -66,7 +68,10 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
     private Map<String, List<Constructor<Shim>>> cachedBeanShims;
 
 
-    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<? extends Content> beanClass, Constructor<Shim> shimClass) {
+    private void defineShim(Map<String, List<Constructor<Shim>>> definedShims, Class<? extends Content> beanClass, Constructor<Shim> shimClass, int constructorParameterCount) {
+        if (shimClass.getParameterCount()!=constructorParameterCount) {
+            return;
+        } // if
         List<Constructor<Shim>> shims = definedShims.get(beanClass.getName());
         LOG.info("defineShim() defining shim {}: {}", beanClass.getSimpleName(), shimClass);
         if (shims==null) {
@@ -78,12 +83,12 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
 
     protected void defineViewShim(Class<? extends Content> beanClass, Constructor<Shim> shimClass) {
-        defineShim(definedViewShims, beanClass, shimClass);
+        defineShim(definedViewShims, beanClass, shimClass, 2);
     } // defineViewShim()
 
 
     protected void defineBeanShim(Class<? extends Content> beanClass, Constructor<Shim> shimClass) {
-        defineShim(definedBeanShims, beanClass, shimClass);
+        defineShim(definedBeanShims, beanClass, shimClass, 1);
     } // defineBeanShim()
 
 
@@ -156,6 +161,12 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
                 if (ct!=null) {
                     LOG.debug("getShims() view shim for bean {} is {}", bean.getClass().getSimpleName(), ct.getDeclaringClass().getSimpleName());
                     Shim result = ct.newInstance(request, bean);
+                    if (result instanceof ShimProviderAware) {
+                        LOG.debug("getShims() provider aware");
+                        ((ShimProviderAware) result).setShimProvider(this);
+                    } else {
+                        LOG.debug("getShims() not provider aware");
+                    } // if
                     LOG.debug("getShims() storing shim as {}", result.getAttributeName());
                     resultMap.put(result.getAttributeName(), result);
                 } // if
@@ -166,6 +177,12 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
                 if (ct!=null) {
                     LOG.debug("getShims() shim for bean {} is {}", bean.getClass().getSimpleName(), ct.getDeclaringClass().getSimpleName());
                     Shim result = ct.newInstance(bean);
+                    if (result instanceof ShimProviderAware) {
+                        LOG.debug("getShims() provider aware");
+                        ((ShimProviderAware) result).setShimProvider(this);
+                    } else {
+                        LOG.debug("getShims() not provider aware");
+                    } // if
                     LOG.debug("getShims() storing shim as {}", result.getAttributeName());
                     resultMap.put(result.getAttributeName(), result);
                 } // if
