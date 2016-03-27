@@ -195,13 +195,19 @@ public abstract class BaseContentTest {
         MutableCode codeResource = beanFactory.createBean(codeClass);
         codeResource.setAnnotation("screen");
         codeResource.setMimeType("text/css");
-        codeResource.setCode("// Empty css".toCharArray());
+        String emptyCss = "// Empty css";
+        codeResource.setCode(emptyCss.toCharArray());
+        codeResource.setModificationTime(System.currentTimeMillis());
+        byte[] buffer = new byte[12];
+        codeResource.getStream().read(buffer);
+        String s = new String(buffer, "UTF-8");
+        Assert.assertEquals(s, emptyCss, "Strange value from code stream.");
         beanFactory.persist(codeResource);
         codes = beanFactory.listBeans(codeClass, null);
         Assert.assertEquals(codes.size(), 1, "We have one code instance.");
         Assert.assertEquals(codes.get(0).compareTo(codes.get(0)), 0, "Code must be equal to itself.");
-        Assert.assertEquals(codes.get(0).getCodeText(), "// Empty css", "Code text must match value set up above.");
-        Assert.assertEquals(codes.get(0).getSize(), "// Empty css".length(), "Code size must match.");
+        Assert.assertEquals(codes.get(0).getCodeText(), emptyCss, "Code text must match value set up above.");
+        Assert.assertEquals(codes.get(0).getSize(), emptyCss.length(), "Code size must match.");
         // Trigger groovy compiler
         codeResource = beanFactory.createBean(codeClass);
         codeResource.setAnnotation("org.tangram.example.Test");
@@ -214,9 +220,9 @@ public abstract class BaseContentTest {
         try {
             bean = beanFactory.getBean(TransientCode.class, codeResource.getId());
         } catch (Exception e) {
-            LOG.info("test3Code() exception occured - onyl relevant for ebean AFAIK", e);
+            LOG.info("test3Code() exception occured - only relevant for ebean AFAIK", e);
         } // try/catch
-        Assert.assertNull(bean, "Despite the correc ID there should have been not code result.");
+        Assert.assertNull(bean, "Despite the correct ID there should have been no code result.");
     } // test3Code()
 
 

@@ -39,10 +39,8 @@ import org.testng.annotations.Test;
  */
 public class SimpleAuthenticatorTest {
 
-    private Map<String, CodeResource> codes;
-
     @Mock(name = "usernamePasswordMapping")
-    private Map<String, String> usernamePasswordMapping;
+    private Map<String, String> usernamePasswordMapping; // NOPMD - this field is not really unused
 
     @Mock
     private final CodeResourceCache codeCache = Mockito.mock(CodeResourceCache.class);
@@ -58,7 +56,7 @@ public class SimpleAuthenticatorTest {
 
         String passwords = "testuser=9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05";
         TransientCode code = new TransientCode("users.properties", "text/plain", "Code:42", passwords, 12345);
-        codes = new HashMap<>();
+        Map<String, CodeResource> codes = new HashMap<>();
         codes.put("users.properties", code);
         Assert.assertEquals(codes.size(), 1, "We should have exactly one resource prepared.");
 

@@ -59,7 +59,7 @@ public class ComaHandlerTest {
     private ComaBlob comaBlob;
 
     @Spy
-    private Set<ComaBeanPopulator> populators = new HashSet<>();
+    private final Set<ComaBeanPopulator> populators = new HashSet<>(); // NOPMD - this field is not really unused
 
     @Mock
     private final BeanFactory beanFactory = Mockito.mock(BeanFactory.class);

@@ -48,6 +48,9 @@ public class DefaultHandlerTest {
     @InjectMocks
     private final DefaultHandler defaultHandler = new DefaultHandler();
 
+    /**
+     * Just combine Content and Blob interface for a test like real world model would do it.
+     */
     private interface BlobContent extends MimedBlob, Content {
 
     } // BlobContent
