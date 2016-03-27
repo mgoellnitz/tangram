@@ -19,7 +19,6 @@
 package org.tangram.components.coma;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -53,7 +52,7 @@ public class ComaHandler extends AbstractLinkHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ComaHandler.class);
 
     @Inject
-    private Set<ComaBeanPopulator> populators = Collections.EMPTY_SET; // NOPMD - this value cannot be final except for test
+    private Set<ComaBeanPopulator> populators;
 
 
     @LinkAction("/content/(.*)")

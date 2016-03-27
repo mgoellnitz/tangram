@@ -18,6 +18,8 @@
  */
 package org.tangram.components.test;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
@@ -34,6 +36,7 @@ import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.components.MetaLinkHandler;
 import org.tangram.components.SimpleStatistics;
+import org.tangram.controller.ControllerHook;
 import org.tangram.link.GenericLinkFactoryAggregator;
 import org.tangram.link.Link;
 import org.tangram.link.TargetDescriptor;
@@ -72,6 +75,9 @@ public class MetaLinkHandlerTest {
 
     @Spy
     private ClassRepository repository; // NOPMD - this field is not really unused
+
+    @Spy
+    private final Set<ControllerHook> controllerHooks = new HashSet<>();; // NOPMD - this field is not really unused
 
     @Mock
     private ViewUtilities viewUtilities; // NOPMD - this field is not really unused

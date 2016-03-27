@@ -67,6 +67,16 @@ public class SimpleAuthenticatorTest {
     } // init()
 
 
+    /**
+     * Return the instance in test with every mock needed for other tests to include a working instance.
+     *
+     * @return code resource cache to be used in other tests
+     */
+    public SimpleAuthenticator getInstance() {
+        return simpleAuthenticator;
+    } // getInstance()
+
+
     @Test
     public void testSimpleAuthenticator() {
         Assert.assertEquals(codeCache.getTypeCache("text/plain").size(), 1, "We should have exactly one resource in the cache.");

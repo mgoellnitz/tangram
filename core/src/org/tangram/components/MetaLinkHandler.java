@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,7 +89,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private LinkFactoryAggregator linkFactoryAggregator;
 
     @Inject
-    private Set<ControllerHook> controllerHooks = new HashSet<>(); // NOPMD - this is just the default for tests.
+    private Set<ControllerHook> controllerHooks;
 
     @Inject
     private PropertyConverter propertyConverter;

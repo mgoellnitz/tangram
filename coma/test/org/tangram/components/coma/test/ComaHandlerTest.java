@@ -19,15 +19,19 @@
 package org.tangram.components.coma.test;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.tangram.coma.ComaBeanPopulator;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
 import org.tangram.components.coma.ComaHandler;
@@ -53,6 +57,9 @@ public class ComaHandlerTest {
     private ComaContent comaBlobContent;
 
     private ComaBlob comaBlob;
+
+    @Spy
+    private Set<ComaBeanPopulator> populators = new HashSet<>();
 
     @Mock
     private final BeanFactory beanFactory = Mockito.mock(BeanFactory.class);
