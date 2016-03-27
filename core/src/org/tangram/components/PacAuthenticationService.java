@@ -162,9 +162,11 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
                 clients = new Clients(callbackUrl, clientList);
                 try {
                     FormClient formClient = clients.findClient(FormClient.class);
-                    formClient.setLoginUrl(linkFactoryAggregator.createLink(request, response, this, "login-form", null).getUrl());
+                    Link loginLink = linkFactoryAggregator.createLink(request, response, this, "login-form", null);
+                    LOG.debug("getClients() login link {}", loginLink);
+                    formClient.setLoginUrl(loginLink.getUrl());
                 } catch (Exception e) {
-                    LOG.warn("getClients() {}", e.getMessage());
+                    LOG.warn("getClients() {} :{}", e.getMessage(), e.getClass().getSimpleName());
                 } // try/catch
             }  // if
         } // synchronized
@@ -225,7 +227,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         LOG.info("redirect()");
         WebContext context = new J2EContext(request, response);
         Client<?, ?> client = getClients(request, response).findClient(provider);
-        LOG.info("redirect() redirecting");
+        LOG.info("redirect() redirecting with {}", client.getName());
         client.redirect(context, true);
         return TargetDescriptor.DONE;
     } // redirect()

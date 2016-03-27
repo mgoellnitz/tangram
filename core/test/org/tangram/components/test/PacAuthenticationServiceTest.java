@@ -18,8 +18,11 @@
  */
 package org.tangram.components.test;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +33,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.pac4j.core.client.Client;
+import org.pac4j.http.client.indirect.FormClient;
+import org.pac4j.http.profile.UsernameProfileCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.Constants;
@@ -48,21 +55,41 @@ import org.testng.annotations.Test;
  */
 public class PacAuthenticationServiceTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PacAuthenticationServiceTest.class);
+
     @Mock
     private LinkHandlerRegistry linkHandlerRegistry; // NOPMD - this field is not really unused
 
     @Mock
-    private LinkFactoryAggregator linkFactoryAggregator; // NOPMD - this field is not really unused
+    private LinkFactoryAggregator aggregator; // NOPMD - this field is not really unused
 
     @Spy
-    private final Set<Client> clientSet = new HashSet<>(); // NOPMD - this field is not really unused
+    private final Set<Client> clientSet = new HashSet<>();
+
+    @Spy
+    private final Set<String> loginProviders = new HashSet<>();
+
+    @Spy
+    private final Map<String,String> userIdAttributes = new HashMap<>();
 
     @InjectMocks
     private final PacAuthenticationService pacAuthenticationService = new PacAuthenticationService();
 
+    private final FormClient formLogin = new FormClient();
+
 
     @BeforeClass
     public void init() throws Exception {
+        SimpleAuthenticatorTest authenticatorTest = new SimpleAuthenticatorTest();
+        authenticatorTest.init();
+        formLogin.setName("form");
+        formLogin.setAuthenticator(authenticatorTest.getInstance());
+        formLogin.setProfileCreator(new UsernameProfileCreator());
+
+        clientSet.add(formLogin);
+        loginProviders.add("form");
+        loginProviders.add("basic");
+        userIdAttributes.put("twitter", "screen_name");
         MockitoAnnotations.initMocks(this);
         pacAuthenticationService.afterPropertiesSet();
     } // init()
@@ -71,32 +98,94 @@ public class PacAuthenticationServiceTest {
     @Test
     public void testPacAuthenticationService() {
         PacAuthenticationService p = pacAuthenticationService;
-        Assert.assertEquals(p.getProviderNames().size(), 0, "There should be no provider names in test.");
+        Assert.assertEquals(p.getProviderNames().size(), 1, "There should be one provider name in test.");
         TargetDescriptor target = new TargetDescriptor(p, null, "login");
         Assert.assertEquals(p.getLoginTarget(Collections.EMPTY_SET), target, "The login target falls back to the default.");
 
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
+
+        Link link = p.createLink(request, response, p, "logout", null);
+        Assert.assertNotNull(link, "We need a valid logout link to test");
+        Mockito.when(aggregator.createLink(request, response, p, "logout", null)).thenReturn(link);
+        Link reTest = aggregator.createLink(request, response, p, "logout", null);
+        Assert.assertEquals(reTest, link, "Logout link should be the one just generated.");
+        Link logoutLink = p.getLogoutLink(request, response);
+        Assert.assertEquals(logoutLink, link, "Logout link should be the one provided by mock.");
+
         HttpSession session = request.getSession(true);
         Assert.assertNotNull(session, "Fresh session instance expected.");
         Assert.assertEquals(p.getUsers(request, response).size(), 0, "There should be no users in test.");
     } // testPacAuthenticationService()
 
 
-    // TODO:
-    public void testCallback() {
+    @Test
+    public void testRedirectToLogin() {
+        PacAuthenticationService p = pacAuthenticationService;
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
-        Link link = new Link("/testapp/callback");
-        Mockito.when(linkFactoryAggregator.createLink(request, response, pacAuthenticationService, "callback", null)).thenReturn(link);
+        LOG.info("testRedirectToLogin() loginProviders={}", loginProviders);
+        Link link = p.createLink(request, response, p, "form", null);
+        Assert.assertNotNull(link, "We need a valid logout link to test");
+        Mockito.when(aggregator.createLink(request, response, p, "form", null)).thenReturn(link);
+        try {
+            p.redirectToLogin(request, response, loginProviders);
+        } catch (IOException e) {
+            Assert.fail("Authentication service should not issue exceptions.", e);
+        } // try/catch
+        Assert.assertEquals(response.getStatus(), 302, "Redirect to login should issue a redirect response state.");
+        Assert.assertEquals(response.getHeader("Location"), "/redirect/form", "Unexpected login redirect target.");
+    } // testRedirectToLogin()
+
+
+    @Test
+    public void testRedirect() {
+        LOG.info("testRedirect()");
+        PacAuthenticationService p = pacAuthenticationService;
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/redirect");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        HttpSession session = request.getSession(true);
+        Assert.assertNotNull(session, "Fresh session instance expected.");
+        Assert.assertEquals(p.getUsers(request, response).size(), 0, "There should be no users in test.");
+
+        Link l = p.createLink(request, response, p, "callback", null);
+        Mockito.when(aggregator.createLink(request, response, p, "callback", null)).thenReturn(l);
+        l = p.createLink(request, response, p, "login-form", null);
+        Mockito.when(aggregator.createLink(request, response, p, "login-form", null)).thenReturn(l);
+        TargetDescriptor redirect = null;
+        try {
+            redirect = p.redirect("form", request, response);
+        } catch (Exception e) {
+            Assert.fail("Authentication service should not issue exceptions.", e);
+        } // try/catch
+        LOG.info("testRedirect() session {}", session.getAttributeNames());
+        Assert.assertEquals(redirect, TargetDescriptor.DONE, "Redirect handling does not include a view.");
+        Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_MOVED_TEMPORARILY, "Unexpected login redirect response code.");
+        Assert.assertEquals(response.getHeader("Location"), "/login-form", "Unexpected login redirect target.");
+    } // testRedirect()
+
+
+    @Test
+    public void testCallback() {
+        LOG.info("testCallback()");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/callback");
+        request.setParameter("client_name", "form");
+        request.setParameter(formLogin.getUsernameParameter(), "testuser");
+        request.setParameter(formLogin.getPasswordParameter(), "testpassword");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        Link l = pacAuthenticationService.createLink(request, response, pacAuthenticationService, "callback", null);
+        Mockito.when(aggregator.createLink(request, response, pacAuthenticationService, "callback", null)).thenReturn(l);
+        l = pacAuthenticationService.createLink(request, response, pacAuthenticationService, "login-form", null);
+        Mockito.when(aggregator.createLink(request, response, pacAuthenticationService, "login-form", null)).thenReturn(l);
         TargetDescriptor login = null;
         try {
             login = pacAuthenticationService.callback(request, response);
         } catch (Exception e) {
             Assert.fail("Authentication service should not issue exceptions.", e);
         } // try/catch
-        TargetDescriptor reference = new TargetDescriptor(pacAuthenticationService, null, null);
+        TargetDescriptor reference = new TargetDescriptor(pacAuthenticationService, null, "return");
         Assert.assertEquals(login, reference, "Expected view for login page.");
+        LOG.info("testCallback() done.");
     } // testCallback()
 
 
@@ -127,7 +216,7 @@ public class PacAuthenticationServiceTest {
         HttpSession session = request.getSession(true);
         Assert.assertNotNull(session, "Fresh session instance expected.");
         session.setAttribute(Constants.ATTRIBUTE_RETURN_URL, "/testapp/magic-return-url");
-        Mockito.when(linkFactoryAggregator.getPrefix(request)).thenReturn("/testapp");
+        Mockito.when(aggregator.getPrefix(request)).thenReturn("/testapp");
         try {
             link = p.createLink(request, response, p, "return", null);
         } catch (Exception e) {
