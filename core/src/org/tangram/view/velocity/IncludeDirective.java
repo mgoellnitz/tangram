@@ -62,7 +62,7 @@ public class IncludeDirective extends Directive {
         Object bean = node.jjtGetChild(0).value(context);
         String view = (node.jjtGetNumChildren()>1) ? (String) node.jjtGetChild(1).value(context) : null;
 
-        final ViewUtilities viewUtilities = ((ViewUtilities) (context.get(Constants.ATTRIBUTE_VIEW_UTILITIES)));
+        ViewUtilities viewUtilities = ((ViewUtilities) (context.get(Constants.ATTRIBUTE_VIEW_UTILITIES)));
 
         // copy model from original context
         Map<String, Object> model = viewUtilities.getViewContextFactory().createModel(bean, request, response);

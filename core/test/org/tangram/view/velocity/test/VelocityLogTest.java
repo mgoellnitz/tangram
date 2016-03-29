@@ -31,11 +31,24 @@ public class VelocityLogTest {
     @Test
     public void testVelocityLog() {
         VelocityLog log = new VelocityLog();
+
+        log.log(VelocityLog.DEBUG_ID, "just trigger log");
+        log.log(VelocityLog.INFO_ID, "just trigger log");
+        log.log(VelocityLog.WARN_ID, "just trigger log");
+        log.log(VelocityLog.ERROR_ID, "just trigger log");
+
+        Throwable t = new Throwable("Test");
+        log.log(VelocityLog.DEBUG_ID, "just trigger log", t);
+        log.log(VelocityLog.INFO_ID, "just trigger log", t);
+        log.log(VelocityLog.WARN_ID, "just trigger log", t);
+        log.log(VelocityLog.ERROR_ID, "just trigger log", t);
+
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.DEBUG_ID), "Level debug should be enabled during test.");
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.ERROR_ID), "Level error should be enabled during test.");
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.INFO_ID), "Level info should be enabled during test.");
         Assert.assertFalse(log.isLevelEnabled(VelocityLog.TRACE_ID), "Level trace should be disabled during test.");
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.WARN_ID), "Level warn should be enabled during test.");
+
     } // testVelocityLog()
 
 } // VelocityLogTest

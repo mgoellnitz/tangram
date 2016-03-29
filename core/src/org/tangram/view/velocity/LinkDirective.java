@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -9,7 +9,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
@@ -33,6 +33,9 @@ import org.tangram.Constants;
 import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.view.jsp.LinkTag;
 
+/**
+ * Apache Velocity directive to generate links using the JSP tag implementation for the same purpose.
+ */
 public class LinkDirective extends Directive {
 
     private static final Logger LOG = LoggerFactory.getLogger(LinkDirective.class);
@@ -111,4 +114,4 @@ public class LinkDirective extends Directive {
         return false;
     } // render()
 
-} // IncludeDirective
+} // LinkDirective
