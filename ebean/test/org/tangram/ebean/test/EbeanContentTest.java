@@ -122,7 +122,7 @@ public class EbeanContentTest extends BaseContentTest {
     @Test(priority = 0)
     public void test0IsEnhanced() {
         Method[] methods = Code.class.getMethods();
-        Assert.assertTrue(checkMethodPrefixOccurs(methods, "_ebean"), "Classes were not enhanced.");
+        Assert.assertTrue(BaseContentTest.checkMethodPrefixOccurs(methods, "_ebean"), "Classes were not enhanced.");
     } // test0IsEnhanced()
 
 } // EbeanContentTest

@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<list>
+<TransientCode>
+<id>CodeResource:6</id>
+<annotation>org.tangram.example.Topic</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>
+package org.tangram.nucleus.test
+
+import javax.jdo.annotations.PersistenceCapable;
+import org.tangram.nucleus.test.content.BaseClass;
+
+@PersistenceCapable
+public class NewsArticle extends BaseClass {
+
+  private String additionalField;
+
+  public void setAdditionalField(String value) {
+    additionalField = value;
+  }
+
+  public String getAdditionalField() {
+    return additionalField;
+  }
+
+}
+</codeText>
+<modificationTime>131235432</modificationTime>
+</TransientCode>
+</list>

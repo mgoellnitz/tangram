@@ -53,7 +53,7 @@ public abstract class BaseContentTest {
      * @param prefix name prefix at least one of the method's names should have
      * @return true if any of the method's names starts with the given prefix.
      */
-    protected boolean checkMethodPrefixOccurs(Method[] methods, String prefix) {
+    public static boolean checkMethodPrefixOccurs(Method[] methods, String prefix) {
         boolean flag = false;
         for (Method method : methods) {
             if (method.getName().startsWith(prefix)) {

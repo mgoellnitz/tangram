@@ -28,12 +28,14 @@ dependencies {
   testCompile "org.testng:testng:$versions.testng"
   // test logging at debug level through special logback.groovy
   testCompile "ch.qos.logback:logback-classic:$versions.logback"
+  testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.springframework:spring-test:$versions.springframework"
+  testCompile "org.springframework:spring-web:$versions.springframework"
+  testCompile "com.thoughtworks.xstream:xstream:$versions.xstream"
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-spring')
   testCompile project (':tangram-mutable').sourceSets.test.output
   testCompile project (':tangram-core').sourceSets.test.output
-  testCompile "org.springframework:spring-core:$versions.springframework"
-  testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile "org.datanucleus:datanucleus-rdbms:$versions.datanucleus"
   testCompile "$versions.jdo_api"
   testCompile "hsqldb:hsqldb:1.8.0.10"

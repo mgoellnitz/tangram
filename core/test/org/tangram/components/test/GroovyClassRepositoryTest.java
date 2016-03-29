@@ -52,14 +52,19 @@ public class GroovyClassRepositoryTest {
     private final GroovyClassRepository repository = new GroovyClassRepository();
 
 
-    @BeforeClass
-    public void init() throws Exception {
+    public void init(String contentResource) throws Exception {
         GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest();
-        codeCacheTest.init();
+        codeCacheTest.init(contentResource);
         codeCache = codeCacheTest.getInstance();
         MockitoAnnotations.initMocks(this);
-        factory.init();
+        factory.init(contentResource);
         repository.afterPropertiesSet();
+    } // init()
+
+
+    @BeforeClass
+    public void init() throws Exception {
+        init("/mock-content.xml");
     } // init()
 
 
