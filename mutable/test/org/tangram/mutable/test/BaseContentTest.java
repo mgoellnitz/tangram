@@ -24,8 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
 import org.tangram.logic.ClassRepository;
@@ -33,6 +38,7 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.MutableCode;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
+import org.tangram.protection.SimplePasswordProtection;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,6 +48,10 @@ public abstract class BaseContentTest {
     private static final Logger LOG = LoggerFactory.getLogger(BaseContentTest.class);
 
     private static final String CLASS_CODE = "package org.tangram.example; import javax.inject.Named; @Named public class Test { public String s; }";
+
+    protected static final String TESTPASSWORD = "testpassword";
+
+    protected static final String TESTUSER = "testuser";
 
 
     /**
@@ -62,6 +72,75 @@ public abstract class BaseContentTest {
         } // for
         return flag;
     } // checkMethodPrefixOccurs()
+
+
+    /**
+     * Test implementations of the simple password protection interfaces.
+     *
+     * @param passwordProtection instance under test
+     */
+    public static void checkSimplePasswordProtection(SimplePasswordProtection passwordProtection) {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        HttpSession session = new MockHttpSession();
+        request.setSession(session);
+        boolean visible = true;
+        try {
+            visible = passwordProtection.isContentVisible(request);
+        } catch (Exception e) {
+            Assert.fail("Password protection should not issue exceptions.", e);
+        } // try/catch
+        Assert.assertFalse(visible, "Initially content should not be visible.");
+        Assert.assertTrue(passwordProtection.needsAuthorization(request), "Initially we should need a login.");
+
+        HttpServletResponse response = new MockHttpServletResponse();
+        String handleLoginResult = "X";
+        try {
+            handleLoginResult = passwordProtection.handleLogin(request, response);
+        } catch (Exception e) {
+            Assert.fail("Password protection should not issue exceptions.", e);
+        } // try/catch
+        Assert.assertEquals(handleLoginResult, SimplePasswordProtection.ERROR_CODE, "No password should result in error.");
+
+        request = new MockHttpServletRequest();
+        request.setSession(session);
+        response = new MockHttpServletResponse();
+        request.setParameter(SimplePasswordProtection.PARAM_LOGIN, TESTUSER);
+        request.setParameter(SimplePasswordProtection.PARAM_PASSWORD, "x");
+        try {
+            handleLoginResult = passwordProtection.handleLogin(request, response);
+        } catch (Exception e) {
+            Assert.fail("Password protection should not issue exceptions.", e);
+        } // try/catch
+        Assert.assertEquals(handleLoginResult, SimplePasswordProtection.ERROR_CODE, "Wrong password should result in error.");
+
+        request = new MockHttpServletRequest();
+        request.setSession(session);
+        response = new MockHttpServletResponse();
+        request.setParameter(SimplePasswordProtection.PARAM_LOGIN, TESTUSER);
+        request.setParameter(SimplePasswordProtection.PARAM_PASSWORD, TESTPASSWORD);
+        try {
+            handleLoginResult = passwordProtection.handleLogin(request, response);
+        } catch (Exception e) {
+            Assert.fail("Password protection should not issue exceptions.", e);
+        } // try/catch
+        Assert.assertNull(handleLoginResult, "Login should have succeded.");
+
+        request = new MockHttpServletRequest();
+        request.setSession(session);
+
+        visible = true;
+        try {
+            visible = passwordProtection.isContentVisible(request);
+        } catch (Exception e) {
+            Assert.fail("Password protection should not issue exceptions.", e);
+        } // try/catch
+        Assert.assertTrue(visible, "After login content should be visible.");
+        Assert.assertFalse(passwordProtection.needsAuthorization(request), "After login we should not need a second.");
+
+        Assert.assertEquals(passwordProtection.getProtectedContents().size(), 0, "Unexpected list of protected contents.");
+        Assert.assertEquals(passwordProtection.getProtectionPath().size(), 1, "Unexpected protection path.");
+        Assert.assertEquals(passwordProtection.getProtectionPath().get(0), passwordProtection, "Unexpected protection path.");
+    } // checkSimplePasswordProtection()
 
 
     protected Map<String, Object> getBeansForContentCreate() {

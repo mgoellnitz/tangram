@@ -23,8 +23,10 @@ import com.google.inject.Injector;
 import com.mycila.guice.ext.closeable.CloseableModule;
 import com.mycila.guice.ext.jsr250.Jsr250Module;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.tangram.guicy.TangramServletModule;
+import org.tangram.jpa.protection.PasswordProtection;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
 import org.tangram.mutable.MutableBeanFactory;
@@ -106,5 +108,16 @@ public class JpaContentTest extends BaseContentTest {
     public void testNothing() {
         Assert.assertTrue(true);
     } // testNothing()
+
+
+    @Test
+    public void testPasswordProtection() {
+        PasswordProtection passwordProtection = new PasswordProtection();
+        passwordProtection.setLogin(TESTUSER);
+        passwordProtection.setPassword(TESTPASSWORD);
+        passwordProtection.setProtectionKey("mock password protection");
+        passwordProtection.setProtectedContents(Collections.EMPTY_LIST);
+        checkSimplePasswordProtection(passwordProtection);
+    } // testPasswordProtection()
 
 } // JpaContentTest

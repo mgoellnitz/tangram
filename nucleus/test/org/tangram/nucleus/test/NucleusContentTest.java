@@ -19,14 +19,17 @@
 package org.tangram.nucleus.test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
+import static org.tangram.mutable.test.BaseContentTest.checkSimplePasswordProtection;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
 import org.tangram.nucleus.NucleusContent;
+import org.tangram.nucleus.protection.PasswordProtection;
 import org.tangram.nucleus.test.content.BaseClass;
 import org.tangram.nucleus.test.content.SubClass;
 import org.testng.Assert;
@@ -111,5 +114,16 @@ public class NucleusContentTest extends BaseContentTest {
         Assert.assertEquals(subBean.checkConversion(testString), testString, "Nucleus specific conversion methods failed.");
         Assert.assertNull(subBean.checkConversion(null), "Nucleus specific conversion methods failed.");
     } // testStringConversion()
+
+
+    @Test
+    public void testPasswordProtection() {
+        PasswordProtection passwordProtection = new PasswordProtection();
+        passwordProtection.setLogin(TESTUSER);
+        passwordProtection.setPassword(TESTPASSWORD);
+        passwordProtection.setProtectionKey("mock password protection");
+        passwordProtection.setProtectedContents(Collections.EMPTY_LIST);
+        checkSimplePasswordProtection(passwordProtection);
+    } // testPasswordProtection()
 
 } // NucleusContentTest
