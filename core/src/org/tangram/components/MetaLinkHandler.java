@@ -184,7 +184,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                             } // for
                             parameters.add(form);
                         } catch (Exception e) {
-                            LOG.error("callAction() cannot create and fill form "+type.getName());
+                            LOG.error("callAction() cannot create and fill form "+type.getName(), e);
                         } // try/catch
                     } // if
                 } // for

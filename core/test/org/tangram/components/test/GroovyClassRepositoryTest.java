@@ -25,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.tangram.PersistentRestartCache;
 import org.tangram.components.GroovyClassRepository;
+import org.tangram.content.BeanFactory;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.util.DummyRestartCache;
@@ -70,6 +71,11 @@ public class GroovyClassRepositoryTest {
     public GroovyClassRepository getInstance() {
         return repository;
     } // getInstance()
+
+
+    public BeanFactory getBeanFactory() {
+        return factory;
+    } // getBeanFactory
 
 
     @Test

@@ -94,6 +94,7 @@ public class DynamicViewContextFactory extends DefaultViewContextFactory impleme
 
     @Override
     public void reset() {
+        LOG.debug("reset()");
         definedViewShims = new HashMap<>();
         definedBeanShims = new HashMap<>();
         cachedViewShims = new HashMap<>();
