@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<list>
+<TransientCode>
+<id>CodeResource:2</id>
+<annotation>users.properties</annotation>
+<mimeType>text/plain</mimeType>
+<codeText>testuser=9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05
+adminUsers=form:testuser
+</codeText>
+<modificationTime>1123543332</modificationTime>
+</TransientCode>
+</list>

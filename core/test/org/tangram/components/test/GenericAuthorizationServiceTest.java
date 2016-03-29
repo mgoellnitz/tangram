@@ -18,18 +18,24 @@
  */
 package org.tangram.components.test;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.authentication.AuthenticationService;
+import org.tangram.authentication.GenericUser;
+import org.tangram.authentication.User;
 import org.tangram.components.GenericAuthorizationService;
 import org.tangram.content.CodeResourceCache;
+import org.tangram.link.TargetDescriptor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -43,11 +49,20 @@ public class GenericAuthorizationServiceTest {
     @Mock
     private AuthenticationService authenticationService;  // NOPMD - this field is not really unused
 
-    @Mock
+    @Spy
     private CodeResourceCache codeResourceCache; // NOPMD - this field is not really unused
 
-    @Mock(name = "adminUsers")
+    @Spy
     private final Set<String> adminUsers = new HashSet<>(); // NOPMD - this field is not really unused
+
+    @Spy
+    private final Set<String> allowedUsers = new HashSet<>(); // NOPMD - this field is not really unused
+
+    @Spy
+    private final Set<String> freeUrls = new HashSet<>(); // NOPMD - this field is not really unused
+
+    @Spy
+    private final Set<String> loginProviders = new HashSet<>(); // NOPMD - this field is not really unused
 
     @InjectMocks
     private final GenericAuthorizationService authorizationService = new GenericAuthorizationService();
@@ -55,6 +70,13 @@ public class GenericAuthorizationServiceTest {
 
     @BeforeClass
     public void init() throws Exception {
+        GenericCodeResourceCacheTest codeResourceCacheTest = new GenericCodeResourceCacheTest();
+        codeResourceCacheTest.init("/auth-content.xml");
+        codeResourceCache = codeResourceCacheTest.getInstance();
+        freeUrls.add("/free");
+        adminUsers.add("form:admin");
+        allowedUsers.add("form:testuser");
+        loginProviders.add("form");
         MockitoAnnotations.initMocks(this);
         authorizationService.afterPropertiesSet();
     } // init()
@@ -62,9 +84,7 @@ public class GenericAuthorizationServiceTest {
 
     @Test
     public void testGenericAuthorizationService() {
-        // TODO:
-        // authorizationService.reset();
-        HttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
         Assert.assertFalse(authorizationService.isAdminUser(request, response), "Dummy request don't belong to admin users.");
 
@@ -75,6 +95,22 @@ public class GenericAuthorizationServiceTest {
             result = true;
         } // try/catch
         Assert.assertTrue(result, "Since dummy request contains no admin user an exception should be thrown.");
+        Map<String, Object> properties = Collections.EMPTY_MAP;
+        GenericUser user = new GenericUser("form", "testuser", properties);
+        Set<User> users = new HashSet<>();
+        users.add(user);
+        Mockito.when(authenticationService.getUsers(request, response)).thenReturn(users);
+        try {
+            authorizationService.throwIfNotAdmin(request, response, "Sorry");
+        } catch (Exception e) {
+            result = false;
+        } // try/catch
+        Assert.assertTrue(result, "Now the user should have been authorized.");
+
+        TargetDescriptor loginTarget = new TargetDescriptor(this, "log", "in");
+        Mockito.when(authenticationService.getLoginTarget(loginProviders)).thenReturn(loginTarget);
+        TargetDescriptor target = authorizationService.getLoginTarget(request);
+        Assert.assertEquals(target, loginTarget, "We need a login target.");
     } // testGenericAuthorizationService()
 
 } // GenericAuthorizationServiceTest
