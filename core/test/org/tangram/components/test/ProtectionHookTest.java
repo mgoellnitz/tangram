@@ -19,13 +19,21 @@
 package org.tangram.components.test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.components.ProtectionHook;
 import org.tangram.content.Content;
+import org.tangram.link.TargetDescriptor;
+import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.protection.ProtectedContent;
 import org.tangram.protection.Protection;
 import org.testng.Assert;
@@ -37,10 +45,17 @@ import org.testng.annotations.Test;
  */
 public class ProtectionHookTest {
 
-    @Test
-    public void testProtectionHook() {
-        ProtectionHook protectionHook = new ProtectionHook();
+    @Spy
+    private MockBeanFactory beanFactory = new MockBeanFactory();
 
+    @InjectMocks
+    private ProtectionHook protectionHook = new ProtectionHook();
+
+
+    @Test
+    public void testProtectionHook() throws Exception {
+        beanFactory.init();
+        MockitoAnnotations.initMocks(this);
         Content c = Mockito.mock(Content.class);
         final List<Content> protectionPath = new ArrayList<>(2);
         ProtectedContent pc = new ProtectedContent() {
@@ -90,13 +105,13 @@ public class ProtectionHookTest {
 
             @Override
             public boolean isContentVisible(HttpServletRequest request) throws Exception {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return false;
             }
 
 
             @Override
             public boolean needsAuthorization(HttpServletRequest request) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return true;
             }
 
 
@@ -108,7 +123,7 @@ public class ProtectionHookTest {
 
             @Override
             public String getId() {
-                throw new UnsupportedOperationException("Not supported yet.");
+                return "Protection:13";
             }
 
 
@@ -119,7 +134,6 @@ public class ProtectionHookTest {
 
         };
 
-
         boolean protectedBy = protectionHook.isProtectedBy(pc, p);
         Assert.assertTrue(protectedBy, "This content should be protected by the given protection.");
 
@@ -127,6 +141,34 @@ public class ProtectionHookTest {
         Assert.assertEquals(requiredProtections.size(), 1, "Expected one required protection.");
         Assert.assertEquals(requiredProtections.keySet().iterator().next(), "testkey", "Unexpected protection key.");
         Assert.assertEquals(requiredProtections.get("testkey"), p, "Unexpected protection discovered.");
+
+        HttpServletRequest request = new MockHttpServletRequest();
+        HttpServletResponse response = new MockHttpServletResponse();
+        Map<String, Object> model = new HashMap<>();
+        TargetDescriptor target = new TargetDescriptor(pc, null, null);
+
+        boolean intercepted = true;
+        try {
+            intercepted = protectionHook.intercept(target, model, request, response);
+        } catch (Exception e) {
+            Assert.fail("There should be no exception handling the interception.", e);
+        } // try/catch
+        Assert.assertFalse(intercepted, "Call should be intercepted.");
+        Assert.assertEquals(model.size(), 2, "Model should contain that many values.");
+
+        request = new MockHttpServletRequest();
+        response = new MockHttpServletResponse();
+        model.clear();
+        target = new TargetDescriptor(p, null, null);
+
+        intercepted = true;
+        try {
+            intercepted = protectionHook.intercept(target, model, request, response);
+        } catch (Exception e) {
+            Assert.fail("There should be no exception handling the interception.", e);
+        } // try/catch
+        Assert.assertFalse(intercepted, "Call should be intercepted.");
+        Assert.assertEquals(model.size(), 2, "Model should contain that many values.");
     } // testProtectionHook()
 
 } // ProtectionHookTest
