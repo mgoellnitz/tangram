@@ -145,10 +145,10 @@ public class EditingHandlerTest {
 
         Object ormClasses = request.getAttribute("classes");
         Assert.assertNotNull(ormClasses, "There should be some classes list object.");
-        Assert.assertEquals(((Collection<?>) ormClasses).size(), 7, "Fixed number of classes in list expected.");
+        Assert.assertEquals(((Collection<?>) ormClasses).size(), 8, "Fixed number of classes in list expected.");
         Object me = request.getAttribute(Constants.THIS);
         Assert.assertNotNull(me, "There should be some instances list object..");
-        Assert.assertEquals(((Collection<?>) me).size(), 7, "Fixed number of instances in list expected.");
+        Assert.assertEquals(((Collection<?>) me).size(), 6, "Fixed number of instances in list expected.");
     } // testList()
 
 
@@ -246,7 +246,7 @@ public class EditingHandlerTest {
         Assert.assertNotNull(target.bean, "Non null result list expected after returning from deletion.");
         Assert.assertEquals(target.action, null, "No action expected.");
         Assert.assertEquals(target.view, "tangramEditorList", "List view expected.");
-        Assert.assertEquals(((Collection<?>) (target.bean)).size(), 7, "Unexpected list of contents to display.");
+        Assert.assertEquals(((Collection<?>) (target.bean)).size(), 6, "Unexpected list of contents to display.");
     } // testDelete()
 
 

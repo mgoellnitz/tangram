@@ -91,13 +91,13 @@ public class NucleusContentTest extends BaseContentTest {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 23;
+        return 6;
     }
 
 
     @Override
     protected int getNumberOfClasses() {
-        return 10;
+        return 4;
     }
 
 
