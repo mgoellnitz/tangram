@@ -18,7 +18,11 @@
  */
 package org.tangram.mutable.components.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.util.zip.CRC32;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,6 +38,8 @@ import org.tangram.content.TransientCode;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.link.TargetDescriptor;
 import org.tangram.mock.MockMutableBeanFactory;
+import org.tangram.mock.content.MockMutableCode;
+import org.tangram.mutable.CodeHelper;
 import org.tangram.protection.AuthorizationService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -117,6 +123,57 @@ public class ToolHandlerTest {
         Assert.assertNull(tool, "Code export with wrong URL should fail.");
         Assert.assertEquals(response.getStatus(), HttpServletResponse.SC_NOT_FOUND, "Code export with wrong URL should fail.");
     } // testFailingCodeExport()
+
+
+    @Test
+    public void testCodeImport() {
+        String id = "CodeResource:10";
+        MockMutableCode code = beanFactory.getBean(MockMutableCode.class, id);
+        Assert.assertNotNull(code, "We should have a bean to modify for a code update test.");
+        Assert.assertEquals(code.getCodeText().length(), 564, "Initial code size expected.");
+
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/codes");
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
+        TargetDescriptor tool = null;
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            CRC32 crc = new CRC32();
+            ZipOutputStream zos = new ZipOutputStream(baos);
+            zos.setComment("Tangram Repository Codes");
+            zos.setLevel(9);
+            String mimeType = code.getMimeType();
+            String folder = CodeHelper.getFolder(mimeType);
+            String extension = CodeHelper.getExtension(mimeType);
+            code.setCodeText("test");
+            if (CodeHelper.getCodeMimeTypes().contains(mimeType)) {
+                byte[] bytes = code.getCodeText().getBytes("UTF-8");
+                ZipEntry ze = new ZipEntry(folder+"/"+code.getAnnotation().replace(';', '_')+extension);
+                ze.setComment(mimeType);
+                ze.setSize(bytes.length);
+                ze.setTime(System.currentTimeMillis());
+                crc.reset();
+                crc.update(bytes);
+                ze.setCrc(crc.getValue());
+                zos.putNextEntry(ze);
+                zos.write(bytes);
+                zos.closeEntry();
+            } // if
+
+            zos.finish();
+            zos.close();
+            byte[] zipFile = baos.toByteArray();
+            tool = toolHandler.codeImport(zipFile, request, response);
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(), "Insufficient ZIP input.");
+        } // try/catch
+        code = beanFactory.getBean(MockMutableCode.class, id);
+        Assert.assertNotNull(code, "We should have a bean to modify for a code update test.");
+        Assert.assertEquals(code.getCodeText(), "test", "Expected to find text we wrote again.");
+        TargetDescriptor result = new TargetDescriptor(toolHandler, null, null);
+        Assert.assertEquals(tool, result, "Code import should go back to import/export page.");
+    } // testCodeImport()
 
 
     @Test
