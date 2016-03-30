@@ -264,7 +264,6 @@ public abstract class BaseContentTest {
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
         Assert.assertNotNull(classesMap, "We have a classes map.");
-        // Assert.assertEquals(classesMap.keySet(), Collections.emptySet(), "There should be no implementing classes.");
         Assert.assertNotNull(classesMap.get(MutableCode.class), "We have a code class.");
         List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
         Assert.assertEquals(codeClasses.size(), 1, "We have one code class.");
@@ -334,6 +333,13 @@ public abstract class BaseContentTest {
         String managerClassName = manager.getClass().getName();
         LOG.info("test5Factory() managerClassName={}", managerClassName);
         Assert.assertTrue(managerClassName.startsWith(getManagerPrefix()), "The factory should have a correctly typed manager instance.");
+        List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
+        Assert.assertEquals(codeClasses.size(), 1, "We have one code class.");
+        Class<MutableCode> codeClass = codeClasses.get(0);
+        String filterQuery = beanFactory.getFilterQuery(codeClass, "annotation", "tangram");
+        Assert.assertNotNull(filterQuery, "There should be some filter query");
+        Assert.assertTrue(filterQuery.indexOf("annotation")>0, "Unexpected contents of filter query");
+        Assert.assertTrue(filterQuery.indexOf("tangram")>0, "Unexpected contents of filter query");
     } // test5Factory()
 
 } // BaseContentTest
