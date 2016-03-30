@@ -18,19 +18,22 @@
  */
 package org.tangram.components.test;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.PersistentRestartCache;
 import org.tangram.components.GenericCodeResourceCache;
+import org.tangram.content.BeanFactory;
 import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.content.TransientCode;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.util.DummyRestartCache;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -39,27 +42,28 @@ import org.testng.annotations.Test;
  */
 public class GenericCodeResourceCacheTest {
 
+    private static final Logger LOG = LoggerFactory.getLogger(GenericCodeResourceCacheTest.class);
+
     @Spy
     private final PersistentRestartCache restartCache = new DummyRestartCache(); // NOPMD - this field is not really unused
 
     @Spy
-    private final MockBeanFactory factory = new MockBeanFactory();
+    private BeanFactory factory;
 
     @InjectMocks
     private final GenericCodeResourceCache codeResourceCache = new GenericCodeResourceCache();
 
 
-    public void init(String contentResource) throws Exception {
+    public GenericCodeResourceCacheTest(String contentResource) throws FileNotFoundException {
+        factory = MockBeanFactory.getInstance(contentResource);
         MockitoAnnotations.initMocks(this);
-        factory.init(contentResource);
         codeResourceCache.afterPropertiesSet();
-    } // init()
+    } // ()
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        init("/mock-content.xml");
-    } // init()
+    public GenericCodeResourceCacheTest() throws FileNotFoundException {
+        this(null);
+    } // ()
 
 
     /**
@@ -74,7 +78,9 @@ public class GenericCodeResourceCacheTest {
 
     @Test
     public void testInit() {
-        boolean isInInterval = (System.currentTimeMillis()-codeResourceCache.getLastUpdate())<20;
+        long difference = System.currentTimeMillis()-codeResourceCache.getLastUpdate();
+        LOG.debug("testInit() difference={}", difference);
+        boolean isInInterval = difference<30000;
         Assert.assertTrue(isInInterval, "Modification time of cache should be initialized.");
     } // testInit()
 

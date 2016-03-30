@@ -18,6 +18,7 @@
  */
 package org.tangram.mock;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -44,6 +45,11 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
     private final Object manager = new MockOrmManager();
 
     private final Collection<Class<? extends Content>> clearedClasses = new HashSet<>();
+
+
+    public MockMutableBeanFactory() throws FileNotFoundException {
+        super("/mock-content.xml");
+    }
 
 
     @Override

@@ -48,12 +48,14 @@ public class MockBeanFactory extends AbstractBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockBeanFactory.class);
 
+    private static final Map<String, MockBeanFactory> INSTANCES = new HashMap<>();
+
     private final Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<>();
 
     private final Map<Class<? extends Content>, List<Content>> contents = new HashMap<>();
 
 
-    public void init(String resourceName) throws FileNotFoundException {
+    protected MockBeanFactory(String resourceName) throws FileNotFoundException {
         XStream xstream = new XStream(new StaxDriver());
         Set<String> basePackages = new HashSet<>();
         basePackages.add("org.tangram.mock.content");
@@ -87,14 +89,25 @@ public class MockBeanFactory extends AbstractBeanFactory {
     } // ()
 
 
-    public void init() throws FileNotFoundException {
-        init("/mock-content.xml");
-    }
+    public static MockBeanFactory getInstance(String resourceName) throws FileNotFoundException {
+        resourceName = (resourceName==null) ? resourceName = "/mock-content.xml" : resourceName;
+        MockBeanFactory result = INSTANCES.get(resourceName);
+        if (result==null) {
+            result = new MockBeanFactory(resourceName);
+            INSTANCES.put(resourceName, result);
+        } // if
+        return result;
+    } // getInstance()
+
+
+    public static MockBeanFactory getInstance() throws FileNotFoundException {
+        return getInstance(null);
+    } // getInstance()
 
 
     public Map<Class<? extends Content>, List<Content>> getContents() {
         return contents;
-    }
+    } // getContents()
 
 
     @Override

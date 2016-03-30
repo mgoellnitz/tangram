@@ -27,7 +27,7 @@
 
   <bean id="propertyConverter" class="org.tangram.view.GenericPropertyConverter" />
 
-  <bean id="beanFactory" class="org.tangram.mock.content.MockBeanFactory" init-method="init" />
+  <bean id="beanFactory" class="org.tangram.mock.content.MockBeanFactory" factory-method="getInstance" />
 
   <util:map id="usernamePasswordMapping" key-type="java.lang.String" value-type="java.lang.String">
     <entry key="user" value="04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb" />

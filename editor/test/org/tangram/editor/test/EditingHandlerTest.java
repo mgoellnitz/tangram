@@ -48,7 +48,6 @@ import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.PropertyConverter;
 import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -71,7 +70,7 @@ public class EditingHandlerTest {
     private LinkHandlerRegistry linkHandlerRegistry; // NOPMD - this field is not really unused
 
     @Spy
-    private final MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
+    private MockMutableBeanFactory beanFactory;
 
     @Spy
     private ClassRepository repository; // NOPMD - this field is not really unused
@@ -88,15 +87,12 @@ public class EditingHandlerTest {
     }
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        GroovyClassRepositoryTest repositoryTest = new GroovyClassRepositoryTest();
-        repositoryTest.init();
-        repository = repositoryTest.getInstance();
+    public EditingHandlerTest() throws Exception {
+        repository = new GroovyClassRepositoryTest().getInstance();
+        beanFactory = new MockMutableBeanFactory();
         MockitoAnnotations.initMocks(this);
-        beanFactory.init();
         handler.afterPropertiesSet();
-    }
+    } // ()
 
 
     @Test

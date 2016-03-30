@@ -18,6 +18,7 @@
  */
 package org.tangram.nucleus.test;
 
+import java.io.FileNotFoundException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,7 +30,6 @@ import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mutable.test.BaseContentTest;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -48,14 +48,11 @@ public class ClassRepositoryEnhancerTest {
     private final ClassRepositoryEnhancer enhancer = new ClassRepositoryEnhancer();
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        GroovyClassRepositoryTest classRepositoryTest = new GroovyClassRepositoryTest();
-        classRepositoryTest.init("/jdo-enhancer-content.xml");
-        classRepository = classRepositoryTest.getInstance();
+    public ClassRepositoryEnhancerTest() throws FileNotFoundException {
+        classRepository = new GroovyClassRepositoryTest("/jdo-enhancer-content.xml").getInstance();
         MockitoAnnotations.initMocks(this);
         enhancer.afterPropertiesSet();
-    } // init()
+    } // ()
 
 
     @Test

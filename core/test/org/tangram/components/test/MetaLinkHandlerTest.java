@@ -46,6 +46,7 @@ import org.tangram.link.GenericLinkFactoryAggregator;
 import org.tangram.link.Link;
 import org.tangram.link.TargetDescriptor;
 import org.tangram.logic.ClassRepository;
+import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.monitor.Statistics;
 import org.tangram.view.DynamicViewContextFactory;
 import org.tangram.view.GenericPropertyConverter;
@@ -53,7 +54,6 @@ import org.tangram.view.PropertyConverter;
 import org.tangram.view.ViewContext;
 import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -66,7 +66,8 @@ public class MetaLinkHandlerTest {
 
     private static final Link ACTION_LINK = new Link("/actionlinkresult");
 
-    private BeanFactory beanFactory;
+    @Spy
+    private MockBeanFactory beanFactory;
 
     @Spy
     private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
@@ -95,6 +96,9 @@ public class MetaLinkHandlerTest {
     private final MetaLinkHandler metaLinkHandler = new MetaLinkHandler();
 
 
+    /**
+     * Mock test class to bring bean factory aware and line handler together like in real world code.
+     */
     public class MockLinkHandler implements org.tangram.link.LinkHandler, BeanFactoryAware {
 
         private BeanFactory beanFactory;
@@ -181,13 +185,11 @@ public class MetaLinkHandlerTest {
     } // TestHandler
 
 
-    @BeforeClass
-    public void init() throws Exception {
+    public MetaLinkHandlerTest() throws Exception {
         aggregator.setDispatcherPath("/testapp");
-        GroovyClassRepositoryTest groovyClassRepositoryTest = new GroovyClassRepositoryTest();
-        groovyClassRepositoryTest.init();
-        repository = groovyClassRepositoryTest.getInstance();
-        beanFactory = groovyClassRepositoryTest.getBeanFactory();
+
+        repository = new GroovyClassRepositoryTest().getInstance();
+        beanFactory = MockBeanFactory.getInstance();
         MockitoAnnotations.initMocks(this);
         viewContextFactory.afterPropertiesSet();
         metaLinkHandler.afterPropertiesSet();
@@ -197,7 +199,7 @@ public class MetaLinkHandlerTest {
         metaLinkHandler.registerLinkHandler(atActionHandler);
         TestHandler testHandler = new TestHandler();
         metaLinkHandler.registerLinkHandler(testHandler);
-    } // init()
+    } // ()
 
 
     @Test

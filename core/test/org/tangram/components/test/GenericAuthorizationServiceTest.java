@@ -37,7 +37,6 @@ import org.tangram.components.GenericAuthorizationService;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.link.TargetDescriptor;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -68,18 +67,15 @@ public class GenericAuthorizationServiceTest {
     private final GenericAuthorizationService authorizationService = new GenericAuthorizationService();
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        GenericCodeResourceCacheTest codeResourceCacheTest = new GenericCodeResourceCacheTest();
-        codeResourceCacheTest.init("/auth-content.xml");
-        codeResourceCache = codeResourceCacheTest.getInstance();
+    public GenericAuthorizationServiceTest() throws Exception {
+        codeResourceCache = new GenericCodeResourceCacheTest("/auth-content.xml").getInstance();
         freeUrls.add("/free");
         adminUsers.add("form:admin");
         allowedUsers.add("form:testuser");
         loginProviders.add("form");
         MockitoAnnotations.initMocks(this);
         authorizationService.afterPropertiesSet();
-    } // init()
+    } // ()
 
 
     @Test

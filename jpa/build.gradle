@@ -47,8 +47,6 @@ dependencies {
   testCompile "hsqldb:hsqldb:1.8.0.10"
 }
 
-compileTestJava.dependsOn ':tangram-mutable:test'
-
 // For Java EE environments
 task jeeJar(type: Jar, dependsOn: jar) {
   classifier = 'jee'

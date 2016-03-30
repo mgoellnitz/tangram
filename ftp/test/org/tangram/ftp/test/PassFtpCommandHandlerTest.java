@@ -52,10 +52,7 @@ public class PassFtpCommandHandlerTest {
     @Test
     public void testPassFtpCommandHandler() throws Exception {
         MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
-        beanFactory.init();
-        GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest();
-        codeCacheTest.init();
-        CodeResourceCache codeCache = codeCacheTest.getInstance();
+        CodeResourceCache codeCache = new GenericCodeResourceCacheTest().getInstance();
         TangramFtpServer ftpServer = new TangramFtpServer(beanFactory, codeCache);
         Map<String, AbstractTrackingCommandHandler> commands = ftpServer.getCommands();
         PassFtpCommandHandler listFtpCommandHandler = (PassFtpCommandHandler) commands.get(CommandNames.PASS);

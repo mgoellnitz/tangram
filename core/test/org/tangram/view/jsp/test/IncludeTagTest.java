@@ -18,6 +18,7 @@
  */
 package org.tangram.view.jsp.test;
 
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -30,13 +31,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockPageContext;
 import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
+import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.view.ViewUtilities;
 import org.tangram.view.jsp.IncludeTag;
 import org.tangram.view.jsp.LinkTag;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -45,13 +46,12 @@ import org.testng.annotations.Test;
  */
 public class IncludeTagTest {
 
-    private final MockBeanFactory beanFactory = new MockBeanFactory();
+    private final BeanFactory beanFactory;
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        beanFactory.init();
-    } // init()
+    public IncludeTagTest() throws FileNotFoundException {
+        beanFactory = MockBeanFactory.getInstance();
+    } // ()
 
 
     @Test

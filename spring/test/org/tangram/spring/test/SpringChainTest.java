@@ -34,12 +34,10 @@ import org.tangram.components.spring.MetaController;
 import org.tangram.components.spring.TangramSpringServices;
 import org.tangram.components.spring.TangramViewHandler;
 import org.tangram.content.BeanFactory;
-import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -53,13 +51,10 @@ public class SpringChainTest {
     @Spy
     private final MockServletContext servletContext = new MockServletContext("."); // NOPMD - this field is not really unused
 
-    private ApplicationContext appContext;
+    private final ApplicationContext appContext;
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        MockBeanFactory beanFactory = new MockBeanFactory();
-        beanFactory.init();
+    public SpringChainTest() throws Exception {
         MockitoAnnotations.initMocks(this);
         XmlWebApplicationContext context = new XmlWebApplicationContext();
         context.setServletContext(servletContext);
@@ -68,7 +63,7 @@ public class SpringChainTest {
         context.afterPropertiesSet();
         LOG.info("init() # of beans is {}.", context.getBeanDefinitionCount());
         appContext = context;
-    } // init()
+    } // ()
 
 
     @Test

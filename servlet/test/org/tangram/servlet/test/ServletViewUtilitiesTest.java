@@ -29,7 +29,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.tangram.components.SimpleStatistics;
 import org.tangram.components.servlet.ServletViewUtilities;
-import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.monitor.Statistics;
 import org.tangram.servlet.JspTemplateResolver;
 import org.tangram.view.DefaultViewContextFactory;
@@ -53,8 +52,6 @@ public class ServletViewUtilitiesTest {
 
     @Test
     public void testServletViewUtilities() throws Exception {
-        MockBeanFactory beanFactory = new MockBeanFactory();
-        beanFactory.init();
         ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
         DefaultViewContextFactory viewContextFactory = new DefaultViewContextFactory();
         MockServletContext servletContext = new MockServletContext(".");

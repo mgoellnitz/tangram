@@ -39,7 +39,6 @@ import org.tangram.content.BeanFactory;
 import org.tangram.link.Link;
 import org.tangram.link.TargetDescriptor;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -52,11 +51,11 @@ public class ComaHandlerTest {
 
     private final static String BLOB_CONTENT_ID = "42";
 
-    private ComaContent comaContent;
+    private final ComaContent comaContent;
 
-    private ComaContent comaBlobContent;
+    private final ComaContent comaBlobContent;
 
-    private ComaBlob comaBlob;
+    private final ComaBlob comaBlob;
 
     @Spy
     private final Set<ComaBeanPopulator> populators = new HashSet<>(); // NOPMD - this field is not really unused
@@ -68,15 +67,14 @@ public class ComaHandlerTest {
     private final ComaHandler comaHandler = new ComaHandler();
 
 
-    @BeforeClass
-    public void init() {
+    public ComaHandlerTest() {
         comaContent = new ComaContent(CONTENT_ID, "Content", null);
         comaBlob = new ComaBlob(BLOB_CONTENT_ID, "data", "image/png", 0, new byte[0]);
-        Map<String,Object> properties = new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("data", comaBlob);
         comaBlobContent = new ComaContent(BLOB_CONTENT_ID, "Image", properties);
         MockitoAnnotations.initMocks(this);
-    } // init()
+    } // ()
 
 
     @Test

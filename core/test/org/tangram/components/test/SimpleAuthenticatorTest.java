@@ -30,7 +30,6 @@ import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.content.TransientCode;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -40,7 +39,7 @@ import org.testng.annotations.Test;
 public class SimpleAuthenticatorTest {
 
     @Mock(name = "usernamePasswordMapping")
-    private Map<String, String> usernamePasswordMapping; // NOPMD - this field is not really unused
+    private final Map<String, String> usernamePasswordMapping = new HashMap<>(); // NOPMD - this field is not really unused
 
     @Mock
     private final CodeResourceCache codeCache = Mockito.mock(CodeResourceCache.class);
@@ -49,9 +48,7 @@ public class SimpleAuthenticatorTest {
     private final SimpleAuthenticator simpleAuthenticator = new SimpleAuthenticator();
 
 
-    @BeforeClass
-    public void init() {
-        usernamePasswordMapping = new HashMap<>();
+    public SimpleAuthenticatorTest() {
         usernamePasswordMapping.put("hinz", "kunz");
 
         String passwords = "testuser=9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05";
@@ -62,7 +59,7 @@ public class SimpleAuthenticatorTest {
 
         MockitoAnnotations.initMocks(this);
         Mockito.when(codeCache.getTypeCache("text/plain")).thenReturn(codes);
-    } // init()
+    } // ()
 
 
     /**

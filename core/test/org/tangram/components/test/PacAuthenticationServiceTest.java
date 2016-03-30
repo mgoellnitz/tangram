@@ -46,7 +46,6 @@ import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.link.TargetDescriptor;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -70,7 +69,7 @@ public class PacAuthenticationServiceTest {
     private final Set<String> loginProviders = new HashSet<>();
 
     @Spy
-    private final Map<String,String> userIdAttributes = new HashMap<>();
+    private final Map<String, String> userIdAttributes = new HashMap<>();
 
     @InjectMocks
     private final PacAuthenticationService pacAuthenticationService = new PacAuthenticationService();
@@ -78,12 +77,9 @@ public class PacAuthenticationServiceTest {
     private final FormClient formLogin = new FormClient();
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        SimpleAuthenticatorTest authenticatorTest = new SimpleAuthenticatorTest();
-        authenticatorTest.init();
+    public PacAuthenticationServiceTest() {
         formLogin.setName("form");
-        formLogin.setAuthenticator(authenticatorTest.getInstance());
+        formLogin.setAuthenticator(new SimpleAuthenticatorTest().getInstance());
         formLogin.setProfileCreator(new UsernameProfileCreator());
 
         clientSet.add(formLogin);

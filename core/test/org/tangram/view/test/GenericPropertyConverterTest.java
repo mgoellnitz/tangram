@@ -18,6 +18,7 @@
  */
 package org.tangram.view.test;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -48,7 +49,6 @@ import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -60,7 +60,7 @@ public class GenericPropertyConverterTest {
     private static final Logger LOG = LoggerFactory.getLogger(GenericPropertyConverterTest.class);
 
     @Spy
-    private final MockBeanFactory beanFactory = new MockBeanFactory();
+    private MockBeanFactory beanFactory;
 
     @Spy
     private final ViewUtilities viewUtilities = new ViewUtilities() { // NOPMD - this field is not really unused
@@ -98,11 +98,10 @@ public class GenericPropertyConverterTest {
     public List<CodeResource> referenceProperty = new ArrayList<>();
 
 
-    @BeforeClass
-    public void init() throws Exception {
+    public GenericPropertyConverterTest() throws FileNotFoundException {
+        beanFactory = MockBeanFactory.getInstance();
         MockitoAnnotations.initMocks(this);
-        beanFactory.init();
-    } // init()
+    } // ()
 
 
     @Test

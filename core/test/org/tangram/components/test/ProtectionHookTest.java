@@ -31,6 +31,7 @@ import org.mockito.Spy;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.components.ProtectionHook;
+import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 import org.tangram.link.TargetDescriptor;
 import org.tangram.mock.content.MockBeanFactory;
@@ -46,15 +47,15 @@ import org.testng.annotations.Test;
 public class ProtectionHookTest {
 
     @Spy
-    private MockBeanFactory beanFactory = new MockBeanFactory();
+    private BeanFactory beanFactory; // NOPMD - this field is not really unused
 
     @InjectMocks
-    private ProtectionHook protectionHook = new ProtectionHook();
+    private final ProtectionHook protectionHook = new ProtectionHook();
 
 
     @Test
     public void testProtectionHook() throws Exception {
-        beanFactory.init();
+        beanFactory = MockBeanFactory.getInstance();
         MockitoAnnotations.initMocks(this);
         Content c = Mockito.mock(Content.class);
         final List<Content> protectionPath = new ArrayList<>(2);

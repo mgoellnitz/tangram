@@ -27,8 +27,7 @@ import org.tangram.view.PropertyConverter
 log.info "starting"
 
 log.info "configuring bean facory"
-BeanFactory beanFactory = new MockBeanFactory()
-beanFactory.init()
+BeanFactory beanFactory = MockBeanFactory.getInstance()
 module.bind(BeanFactory.class).toInstance(beanFactory)
 
 log.info "configuring property converter"

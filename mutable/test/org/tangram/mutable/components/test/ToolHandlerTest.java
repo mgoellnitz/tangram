@@ -18,6 +18,7 @@
  */
 package org.tangram.mutable.components.test;
 
+import java.io.FileNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,7 +36,6 @@ import org.tangram.link.TargetDescriptor;
 import org.tangram.mock.MockMutableBeanFactory;
 import org.tangram.protection.AuthorizationService;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -47,10 +47,10 @@ public class ToolHandlerTest {
     private static final TargetDescriptor DUMMY_LOGIN = new TargetDescriptor(ToolHandlerTest.class, "dummy", "login");
 
     @Spy
-    private final MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
+    private final MockMutableBeanFactory beanFactory;
 
     @Spy
-    private CodeResourceCache codeCache; // NOPMD - this field is not really unused
+    private final CodeResourceCache codeCache; // NOPMD - this field is not really unused
 
     @Mock
     private LinkHandlerRegistry linkHandlerRegistry; // NOPMD - this field is not really unused
@@ -62,15 +62,12 @@ public class ToolHandlerTest {
     private final ToolHandler toolHandler = new ToolHandler();
 
 
-    @BeforeClass
-    public void init() throws Exception {
-        GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest();
-        codeCacheTest.init();
-        codeCache = codeCacheTest.getInstance();
+    public ToolHandlerTest() throws FileNotFoundException {
+        codeCache = new GenericCodeResourceCacheTest().getInstance();
+        beanFactory = new MockMutableBeanFactory();
         MockitoAnnotations.initMocks(this);
-        beanFactory.init();
         toolHandler.afterPropertiesSet();
-    } // init()
+    } // ()
 
 
     @Test

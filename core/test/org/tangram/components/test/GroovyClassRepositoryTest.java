@@ -19,18 +19,17 @@
 package org.tangram.components.test;
 
 import groovy.lang.GroovyClassLoader;
+import java.io.FileNotFoundException;
 import javax.inject.Singleton;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.tangram.PersistentRestartCache;
 import org.tangram.components.GroovyClassRepository;
-import org.tangram.content.BeanFactory;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.util.DummyRestartCache;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -43,7 +42,7 @@ public class GroovyClassRepositoryTest {
     private final PersistentRestartCache restartCache = new DummyRestartCache(); // NOPMD - this field is not really unused
 
     @Spy
-    private final MockBeanFactory factory = new MockBeanFactory();
+    private MockBeanFactory factory; // NOPMD - this field is not really unused
 
     @Spy
     private CodeResourceCache codeCache; // NOPMD - this field is not really unused
@@ -52,21 +51,17 @@ public class GroovyClassRepositoryTest {
     private final GroovyClassRepository repository = new GroovyClassRepository();
 
 
-    public void init(String contentResource) throws Exception {
-        GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest();
-        codeCacheTest.init(contentResource);
+    public GroovyClassRepositoryTest(String contentResource) throws FileNotFoundException {
+        GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest(contentResource);
         codeCache = codeCacheTest.getInstance();
+        factory = MockBeanFactory.getInstance(contentResource);
         MockitoAnnotations.initMocks(this);
-        factory.init(contentResource);
         repository.afterPropertiesSet();
-    } // init()
+    } // ()
 
-
-    @BeforeClass
-    public void init() throws Exception {
-        init("/mock-content.xml");
-    } // init()
-
+    public GroovyClassRepositoryTest() throws FileNotFoundException {
+        this(null);
+    } // ()
 
     /**
      * Return the instance in test with every mock needed for other tests to include a working instance.
@@ -76,11 +71,6 @@ public class GroovyClassRepositoryTest {
     public GroovyClassRepository getInstance() {
         return repository;
     } // getInstance()
-
-
-    public BeanFactory getBeanFactory() {
-        return factory;
-    } // getBeanFactory
 
 
     @Test
