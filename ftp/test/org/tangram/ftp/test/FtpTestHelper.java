@@ -36,6 +36,7 @@ import org.tangram.components.test.GenericCodeResourceCacheTest;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.ftp.TangramFtpServer;
 import org.tangram.mock.MockMutableBeanFactory;
+import org.tangram.mutable.MutableBeanFactory;
 
 
 /**
@@ -55,6 +56,8 @@ public class FtpTestHelper {
 
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
+    private final MutableBeanFactory beanFactory;
+
 
     /**
      * Create a new helper instance.
@@ -66,11 +69,16 @@ public class FtpTestHelper {
     public FtpTestHelper(String commandName) throws UnsupportedEncodingException, FileNotFoundException {
         command = commandName;
         bytes = (commandName.toLowerCase()+"\r\n").getBytes("UTF-8");
-        MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
+        beanFactory = new MockMutableBeanFactory();
         CodeResourceCache codeCache = new GenericCodeResourceCacheTest().getInstance();
         TangramFtpServer ftpServer = new TangramFtpServer(beanFactory, codeCache);
         commands = ftpServer.getCommands();
     } // ()
+
+
+    public MutableBeanFactory getBeanFactory() {
+        return beanFactory;
+    } // getBeanFactory()
 
 
     public Map<String, AbstractTrackingCommandHandler> getCommands() {

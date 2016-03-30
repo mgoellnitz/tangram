@@ -25,44 +25,47 @@ import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.CommandNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.ftp.RetrFtpCommandHandler;
+import org.tangram.ftp.RntoFtpCommandHandler;
 import org.tangram.ftp.SessionHelper;
+import org.tangram.mock.content.MockMutableCode;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
 /**
- * Test aspects of the ftp command handler for retrieving.
+ * Test aspects of the ftp command handler for renaming.
  */
-public class RetrFtpCommandHandlerTest {
+public class RntoFtpCommandHandlerTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RetrFtpCommandHandlerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RntoFtpCommandHandlerTest.class);
 
 
     @Test
-    public void testRetrFtpCommandHandler() throws Exception {
-        FtpTestHelper helper = new FtpTestHelper(CommandNames.RETR);
-        RetrFtpCommandHandler retrFtpCommandHandler = (RetrFtpCommandHandler) helper.getHandler();
-
+    public void testRntoFtpCommandHandler() throws Exception {
+        String id = "CodeResource:10";
+        FtpTestHelper helper = new FtpTestHelper(CommandNames.RNTO);
+        MockMutableCode code = helper.getBeanFactory().getBean(MockMutableCode.class, id);
+        Assert.assertEquals(code.getAnnotation(), "org.tangram.link.LinkHandler", "unexpected initial value for annotation.");
+        RntoFtpCommandHandler rntoFtpCommandHandler = (RntoFtpCommandHandler) helper.getHandler();
         List<String> params = new ArrayList<>();
-        params.add("org.tangram.link.LinkHandler.groovy");
+        params.add("org.tangram.link.GroovyLinkHandler.groovy");
         Command command = helper.getCommand(params);
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
-        LOG.debug("testRetrFtpCommandHandler() run");
+        LOG.debug("testRntoFtpCommandHandler() run");
         Thread t = new Thread(session);
         t.start();
         Thread.sleep(100);
-        LOG.debug("testRetrFtpCommandHandler() list");
+        LOG.debug("testRntoFtpCommandHandler() list");
         session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
-        retrFtpCommandHandler.handleCommand(command, session);
-        LOG.debug("testRetrFtpCommandHandler() close");
+        session.setAttribute(SessionHelper.RENAME_ID, id);
+        rntoFtpCommandHandler.handleCommand(command, session);
+        LOG.debug("testRntoFtpCommandHandler() close");
         session.close();
-        LOG.debug("testRetrFtpCommandHandler() join");
+        LOG.debug("testRntoFtpCommandHandler() join");
         t.join(5000);
-        String content = session.getContent();
-        Assert.assertEquals(content.length(), 564, "Unexpected file content received.");
-        Assert.assertEquals(content.indexOf("package org.tangram.test"), 0, "Unexpected file content received.");
-    } // testRetrFtpCommandHandler()
+        code = helper.getBeanFactory().getBean(MockMutableCode.class, id);
+        Assert.assertEquals(code.getAnnotation(), "org.tangram.link.GroovyLinkHandler", "unexpected new value for annotation.");
+    } // testRntoFtpCommandHandler()
 
-} // RetrFtpCommandHandlerTest
+} // RntoFtpCommandHandlerTest
