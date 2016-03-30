@@ -36,7 +36,6 @@ import org.tangram.annotate.Abstract;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanListener;
 import org.tangram.content.Content;
-import org.tangram.content.TransientCode;
 import org.tangram.util.ClassResolver;
 import org.tangram.util.SystemUtils;
 
@@ -63,10 +62,9 @@ public class MockBeanFactory extends AbstractBeanFactory {
         allClasses = new ArrayList<>();
         ClassResolver resolver = new ClassResolver(basePackages);
         Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
-        resolvedClasses.add(TransientCode.class);
-        resolvedClasses.addAll(resolver.getSubclasses(MockContent.class));
+        resolvedClasses.addAll(resolver.getSubclasses(Content.class));
         for (Class<? extends Content> cls : resolvedClasses) {
-            LOG.info("getAllClasses() * {}", cls.getName());
+            LOG.info("getAllClasses() {}", cls.getName());
             if (!allClasses.contains(cls)) {
                 allClasses.add(cls);
                 xstream.alias(cls.getSimpleName(), cls);

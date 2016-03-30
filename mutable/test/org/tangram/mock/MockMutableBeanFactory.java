@@ -48,7 +48,7 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
 
     public MockMutableBeanFactory() throws FileNotFoundException {
-        super("/mock-content.xml");
+        super("/mutable-content.xml");
     }
 
 

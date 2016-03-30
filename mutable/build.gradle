@@ -24,7 +24,8 @@ dependencies {
   compile "com.thoughtworks.xstream:xstream:$versions.xstream"
 
   testCompile "org.testng:testng:$versions.testng"
-  // Used for mocking some things
+  // test logging at debug level through special logback.groovy
+  testCompile "ch.qos.logback:logback-classic:$versions.logback"
   testCompile "org.mockito:mockito-all:$versions.mockito"
   testCompile "org.springframework:spring-web:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"

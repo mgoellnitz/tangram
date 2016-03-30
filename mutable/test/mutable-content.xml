@@ -1,0 +1,116 @@
+<?xml version="1.0" ?>
+<list>
+<TransientCode>
+<id>CodeResource:2</id>
+<annotation>ftp-users.properties</annotation>
+<mimeType>text/plain</mimeType>
+<codeText>testuser=9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05
+</codeText>
+<modificationTime>11235432</modificationTime>
+</TransientCode>
+<TransientCode>
+<id>CodeResource:4</id>
+<annotation>org.tangram.example.Topic</annotation>
+<mimeType>text/html</mimeType>
+<codeText>&lt;h1&gt;Title&lt;/h1&gt;
+</codeText>
+<modificationTime>11235432</modificationTime>
+</TransientCode>
+<TransientCode>
+<id>CodeResource:6</id>
+<annotation>org.tangram.example.Topic</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>
+package org.tangram.test
+
+public class GroovyTest {
+
+  public String getSomething() {
+    return "something"
+  }
+
+}
+</codeText>
+<modificationTime>131235432</modificationTime>
+</TransientCode>
+<TransientCode>
+<id>CodeResource:8</id>
+<annotation>org.tangram.example.Container</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>package org.tangram.test
+
+import javax.inject.Singleton
+
+@Singleton
+public class GroovyAnnotatedTest {
+
+}
+</codeText>
+<modificationTime>131235432</modificationTime>
+</TransientCode>
+<MockMutableCode>
+<id>CodeResource:10</id>
+<annotation>org.tangram.link.LinkHandler</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>package org.tangram.test
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.tangram.link.LinkHandler
+import org.tangram.link.Link
+import org.tangram.link.TargetDescriptor;
+
+public class GroovyLinkHandlerTest implements LinkHandler {
+
+  @Override
+  public TargetDescriptor parseLink(String url, HttpServletResponse response) {
+    return null;
+  }
+
+  @Override
+  public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
+    return null;
+  }
+
+}
+</codeText>
+<modificationTime>131235442</modificationTime>
+</MockMutableCode>
+<TransientCode>
+<id>CodeResource:12</id>
+<annotation>org.tangram.content.Content</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>package org.tangram.test
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.tangram.annotate.LinkHandler
+import org.tangram.link.TargetDescriptor;
+
+@LinkHandler
+public class GroovyAtHandlerTest {
+
+}
+</codeText>
+<modificationTime>131235442</modificationTime>
+</TransientCode>
+<TransientCode>
+<id>CodeResource:14</id>
+<annotation>org.tangram.example.Article</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>
+package org.tangram.test
+
+public class GroovyErrorTest {
+
+static void import
+
+}
+</codeText>
+<modificationTime>131235432</modificationTime>
+</TransientCode>
+<RootTopic>
+  <id>RootTopic:1</id>
+  <bottomLinks><list></list></bottomLinks>
+</RootTopic>
+</list>

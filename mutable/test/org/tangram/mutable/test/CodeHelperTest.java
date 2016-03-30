@@ -18,6 +18,10 @@
  */
 package org.tangram.mutable.test;
 
+import org.tangram.components.test.GenericCodeResourceCacheTest;
+import org.tangram.content.CodeResourceCache;
+import org.tangram.mock.MockMutableBeanFactory;
+import org.tangram.mock.content.MockMutableCode;
 import org.tangram.mutable.CodeHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -52,6 +56,20 @@ public class CodeHelperTest {
         Assert.assertEquals(CodeHelper.getAnnotation("org.tangram.example.TestClass.groovy.old"), "org.tangram.example.TestClass", "Annotation for groovy code is its filename without extension.");
         Assert.assertEquals(CodeHelper.getAnnotation("org.tangram.example.TestClass.vtl"), "org.tangram.example.TestClass", "Annotation for velocity template code is its filename without extension.");
         Assert.assertEquals(CodeHelper.getAnnotation("org.tangram.example.TestClass.md"), "org.tangram.example.TestClass", "Annotation for markdown template code is its filename without extension.");
-    } // testJavaBean()
+    } // testCodeHelper()
+
+
+    @Test
+    public void testUpdateCode() throws Exception {
+        MockMutableBeanFactory beanFactory = new MockMutableBeanFactory();
+        CodeResourceCache codeCache = new GenericCodeResourceCacheTest().getInstance();
+        MockMutableCode bean = beanFactory.getBean(MockMutableCode.class, "CodeResource:10");
+        Assert.assertNotNull(bean, "We should have a bean to modify for a code update test.");
+        Assert.assertEquals(bean.getCodeText().length(), 564, "Initial code size expected.");
+        CodeHelper.updateCode(beanFactory, codeCache, "application/x-groovy", "org.tangram.link.LinkHandler.groovy", new byte[0], System.currentTimeMillis());
+        bean = beanFactory.getBean(MockMutableCode.class, "CodeResource:10");
+        Assert.assertNotNull(bean, "We should have a bean to modify for a code update test.");
+        Assert.assertEquals(bean.getCodeText().length(), 0, "Empty code expected after modification.");
+    } // testUpdateCode()
 
 } // CodeHelperTest
