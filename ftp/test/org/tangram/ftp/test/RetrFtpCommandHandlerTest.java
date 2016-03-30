@@ -18,8 +18,6 @@
  */
 package org.tangram.ftp.test;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,25 +25,27 @@ import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.command.CommandNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.ftp.ListFtpCommandHandler;
+import org.tangram.ftp.RetrFtpCommandHandler;
 import org.tangram.ftp.SessionHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
 /**
- * Test aspects of the ftp command handler for listing folders.
+ * Test aspects of the ftp command handler for retrieving.
  */
-public class ListFtpCommandHandlerTest {
+public class RetrFtpCommandHandlerTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ListFtpCommandHandlerTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RetrFtpCommandHandlerTest.class);
 
 
     @Test
-    public void testListFtpCommandHandler() throws Exception {
-        FtpTestHelper helper = new FtpTestHelper(CommandNames.LIST);
-        ListFtpCommandHandler listFtpCommandHandler = (ListFtpCommandHandler) helper.getHandler();
+    public void testRetrFtpCommandHandler() throws Exception {
+        FtpTestHelper helper = new FtpTestHelper(CommandNames.RETR);
+        RetrFtpCommandHandler retrFtpCommandHandler = (RetrFtpCommandHandler) helper.getHandler();
+
         List<String> params = new ArrayList<>();
+        params.add("org.tangram.link.LinkHandler.groovy");
         Command command = helper.getCommand(params);
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
@@ -54,20 +54,15 @@ public class ListFtpCommandHandlerTest {
         t.start();
         Thread.sleep(100);
         LOG.debug("testListFtpCommandHandler() list");
-        listFtpCommandHandler.handleCommand(command, session);
         session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
-        listFtpCommandHandler.handleCommand(command, session);
+        retrFtpCommandHandler.handleCommand(command, session);
         LOG.debug("testListFtpCommandHandler() close");
         session.close();
         LOG.debug("testListFtpCommandHandler() join");
         t.join(5000);
-        BufferedReader reader = new BufferedReader(new StringReader(session.getContent()));
-        String line = reader.readLine();
-        while (line!=null) {
-            Assert.assertTrue(line.startsWith("-rw-r--r--   1 tangram tangram"), "Error in line format discovered.");
-            Assert.assertTrue(line.endsWith(".groovy"), "Error in line format discovered.");
-            line = reader.readLine();
-        } // while
-    } // testListFtpCommandHandler()
+        String content = session.getContent();
+        Assert.assertEquals(content.length(), 564, "Unexpected file content received.");
+        Assert.assertEquals(content.indexOf("package org.tangram.test"), 0, "Unexpected file content received.");
+    } // testRetrFtpCommandHandler()
 
-} // ListFtpCommandHandlerTest
+} // RetrFtpCommandHandlerTest

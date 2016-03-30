@@ -37,8 +37,7 @@ public class GroovyTest {
 <id>CodeResource:8</id>
 <annotation>org.tangram.example.Container</annotation>
 <mimeType>application/x-groovy</mimeType>
-<codeText>
-package org.tangram.test
+<codeText>package org.tangram.test
 
 import javax.inject.Singleton
 
@@ -53,8 +52,7 @@ public class GroovyAnnotatedTest {
 <id>CodeResource:10</id>
 <annotation>org.tangram.link.LinkHandler</annotation>
 <mimeType>application/x-groovy</mimeType>
-<codeText>
-package org.tangram.test
+<codeText>package org.tangram.test
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,8 +80,7 @@ public class GroovyLinkHandlerTest implements LinkHandler {
 <id>CodeResource:12</id>
 <annotation>org.tangram.content.Content</annotation>
 <mimeType>application/x-groovy</mimeType>
-<codeText>
-package org.tangram.test
+<codeText>package org.tangram.test
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
