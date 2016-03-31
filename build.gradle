@@ -24,6 +24,7 @@ buildscript {
   }
   dependencies {
     classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
+    classpath 'org.standardout:gradle-versioneye-plugin:1.2.0'
   }
 }
 
@@ -35,6 +36,7 @@ allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
   apply plugin: 'java'
   apply plugin: 'jacoco'
+  apply plugin: 'org.standardout.versioneye'
   // our custom directory layout
   sourceSets {
     main {
