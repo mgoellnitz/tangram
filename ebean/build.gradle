@@ -36,7 +36,7 @@ dependencies {
   testCompile project (':tangram-core').sourceSets.test.output
   testCompile "org.springframework:spring-core:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"
-  testCompile "com.h2database:h2:1.4.191"
+  testCompile "com.h2database:h2:$versions.h2db"
 }
 
 compileTestJava.doLast {

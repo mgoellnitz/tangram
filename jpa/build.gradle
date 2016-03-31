@@ -44,7 +44,7 @@ dependencies {
   testCompile project (':tangram-core').sourceSets.test.output
   testCompile "org.springframework:spring-core:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"
-  testCompile "hsqldb:hsqldb:1.8.0.10"
+  testCompile "hsqldb:hsqldb:$versions.hsqldb"
 }
 
 // For Java EE environments

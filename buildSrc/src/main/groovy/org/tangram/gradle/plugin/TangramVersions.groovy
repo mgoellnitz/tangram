@@ -31,7 +31,7 @@ public class TangramVersions {
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String groovy = '2.4.6'
-  String asm = '4.0'
+  String asm = '5.1'
   String velocity = '1.7'
   String slf4j = '1.7.20'
   String log4j = '1.2.17'
@@ -47,7 +47,9 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.3.1' // Gradle 2.10 has 6.3.1 - tests fail with other versions - latest is 6.9.11
+  String testng = '6.9.11' // Gradle 2.12 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String hsqldb = '1.8.1.1'
+  String h2db = '1.4.191'
 
   // The dependency injection options
   String dinistiq = '0.5'
