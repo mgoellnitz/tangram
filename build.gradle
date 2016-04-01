@@ -65,6 +65,10 @@ allprojects {
   test {
     useTestNG()
   }
+  dependencies {
+    jacocoAgent "org.jacoco:org.jacoco.agent:0.7.6+"
+    jacocoAnt "org.jacoco:org.jacoco.ant:0.7.6+"
+  }
 }
 
 repositories {
