@@ -70,7 +70,7 @@ public class EditingHandlerTest {
     private LinkHandlerRegistry linkHandlerRegistry; // NOPMD - this field is not really unused
 
     @Spy
-    private MockMutableBeanFactory beanFactory;
+    private final MockMutableBeanFactory beanFactory;
 
     @Spy
     private ClassRepository repository; // NOPMD - this field is not really unused

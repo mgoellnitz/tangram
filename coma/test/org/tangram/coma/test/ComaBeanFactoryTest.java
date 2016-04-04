@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.coma.ComaBeanFactory;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
@@ -37,8 +35,6 @@ import org.testng.annotations.Test;
  * Do some very basic test accessing a prepared read only database from CoreMedia 5.0 with hsqldb.
  */
 public class ComaBeanFactoryTest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ComaBeanFactoryTest.class);
 
     private static final String DB_DRIVER = "org.hsqldb.jdbcDriver";
 

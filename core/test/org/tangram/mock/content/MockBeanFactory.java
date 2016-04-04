@@ -87,7 +87,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
     } // ()
 
 
-    public static MockBeanFactory getInstance(String resourceName) throws FileNotFoundException {
+    public static MockBeanFactory getFactoryInstance(String resourceName) throws FileNotFoundException {
         resourceName = (resourceName==null) ? resourceName = "/mock-content.xml" : resourceName;
         MockBeanFactory result = INSTANCES.get(resourceName);
         if (result==null) {
@@ -95,12 +95,12 @@ public class MockBeanFactory extends AbstractBeanFactory {
             INSTANCES.put(resourceName, result);
         } // if
         return result;
-    } // getInstance()
+    } // getFactoryInstance()
 
 
     public static MockBeanFactory getInstance() throws FileNotFoundException {
-        return getInstance(null);
-    } // getInstance()
+        return getFactoryInstance(null);
+    } // getFactoryInstance()
 
 
     public Map<Class<? extends Content>, List<Content>> getContents() {

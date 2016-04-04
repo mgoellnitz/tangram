@@ -55,7 +55,7 @@ public class GenericCodeResourceCacheTest {
 
 
     public GenericCodeResourceCacheTest(String contentResource) throws FileNotFoundException {
-        factory = MockBeanFactory.getInstance(contentResource);
+        factory = MockBeanFactory.getFactoryInstance(contentResource);
         MockitoAnnotations.initMocks(this);
         codeResourceCache.afterPropertiesSet();
     } // ()
@@ -73,7 +73,7 @@ public class GenericCodeResourceCacheTest {
      */
     public CodeResourceCache getInstance() {
         return codeResourceCache;
-    } // getInstance()
+    } // getFactoryInstance()
 
 
     @Test

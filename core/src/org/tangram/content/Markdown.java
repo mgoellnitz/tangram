@@ -52,7 +52,7 @@ public class Markdown {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Markdown) ? toString().equals(obj.toString()) : false;
+        return (obj instanceof Markdown) && toString().equals(obj.toString());
     } // equals()
 
 

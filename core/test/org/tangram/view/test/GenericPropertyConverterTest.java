@@ -60,7 +60,7 @@ public class GenericPropertyConverterTest {
     private static final Logger LOG = LoggerFactory.getLogger(GenericPropertyConverterTest.class);
 
     @Spy
-    private MockBeanFactory beanFactory;
+    private final MockBeanFactory beanFactory;
 
     @Spy
     private final ViewUtilities viewUtilities = new ViewUtilities() { // NOPMD - this field is not really unused

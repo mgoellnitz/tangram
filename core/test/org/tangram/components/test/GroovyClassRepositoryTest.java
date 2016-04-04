@@ -54,7 +54,7 @@ public class GroovyClassRepositoryTest {
     public GroovyClassRepositoryTest(String contentResource) throws FileNotFoundException {
         GenericCodeResourceCacheTest codeCacheTest = new GenericCodeResourceCacheTest(contentResource);
         codeCache = codeCacheTest.getInstance();
-        factory = MockBeanFactory.getInstance(contentResource);
+        factory = MockBeanFactory.getFactoryInstance(contentResource);
         MockitoAnnotations.initMocks(this);
         repository.afterPropertiesSet();
     } // ()
@@ -70,7 +70,7 @@ public class GroovyClassRepositoryTest {
      */
     public GroovyClassRepository getInstance() {
         return repository;
-    } // getInstance()
+    } // getFactoryInstance()
 
 
     @Test

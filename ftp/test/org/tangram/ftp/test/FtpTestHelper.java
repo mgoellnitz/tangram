@@ -30,8 +30,6 @@ import java.util.Map;
 import org.mockftpserver.core.command.AbstractTrackingCommandHandler;
 import org.mockftpserver.core.command.Command;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.components.test.GenericCodeResourceCacheTest;
 import org.tangram.content.CodeResourceCache;
 import org.tangram.ftp.TangramFtpServer;
@@ -45,8 +43,6 @@ import org.tangram.mutable.MutableBeanFactory;
  * provides common mock implementations for ftp handler tests.
  */
 public class FtpTestHelper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(FtpTestHelper.class);
 
     private final String command;
 

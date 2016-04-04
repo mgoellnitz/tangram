@@ -67,7 +67,7 @@ public class MetaLinkHandlerTest {
     private static final Link ACTION_LINK = new Link("/actionlinkresult");
 
     @Spy
-    private MockBeanFactory beanFactory;
+    private final MockBeanFactory beanFactory;
 
     @Spy
     private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
