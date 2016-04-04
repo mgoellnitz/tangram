@@ -2,6 +2,7 @@ Tangram Dynamic Extendable Web Applications
 ===========================================
 
 [![Build Status](https://api.travis-ci.org/mgoellnitz/tangram.svg?branch=master)](https://travis-ci.org/mgoellnitz/tangram)
+[![Coverage Status](https://coveralls.io/repos/github/mgoellnitz/tangram/badge.svg?branch=master)](https://coveralls.io/github/mgoellnitz/tangram?branch=master)
 
 Tangram is a framework comprised of an assembly of proven Java library modules
 to form a basis for web applications which need the following core elements:
