@@ -30,7 +30,6 @@ import org.testng.annotations.Test;
  *
  * Deliberately copied from CoConAT project which will some day become a dependency.
  */
-@Test
 public class ComaTextConverterTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaTextConverterTest .class);
