@@ -68,7 +68,7 @@ public class DefaultHandler extends AbstractLinkHandler implements InternalLinkF
     } // setMaxInlinedBlobSize()
 
 
-    @LinkAction("/id_([A-Z][a-zA-Z]+:[0-9]+)/view_([a-zA-Z0-9]+)")
+    @LinkAction("/id_([A-Z][a-zA-Z]+:[0-9a-f]+)/view_([a-zA-Z0-9]+)")
     public TargetDescriptor render(@LinkPart(1) String id, @LinkPart(2) String view, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Utils.setPrimaryBrowserLanguageForJstl(request);
         LOG.debug("render() id={} view={}", id, view);
@@ -82,7 +82,7 @@ public class DefaultHandler extends AbstractLinkHandler implements InternalLinkF
     } // render()
 
 
-    @LinkAction("/id_([A-Z][a-zA-Z]+:[0-9]+)")
+    @LinkAction("/id_([A-Z][a-zA-Z]+:[0-9a-f]+)")
     public TargetDescriptor render(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         return render(id, null, request, response);
     } // render()
