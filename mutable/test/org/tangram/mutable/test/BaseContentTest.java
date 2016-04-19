@@ -216,7 +216,25 @@ public abstract class BaseContentTest {
 
 
     @Test(priority = 1)
-    public void test1CreateTestContent() throws Exception {
+    public void test2Factory() throws Exception {
+        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
+        Assert.assertNotNull(beanFactory, "Need factory for beans.");
+        Object manager = beanFactory.getManager();
+        Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
+        String managerClassName = manager.getClass().getName();
+        Assert.assertTrue(managerClassName.startsWith(getManagerPrefix()), "The factory should have a correctly typed manager instance.");
+        List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
+        Assert.assertEquals(codeClasses.size(), 1, "We have one code class.");
+        Class<MutableCode> codeClass = codeClasses.get(0);
+        String filterQuery = beanFactory.getFilterQuery(codeClass, "annotation", "tangram");
+        Assert.assertNotNull(filterQuery, "There should be some filter query");
+        Assert.assertTrue(filterQuery.indexOf("annotation")>0, "Unexpected contents of filter query");
+        Assert.assertTrue(filterQuery.indexOf("tangram")>0, "Unexpected contents of filter query");
+    } // test1Factory()
+
+
+    @Test(priority = 3)
+    public void test3CreateTestContent() throws Exception {
         MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         int numberOfAllClasses = getNumberOfAllClasses();
@@ -236,11 +254,11 @@ public abstract class BaseContentTest {
         setPeers(beanB, beanA);
         beanFactory.persist(beanB);
         beanFactory.commitTransaction();
-    } // test1CreateTestContent()
+    } // test3CreateTestContent()
 
 
-    @Test(priority = 2)
-    public void test2Components() throws Exception {
+    @Test(priority = 4)
+    public void test4Components() throws Exception {
         MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
@@ -255,11 +273,11 @@ public abstract class BaseContentTest {
         Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
         Content content = beanFactory.getBean(bean.getId());
         Assert.assertEquals(bean, content, "Untyped content should result in the same bean.");
-    } // test2Components()
+    } // test4Components()
 
 
-    @Test(priority = 3)
-    public void test3Code() throws Exception {
+    @Test(priority = 5)
+    public void test5Code() throws Exception {
         MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
@@ -301,11 +319,11 @@ public abstract class BaseContentTest {
             LOG.info("test3Code() exception occured - only relevant for ebean AFAIK", e);
         } // try/catch
         Assert.assertNull(bean, "Despite the correct ID there should have been no code result.");
-    } // test3Code()
+    } // test5Code()
 
 
-    @Test(priority = 4)
-    public void test4ObtainCode() throws Exception {
+    @Test(priority = 6)
+    public void test6ObtainCode() throws Exception {
         ClassRepository repository = getInstance(ClassRepository.class, false);
         Assert.assertNotNull(repository, "Could not find class repository.");
         Map<String, Class<Object>> annotatedClasses = repository.getAnnotated(Named.class);
@@ -320,26 +338,6 @@ public abstract class BaseContentTest {
         Assert.assertEquals(emptyClassBytes.length, 2372, "Unexpected number of bytes for class found.");
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
-    } // test4ObtainCode()
-
-
-    @Test(priority = 5)
-    public void test5Factory() throws Exception {
-        LOG.info("test5Factory()");
-        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
-        Assert.assertNotNull(beanFactory, "Need factory for beans.");
-        Object manager = beanFactory.getManager();
-        Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
-        String managerClassName = manager.getClass().getName();
-        LOG.info("test5Factory() managerClassName={}", managerClassName);
-        Assert.assertTrue(managerClassName.startsWith(getManagerPrefix()), "The factory should have a correctly typed manager instance.");
-        List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
-        Assert.assertEquals(codeClasses.size(), 1, "We have one code class.");
-        Class<MutableCode> codeClass = codeClasses.get(0);
-        String filterQuery = beanFactory.getFilterQuery(codeClass, "annotation", "tangram");
-        Assert.assertNotNull(filterQuery, "There should be some filter query");
-        Assert.assertTrue(filterQuery.indexOf("annotation")>0, "Unexpected contents of filter query");
-        Assert.assertTrue(filterQuery.indexOf("tangram")>0, "Unexpected contents of filter query");
-    } // test5Factory()
+    } // test6ObtainCode()
 
 } // BaseContentTest
