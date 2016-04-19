@@ -18,6 +18,7 @@
  */
 package org.tangram.components.test;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,6 +36,8 @@ import org.tangram.authentication.GenericUser;
 import org.tangram.authentication.User;
 import org.tangram.components.GenericAuthorizationService;
 import org.tangram.content.CodeResourceCache;
+import org.tangram.link.Link;
+import org.tangram.link.LinkFactoryAggregator;
 import org.tangram.link.TargetDescriptor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -62,6 +65,9 @@ public class GenericAuthorizationServiceTest {
 
     @Spy
     private final Set<String> loginProviders = new HashSet<>(); // NOPMD - this field is not really unused
+
+    @Mock
+    private final LinkFactoryAggregator aggregator = null;
 
     @InjectMocks
     private final GenericAuthorizationService authorizationService = new GenericAuthorizationService();
@@ -108,5 +114,46 @@ public class GenericAuthorizationServiceTest {
         TargetDescriptor target = authorizationService.getLoginTarget(request);
         Assert.assertEquals(target, loginTarget, "We need a login target.");
     } // testGenericAuthorizationService()
+
+    @Test
+    public void testClosedSystem() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        HttpServletResponse response = new MockHttpServletResponse();
+        Set<User> users = new HashSet<>();
+        Mockito.when(authenticationService.getUsers(request, response)).thenReturn(users);
+        TargetDescriptor target = new TargetDescriptor(this, "log", "in");
+        Mockito.when(authorizationService.getLoginTarget(request)).thenReturn(target);
+        String uri = "/login-test";
+        Link link = new Link(uri);
+        Mockito.when(aggregator.createLink(request, response, target.getBean(), target.getAction(), target.getView())).thenReturn(link);
+        try {
+            authorizationService.handleRequest(request, response);
+        } catch (IOException e) {
+            Assert.fail("Request handling should not throw an exception");
+        } // try/catch
+        Assert.assertEquals(response.getStatus(), 302, "expected redirect to new location");
+        Assert.assertEquals(response.getHeader("Location"), uri, "expected redirect to new location");
+    } // testClosedSystem()
+
+    @Test
+    public void testHandleRequest() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        HttpServletResponse response = new MockHttpServletResponse();
+        Map<String, Object> properties = Collections.EMPTY_MAP;
+        GenericUser user = new GenericUser("form", "testuser", properties);
+        Set<User> users = new HashSet<>();
+        users.add(user);
+        Mockito.when(authenticationService.getUsers(request, response)).thenReturn(users);
+        String uri = "/logout-test";
+        Link link = new Link(uri);
+        Mockito.when(authenticationService.getLogoutLink(request, response)).thenReturn(link);
+        try {
+            authorizationService.handleRequest(request, response);
+        } catch (IOException e) {
+            Assert.fail("Request handling should not throw an exception");
+        } // try/catch
+        Assert.assertEquals(response.getStatus(), 200, "expected normal status result");
+        Assert.assertEquals(request.getAttribute("tangramLogoutUrl"), uri, "expected correct logout link in attribute");
+    } // testHandleRequest()
 
 } // GenericAuthorizationServiceTest

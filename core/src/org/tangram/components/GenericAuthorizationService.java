@@ -146,7 +146,14 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
             if (isAdminUser(request, response)) {
                 request.setAttribute("tangramAdminUser", true);
             } // if
-            if (!users.isEmpty()) {
+            if (users.isEmpty()) {
+                if (closedSystem) {
+                    LOG.info("handleRequest() no logged in user found while application is globally protected");
+                    TargetDescriptor target = getLoginTarget(request);
+                    Link loginLink = linkFactoryAggregator.createLink(request, response, target.getBean(), target.getAction(), target.getView());
+                    response.sendRedirect(loginLink.getUrl());
+                } // if
+            } else {
                 boolean allowed = false;
                 request.setAttribute("tangramLogoutUrl", authenticationService.getLogoutLink(request, response).getUrl());
                 for (User user : users) {
@@ -155,13 +162,6 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
                 if ((closedSystem)&&(!allowed)) {
                     LOG.warn("handleRequest() user not allowed to access page: {}", users);
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, users+" not allowed to view page");
-                } // if
-            } else {
-                if (closedSystem) {
-                    LOG.info("handleRequest() no logged in user found while application is globally protected");
-                    TargetDescriptor target = getLoginTarget(request);
-                    Link loginLink = linkFactoryAggregator.createLink(request, response, target.getBean(), target.getAction(), target.getView());
-                    response.sendRedirect(loginLink.getUrl());
                 } // if
             } // if
         } // if
