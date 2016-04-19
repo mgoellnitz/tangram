@@ -230,7 +230,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
                 ResultSetMetaData metaData = baseSet.getMetaData();
                 for (int i = 1; i<=metaData.getColumnCount(); i++) {
-                    String columnName = metaData.getColumnName(i);
+                    String columnName = metaData.getColumnName(i).toLowerCase();
                     Object value = baseSet.getObject(i);
                     LOG.debug("getProperties() property {} = {}", columnName, value);
                     properties.put(columnName, value);

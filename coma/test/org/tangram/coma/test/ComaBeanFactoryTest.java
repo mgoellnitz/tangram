@@ -139,6 +139,8 @@ public class ComaBeanFactoryTest {
         Map<String, String> parents = new HashMap<>();
         factory.setParents(parents);
         Assert.assertEquals(factory.getParents(), parents, "Unexpected parents collection found.");
+        Set<String> referrerIds = factory.getReferrerIds("6", "Topic", "subTopics");
+        Assert.assertEquals(referrerIds.size(), 1, "Unexpected referrer set found.");
     } // testImplementation()
 
 } // ComaBeanFactoryTest
