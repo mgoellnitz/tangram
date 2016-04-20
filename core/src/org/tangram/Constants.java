@@ -62,7 +62,7 @@ public final class Constants {
     /**
      * Pattern string to find IDs in Strings
      */
-    public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9]+)";
+    public static final String ID_PATTERN = "([A-Z][a-zA-Z]+:[0-9a-f]+)";
 
     /**
      * Pattern to find IDs in (rich/long) text.
