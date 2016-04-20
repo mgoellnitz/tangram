@@ -1,0 +1,42 @@
+/**
+ *
+ * Copyright 2013-2016 Martin Goellnitz
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+apply from: '../lib.gradle'
+
+// This is needed to let the testCompile time dependency work
+evaluationDependsOn(':tangram-mutable')
+
+dependencies {
+  compile project (':tangram-mutable')
+
+  compile "org.mongodb.morphia:morphia:$versions.morphia"
+
+  testCompile "org.testng:testng:$versions.testng"
+  // test logging at debug level through special logback.groovy
+  testCompile "ch.qos.logback:logback-classic:$versions.logback"
+  // more or less a dummy for the various autoscanned and auto injected beans
+  testCompile project (':tangram-dinistiq')
+  testCompile project (':tangram-mutable').sourceSets.test.output
+  testCompile project (':tangram-core').sourceSets.test.output
+  testCompile "org.springframework:spring-core:$versions.springframework"
+  testCompile "org.springframework:spring-test:$versions.springframework"
+}
+
+compileTestJava.doLast {
+  ebeanEnhanceTest()
+}
