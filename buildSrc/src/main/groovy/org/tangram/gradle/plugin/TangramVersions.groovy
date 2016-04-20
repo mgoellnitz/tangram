@@ -39,7 +39,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.9'
-  String pac4j = '1.8.7'
+  String pac4j = '1.8.8'
   String mockftpserver = '2.6'
   String tomcat = '7.0.68'
   String codemirror = '5.12'
@@ -78,11 +78,11 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.6.1'
+  String ebean = '7.7.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '4.9.2'
 
-  // Not used by tangram itself
-  String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
+  String mongodb = '3.0.2'
+  String morphia = '1.1.1'
 
 } // TangramVersions
