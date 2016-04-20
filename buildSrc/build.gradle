@@ -47,8 +47,6 @@ repositories {
   jcenter()
 }
 
-// Must for the time being be compiled with gradle 1.x/Groovy 1.x since most
-// web based support plattforms don't support gradle 2 and Groovy 2.
 dependencies {
   compile gradleApi()
   compile localGroovy()

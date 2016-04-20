@@ -53,6 +53,12 @@ class TangramUtilities {
    * Helper methods to be used for conditional filtering of input files.
    * These filters only work with files - not e.g. with zip entries.
    */
+  public isFilterable(input) {
+    return (input.displayName.startsWith('file') &&
+           (input.name.endsWith('.css') || input.name.endsWith('.js') ||
+            input.name.endsWith('.html') || input.name.endsWith('.txt') || input.name.endsWith('.jsp')))
+  }
+
   public isCss(input) {
     return (input.displayName.startsWith('file') && input.name.endsWith('.css'))
   }

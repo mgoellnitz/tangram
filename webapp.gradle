@@ -44,16 +44,22 @@ war.dependsOn jar
 jar.doFirst {
   into('META-INF/resources') {
     from fileTree("$projectDir/webapp")
-    filter(ReplaceTokens, tokens: ['codemirror_version': "$versions.codemirror".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
+    eachFile {
+      if (isFilterable(it)) {
+        filter(ReplaceTokens, tokens: ['codemirror_version': "$versions.codemirror".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
+      }
+    }
   }
 }
 
 // Special handling for the war packaging
 war {
-  filter(ReplaceTokens, tokens: ['codemirror_version': "$versions.codemirror".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
   eachFile {
+    if (isFilterable(it)) {
+      filter(ReplaceTokens, tokens: ['codemirror_version': "$versions.codemirror".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
+    }
     if(isCss(it)) {
-      it.filter(org.tangram.gradle.plugin.CSSMinify)
+      // it.filter(org.tangram.gradle.plugin.CSSMinify)
     }
     if(isJavaScript(it)) {
       it.filter(org.tangram.gradle.plugin.JavaScriptMinify)
