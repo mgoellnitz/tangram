@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String springframework = '4.2.5.RELEASE'
 
-  String weld = '2.3.3.Final'
+  String weld = '2.3.4.Final'
   String openwebbeans = '1.6.2'
 
   // Storage options
