@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,13 @@
  */
 import com.google.inject.name.Names
 import org.tangram.PersistentRestartCache
-import org.tangram.util.DummyRestartCache
+import org.tangram.util.FileRestartCache
 import javax.servlet.ServletContext
 
 log.info "starting"
 
-PersistentRestartCache persistentRestartCache = new DummyRestartCache()
+PersistentRestartCache persistentRestartCache = new FileRestartCache()
+persistentRestartCache.filename='build/test-restart-cache.ser'
 log.info("configuring persistent restart cache {}", persistentRestartCache)
 module.bind(PersistentRestartCache.class).toInstance(persistentRestartCache)
 

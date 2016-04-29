@@ -150,7 +150,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
      * Check if the underlying API implementation of the bean factory really has the needed managing instance
      * of some sort at hand.
      *
-     * common case to check for persisting and deleting instanced though highly API specific in detail.
+     * common case to check for persisting and deleting instances though highly API specific in detail.
      *
      * @return tell if manager instance is available in this bean factory instance
      */
@@ -225,7 +225,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 // yes we saw situations where this was not the case thus hiding other errors!
                 rollbackTransaction();
             } // if
-        } // try/catch/finally
+        } // try/catc
         return result;
     } // persistUncommitted()
 
@@ -246,7 +246,7 @@ public abstract class AbstractMutableBeanFactory extends AbstractBeanFactory imp
                 // yes we saw situations where this was not the case thus hiding other errors!
                 rollbackTransaction();
             } // if
-        } // try/catch/finally
+        } // try/catch
         return result;
     } // delete()
 

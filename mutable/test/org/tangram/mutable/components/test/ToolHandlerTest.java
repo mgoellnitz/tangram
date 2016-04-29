@@ -233,12 +233,14 @@ public class ToolHandlerTest {
         Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
         TargetDescriptor tool = null;
         try {
-            byte[] xmlfile = "<?xml version=\"1.0\" ?><list/>".getBytes("UTF-8");
-            tool = toolHandler.contentImport(xmlfile, request, response);
+            String xml = "<?xml version=\"1.0\" ?><list><Topic><id>Topic:234</id></Topic></list>";
+            tool = toolHandler.contentImport(xml.getBytes("UTF-8"), request, response);
         } catch (Exception e) {
             Assert.assertEquals(e.getMessage(), "Insufficient XML input.");
         } // try/catch
         Assert.assertEquals(tool, TargetDescriptor.DONE, "Content export indicates direct writing to writer.");
+        // MockMutableBean factory does not store these values on persist() so far
+        // Assert.assertNotNull(beanFactory.getBean(Topic.class, "Topic:234"), "Just imported bean should be avaiable.");
     } // testContentImport()
 
 

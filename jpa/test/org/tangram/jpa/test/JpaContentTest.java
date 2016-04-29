@@ -33,7 +33,6 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
@@ -99,15 +98,6 @@ public class JpaContentTest extends BaseContentTest {
     protected int getNumberOfClasses() {
         return 4;
     }
-
-
-    /**
-     * Dummy test so that this test class contains at least one test.
-     */
-    @Test
-    public void testNothing() {
-        Assert.assertTrue(true);
-    } // testNothing()
 
 
     @Test

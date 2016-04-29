@@ -293,7 +293,7 @@ public class ToolHandler {
         if (xmlfile==null) {
             throw new Exception("You missed to select an input file.");
         } // if
-        if (xmlfile.length < 5) {
+        if (xmlfile.length<5) {
             throw new Exception("Insufficient XML input.");
         } // if
         Reader input = new StringReader(new String(xmlfile, "UTF-8"));
@@ -304,7 +304,7 @@ public class ToolHandler {
         for (Class<? extends Content> c : classes) {
             xstream.alias(c.getSimpleName(), c);
         } // for
-
+        
         Object contents = xstream.fromXML(input);
         LOG.info("doImport() {}", contents);
         if (contents instanceof List) {
