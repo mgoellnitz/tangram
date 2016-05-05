@@ -38,7 +38,7 @@ apply plugin: 'com.jfrog.artifactory'
 
 defaultTasks 'clean', 'publishToMavenLocal'
 
-version '1.1-SNAPSHOT'
+version '1.1.0'
 
 String[] roots = ["${project.projectDir}/src/main/groovy"]
 def versions = new GroovyScriptEngine(roots).loadScriptByName('org/tangram/gradle/plugin/TangramVersions.groovy').newInstance()
