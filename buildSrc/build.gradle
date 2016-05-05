@@ -29,7 +29,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.gradle.plugin-publish' version '0.9.1'
+  id 'com.gradle.plugin-publish' version '0.9.4'
 }
 
 apply plugin: 'groovy'
@@ -126,7 +126,7 @@ pluginBundle {
 
   plugins {
     greetingsPlugin {
-      id = 'tangram.gradle.plugin'
+      id = 'tangram.tools'
       displayName = 'Tangram Gradle plugin'
     }
   }
