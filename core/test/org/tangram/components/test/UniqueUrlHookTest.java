@@ -55,7 +55,7 @@ public class UniqueUrlHookTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", URI+"/title.html?a=b");
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        Map<String, Object> model = Collections.EMPTY_MAP;
+        Map<String, Object> model = Collections.emptyMap();
         TargetDescriptor descriptor = new TargetDescriptor(model, "x", "y");
         Link link = new Link(URI);
 

@@ -20,6 +20,7 @@ package org.tangram.servlet.test;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Set;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -51,7 +52,8 @@ public class MeasureTimeFilterTest {
 
         ServletContext context = new MockServletContext(".");
         context.setAttribute(Constants.ATTRIBUTE_STATISTICS, statistics);
-        measureTimeFilter.setFreeUrls(Collections.EMPTY_SET);
+        Set<String> emptyStringSet = Collections.emptySet();
+        measureTimeFilter.setFreeUrls(emptyStringSet);
         FilterConfig config = new MockFilterConfig(context, "test");
         try {
             measureTimeFilter.init(config);

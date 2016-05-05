@@ -97,7 +97,7 @@ public class GenericAuthorizationServiceTest {
             result = true;
         } // try/catch
         Assert.assertTrue(result, "Since dummy request contains no admin user an exception should be thrown.");
-        Map<String, Object> properties = Collections.EMPTY_MAP;
+        Map<String, Object> properties = Collections.emptyMap();
         GenericUser user = new GenericUser("form", "testuser", properties);
         Set<User> users = new HashSet<>();
         users.add(user);
@@ -139,7 +139,7 @@ public class GenericAuthorizationServiceTest {
     public void testHandleRequest() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
-        Map<String, Object> properties = Collections.EMPTY_MAP;
+        Map<String, Object> properties = Collections.emptyMap();
         GenericUser user = new GenericUser("form", "testuser", properties);
         Set<User> users = new HashSet<>();
         users.add(user);

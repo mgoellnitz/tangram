@@ -18,8 +18,8 @@
  */
 package org.tangram.mock.content;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import java.util.List;
+import org.tangram.content.TransientCode;
 
 
 /**
@@ -29,9 +29,9 @@ public class RootTopic extends Topic {
 
     private List<Topic> bottomLinks;
 
-    private List<Code> css;
+    private List<TransientCode> css;
 
-    private List<Code> js;
+    private List<TransientCode> js;
 
     private ImageData logo;
 
@@ -46,22 +46,22 @@ public class RootTopic extends Topic {
     }
 
 
-    public List<Code> getCss() {
+    public List<TransientCode> getCss() {
         return this.css;
     }
 
 
-    public void setCss(List<Code> css) {
+    public void setCss(List<TransientCode> css) {
         this.css = css;
     }
 
 
-    public List<Code> getJs() {
+    public List<TransientCode> getJs() {
         return this.js;
     }
 
 
-    public void setJs(List<Code> js) {
+    public void setJs(List<TransientCode> js) {
         this.js = js;
     }
 

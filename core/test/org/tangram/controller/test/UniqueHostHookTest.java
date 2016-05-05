@@ -60,7 +60,7 @@ public class UniqueHostHookTest {
         MockHttpServletRequest localRequest = new MockHttpServletRequest("GET", "http://www.example.com:8080"+URI);
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        Map<String, Object> model = Collections.EMPTY_MAP;
+        Map<String, Object> model = Collections.emptyMap();
         TargetDescriptor descriptor = new TargetDescriptor(model, "x", "y");
         Link link = new Link(URI);
 

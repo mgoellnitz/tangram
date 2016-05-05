@@ -138,7 +138,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory implements Mu
         List<T> result = new ArrayList<>();
         try {
             String shortTypeName = cls.getSimpleName();
-            Query query = datastore.createQuery(cls);
+            Query<T> query = datastore.createQuery(cls);
             // TODO: Query String
             if (orderProperty!=null) {
                 // TODO

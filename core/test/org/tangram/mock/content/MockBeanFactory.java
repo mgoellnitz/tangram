@@ -115,7 +115,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
             if (cls.isAssignableFrom(c)) {
                 for (Content content : contents.get(c)) {
                     if (content.getId().equals(id)) {
-                        result = (T) content;
+                        result = convert(cls, content);
                     } // if
                 } // for
             } // if
@@ -170,7 +170,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
         List<T> result = (List<T>) contents.get(cls);
         if (result==null) {
-            result = Collections.EMPTY_LIST;
+            result = Collections.emptyList();
         } // if
         return result;
     } // listBeansOfExactClass()

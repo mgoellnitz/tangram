@@ -96,7 +96,8 @@ public class PacAuthenticationServiceTest {
         PacAuthenticationService p = pacAuthenticationService;
         Assert.assertEquals(p.getProviderNames().size(), 1, "There should be one provider name in test.");
         TargetDescriptor target = new TargetDescriptor(p, null, "login");
-        Assert.assertEquals(p.getLoginTarget(Collections.EMPTY_SET), target, "The login target falls back to the default.");
+        Set<String> emptyStringSet = Collections.emptySet();
+        Assert.assertEquals(p.getLoginTarget(emptyStringSet), target, "The login target falls back to the default.");
 
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
