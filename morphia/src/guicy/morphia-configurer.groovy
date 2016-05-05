@@ -34,6 +34,7 @@ Set<String> basePackages = SystemUtils.stringSetFromParameterString(config.getPr
 MorphiaBeanFactory beanFactory = new MorphiaBeanFactory()
 beanFactory.setUri(config.getProperty("mongo.uri", "mongodb://localhost:27017/"))
 beanFactory.setDatabase(config.getProperty("mongo.database", "tangram"))
+beanFactory.setBasePackages(basePackages)
 module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
