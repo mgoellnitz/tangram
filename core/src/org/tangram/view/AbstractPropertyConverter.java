@@ -227,7 +227,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                             Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
                             LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
                             if (actualTypeArgument instanceof Class) {
-                                elementClass = (Class) actualTypeArgument;
+                                elementClass = SystemUtils.convert(actualTypeArgument);
                             } // if
                         } // if
                         if (m.find()) {

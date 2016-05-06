@@ -50,7 +50,7 @@ public class MockSession extends DefaultSession {
      * @param commandHandlers - the Map of command name -> CommandHandler. It is assumed that the
      * command names are all normalized to upper case. See {@link Command#normalizeName(String)}.
      */
-    public MockSession(Socket controlSocket, Map commandHandlers) {
+    public MockSession(Socket controlSocket, Map<String, Object> commandHandlers) {
         super(controlSocket, commandHandlers);
     } // ()
 

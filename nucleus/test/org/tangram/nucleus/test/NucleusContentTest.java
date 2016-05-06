@@ -122,7 +122,7 @@ public class NucleusContentTest extends BaseContentTest {
         passwordProtection.setLogin(TESTUSER);
         passwordProtection.setPassword(TESTPASSWORD);
         passwordProtection.setProtectionKey("mock password protection");
-        passwordProtection.setProtectedContents(Collections.EMPTY_LIST);
+        passwordProtection.setProtectedContents(Collections.emptyList());
         checkSimplePasswordProtection(passwordProtection);
     } // testPasswordProtection()
 

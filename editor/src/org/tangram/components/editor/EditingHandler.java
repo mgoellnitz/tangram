@@ -355,7 +355,7 @@ public class EditingHandler extends AbstractLinkHandler {
 
     private String getFilterQuery(HttpServletRequest request, String filterProperty, String filterValue, Class<? extends Content> cls, String filterQuery) {
         HttpSession session = request.getSession(true);
-        Map<String, String[]> filters = (Map<String, String[]>) session.getAttribute(ATTRIBUTE_FILTERS);
+        Map<String, String[]> filters = SystemUtils.convert(session.getAttribute(ATTRIBUTE_FILTERS));
         if (filters==null) {
             filters = new HashMap<>();
             session.setAttribute(ATTRIBUTE_FILTERS, filters);
