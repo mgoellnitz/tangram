@@ -38,7 +38,7 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.9'
   String pac4j = '1.7.2'
-  String tomcat = '7.0.68'
+  String tomcat = '7.0.69'
   String codemirror = '5.12'
   String ckeditor = '4.5.7'
 
@@ -78,6 +78,6 @@ public class TangramVersions {
   String ebean = '7.2.3'
   String ebean_agent = '4.9.2'
 
-  String appengine = '1.9.36'
+  String appengine = '1.9.37'
 
 } // TangramVersions
