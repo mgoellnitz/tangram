@@ -42,8 +42,8 @@ repositories {
   jcenter()
 }
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 def bootClasspathStr = "${project.hasProperty('jdk') ? jdk : System.env.JAVA_HOME}/jre/lib/rt.jar"
 project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
