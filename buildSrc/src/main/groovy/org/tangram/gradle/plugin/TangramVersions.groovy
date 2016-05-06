@@ -78,7 +78,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.8.1'
+  String ebean = '7.9.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '4.9.2'
 
