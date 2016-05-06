@@ -44,6 +44,7 @@ import org.tangram.content.Content;
 import org.tangram.content.Markdown;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.mock.content.RootTopic;
+import org.tangram.util.SystemUtils;
 import org.tangram.view.GenericPropertyConverter;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
@@ -190,14 +191,14 @@ public class GenericPropertyConverterTest {
         Assert.assertNotNull(codes, "We expected at least some result for the list conversion.");
         LOG.debug("testConversions() codes types {}", codes.getClass().getName());
         Assert.assertTrue(codes instanceof List<?>, "We expected a list of content elements.");
-        List<Object> codeList = (List) codes;
+        List<Object> codeList = SystemUtils.convert(codes);
         Assert.assertEquals(codeList.size(), 1, "We expected a fixed number of elements.");
 
         Type type = GenericPropertyConverterTest.class.getDeclaredField("referenceProperty").getGenericType();
         codes = c.getStorableObject(null, "org.tangram.content.Content", List.class, type, request);
         Assert.assertNotNull(codes, "We expected at least some result for the list conversion.");
         Assert.assertTrue(codes instanceof List<?>, "We expected a list of content elements.");
-        codeList = (List) codes;
+        codeList = SystemUtils.convert(codes);
         Assert.assertEquals(codeList.size(), 1, "We expected a fixed number of elements.");
     } // testConversions()
 

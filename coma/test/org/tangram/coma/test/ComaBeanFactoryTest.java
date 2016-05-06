@@ -27,6 +27,7 @@ import org.tangram.coma.ComaBeanFactory;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
 import org.tangram.content.Content;
+import org.tangram.util.SystemUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -77,7 +78,7 @@ public class ComaBeanFactoryTest {
         Assert.assertTrue(home.containsValue("CoConAT"), "root topic should property value CoConAT in some property");
         Object l = home.get("logo");
         Assert.assertNotNull(l, "no logo found in root topic");
-        List<ComaContent> logos = (List<ComaContent>) l;
+        List<ComaContent> logos = SystemUtils.convert(l);
         Assert.assertEquals(logos.size(), 1, "Expected to find exactly one logo");
         ComaContent logo = logos.get(0);
         Assert.assertEquals(logo.keySet().size(), logo.values().size(), "Size of keys must match size of values for logo");
@@ -100,7 +101,7 @@ public class ComaBeanFactoryTest {
         home.put("title", "new title");
         Assert.assertEquals(home.get("title"), "new title", "Unexpected title found");
         home.clear();
-        home.putAll(Collections.EMPTY_MAP);
+        home.putAll(Collections.emptyMap());
         Assert.assertNull(home.get("title"), "Unexpected title found");
     } // testRepository()
 
