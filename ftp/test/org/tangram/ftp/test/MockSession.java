@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Map;
 import org.mockftpserver.core.MockFtpServerException;
+import org.mockftpserver.core.command.AbstractTrackingCommandHandler;
 import org.mockftpserver.core.command.Command;
 import org.mockftpserver.core.session.DefaultSession;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class MockSession extends DefaultSession {
      * @param commandHandlers - the Map of command name -> CommandHandler. It is assumed that the
      * command names are all normalized to upper case. See {@link Command#normalizeName(String)}.
      */
-    public MockSession(Socket controlSocket, Map<String, Object> commandHandlers) {
+    public MockSession(Socket controlSocket, Map<String, AbstractTrackingCommandHandler> commandHandlers) {
         super(controlSocket, commandHandlers);
     } // ()
 
