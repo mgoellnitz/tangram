@@ -1,5 +1,4 @@
-Tangram Dynamic Extendable Web Applications
-===========================================
+# Tangram Dynamic Extendable Web Applications
 
 [![Build Status](https://api.travis-ci.org/mgoellnitz/tangram.svg?branch=master)](https://travis-ci.org/mgoellnitz/tangram)
 [![Coverage Status](https://coveralls.io/repos/github/mgoellnitz/tangram/badge.svg?branch=master)](https://coveralls.io/github/mgoellnitz/tangram?branch=master)
@@ -63,8 +62,7 @@ A growing set of documentation items can be found in the wiki of this project:
 
 [https://github.com/mgoellnitz/tangram/wiki](https://github.com/mgoellnitz/tangram/wiki)
 
-Maven Repositories
-------------------
+## Maven Repositories
 
 Releases:
 
@@ -72,10 +70,9 @@ https://jcenter.bintray.com/
 
 Snapshots:
 
-https://raw.githubusercontent.com/mgoellnitz/artifacts/master
+http://oss.jfrog.org/oss-snapshot-local/
 
-HOW-TO
-======
+# HOW-TO
 
 To make all this work you need
 
@@ -133,21 +130,3 @@ gradle eclipse
 (output folders are set to .../build/classes/main not to .../bin)
 
 (We don't recommend using eclipse anymore)
-
-Changes 1.0
-===========
-
-The current release version focuses on the original term "tangram" again, which means
-putting together existing peaces and combine them into a pretty shape.
-
-Tangram now provides choice for nearly any of the parts we put together:
-
-Storage Layer: JDO, JPA, Ebean
-
-Dependency Injection: Springframework, Dinistiq, Guice (CDI)
-
-Templating: JSP and Apache Velocity
-
-If you stick to the internal abstract "handler" and "action" scheme, you can even
-change the underlying implementations at any time, while it obviously is possible
-to directly use e.g. guice modules or spring controllers.
