@@ -42,12 +42,12 @@ public class TangramVersions {
   String pac4j = '1.8.8'
   String mockftpserver = '2.6'
   String tomcat = '8.0.33'
-  String codemirror = '5.12'
-  String ckeditor = '4.5.7'
+  String codemirror = '5.14'
+  String ckeditor = '4.5.8'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.9.11' // Gradle 2.12 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.9.11' // Gradle 2.13 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.191'
 
