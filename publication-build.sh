@@ -15,4 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-gradle -Pjdk=/opt/jdk1.7.0_80 -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
+# last public JDK 7: /opt/jdk1.7.0_80
+#
+gradle -Pjdk=/opt/jdk1.8.0_92 -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
