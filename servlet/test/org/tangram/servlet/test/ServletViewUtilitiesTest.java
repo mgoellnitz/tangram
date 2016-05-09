@@ -50,17 +50,23 @@ public class ServletViewUtilitiesTest {
     private final JspTemplateResolver jspTemplateResolver = new JspTemplateResolver();
 
 
+    @SuppressWarnings("rawtypes")
+    private Set<TemplateResolver> setupResolvers(MockServletContext servletContext) {
+        Set<TemplateResolver> resolvers = new HashSet<>();
+        jspTemplateResolver.setServletContext(servletContext);
+        jspTemplateResolver.afterPropertiesSet();
+        resolvers.add(jspTemplateResolver);
+        return resolvers;
+    } // setupResolvers()
+
+
     @Test
     public void testServletViewUtilities() throws Exception {
         ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
         DefaultViewContextFactory viewContextFactory = new DefaultViewContextFactory();
         MockServletContext servletContext = new MockServletContext(".");
 
-        Set<TemplateResolver> resolvers = new HashSet<>();
-        jspTemplateResolver.setServletContext(servletContext);
-        jspTemplateResolver.afterPropertiesSet();
-        resolvers.add(jspTemplateResolver);
-        servletViewUtilities.setResolvers(resolvers);
+        servletViewUtilities.setResolvers(setupResolvers(servletContext));
 
         MockitoAnnotations.initMocks(this);
 

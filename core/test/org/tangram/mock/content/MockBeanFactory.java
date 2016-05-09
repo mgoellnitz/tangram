@@ -168,9 +168,15 @@ public class MockBeanFactory extends AbstractBeanFactory {
 
     @Override
     public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
-        List<T> result = (List<T>) contents.get(cls);
-        if (result==null) {
+        List<Content> contentsForType = contents.get(cls);
+        List<T> result;
+        if (contentsForType==null) {
             result = Collections.emptyList();
+        } else {
+            result = new ArrayList<>(contentsForType.size());
+            for (Content c : contentsForType) {
+                result.add(SystemUtils.convert(c));
+            } // for
         } // if
         return result;
     } // listBeansOfExactClass()
