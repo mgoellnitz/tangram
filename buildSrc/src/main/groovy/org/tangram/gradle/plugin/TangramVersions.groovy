@@ -69,7 +69,7 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.2'
 
   String openjpa = '2.4.1'
-  String eclipselink = '2.6.2'
+  String eclipselink = '2.6.3'
   String hibernate = '5.1.0.Final'
   String hibernate_ogm = '4.2.0.Final'
 
@@ -78,7 +78,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.9.1'
+  String ebean = '7.10.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '4.9.2'
 
