@@ -63,6 +63,7 @@ public class PacAuthenticationServiceTest {
     private LinkFactoryAggregator aggregator; // NOPMD - this field is not really unused
 
     @Spy
+    @SuppressWarnings("rawtypes")
     private final Set<Client> clientSet = new HashSet<>();
 
     @Spy
