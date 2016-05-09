@@ -63,7 +63,7 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.1'
 
   String openjpa = '2.4.1'
-  String eclipselink = '2.6.2'
+  String eclipselink = '2.6.3'
   String mongodb = '2.13.2' // '3.0.3' OpenShift right now has MongoDB 2.4 available
   String hibernate = '5.1.0.Final'
   String hibernate_ogm = '4.2.0.Final'
