@@ -150,6 +150,7 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
         List<Class<T>> result = new ArrayList<>();
         for (Class<? extends Content> c : getImplementingClassesMap().get(baseClass)) {
