@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 /**
  * Test aspects of the ftp command handler for renaming.
  */
-public class RntoFtpCommandHandlerTest {
+public class RntoFtpCommandHandlerTest extends AbstractThreadedTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(RntoFtpCommandHandlerTest.class);
 
@@ -53,9 +53,7 @@ public class RntoFtpCommandHandlerTest {
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
         LOG.debug("testRntoFtpCommandHandler() run");
-        Thread t = new Thread(session);
-        t.start();
-        Thread.sleep(100);
+        concurrentSleep(session);
         LOG.debug("testRntoFtpCommandHandler() list");
         session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
         session.setAttribute(SessionHelper.RENAME_ID, id);
@@ -63,7 +61,7 @@ public class RntoFtpCommandHandlerTest {
         LOG.debug("testRntoFtpCommandHandler() close");
         session.close();
         LOG.debug("testRntoFtpCommandHandler() join");
-        t.join(5000);
+        join();
         code = helper.getBeanFactory().getBean(MockMutableCode.class, id);
         Assert.assertEquals(code.getAnnotation(), "org.tangram.link.GroovyLinkHandler", "unexpected new value for annotation.");
     } // testRntoFtpCommandHandler()

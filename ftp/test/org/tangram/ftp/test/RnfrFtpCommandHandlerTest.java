@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 /**
  * Test aspects of the ftp command handler for renaming.
  */
-public class RnfrFtpCommandHandlerTest {
+public class RnfrFtpCommandHandlerTest extends AbstractThreadedTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(RnfrFtpCommandHandlerTest.class);
 
@@ -50,16 +50,14 @@ public class RnfrFtpCommandHandlerTest {
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
         LOG.debug("testRnfrFtpCommandHandler() run");
-        Thread t = new Thread(session);
-        t.start();
-        Thread.sleep(100);
+        concurrentSleep(session);
         LOG.debug("testRnfrFtpCommandHandler() list");
         session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
         rnfrFtpCommandHandler.handleCommand(command, session);
         LOG.debug("testRnfrFtpCommandHandler() close");
         session.close();
         LOG.debug("testRnfrFtpCommandHandler() join");
-        t.join(5000);
+        join();
         Object renameId = session.getAttribute(SessionHelper.RENAME_ID);
         Assert.assertEquals(renameId, "CodeResource:10", "Unexpected content id to rename content to via ftp.");
     } // testRnfrFtpCommandHandler()

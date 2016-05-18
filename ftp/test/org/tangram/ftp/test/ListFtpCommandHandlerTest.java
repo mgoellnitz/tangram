@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
 /**
  * Test aspects of the ftp command handler for listing folders.
  */
-public class ListFtpCommandHandlerTest {
+public class ListFtpCommandHandlerTest extends AbstractThreadedTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ListFtpCommandHandlerTest.class);
 
@@ -50,9 +50,7 @@ public class ListFtpCommandHandlerTest {
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
         LOG.debug("testListFtpCommandHandler() run");
-        Thread t = new Thread(session);
-        t.start();
-        Thread.sleep(100);
+        concurrentSleep(session);
         LOG.debug("testListFtpCommandHandler() list");
         listFtpCommandHandler.handleCommand(command, session);
         session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
@@ -60,7 +58,7 @@ public class ListFtpCommandHandlerTest {
         LOG.debug("testListFtpCommandHandler() close");
         session.close();
         LOG.debug("testListFtpCommandHandler() join");
-        t.join(5000);
+        join();
         BufferedReader reader = new BufferedReader(new StringReader(session.getContent()));
         String line = reader.readLine();
         while (line!=null) {

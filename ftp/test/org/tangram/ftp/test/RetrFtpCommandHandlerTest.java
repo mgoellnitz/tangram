@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 /**
  * Test aspects of the ftp command handler for retrieving.
  */
-public class RetrFtpCommandHandlerTest {
+public class RetrFtpCommandHandlerTest extends AbstractThreadedTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(RetrFtpCommandHandlerTest.class);
 
@@ -50,16 +50,14 @@ public class RetrFtpCommandHandlerTest {
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
         LOG.debug("testRetrFtpCommandHandler() run");
-        Thread t = new Thread(session);
-        t.start();
-        Thread.sleep(100);
+        concurrentSleep(session);
         LOG.debug("testRetrFtpCommandHandler() list");
         session.setAttribute(SessionHelper.CURRENT_DIR, "/groovy");
         retrFtpCommandHandler.handleCommand(command, session);
         LOG.debug("testRetrFtpCommandHandler() close");
         session.close();
         LOG.debug("testRetrFtpCommandHandler() join");
-        t.join(5000);
+        join();
         String content = session.getContent();
         Assert.assertEquals(content.length(), 564, "Unexpected file content received.");
         Assert.assertEquals(content.indexOf("package org.tangram.test"), 0, "Unexpected file content received.");
