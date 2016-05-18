@@ -26,8 +26,10 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.http.credentials.UsernamePasswordCredentials;
 import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator;
+import org.pac4j.http.profile.HttpProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.CodeResource;
@@ -77,6 +79,10 @@ public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
             if ((storedHash==null)||!storedHash.equals(hash)) {
                 throw new RuntimeException("wrong credentials");
             } // if
+            HttpProfile profile = new HttpProfile();
+            profile.setId(upc.getUsername());
+            profile.addAttribute(CommonProfile.USERNAME, upc.getUsername());
+            upc.setUserProfile(profile);
         } catch (NoSuchAlgorithmException|UnsupportedEncodingException e) {
             LOG.error("validate()", e);
             throw new RuntimeException("internal error: "+e.getMessage(), e);
