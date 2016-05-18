@@ -52,7 +52,8 @@ import org.tangram.view.ViewUtilities
 import org.tangram.view.velocity.VelocityPatchBean
 import org.pac4j.http.client.BasicAuthClient
 import org.pac4j.http.client.indirect.FormClient
-import org.pac4j.http.profile.UsernameProfileCreator
+import org.pac4j.http.profile.creator.ProfileCreator
+import org.pac4j.http.profile.creator.AuthenticatorProfileCreator
 import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator
 
 log.info "starting"
@@ -98,7 +99,7 @@ log.info("configuring simple name password mapper")
 UsernamePasswordAuthenticator authenticator = new SimpleAuthenticator()
 module.bind(UsernamePasswordAuthenticator.class).toInstance(authenticator)
 
-UsernameProfileCreator profileCreator = new UsernameProfileCreator()
+ProfileCreator profileCreator = new AuthenticatorProfileCreator()
 
 log.info("configuring authentication clients")
 FormClient formClient = new FormClient()
