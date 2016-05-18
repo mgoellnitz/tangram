@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 /**
  * Test aspects of the ftp command handler for password authentication.
  */
-public class PassFtpCommandHandlerTest {
+public class PassFtpCommandHandlerTest extends AbstractThreadedTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(PassFtpCommandHandlerTest.class);
 
@@ -49,16 +49,14 @@ public class PassFtpCommandHandlerTest {
         Socket socket = helper.getSocket();
         MockSession session = new MockSession(socket, helper.getCommands());
         LOG.debug("testPassFtpCommandHandler() run");
-        Thread t = new Thread(session);
-        t.start();
-        Thread.sleep(100);
+        concurrentSleep(session);
         LOG.debug("testPassFtpCommandHandler() list");
         session.setAttribute(SessionHelper.USER, "testuser");
         passFtpCommandHandler.handleCommand(command, session);
         LOG.debug("testPassFtpCommandHandler() close");
         session.close();
         LOG.debug("testPassFtpCommandHandler() join");
-        t.join(5000);
+        join();
         String result = helper.getOutput();
         Assert.assertTrue(result.length()>32, "Not enough output read for correct result.");
         result = result.substring(result.length()-30, result.length()-2);
