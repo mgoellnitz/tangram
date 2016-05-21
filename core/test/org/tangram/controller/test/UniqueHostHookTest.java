@@ -53,7 +53,7 @@ public class UniqueHostHookTest {
     @Test
     public void testUniqueHostHook() {
         MockitoAnnotations.initMocks(this);
-        MockHttpServletRequest correctRequest = new MockHttpServletRequest("GET", "http://"+DOMAIN+":8080"+URI);
+        MockHttpServletRequest correctRequest = new MockHttpServletRequest("GET", "http://"+DOMAIN+":"+"8080"+URI);
         correctRequest.addHeader("Host", DOMAIN);
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://www.example.com:8080"+URI);
         request.addHeader("Host", "www.example.com");
