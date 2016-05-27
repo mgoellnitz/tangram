@@ -92,7 +92,7 @@ public class EbeanContentTest extends BaseContentTest {
 
     @Override
     protected String getCondition() {
-        return "where subtitle='great'";
+        return "subtitle='great'";
     }
 
 

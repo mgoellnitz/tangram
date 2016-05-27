@@ -49,7 +49,7 @@ public class TangramVersions {
   String junit = '4.12'
   String testng = '6.9.11' // Gradle 2.13 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.191'
+  String h2db = '1.4.192'
 
   // The dependency injection options
   String dinistiq = '0.5'
@@ -78,7 +78,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.11.4'
+  String ebean = '7.12.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '4.10.1'
 
