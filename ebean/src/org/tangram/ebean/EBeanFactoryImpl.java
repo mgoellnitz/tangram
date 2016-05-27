@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.persistence.Entity;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
@@ -150,7 +151,11 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
         List<T> result = new ArrayList<>();
         try {
             String shortTypeName = cls.getSimpleName();
-            com.avaje.ebean.Query<T> query = queryString == null ? server.find(cls) : server.createQuery(cls, queryString);
+
+            com.avaje.ebean.Query<T> query = server.createQuery(cls);
+            if (StringUtils.isNotEmpty(queryString)) {
+                query.where(queryString);
+            } // if
             if (orderProperty!=null) {
                 String asc = (ascending) ? " asc" : " desc";
                 query = query.orderBy(orderProperty+asc);
