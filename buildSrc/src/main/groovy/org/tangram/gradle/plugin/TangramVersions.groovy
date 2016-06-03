@@ -52,7 +52,7 @@ public class TangramVersions {
   String h2db = '1.4.192'
 
   // The dependency injection options
-  String dinistiq = '0.5'
+  String dinistiq = '0.6'
 
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
@@ -78,7 +78,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.12.1'
+  String ebean = '7.12.2'
   String ebean_datasource = '1.1'
   String ebean_agent = '4.10.1'
 
