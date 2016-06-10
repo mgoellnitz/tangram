@@ -30,7 +30,7 @@ public class TangramVersions {
   String lombok = '1.16.8'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
-  String groovy = '2.4.6'
+  String groovy = '2.4.7'
   String asm = '5.1'
   String velocity = '1.7'
   String slf4j = '1.7.21'
@@ -78,7 +78,7 @@ public class TangramVersions {
   // String datanucleus = '4.1.0-release'
   String datanucleus = '[4.1,4.2)'
 
-  String ebean = '7.12.2'
+  String ebean = '7.13.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '4.10.1'
 
