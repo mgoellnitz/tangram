@@ -27,7 +27,6 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -187,7 +186,7 @@ public class TangramServletModule extends ServletModule {
                 s.setProperty("module", this);
                 s.setProperty("log", LoggerFactory.getLogger(name.replace(".groovy", "").replace('/', '.')));
                 s.run();
-            } catch (IOException e) {
+            } catch (RuntimeException e) {
                 throw new Error("Failed to configure module via "+name, e);
             } // try/catch
         }
