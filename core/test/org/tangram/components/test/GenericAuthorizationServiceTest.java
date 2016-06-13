@@ -67,7 +67,7 @@ public class GenericAuthorizationServiceTest {
     private final Set<String> loginProviders = new HashSet<>(); // NOPMD - this field is not really unused
 
     @Mock
-    private final LinkFactoryAggregator aggregator = null;
+    private final LinkFactoryAggregator aggregator = null; // NOPMD - this field cannot really be marked static
 
     @InjectMocks
     private final GenericAuthorizationService authorizationService = new GenericAuthorizationService();

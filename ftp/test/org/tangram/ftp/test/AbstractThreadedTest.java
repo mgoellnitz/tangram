@@ -11,11 +11,11 @@ package org.tangram.ftp.test;
  */
 public class AbstractThreadedTest {
 
-    private Thread t;
+    private Thread t; // NOPMD - We need threading to trigger network communication
 
 
     protected void concurrentSleep(MockSession session) throws InterruptedException {
-        t = new Thread(session);
+        t = new Thread(session); // NOPMD - We need threading to trigger network communication
         t.start();
         Thread.sleep(100);
     } // concurrentSleep()
