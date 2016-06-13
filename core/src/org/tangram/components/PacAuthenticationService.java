@@ -39,7 +39,6 @@ import org.pac4j.core.client.Clients;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
-import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.http.client.indirect.FormClient;
 import org.pac4j.oauth.profile.google2.Google2Email;
@@ -62,11 +61,11 @@ import org.tangram.util.SystemUtils;
 
 
 /**
- * Authentication service using pac4j as backend.
+ * Authentication service using pac4j as its backend.
  *
- * Supports any client implementation as login provider pac4j supports.
+ * Supports any client implementation pac4j supports as a login provider.
  * Clients are added via dependency injection and are filtered according to the set of login providers
- * according to their respective name - which we tend to set in the DI config files for the clients to
+ * following their respective name - which we tend to set in the DI config files for the clients to
  * be shorter than their default counterparts.
  */
 @LinkHandler
@@ -228,7 +227,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         WebContext context = new J2EContext(request, response);
         Client<?, ?> client = getClients(request, response).findClient(provider);
         LOG.info("redirect() redirecting with {}", client.getName());
-        client.redirect(context, true);
+        client.redirect(context);
         return TargetDescriptor.DONE;
     } // redirect()
 
@@ -244,7 +243,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             session.setAttribute(Constants.ATTRIBUTE_USERS, users);
         } // if
         WebContext context = new J2EContext(request, response);
-        Client<Credentials, UserProfile> client = SystemUtils.convert(getClients(request, response).findClient(context));
+        Client<Credentials, ?> client = SystemUtils.convert(getClients(request, response).findClient(context));
         LOG.info("callback() client: {}", client);
         try {
             Credentials credentials = client.getCredentials(context);
@@ -268,7 +267,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
                 users.add(user);
             } // if
             LOG.info("callback({}) logged in users after callback {}", session.getId(), users);
-        } catch (RequiresHttpAction|RuntimeException e) {
+        } catch (RuntimeException e) {
             LOG.warn("callback() {}", e.getLocalizedMessage(), e);
             session.setAttribute("tangram.login.error", e.getLocalizedMessage());
             return new TargetDescriptor(this, null, client.getName());

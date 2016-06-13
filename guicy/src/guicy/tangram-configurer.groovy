@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,11 +50,11 @@ import org.tangram.view.DynamicViewContextFactory
 import org.tangram.view.ViewContextFactory
 import org.tangram.view.ViewUtilities
 import org.tangram.view.velocity.VelocityPatchBean
-import org.pac4j.http.client.BasicAuthClient
+import org.pac4j.http.client.indirect.IndirectBasicAuthClient
 import org.pac4j.http.client.indirect.FormClient
-import org.pac4j.http.profile.creator.ProfileCreator
-import org.pac4j.http.profile.creator.AuthenticatorProfileCreator
-import org.pac4j.http.credentials.authenticator.UsernamePasswordAuthenticator
+import org.pac4j.core.profile.creator.ProfileCreator
+import org.pac4j.core.profile.creator.AuthenticatorProfileCreator
+import org.pac4j.core.credentials.authenticator.UsernamePasswordAuthenticator
 
 log.info "starting"
 String dispatcherPath = config.getProperty("dispatcherPath", "/s")
@@ -107,7 +107,7 @@ formClient.name='form'
 formClient.authenticator = authenticator
 formClient.profileCreator = profileCreator
 module.addClient(formClient)
-BasicAuthClient basicAuthClient = new BasicAuthClient()
+IndirectBasicAuthClient basicAuthClient = new IndirectBasicAuthClient()
 basicAuthClient.name='basic'
 basicAuthClient.authenticator = authenticator
 basicAuthClient.profileCreator = profileCreator

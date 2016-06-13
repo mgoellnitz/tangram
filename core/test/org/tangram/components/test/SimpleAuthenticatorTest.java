@@ -24,7 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.pac4j.http.credentials.UsernamePasswordCredentials;
+import org.pac4j.core.credentials.UsernamePasswordCredentials;
 import org.tangram.components.SimpleAuthenticator;
 import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;

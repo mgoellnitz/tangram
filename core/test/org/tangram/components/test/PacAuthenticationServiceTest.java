@@ -33,10 +33,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.pac4j.core.client.Client;
+import org.pac4j.core.credentials.UsernamePasswordCredentials;
+import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.creator.AuthenticatorProfileCreator;
 import org.pac4j.http.client.indirect.FormClient;
-import org.pac4j.http.credentials.UsernamePasswordCredentials;
-import org.pac4j.http.profile.HttpProfile;
-import org.pac4j.http.profile.creator.AuthenticatorProfileCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -83,7 +83,7 @@ public class PacAuthenticationServiceTest {
     public PacAuthenticationServiceTest() {
         formLogin.setName("form");
         formLogin.setAuthenticator(new SimpleAuthenticatorTest().getInstance());
-        AuthenticatorProfileCreator<UsernamePasswordCredentials, HttpProfile> a = new AuthenticatorProfileCreator<>();
+        AuthenticatorProfileCreator<UsernamePasswordCredentials, CommonProfile> a = new AuthenticatorProfileCreator<>();
         formLogin.setProfileCreator(a);        clientSet.add(formLogin);
         loginProviders.add("form");
         loginProviders.add("basic");

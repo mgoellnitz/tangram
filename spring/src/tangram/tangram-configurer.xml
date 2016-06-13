@@ -81,9 +81,9 @@
     <value>basic</value>
   </util:set>
 
-  <bean id="profileCreator" class="org.pac4j.http.profile.creator.AuthenticatorProfileCreator" />
+  <bean id="profileCreator" class="org.pac4j.core.profile.creator.AuthenticatorProfileCreator" />
 
-  <bean id="basicAuthLogin" class="org.pac4j.http.client.BasicAuthClient">
+  <bean id="basicAuthLogin" class="org.pac4j.http.client.indirect.IndirectBasicAuthClient">
     <property name="name" value="basic"/>
     <property name="authenticator" ref="usernamePasswordAuthenticator"/>
     <property name="profileCreator" ref="profileCreator"/>
