@@ -41,12 +41,17 @@ jar.enabled = true
 war.dependsOn jar
 
 // Use resources from jar file
+// Special handling of CodeMirrir .0 releases
+def cmv = "$versions.codemirror".toString()
+if (cmv.lastIndexOf('.') == 1) {
+  cmv += ".0"
+}
 jar.doFirst {
   into('META-INF/resources') {
     from fileTree("$projectDir/webapp")
     eachFile {
       if (isFilterable(it)) {
-        filter(ReplaceTokens, tokens: ['codemirror_version': "$versions.codemirror".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
+        filter(ReplaceTokens, tokens: ['codemirror_version': "$cmv".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
       }
     }
   }
