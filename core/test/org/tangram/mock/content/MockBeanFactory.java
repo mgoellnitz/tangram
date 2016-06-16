@@ -175,7 +175,8 @@ public class MockBeanFactory extends AbstractBeanFactory {
         } else {
             result = new ArrayList<>(contentsForType.size());
             for (Content c : contentsForType) {
-                result.add(SystemUtils.convert(c));
+                T ct = SystemUtils.convert(c);
+                result.add(ct);
             } // for
         } // if
         return result;
