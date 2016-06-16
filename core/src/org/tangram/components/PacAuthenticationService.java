@@ -62,11 +62,11 @@ import org.tangram.util.SystemUtils;
 
 
 /**
- * Authentication service using pac4j as backend.
+ * Authentication service using pac4j as its backend.
  *
- * Supports any client implementation as login provider pac4j supports.
+ * Supports any client implementation pac4j supports as a login provider.
  * Clients are added via dependency injection and are filtered according to the set of login providers
- * according to their respective name - which we tend to set in the DI config files for the clients to
+ * following their respective name - which we tend to set in the DI config files for the clients to
  * be shorter than their default counterparts.
  */
 @LinkHandler
