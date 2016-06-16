@@ -101,7 +101,8 @@ public class ComaBeanFactoryTest {
         home.put("title", "new title");
         Assert.assertEquals(home.get("title"), "new title", "Unexpected title found");
         home.clear();
-        home.putAll(Collections.emptyMap());
+        Map<String, Object> emptyMap = Collections.emptyMap();
+        home.putAll(emptyMap);
         Assert.assertNull(home.get("title"), "Unexpected title found");
     } // testRepository()
 

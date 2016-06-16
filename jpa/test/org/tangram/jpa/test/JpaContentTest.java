@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.tangram.guicy.TangramServletModule;
+import org.tangram.jpa.JpaContent;
 import org.tangram.jpa.protection.PasswordProtection;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
@@ -106,7 +107,8 @@ public class JpaContentTest extends BaseContentTest {
         passwordProtection.setLogin(TESTUSER);
         passwordProtection.setPassword(TESTPASSWORD);
         passwordProtection.setProtectionKey("mock password protection");
-        passwordProtection.setProtectedContents(Collections.emptyList());
+        List<JpaContent> emptyList = Collections.emptyList();
+        passwordProtection.setProtectedContents(emptyList);
         checkSimplePasswordProtection(passwordProtection);
     } // testPasswordProtection()
 
