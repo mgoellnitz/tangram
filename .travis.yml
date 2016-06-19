@@ -4,6 +4,9 @@ language: java
 
 jdk:
   - oraclejdk7
+  
+before_script:
+  - gradle clean
 
 after_success:
   - gradle -Prelease build  versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
