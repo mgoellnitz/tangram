@@ -1,3 +1,27 @@
+# 
+# Copyright 2016 Martin Goellnitz
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+# Environment variables needed:
+# ORG_GRADLE_PROJECT_bintrayUser
+# ORG_GRADLE_PROJECT_bintrayKey
+# VERSIONEYE_API_KEY
+# TANGRAM_MORPHIA_INTEGRATION_TEST
+# JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m" (for Java 7)
+# GRADLE_OPTS="-Prelease"
+#
 sudo: false
 
 language: java
@@ -11,7 +35,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 after_success:
-  - gradle -Prelease build  versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle -Prelease versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
