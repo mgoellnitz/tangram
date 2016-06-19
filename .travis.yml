@@ -10,11 +10,11 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-before_script:
-  - gradle clean
+before_install:
+  - gradle -Prelease clean compileJava
 
 after_success:
-  - gradle -Prelease build  versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle -Prelease build versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
