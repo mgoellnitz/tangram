@@ -20,7 +20,7 @@
 # VERSIONEYE_API_KEY
 # TANGRAM_MORPHIA_INTEGRATION_TEST
 # JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m" (for Java 7)
-# GRADLE_OPTS="-Prelease"
+# ORG_GRADLE_PROJECT_release=true
 #
 sudo: false
 
@@ -35,7 +35,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 after_success:
-  - gradle -Prelease versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
