@@ -11,7 +11,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_install:
-  - gradle -Prelease clean
+  - gradle -Prelease clean compileJava
 
 after_success:
   - gradle -Prelease build versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
