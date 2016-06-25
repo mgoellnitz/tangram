@@ -47,7 +47,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.9.11' // Gradle 2.13 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.9.12' // Gradle 2.13 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.192'
 
