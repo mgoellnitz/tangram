@@ -83,6 +83,6 @@ public class TangramVersions {
   String ebean_agent = '4.11.1'
 
   String mongodb = '3.0.2'
-  String morphia = '1.1.1'
+  String morphia = '1.2.0'
 
 } // TangramVersions
