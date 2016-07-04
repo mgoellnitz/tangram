@@ -55,7 +55,7 @@ public class TangramVersions {
   String dinistiq = '0.6'
 
   String guice = '4.0'
-  String mycila_guice = '3.6.ga'
+  String mycila_guice = '3.6.ga' // No 4.1 compatible version available for JSR 250 support
 
   String springframework = '4.3.0.RELEASE'
 
@@ -70,8 +70,8 @@ public class TangramVersions {
 
   String openjpa = '2.4.1'
   String eclipselink = '2.6.3'
-  String hibernate = '5.1.0.Final'
-  String hibernate_ogm = '5.0.0.Final'
+  String hibernate = '5.2.1.Final'
+  String hibernate_ogm = '5.0.1.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
