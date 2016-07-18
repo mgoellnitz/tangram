@@ -27,7 +27,7 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.8'
+  String lombok = '1.16.10'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String groovy = '2.4.7'
@@ -43,7 +43,7 @@ public class TangramVersions {
   String mockftpserver = '2.6'
   String tomcat = '8.0.36'
   String codemirror = '5.16.0'
-  String ckeditor = '4.5.9'
+  String ckeditor = '4.5.10'
 
   // For testing purposes
   String junit = '4.12'
@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String springframework = '4.3.1.RELEASE'
 
-  String weld = '2.3.4.Final'
+  String weld = '2.3.5.Final'
   String openwebbeans = '1.6.2'
 
   // Storage options
@@ -83,6 +83,6 @@ public class TangramVersions {
   String ebean_agent = '4.11.1'
 
   String mongodb = '3.0.2'
-  String morphia = '1.1.1'
+  String morphia = '1.2.0'
 
 } // TangramVersions
