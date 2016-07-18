@@ -26,10 +26,10 @@ package org.tangram.gradle.plugin;
  */
 public class TangramVersions {
 
-  String lombok = '1.16.8'
+  String lombok = '1.16.10'
   String servlet_api = 'javax.servlet:servlet-api:2.5'
   String jsp_api = 'javax.servlet:jsp-api:2.0'
-  String groovy = '2.4.6'
+  String groovy = '2.4.7'
   String asm = '4.0'
   String velocity = '1.7'
   String slf4j = '1.7.21'
@@ -40,7 +40,7 @@ public class TangramVersions {
   String pac4j = '1.7.2'
   String tomcat = '7.0.69'
   String codemirror = '5.12'
-  String ckeditor = '4.5.8'
+  String ckeditor = '4.5.10'
 
   // For testing purposes
   String junit = '4.12'
@@ -51,7 +51,7 @@ public class TangramVersions {
 
   String springframework = '4.2.6.RELEASE'
 
-  String weld = '2.3.4.Final'
+  String weld = '2.3.5.Final'
   String openwebbeans = '1.6.2'
 
   String guice = '4.0'
@@ -78,6 +78,6 @@ public class TangramVersions {
   String ebean = '7.2.3'
   String ebean_agent = '4.9.2'
 
-  String appengine = '1.9.38'
+  String appengine = '1.9.40'
 
 } // TangramVersions
