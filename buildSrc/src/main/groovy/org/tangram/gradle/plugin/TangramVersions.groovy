@@ -63,7 +63,7 @@ public class TangramVersions {
   String openwebbeans = '1.6.2'
 
   // Storage options
-  String jdo_api = 'javax.jdo:jdo-api:3.1'
+  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m5'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.2'
@@ -76,7 +76,7 @@ public class TangramVersions {
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
   // String datanucleus = '4.1.0-release'
-  String datanucleus = '[4.1,4.2)'
+  String datanucleus = '5.0.0-release'
 
   String ebean = '7.12.2'
   String ebean_datasource = '1.1'
