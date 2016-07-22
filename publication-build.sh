@@ -15,4 +15,5 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
+export JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m"
 gradle -Pjdk=/opt/jdk1.7.0_80 -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
