@@ -25,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.pac4j.core.credentials.UsernamePasswordCredentials;
+import org.pac4j.core.exception.HttpAction;
 import org.tangram.components.SimpleAuthenticator;
 import org.tangram.content.CodeResource;
 import org.tangram.content.CodeResourceCache;
@@ -73,15 +74,15 @@ public class SimpleAuthenticatorTest {
 
 
     @Test
-    public void testSimpleAuthenticator() {
+    public void testSimpleAuthenticator() throws HttpAction {
         Assert.assertEquals(codeCache.getTypeCache("text/plain").size(), 1, "We should have exactly one resource in the cache.");
 
         UsernamePasswordCredentials c = new UsernamePasswordCredentials("testuser", "testpassword", "dontcare");
-        simpleAuthenticator.validate(c);
+        simpleAuthenticator.validate(c, null);
         c = new UsernamePasswordCredentials("testuser", "wrong", "dontcare");
         boolean result = false;
         try {
-            simpleAuthenticator.validate(c);
+            simpleAuthenticator.validate(c, null);
         } catch (RuntimeException e) {
             result = true;
         } // try/catch
@@ -90,7 +91,7 @@ public class SimpleAuthenticatorTest {
         c = new UsernamePasswordCredentials("testguy", "irrelevant", "dontcare");
         result = false;
         try {
-            simpleAuthenticator.validate(c);
+            simpleAuthenticator.validate(c, null);
         } catch (RuntimeException e) {
             result = true;
         } // try/catch
