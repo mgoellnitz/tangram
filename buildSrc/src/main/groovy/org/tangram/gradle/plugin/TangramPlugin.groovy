@@ -32,7 +32,8 @@ class TangramPlugin implements Plugin<Project> {
   public void apply(Project project) {
     def utilities = new TangramUtilities(project)
     project.convention.plugins.utilities = utilities
-    project.extensions.create('versions', TangramVersions)
+    TangramVersions versions = new TangramVersions()
+    project.extensions.add('versions', versions)
     OptionFlag enhancer = new OptionFlag()
     OptionFlag overlay = new OptionFlag()
     project.extensions.add('enhancer', enhancer)
@@ -48,7 +49,9 @@ class TangramPlugin implements Plugin<Project> {
           def jarPath = project.getConfigurations().getByName('runtime').asPath
           def persistenceAPI = ''
           def jpaBackend = ''
-          if (jarPath.indexOf('jdo-api') > 0) { persistenceAPI = 'jdo' }
+          def jdoapi = versions.jdo_api.split(':')[1];
+          // println "compileJava - check: $versions.jdo_api $jdoapi"
+          if (jarPath.indexOf(jdoapi) > 0) { persistenceAPI = 'jdo' }
           if (jarPath.indexOf('javax.persistence') > 0) { persistenceAPI = 'jpa' }
           if (jarPath.indexOf('ebean') > 0) { persistenceAPI = 'ebean' }
           if (jarPath.indexOf('datanucleus-core') > 0) { jpaBackend = 'datanucleus' }
