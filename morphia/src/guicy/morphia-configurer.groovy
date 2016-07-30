@@ -23,6 +23,8 @@ import org.tangram.content.BeanFactory
 import org.tangram.morphia.MorphiaBeanFactory
 import org.tangram.mutable.MutableBeanFactory
 import org.tangram.view.GenericPropertyConverter
+import com.google.inject.TypeLiteral
+import java.lang.reflect.Type
 
 log.info "starting"
 
@@ -37,6 +39,12 @@ beanFactory.setDatabase(config.getProperty("mongo.database", "tangram"))
 beanFactory.setBasePackages(basePackages)
 module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
+Object vehicle = new Object() {
+  MutableBeanFactory<?> v
+};
+Type interimType = vehicle.getClass().getDeclaredField("v").getGenericType()
+TypeLiteral mbf = TypeLiteral.get(interimType)
+module.bind(mbf).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
 
 log.info "done."

@@ -25,6 +25,7 @@ import com.mycila.guice.ext.jsr250.Jsr250Module;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.tangram.guicy.TangramServletModule;
 import org.tangram.jpa.protection.PasswordProtection;
 import org.tangram.jpa.test.content.BaseClass;
@@ -36,7 +37,7 @@ import org.tangram.mutable.test.content.SubInterface;
 import org.testng.annotations.Test;
 
 
-public class JpaContentTest extends BaseContentTest {
+public class JpaContentTest extends BaseContentTest<EntityManager> {
 
     static {
         org.apache.openjpa.enhance.InstrumentationFactory.setDynamicallyInstallAgent(false);
@@ -51,13 +52,13 @@ public class JpaContentTest extends BaseContentTest {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<EntityManager> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<EntityManager> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 

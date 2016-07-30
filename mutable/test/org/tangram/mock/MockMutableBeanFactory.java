@@ -38,11 +38,11 @@ import org.tangram.mutable.MutableCode;
 /**
  * Mock utility class for mutable bean factory instances needed in tests.
  */
-public class MockMutableBeanFactory extends MockBeanFactory implements MutableBeanFactory {
+public class MockMutableBeanFactory extends MockBeanFactory implements MutableBeanFactory<MockOrmManager> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockMutableBeanFactory.class);
 
-    private final Object manager = new MockOrmManager();
+    private final MockOrmManager manager = new MockOrmManager();
 
     private final Collection<Class<? extends Content>> clearedClasses = new HashSet<>();
 
@@ -180,7 +180,7 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
 
     @Override
-    public Object getManager() {
+    public MockOrmManager getManager() {
         return manager;
     } // getManager()
 

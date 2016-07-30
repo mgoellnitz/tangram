@@ -80,7 +80,7 @@ public class ToolHandler {
     private Statistics statistics;
 
     @Inject
-    private MutableBeanFactory beanFactory;
+    private MutableBeanFactory<?> beanFactory;
 
     @Inject
     private CodeResourceCache codeResourceCache;
@@ -304,7 +304,7 @@ public class ToolHandler {
         for (Class<? extends Content> c : classes) {
             xstream.alias(c.getSimpleName(), c);
         } // for
-        
+
         Object contents = xstream.fromXML(input);
         LOG.info("doImport() {}", contents);
         if (contents instanceof List) {

@@ -25,7 +25,7 @@ import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
 
-public interface MutableBeanFactory extends BeanFactory {
+public interface MutableBeanFactory<M extends Object> extends BeanFactory {
 
     /**
      * Returns the root class of all content classes handled by the implementing instance - may be null;
@@ -170,6 +170,6 @@ public interface MutableBeanFactory extends BeanFactory {
      *
      * @return implementation specific manager instance
      */
-    Object getManager();
+    M getManager();
 
 } // MutableBeanFactory

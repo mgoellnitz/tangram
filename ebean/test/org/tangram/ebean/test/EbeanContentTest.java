@@ -18,6 +18,7 @@
  */
 package org.tangram.ebean.test;
 
+import com.avaje.ebean.EbeanServer;
 import dinistiq.Dinistiq;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public class EbeanContentTest extends BaseContentTest {
+public class EbeanContentTest extends BaseContentTest<EbeanServer> {
 
     @Override
     protected Map<String, Object> getBeansForContentCreate() {
@@ -67,13 +68,13 @@ public class EbeanContentTest extends BaseContentTest {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<EbeanServer> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<EbeanServer> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 

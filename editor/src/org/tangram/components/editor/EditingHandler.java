@@ -194,7 +194,7 @@ public class EditingHandler extends AbstractLinkHandler {
     } // setDeleteMethodEnabled()
 
 
-    private MutableBeanFactory getMutableBeanFactory() {
+    private MutableBeanFactory<?> getMutableBeanFactory() {
         return (MutableBeanFactory) getBeanFactory();
     } // getMutableBeanFactory()
 

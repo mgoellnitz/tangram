@@ -21,6 +21,7 @@ package org.tangram.nucleus.test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.jdo.PersistenceManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.tangram.mutable.MutableBeanFactory;
@@ -42,7 +43,7 @@ import org.testng.annotations.Test;
  * We need a test order to have enhanced classes first, then create some content, and the test this content in
  * a separate test "session".
  */
-public class NucleusContentTest extends BaseContentTest {
+public class NucleusContentTest extends BaseContentTest<PersistenceManager> {
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
@@ -52,13 +53,13 @@ public class NucleusContentTest extends BaseContentTest {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<PersistenceManager> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<PersistenceManager> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 

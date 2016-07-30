@@ -43,7 +43,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public abstract class BaseContentTest {
+public abstract class BaseContentTest<M extends Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseContentTest.class);
 
@@ -176,10 +176,10 @@ public abstract class BaseContentTest {
     protected abstract <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception;
 
 
-    protected abstract BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception;
+    protected abstract BaseInterface createBaseBean(MutableBeanFactory<M> beanFactory) throws Exception;
 
 
-    protected abstract SubInterface createSubBean(MutableBeanFactory beanFactory) throws Exception;
+    protected abstract SubInterface createSubBean(MutableBeanFactory<M> beanFactory) throws Exception;
 
 
     protected abstract Class<? extends BaseInterface> getBaseClass();
@@ -217,7 +217,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 1)
     public void test2Factory() throws Exception {
-        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
+        MutableBeanFactory<M> beanFactory = getInstance(MutableBeanFactory.class, true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Object manager = beanFactory.getManager();
         Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
@@ -235,7 +235,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 3)
     public void test3CreateTestContent() throws Exception {
-        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
+        MutableBeanFactory<M> beanFactory = getInstance(MutableBeanFactory.class, true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         int numberOfAllClasses = getNumberOfAllClasses();
         // Assert.assertEquals(beanFactory.getAllClasses().toString(), "[interface org.tangram.feature.protection.Protection, interface org.tangram.feature.protection.ProtectedContent, interface org.tangram.mutable.test.content.SubInterface, interface org.tangram.mutable.MutableCode, interface org.tangram.content.CodeResource, class org.tangram.ebean.EContent, interface org.tangram.mutable.test.content.BaseInterface, class org.tangram.content.TransientCode, class org.tangram.ebean.Code, interface org.tangram.content.Content, class org.tangram.ebean.test.content.BaseClass, class org.tangram.ebean.test.content.SubClass]", "Discovered strange list of classes as strings.");
@@ -278,7 +278,7 @@ public abstract class BaseContentTest {
 
     @Test(priority = 5)
     public void test5Code() throws Exception {
-        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
+        MutableBeanFactory<M> beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
         Assert.assertNotNull(classesMap, "We have a classes map.");

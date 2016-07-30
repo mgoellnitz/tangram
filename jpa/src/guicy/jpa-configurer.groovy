@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015 Martin Goellnitz
+ * Copyright 2015-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,8 @@ import org.tangram.jpa.JpaBeanFactoryImpl
 import org.tangram.content.BeanFactory
 import org.tangram.mutable.MutableBeanFactory
 import org.tangram.view.GenericPropertyConverter
+import com.google.inject.TypeLiteral
+import java.lang.reflect.Type
 
 log.info "starting"
 
@@ -46,6 +48,12 @@ if (servletContext != null) {
   servletContext.setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 }
 module.bind(BeanFactory.class).toInstance(beanFactory)
+Object vehicle = new Object() {
+  MutableBeanFactory<?> v
+};
+Type interimType = vehicle.getClass().getDeclaredField("v").getGenericType()
+TypeLiteral mbf = TypeLiteral.get(interimType)
+module.bind(mbf).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
 
 log.info "done."

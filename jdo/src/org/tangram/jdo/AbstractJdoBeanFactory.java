@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +41,7 @@ import org.tangram.util.ClassResolver;
 import org.tangram.util.SystemUtils;
 
 
-public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory implements JdoBeanFactory {
+public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<PersistenceManager> implements JdoBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractJdoBeanFactory.class);
 
@@ -296,7 +296,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory 
 
 
     @Override
-    public Object getManager() {
+    public PersistenceManager getManager() {
         return manager;
     } // getManager()
 

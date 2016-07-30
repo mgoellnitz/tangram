@@ -49,7 +49,7 @@ import org.tangram.util.SystemUtils;
  */
 @Named("beanFactory")
 @Singleton
-public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements MutableBeanFactory {
+public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager> implements MutableBeanFactory<EntityManager> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JpaBeanFactoryImpl.class);
 
@@ -252,7 +252,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
-    public Object getManager() {
+    public EntityManager getManager() {
         return manager;
     } // getManager()
 

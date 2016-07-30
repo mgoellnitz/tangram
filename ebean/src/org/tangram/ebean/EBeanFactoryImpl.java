@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,7 +44,7 @@ import org.tangram.util.SystemUtils;
 
 @Named("beanFactory")
 @Singleton
-public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements MutableBeanFactory {
+public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer> implements MutableBeanFactory<EbeanServer> {
 
     private static final Logger LOG = LoggerFactory.getLogger(EBeanFactoryImpl.class);
 
@@ -220,7 +220,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory implements Muta
 
 
     @Override
-    public Object getManager() {
+    public EbeanServer getManager() {
         return server;
     } // getManager()
 

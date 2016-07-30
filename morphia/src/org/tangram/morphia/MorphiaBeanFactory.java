@@ -45,7 +45,7 @@ import org.tangram.util.SystemUtils;
 
 @Named("beanFactory")
 @Singleton
-public class MorphiaBeanFactory extends AbstractMutableBeanFactory implements MutableBeanFactory {
+public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore> implements MutableBeanFactory<Datastore> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaBeanFactory.class);
 
@@ -205,7 +205,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory implements Mu
 
 
     @Override
-    public Object getManager() {
+    public Datastore getManager() {
         return datastore;
     } // getManager()
 

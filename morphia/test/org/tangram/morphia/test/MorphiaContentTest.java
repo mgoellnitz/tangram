@@ -35,7 +35,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public class MorphiaContentTest extends BaseContentTest {
+public class MorphiaContentTest extends BaseContentTest<Datastore> {
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
@@ -48,13 +48,13 @@ public class MorphiaContentTest extends BaseContentTest {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<Datastore> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<Datastore> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 
