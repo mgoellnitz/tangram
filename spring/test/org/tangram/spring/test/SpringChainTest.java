@@ -30,10 +30,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
+import org.tangram.components.SimpleStatistics;
 import org.tangram.components.spring.MetaController;
 import org.tangram.components.spring.TangramSpringServices;
 import org.tangram.components.spring.TangramViewHandler;
 import org.tangram.content.BeanFactory;
+import org.tangram.spring.MeasureTimeInterceptor;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
@@ -132,5 +134,25 @@ public class SpringChainTest {
         ModelAndView result = controller.handleRequest(request, response);
         Assert.assertNull(result, "Meta controller should issue a result.");
     } // testMetaController()
+
+
+    @Test
+    public void testMeasureTimeInterceptor() throws Exception {
+        SimpleStatistics statistics = TangramSpringServices.getApplicationContext().getBean(SimpleStatistics.class);
+        Assert.assertNotNull(statistics, "Need a statistics instance to do the test.");
+        MeasureTimeInterceptor interceptor = TangramSpringServices.getApplicationContext().getBean(MeasureTimeInterceptor.class);
+        Assert.assertNotNull(interceptor, "Need a time measring interceptor to do the test.");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/id_RootTopic:1");
+        request.setContextPath("/testapp");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setContentType("text/html");
+        Long avg = statistics.getCounter().get("page render time");
+        Assert.assertNull(avg, "There should be no average page render time before test.");
+        interceptor.preHandle(request, response, null);
+        interceptor.afterCompletion(request, response, null, null);
+        avg = statistics.getCounter().get("page render time");
+        Assert.assertNotNull(avg, "There should be an average page render time after test.");
+        Assert.assertEquals((long)avg, 0L, "There should be an average page render time of 0.");
+    } // testMeasureTimeInterceptor()
 
 } // SpringChainTest
