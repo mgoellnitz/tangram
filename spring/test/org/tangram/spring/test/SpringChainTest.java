@@ -61,7 +61,7 @@ public class SpringChainTest {
         XmlWebApplicationContext context = new XmlWebApplicationContext();
         context.setServletContext(servletContext);
         // context.setConfigLocations("/tangram/*", "tangram/*.xml", "/WEB-INF/tangram/*.xml", "classpath*:tangram/*.xml" );
-        context.setConfigLocations("/tangram/tangram-configurer.xml", "/tangram/tangram-test-configurer.xml");
+        context.setConfigLocations("/tangram/tangram-configurer.xml", "/tangram/mutable-configurer.xml", "/tangram/tangram-test-configurer.xml");
         context.afterPropertiesSet();
         LOG.info("init() # of beans is {}.", context.getBeanDefinitionCount());
         appContext = context;
@@ -138,9 +138,10 @@ public class SpringChainTest {
 
     @Test
     public void testMeasureTimeInterceptor() throws Exception {
-        SimpleStatistics statistics = TangramSpringServices.getApplicationContext().getBean(SimpleStatistics.class);
+        ApplicationContext applicationContext = TangramSpringServices.getApplicationContext();
+        SimpleStatistics statistics = applicationContext.getBean(SimpleStatistics.class);
         Assert.assertNotNull(statistics, "Need a statistics instance to do the test.");
-        MeasureTimeInterceptor interceptor = TangramSpringServices.getApplicationContext().getBean(MeasureTimeInterceptor.class);
+        MeasureTimeInterceptor interceptor = applicationContext.getBean(MeasureTimeInterceptor.class);
         Assert.assertNotNull(interceptor, "Need a time measring interceptor to do the test.");
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/id_RootTopic:1");
         request.setContextPath("/testapp");
