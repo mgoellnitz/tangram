@@ -10,7 +10,7 @@
 </TransientCode>
 <TransientCode>
 <id>CodeResource:4</id>
-<annotation>org.tangram.example.Topic</annotation>
+<annotation>org.tangram.view.ViewUtilities</annotation>
 <mimeType>text/html</mimeType>
 <codeText>&lt;h1&gt;Title&lt;/h1&gt;
 </codeText>
