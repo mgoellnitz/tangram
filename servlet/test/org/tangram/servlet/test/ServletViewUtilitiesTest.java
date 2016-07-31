@@ -18,7 +18,9 @@
  */
 package org.tangram.servlet.test;
 
+import java.io.FileNotFoundException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.mockito.InjectMocks;
@@ -29,11 +31,15 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.tangram.components.SimpleStatistics;
 import org.tangram.components.servlet.ServletViewUtilities;
+import org.tangram.components.test.GenericCodeResourceCacheTest;
+import org.tangram.content.CodeResourceCache;
 import org.tangram.monitor.Statistics;
 import org.tangram.servlet.JspTemplateResolver;
+import org.tangram.servlet.RepositoryTemplateResolver;
 import org.tangram.view.DefaultViewContextFactory;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.TemplateResolver;
+import org.tangram.view.velocity.VelocityResourceLoader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -46,8 +52,29 @@ public class ServletViewUtilitiesTest {
     @Spy
     private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
 
+    @Spy
+    private CodeResourceCache cache;
+
+    @Spy
+    private DefaultViewContextFactory viewContextFactory = new DefaultViewContextFactory();
+
     @InjectMocks
     private final JspTemplateResolver jspTemplateResolver = new JspTemplateResolver();
+
+    @InjectMocks
+    private final RepositoryTemplateResolver repositoryTemplateResolver = new RepositoryTemplateResolver();
+
+    @InjectMocks
+    private ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
+
+
+    public ServletViewUtilitiesTest() throws FileNotFoundException {
+        MockServletContext servletContext = new MockServletContext(".");
+        servletViewUtilities.setResolvers(setupResolvers(servletContext));
+        cache = new GenericCodeResourceCacheTest().getInstance();
+        VelocityResourceLoader.codeResourceCache = cache;
+        MockitoAnnotations.initMocks(this);
+    } // ()
 
 
     @SuppressWarnings("rawtypes")
@@ -56,20 +83,13 @@ public class ServletViewUtilitiesTest {
         jspTemplateResolver.setServletContext(servletContext);
         jspTemplateResolver.afterPropertiesSet();
         resolvers.add(jspTemplateResolver);
+        resolvers.add(repositoryTemplateResolver);
         return resolvers;
     } // setupResolvers()
 
 
     @Test
     public void testServletViewUtilities() throws Exception {
-        ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
-        DefaultViewContextFactory viewContextFactory = new DefaultViewContextFactory();
-        MockServletContext servletContext = new MockServletContext(".");
-
-        servletViewUtilities.setResolvers(setupResolvers(servletContext));
-
-        MockitoAnnotations.initMocks(this);
-
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/id_RootTopic:1");
         request.setContextPath("/testapp");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -77,9 +97,15 @@ public class ServletViewUtilitiesTest {
 
         Object bean = new Throwable("Test Code");
         Map<String, Object> model = viewContextFactory.createModel(bean, request, response);
-
         servletViewUtilities.render(null, model, null);
-        Assert.assertEquals(response.getContentAsString(), "", "The result is empty for mock instances.");
+
+        Map<String, Object> secondModel = viewContextFactory.createModel(servletViewUtilities, request, response);
+        VelocityResourceLoader.codeResourceCache = cache;
+        servletViewUtilities.render(null, secondModel, null);
+
+        List<String> includedUrls = response.getIncludedUrls();
+        Assert.assertNotNull(includedUrls, "There must be some include urls.");
+        Assert.assertEquals(response.getContentAsString(), "<h1>Title</h1>\n", "The result is empty for mock instances.");
     } // testServletViewUtilities()
 
 
