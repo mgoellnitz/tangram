@@ -53,10 +53,10 @@ public class ServletViewUtilitiesTest {
     private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
 
     @Spy
-    private CodeResourceCache cache;
+    private final CodeResourceCache cache;
 
     @Spy
-    private DefaultViewContextFactory viewContextFactory = new DefaultViewContextFactory();
+    private final DefaultViewContextFactory viewContextFactory = new DefaultViewContextFactory();
 
     @InjectMocks
     private final JspTemplateResolver jspTemplateResolver = new JspTemplateResolver();
@@ -65,7 +65,7 @@ public class ServletViewUtilitiesTest {
     private final RepositoryTemplateResolver repositoryTemplateResolver = new RepositoryTemplateResolver();
 
     @InjectMocks
-    private ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
+    private final ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
 
 
     public ServletViewUtilitiesTest() throws FileNotFoundException {

@@ -52,7 +52,7 @@ public class FtpTestHelper {
 
     private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-    private final MutableBeanFactory beanFactory;
+    private final MutableBeanFactory<?> beanFactory;
 
 
     /**
@@ -72,7 +72,7 @@ public class FtpTestHelper {
     } // ()
 
 
-    public MutableBeanFactory getBeanFactory() {
+    public MutableBeanFactory<?> getBeanFactory() {
         return beanFactory;
     } // getBeanFactory()
 

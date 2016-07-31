@@ -259,7 +259,7 @@ public abstract class BaseContentTest<M extends Object> {
 
     @Test(priority = 4)
     public void test4Components() throws Exception {
-        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
+        MutableBeanFactory<?> beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals(allBeans.size(), 2, "We have prepared a fixed number of beans.");
@@ -343,7 +343,7 @@ public abstract class BaseContentTest<M extends Object> {
 
     @Test(priority = 7)
     public void test7DeleteComponents() throws Exception {
-        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
+        MutableBeanFactory<?> beanFactory = getInstance(MutableBeanFactory.class, false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends Content> subBeans = beanFactory.listBeans(SubInterface.class);
         beanFactory.beginTransaction();

@@ -43,7 +43,7 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
     private final MutableBeanFactory<?> beanFactory;
 
 
-    public RntoFtpCommandHandler(MutableBeanFactory beanFactory) {
+    public RntoFtpCommandHandler(MutableBeanFactory<?> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

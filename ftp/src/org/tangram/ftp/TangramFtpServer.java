@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -72,7 +72,7 @@ public class TangramFtpServer extends AbstractFtpServer {
      * @param beanFactory bean factory instance to to content from and store in.
      * @param codeResourceCache code access facade for the bean factory.
      */
-    public TangramFtpServer(MutableBeanFactory beanFactory, CodeResourceCache codeResourceCache) {
+    public TangramFtpServer(MutableBeanFactory<?> beanFactory, CodeResourceCache codeResourceCache) {
         PwdFtpCommandHandler pwdCommandHandler = new PwdFtpCommandHandler();
 
         // Initialize the default CommandHandler mappings

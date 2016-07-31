@@ -189,7 +189,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
         List<T> result = new ArrayList<>();
         try {
             Extent<T> extent = manager.getExtent(cls, false);
-            Query query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
+            Query<?> query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
                 String order = orderProperty+(ascending ? " asc" : " desc");
