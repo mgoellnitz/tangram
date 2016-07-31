@@ -98,7 +98,7 @@ public class MorphiaContentTest extends BaseContentTest<Datastore> {
 
 
     @Test(priority = 10)
-    public void test2WipeContent() throws Exception {
+    public void test10WipeContent() throws Exception {
         MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Object manager = beanFactory.getManager();

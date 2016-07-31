@@ -340,4 +340,17 @@ public abstract class BaseContentTest<M extends Object> {
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
     } // test6ObtainCode()
 
+
+    @Test(priority = 7)
+    public void test7DeleteComponents() throws Exception {
+        MutableBeanFactory beanFactory = getInstance(MutableBeanFactory.class, false);
+        Assert.assertNotNull(beanFactory, "Need factory for beans.");
+        List<? extends Content> subBeans = beanFactory.listBeans(SubInterface.class);
+        beanFactory.beginTransaction();
+        boolean result = beanFactory.delete(subBeans.get(0));
+        Assert.assertTrue(result, "Item should have been deleted.");
+        List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
+        Assert.assertEquals(allBeans.size(), 1, "There should be less beans after deleting one item.");
+    } // test7DeleteComponents()
+
 } // BaseContentTest
