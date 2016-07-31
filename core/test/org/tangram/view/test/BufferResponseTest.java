@@ -62,4 +62,142 @@ public class BufferResponseTest {
 
     } // testBufferReponse()
 
+
+    @Test
+    public void testUnimplementedMethods() {
+        BufferResponse bufferResponse = new BufferResponse();
+        boolean success = false;
+        try {
+            bufferResponse.setContentLengthLong(13);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.getHeaderNames();
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.getHeaders("dontcare");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.getHeader("dontcare");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.getStatus();
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.setStatus(0);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.addIntHeader("dontcare", 0);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.setIntHeader("dontcare", 0);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.addHeader("dontcare", "nothing");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.setHeader("dontcare", "nothing");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.addDateHeader("dontcare", 0);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.setDateHeader("dontcare", 0);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.sendRedirect("http://do.away/");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } catch (IOException ioe) {
+            Assert.fail("Didn't expect any I/O to really happen during test.");
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.sendError(0);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } catch (IOException ioe) {
+            Assert.fail("Didn't expect any I/O to really happen during test.");
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.sendError(0, "http://do.away/");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } catch (IOException ioe) {
+            Assert.fail("Didn't expect any I/O to really happen during test.");
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.encodeRedirectURL("http://do.away/");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.encodeURL("http://do.away/");
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+        success = false;
+        try {
+            bufferResponse.addCookie(null);
+        } catch (UnsupportedOperationException uoe) {
+            success = "NYI".equals(uoe.getMessage());
+        } // try/catch
+        Assert.assertTrue(success, "Expectedly unsupported operation incidentally now working.");
+    } // testUnimplementedMethods()
+
 } // BufferResponseTest
