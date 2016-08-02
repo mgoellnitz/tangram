@@ -21,6 +21,7 @@
 # TANGRAM_MORPHIA_INTEGRATION_TEST
 # JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m" (for Java 7)
 # ORG_GRADLE_PROJECT_release=true
+# ORG_GRADLE_PROJECT_pmdversion=5.1.3 // later versions seemingly don't work on travis-ci
 #
 sudo: false
 

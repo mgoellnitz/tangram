@@ -130,7 +130,7 @@ public class TangramFtpServer extends AbstractFtpServer {
     @Override
     protected void finalize() throws Throwable {
         for (String key : commands.keySet()) {
-            LOG.info(key+": "+commands.get(key).numberOfInvocations());
+            LOG.info("{}: {}", key, commands.get(key).numberOfInvocations());
         } // for
         super.finalize();
     } // finalize()

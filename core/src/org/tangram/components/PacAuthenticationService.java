@@ -268,7 +268,7 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             } // if
             LOG.info("callback({}) logged in users after callback {}", session.getId(), users);
         } catch (RuntimeException e) {
-            LOG.warn("callback() {}", e.getLocalizedMessage(), e);
+            LOG.warn("callback()", e.getLocalizedMessage());
             session.setAttribute("tangram.login.error", e.getLocalizedMessage());
             return new TargetDescriptor(this, null, client.getName());
         } // try/catch

@@ -173,14 +173,14 @@ public class TangramServletModule extends ServletModule {
         try {
             scripts = SystemUtils.getResourceListing(GUICY_BASE, ".groovy");
         } catch (Exception e) {
-            LOG.error("{} error while reading all modules binding scripts", e);
+            LOG.error("Error while reading all modules binding scripts", e);
         } // try/catch
 
         for (final String name : scripts) {
             try {
-                LOG.info("configureServlets() loading "+name);
+                LOG.info("configureServlets() loading {}", name);
                 URL resource = Thread.currentThread().getContextClassLoader().getResource(name);
-                LOG.info("configureServlets() loading "+resource);
+                LOG.info("configureServlets() loading {}", resource);
                 Script s = shell.parse(new GroovyCodeSource(resource));
                 s.setProperty("config", configuration);
                 s.setProperty("module", this);

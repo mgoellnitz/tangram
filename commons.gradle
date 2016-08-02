@@ -58,8 +58,8 @@ if (release) {
     ruleSets = []
     ruleSetFiles = files("$project.rootProject.projectDir/pmd.xml")
     sourceSets = [sourceSets.main]
-    // We'd love to have a later version like 5.4.2 old gradle on travis seems to have a probem with this.
-    toolVersion = '5.1.3'
+    // Used to override the latest working version on travi-ci. 5.5 don't work so far.
+    toolVersion = project.hasProperty('pmdversion') ? pmdversion : '5.4.2'
   }
 }
 
@@ -88,7 +88,6 @@ artifactory {
       repoKey = version.endsWith('SNAPSHOT') ? 'oss-snapshot-local' : 'oss-release-local'
       username = "$bintrayUser"
       password = "$bintrayKey"
-      // maven = true
     }
     defaults {
       publications ('mavenJava')

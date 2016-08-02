@@ -424,7 +424,7 @@ public abstract class AbstractMutableBeanFactory<M extends Object> extends Abstr
         } catch (Exception e) {
             if (LOG.isWarnEnabled()) {
                 String simpleName = e.getClass().getSimpleName();
-                LOG.warn("getBean() object not found for id '{}' {}: {}", id, simpleName, e.getLocalizedMessage(), e);
+                LOG.warn("getBean() object not found for id '"+id+"' "+simpleName+": "+e.getLocalizedMessage(), e);
             } // if
         } // try/catch/finally
         statistics.increase("get bean uncached");

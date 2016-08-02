@@ -58,7 +58,7 @@ public class VelocityResourceLoader extends ResourceLoader {
                     result = t.getStream();
                 } // if
             } catch (Exception e) {
-                LOG.error("getResourceStream() "+e.getMessage());
+                LOG.error("getResourceStream() {}", e.getMessage());
             } // try/catch
         } // if
         return result;

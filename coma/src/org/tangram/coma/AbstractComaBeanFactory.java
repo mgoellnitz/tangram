@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2016 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -370,7 +370,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
                 } // if
             } // if
         } catch (SQLException se) {
-            LOG.error("getType()", se);
+            LOG.error("getType() "+id, se);
         } // try/catch
         return type;
     } // getType()
@@ -394,7 +394,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
             } // for
             return currentFolder;
         } catch (RuntimeException se) {
-            LOG.error("getChildId()", se);
+            LOG.error("getChildId() "+path, se);
         } // try/catch
         return null;
     } // getChildId()
@@ -528,12 +528,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         try {
             Class.forName(dbDriver).newInstance();
         } catch (RuntimeException|ClassNotFoundException|InstantiationException|IllegalAccessException ex) {
-            LOG.error("afterPropertiesSet() error loading driver {} ({}) ", dbDriver, this, ex);
+            LOG.error("afterPropertiesSet() error loading driver "+dbDriver+ "("+this+")", ex);
         } // try/catch
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         } catch (RuntimeException|SQLException ex) {
-            LOG.error("afterPropertiesSet() error getting connection to {} as {}", dbUrl, dbUser, ex);
+            LOG.error("afterPropertiesSet() error getting connection to "+dbUrl+" as "+dbUser, ex);
         } // try/catch
     } // afterPropertiesSet()
 

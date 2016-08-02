@@ -99,7 +99,7 @@ public class StreamingMultipartResolver implements MultipartResolver {
                         multipartFiles.add(name, file);
                         multipartFileContentTypes.put(name, file.getContentType());
                     } catch (final IOException e) {
-                        LOG.warn("({})", e.getCause().getMessage(), e);
+                        LOG.warn("() "+e.getCause().getMessage(), e);
                         MultipartFile file = new MultipartFile() {
 
                             @Override
