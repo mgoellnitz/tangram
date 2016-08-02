@@ -57,7 +57,7 @@ public class TangramVersions {
   String guice = '4.0'
   String mycila_guice = '3.6.ga' // No 4.1 compatible version available for JSR 250 support
 
-  String springframework = '4.3.1.RELEASE'
+  String springframework = '4.3.2.RELEASE'
 
   String weld = '2.3.5.Final'
   String openwebbeans = '1.6.2'
