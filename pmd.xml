@@ -81,7 +81,12 @@
     <exclude name="SimpleDateFormatNeedsLocale"/>
     <exclude name="UseLocaleWithCaseConversions"/>
     <exclude name="CompareObjectsWithEquals"/>
+    <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
     <exclude name="UseVarargs"/>
+    <!-- results in false positives: -->
+    <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
+    <!-- this may be a problem - or not -->
+    <exclude name="SingleMethodSingleton"/>
   </rule>
   <rule ref="rulesets/java/empty.xml"/>
   <rule ref="rulesets/java/finalizers.xml"/>
@@ -105,6 +110,7 @@
   <rule ref="rulesets/java/naming.xml">
     <exclude name="LongVariable"/>
     <exclude name="ShortVariable"/>
+    <exclude name="ShortMethodName"/>
     <exclude name="ShortClassName"/>
     <exclude name="AbstractNaming"/>
     <exclude name="AvoidFieldNameMatchingTypeName"/>
