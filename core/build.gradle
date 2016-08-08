@@ -52,6 +52,11 @@ dependencies {
   compile "org.pac4j:pac4j-core:$versions.pac4j"
   compile "org.pac4j:pac4j-http:$versions.pac4j"
   compile "org.pac4j:pac4j-oauth:$versions.pac4j"
+  
+  // These are in fact optional runtime JSP dependencies
+  // runtime "org.json:json:$versions.org_json"
+  // runtime "javax.json:javax.json-api:$versions.javax_json"
+  // runtime "com.google.code.gson:gson:$versions.gson"
 
   testCompile "org.testng:testng:$versions.testng"
   // test logging at debug level through special logback.groovy
@@ -60,9 +65,6 @@ dependencies {
   testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile "org.springframework:spring-web:$versions.springframework"
   testCompile "com.thoughtworks.xstream:xstream:$versions.xstream"
-  testCompile "org.json:json:$versions.org_json"
-  testCompile "javax.json:javax.json-api:$versions.javax_json"
-  testCompile "com.google.code.gson:gson:$versions.gson"
 
   providedCompile "$versions.servlet_api"
   providedCompile "$versions.jsp_api"
