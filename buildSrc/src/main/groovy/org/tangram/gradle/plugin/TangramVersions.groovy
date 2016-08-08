@@ -30,6 +30,9 @@ public class TangramVersions {
   String lombok = '1.16.10'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
+  String org_json = '20160212' // not used in tangram internally
+  String javax_json = '1.0'
+  String gson = '2.7'
   String groovy = '2.4.7'
   String asm = '5.1'
   String velocity = '1.7'
