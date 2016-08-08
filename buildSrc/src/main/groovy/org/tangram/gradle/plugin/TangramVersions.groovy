@@ -57,8 +57,7 @@ public class TangramVersions {
   // The dependency injection options
   String dinistiq = '0.6'
 
-  String guice = '4.0'
-  String mycila_guice = '3.6.ga' // No 4.1 compatible version available for JSR 250 support
+  String guice = '4.1.0'
 
   String springframework = '4.3.2.RELEASE'
 

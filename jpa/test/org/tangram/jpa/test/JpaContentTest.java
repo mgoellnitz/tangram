@@ -20,13 +20,12 @@ package org.tangram.jpa.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.mycila.guice.ext.closeable.CloseableModule;
-import com.mycila.guice.ext.jsr250.Jsr250Module;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.tangram.guicy.TangramServletModule;
+import org.tangram.guicy.postconstruct.PostConstructModule;
 import org.tangram.jpa.protection.PasswordProtection;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
@@ -46,7 +45,7 @@ public class JpaContentTest extends BaseContentTest<EntityManager> {
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
-        Injector injector = Guice.createInjector(new CloseableModule(), new Jsr250Module(), new TangramServletModule());
+        Injector injector = Guice.createInjector(new PostConstructModule(), new TangramServletModule());
         return injector.getInstance(type);
     } // getInstance()
 

@@ -19,10 +19,10 @@
 package org.tangram.guicy.test;
 
 import com.google.inject.Guice;
-import com.mycila.guice.ext.closeable.CloseableModule;
-import com.mycila.guice.ext.jsr250.Jsr250Module;
+import com.google.inject.Injector;
 import org.tangram.Constants;
 import org.tangram.guicy.TangramServletModule;
+import org.tangram.guicy.postconstruct.PostConstructModule;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,7 +41,7 @@ public class TangramServletModuleTest {
             configureServlets();
             Object aggregator = getServletContext().getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
             Assert.assertNotNull(aggregator, "We need a link factory aggregator.");
-            Object viewSettins  = getServletContext().getAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS);
+            Object viewSettins = getServletContext().getAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS);
             Assert.assertNotNull(viewSettins, "We need view settings.");
             Object statistics = getServletContext().getAttribute(Constants.ATTRIBUTE_STATISTICS);
             Assert.assertNotNull(statistics, "We need a statistics instance.");
@@ -55,7 +55,8 @@ public class TangramServletModuleTest {
     @Test
     public void testTangramServletModule() {
         TestServletModule servletModule = new TestServletModule();
-        Guice.createInjector(new CloseableModule(), new Jsr250Module(), servletModule);
+        Injector injector = Guice.createInjector(new PostConstructModule(), servletModule);
+        Assert.assertNotNull(injector, "The injector must not be null.");
     } // testTangramServletModule()
 
 } // TangramServletModuleTest

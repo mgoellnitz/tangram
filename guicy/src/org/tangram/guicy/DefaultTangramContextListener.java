@@ -22,13 +22,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.mycila.guice.ext.closeable.CloseableModule;
-import com.mycila.guice.ext.jsr250.Jsr250Module;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.guicy.postconstruct.PostConstructModule;
 
 
 /**
@@ -46,7 +45,7 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        LOG.info("contextInitialized()");
+        LOG.debug("contextInitialized()");
         ServletContext context = servletContextEvent.getServletContext();
         String servletModuleClassName = context.getInitParameter(SERVLET_MODULE_CLASS);
         if (StringUtils.isNotBlank(servletModuleClassName)) {
@@ -66,8 +65,8 @@ public class DefaultTangramContextListener extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        LOG.info("getInjector()");
-        return Guice.createInjector(new CloseableModule(), new Jsr250Module(), servletModule);
+        LOG.debug("getInjector()");
+        return Guice.createInjector(new PostConstructModule(), servletModule);
     } // getInjector()
 
 } // DefaultTangramContextListener
