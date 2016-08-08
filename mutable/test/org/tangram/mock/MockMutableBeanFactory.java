@@ -173,7 +173,8 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
 
     public Collection<Class<? extends Content>> getClearedCacheClasses() {
-        Collection<Class<? extends Content>> result = clearedClasses;
+        Collection<Class<? extends Content>> result = new HashSet<>();
+        result.addAll(clearedClasses);
         clearedClasses.clear();
         return result;
     } // getClearedCacheClasses()

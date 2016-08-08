@@ -87,8 +87,7 @@ public class ToolHandlerTest {
         } catch (Exception e) {
             Assert.fail("Tool handler should not issue exceptions when clearing caches.", e);
         } // try/catch
-        // TODO: Mock mutable bean factory should give us some classes to deal with.
-        Assert.assertEquals(beanFactory.getClearedCacheClasses().size(), 0, "Fixed number of classes to clear caches for expected.");
+        Assert.assertEquals(beanFactory.getClearedCacheClasses().size(), 8, "Fixed number of classes to clear caches for expected.");
     } // testClearCaches()
 
 
