@@ -85,8 +85,6 @@
     <exclude name="UseVarargs"/>
     <!-- results in false positives: -->
     <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal"/>
-    <!-- this may be a problem - or not -->
-    <exclude name="SingleMethodSingleton"/>
   </rule>
   <rule ref="rulesets/java/empty.xml"/>
   <rule ref="rulesets/java/finalizers.xml"/>
