@@ -23,11 +23,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
 import org.tangram.components.SimpleStatistics;
 import org.tangram.components.servlet.ServletViewUtilities;
@@ -48,6 +52,8 @@ import org.testng.annotations.Test;
  * Test the servlet view utilities.
  */
 public class ServletViewUtilitiesTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ServletViewUtilitiesTest.class);
 
     @Spy
     private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
@@ -111,13 +117,46 @@ public class ServletViewUtilitiesTest {
 
     @Test
     public void testCreateParameterAccess() throws Exception {
-        ServletViewUtilities servletViewUtilities = new ServletViewUtilities();
+        ServletViewUtilities viewUtilities = new ServletViewUtilities();
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/id_RootTopic:1");
         request.setContextPath("/testapp");
+        request.setContentType(" ");
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setContentType("text/html");
-        RequestParameterAccess parameterAccess = servletViewUtilities.createParameterAccess(request);
+        RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
         Assert.assertNotNull(parameterAccess, "Access instance should have been created.");
     } // testCreateParameterAccess()
+
+
+    @Test
+    public void testFormEncodedParameterAccess() throws Exception {
+        ServletViewUtilities viewUtilities = new ServletViewUtilities();
+        MockServletContext context = new MockServletContext();
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(context);
+        request.setMethod("POST");
+        request.setRequestURI("/testapp/id_RootTopic:1");
+        request.setContentType("multipart/form-data; boundary=----------tangram");
+        String content = "\r\n------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"field\"\r\n\r\n"
+                +"content of the field\r\n"
+                +"------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"file\"; filename=\"testfile.txt\"\r\n"
+                +"Content-Type: text/plain\r\n\r\n"
+                +"Please test for these contents here.\r\n\r\n"
+                +"------------tangram--\r\n\r\n";
+        byte[] bytes = content.getBytes("ISO-8859-1");
+        request.setContent(bytes);
+        LOG.info("testFormEncodedParameterAccess() content size {}", bytes.length);
+        Assert.assertTrue(ServletFileUpload.isMultipartContent(request), "Multipart request expected.");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setContentType("text/html");
+        RequestParameterAccess parameters = viewUtilities.createParameterAccess(request);
+        Assert.assertNotNull(parameters, "Access instance should have been created.");
+        Assert.assertEquals(parameters.getParameterMap().size(), 1, "Unexpected number of parameters.");
+        Assert.assertEquals(parameters.getBlobNames().size(), 1, "Expected one available blob in the request parameters.");
+        Assert.assertEquals(parameters.getParameter("field"), "content of the field", "Unexpected field value");
+        Assert.assertEquals(parameters.getData("file").length, 38, "Unexpected file size");
+        Assert.assertEquals(parameters.getOriginalName("file"), "testfile.txt", "Unexpected file name");
+    } // testFormEncodedParameterAccess()
 
 } // ServletViewUtilitiesTest

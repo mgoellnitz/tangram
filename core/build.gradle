@@ -30,7 +30,6 @@ dependencies {
   compile "org.slf4j:slf4j-api:$versions.slf4j"
   // Nice to have for some pac4j implementations
   // runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
-  compile "commons-fileupload:commons-fileupload:1.3.2"
   compile "commons-io:commons-io:2.5"
   // Used by velocity:
   compile "commons-collections:commons-collections:3.2.2"
@@ -52,7 +51,7 @@ dependencies {
   compile "org.pac4j:pac4j-core:$versions.pac4j"
   compile "org.pac4j:pac4j-http:$versions.pac4j"
   compile "org.pac4j:pac4j-oauth:$versions.pac4j"
-  
+
   // These are in fact optional runtime JSP dependencies
   // runtime "org.json:json:$versions.org_json"
   // runtime "javax.json:javax.json-api:$versions.javax_json"
