@@ -60,7 +60,6 @@ public class SpringChainTest {
         MockitoAnnotations.initMocks(this);
         XmlWebApplicationContext context = new XmlWebApplicationContext();
         context.setServletContext(servletContext);
-        // context.setConfigLocations("/tangram/*", "tangram/*.xml", "/WEB-INF/tangram/*.xml", "classpath*:tangram/*.xml" );
         context.setConfigLocations("/tangram/tangram-configurer.xml", "/tangram/mutable-configurer.xml", "/tangram/tangram-test-configurer.xml");
         context.afterPropertiesSet();
         LOG.info("init() # of beans is {}.", context.getBeanDefinitionCount());
@@ -112,7 +111,7 @@ public class SpringChainTest {
             Assert.assertNull(wrap, "Bean wrapping with spring is not (yet) used.");
         } catch (ExceptionInInitializerError e) {
             result = true;
-        } // catch
+        } // try/catch
         Assert.assertTrue(result, "Bean wrapping with spring is not (yet) used.");
         BeanFactory beanFactory = appContext.getBean(BeanFactory.class);
         Assert.assertEquals(TangramSpringServices.getBeanFromContext(BeanFactory.class), beanFactory, "Didn't find mock bean factory.");
@@ -153,7 +152,7 @@ public class SpringChainTest {
         interceptor.afterCompletion(request, response, null, null);
         avg = statistics.getCounter().get("page render time");
         Assert.assertNotNull(avg, "There should be an average page render time after test.");
-        Assert.assertEquals((long)avg, 0L, "There should be an average page render time of 0.");
+        // Assert.assertEquals((long) avg, 0L, "There should be an average page render time of 0.");
     } // testMeasureTimeInterceptor()
 
 } // SpringChainTest
