@@ -109,6 +109,47 @@ static void import
 </codeText>
 <modificationTime>131235432</modificationTime>
 </TransientCode>
+<TransientCode>
+<id>CodeResource:16</id>
+<annotation>org.tangram.mock.content.RootTopic</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>
+package org.tangram.test
+  
+import org.tangram.mock.content.RootTopic
+import org.tangram.logic.AbstractShim
+
+public class ShimTest extends AbstractShim&lt;RootTopic&gt; {
+  
+  public ShimTest(RootTopic d) {
+    super(d)
+  }
+
+}
+</codeText>
+<modificationTime>131655432</modificationTime>
+</TransientCode>
+<TransientCode>
+<id>CodeResource:18</id>
+<annotation>org.tangram.mock.content.Topic</annotation>
+<mimeType>application/x-groovy</mimeType>
+<codeText>
+package org.tangram.test
+  
+import javax.servlet.http.HttpServletRequest
+import org.tangram.mock.content.Topic
+import org.tangram.logic.AbstractViewShim
+
+public class ViewShimTest extends AbstractViewShim&lt;Topic&gt; {
+  
+  public ViewShimTest(HttpServletRequest request, Topic d) {
+    super(d)
+  }
+
+}
+</codeText>
+<modificationTime>131755432</modificationTime>
+</TransientCode>
 <RootTopic>
   <id>RootTopic:1</id>
   <bottomLinks><list></list></bottomLinks>

@@ -104,7 +104,7 @@ public class GenericCodeResourceCacheTest {
         Assert.assertEquals(codeResourceCache.get("CodeResource:42"), referenceCode, "Expected to find reference code.");
         Map<String, CodeResource> typeCache = codeResourceCache.getTypeCache("application/x-groovy");
         Assert.assertNotNull(typeCache, "The should be some groovy codes.");
-        Assert.assertEquals(typeCache.size(), 5, "The should be some groovy codes.");
+        Assert.assertEquals(typeCache.size(), 7, "There should be some groovy codes.");
     } // testGenericCodeResourceCache()
 
 } // GenericCodeResourceCacheTest

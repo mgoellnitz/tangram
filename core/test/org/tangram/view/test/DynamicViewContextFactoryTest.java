@@ -20,10 +20,15 @@ package org.tangram.view.test;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.tangram.Constants;
+import org.tangram.components.test.GroovyClassRepositoryTest;
+import org.tangram.logic.ClassRepository;
 import org.tangram.logic.Shim;
 import org.tangram.logic.test.BeanShim;
 import org.tangram.logic.test.ProviderAwareBeanShim;
@@ -65,12 +70,22 @@ public class DynamicViewContextFactoryTest {
 
     } // TestFactory
 
+    @Spy
+    private ClassRepository repository; // NOPMD - this field is not really unused
+
+    @InjectMocks
+    private DynamicViewContextFactory factory = new TestFactory();
+
+
+    public DynamicViewContextFactoryTest() throws Exception {
+        repository = new GroovyClassRepositoryTest().getInstance();
+        MockitoAnnotations.initMocks(this);
+    } // ()
+
 
     @Test
     public void testViewContextCreation() {
-        DynamicViewContextFactory factory = new TestFactory();
         factory.afterPropertiesSet();
-
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpSession session = new MockHttpSession();
         MockContent bean = new MockContent();
