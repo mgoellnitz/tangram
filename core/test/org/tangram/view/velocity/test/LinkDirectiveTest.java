@@ -24,6 +24,7 @@ import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.context.InternalContextAdapterImpl;
+import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.mockito.Mockito;
@@ -75,16 +76,25 @@ public class LinkDirectiveTest {
         Node viewNode = Mockito.mock(Node.class);
         Node actionNode = Mockito.mock(Node.class);
         Node hrefNode = Mockito.mock(Node.class);
+        Node targetNode = Mockito.mock(Node.class);
+        Node handlersNode = Mockito.mock(Node.class);
         Mockito.when(beanNode.value(context)).thenReturn(bean);
         Mockito.when(viewNode.value(context)).thenReturn(view);
         Mockito.when(actionNode.value(context)).thenReturn(action);
         Mockito.when(hrefNode.value(context)).thenReturn(true);
+        Mockito.when(targetNode.value(context)).thenReturn(false);
+        Mockito.when(handlersNode.value(context)).thenReturn(false);
         Mockito.when(node.jjtGetChild(0)).thenReturn(beanNode);
         Mockito.when(node.jjtGetChild(1)).thenReturn(viewNode);
         Mockito.when(node.jjtGetChild(2)).thenReturn(actionNode);
         Mockito.when(node.jjtGetChild(3)).thenReturn(hrefNode);
-        Mockito.when(node.jjtGetNumChildren()).thenReturn(4);
+        Mockito.when(node.jjtGetChild(4)).thenReturn(targetNode);
+        Mockito.when(node.jjtGetChild(5)).thenReturn(handlersNode);
+        Mockito.when(node.jjtGetNumChildren()).thenReturn(6);
 
+        RuntimeInstance runtime = new RuntimeInstance();
+        runtime.addDirective(linkDirective);
+        linkDirective.init(runtime, context, node);
         boolean result = true;
         try {
             result = linkDirective.render(context, writer, node);

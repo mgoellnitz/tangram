@@ -24,6 +24,7 @@ import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.context.InternalContextAdapterImpl;
+import org.apache.velocity.runtime.RuntimeInstance;
 import org.apache.velocity.runtime.directive.DirectiveConstants;
 import org.apache.velocity.runtime.parser.node.Node;
 import org.mockito.Mockito;
@@ -82,6 +83,10 @@ public class IncludeDirectiveTest {
         Mockito.when(node.jjtGetChild(0)).thenReturn(beanNode);
         Mockito.when(node.jjtGetChild(1)).thenReturn(viewNode);
         Mockito.when(node.jjtGetNumChildren()).thenReturn(2);
+
+        RuntimeInstance runtime = new RuntimeInstance();
+        runtime.addDirective(includeDirective);
+        includeDirective.init(runtime, context, node);
 
         boolean result = true;
         try {
