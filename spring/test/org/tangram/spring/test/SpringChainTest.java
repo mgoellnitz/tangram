@@ -19,6 +19,7 @@
 package org.tangram.spring.test;
 
 import java.util.Map;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
@@ -99,6 +102,31 @@ public class SpringChainTest {
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
         Assert.assertNotNull(parameterAccess, "Access instance should have been created.");
     } // testCreateParameterAccess()
+
+
+    @Test
+    public void testFormEncodedParameterAccess() throws Exception {
+        MockServletContext context = new MockServletContext();
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(context);
+        request.setMethod("POST");
+        request.setRequestURI("/testapp/id_RootTopic:1");
+        // request.setContentType("multipart/form-data; boundary=----------tangram");
+        byte[] content = "Please test for these contents here.".getBytes("UTF-8");
+        MockMultipartFile f = new MockMultipartFile("file", "testfile.txt", "text/plain", content);
+        request.addFile(f);
+        request.setParameter("field", "content of the field");
+        Assert.assertTrue(ServletFileUpload.isMultipartContent(request), "Multipart request expected.");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        response.setContentType("text/html");
+        ViewUtilities viewUtilities = appContext.getBean(ViewUtilities.class);
+        RequestParameterAccess parameters = viewUtilities.createParameterAccess(request);
+        Assert.assertNotNull(parameters, "Access instance should have been created.");
+        Assert.assertEquals(parameters.getParameterMap().size(), 1, "Unexpected number of parameters.");
+        Assert.assertEquals(parameters.getBlobNames().size(), 1, "Expected one available blob in the request parameters.");
+        Assert.assertEquals(parameters.getParameter("field"), "content of the field", "Unexpected field value");
+        Assert.assertEquals(parameters.getData("file").length, 36, "Unexpected file size");
+        Assert.assertEquals(parameters.getOriginalName("file"), "testfile.txt", "Unexpected file name");
+    } // testFormEncodedParameterAccess()
 
 
     @Test

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.tangram.spring.StreamingMultipartResolver;
 import org.tangram.util.SystemUtils;
 import org.tangram.view.AbstractRequestParameterAccess;
@@ -43,8 +43,8 @@ public class SpringRequestParameterAccess extends AbstractRequestParameterAccess
      * Weak visibility to avoid direct instanciation.
      */
     SpringRequestParameterAccess(HttpServletRequest request) throws Exception {
-        if (request instanceof DefaultMultipartHttpServletRequest) {
-            DefaultMultipartHttpServletRequest r = (DefaultMultipartHttpServletRequest) request;
+        if (request instanceof MultipartHttpServletRequest) {
+            MultipartHttpServletRequest r = (MultipartHttpServletRequest) request;
             Map<String, MultipartFile> fileMap = r.getFileMap();
 
             for (Entry<String, MultipartFile> entry : fileMap.entrySet()) {
