@@ -66,8 +66,21 @@ public class ComaHandlerTest {
     @InjectMocks
     private final ComaHandler comaHandler = new ComaHandler();
 
+    /**
+     * Dummy populator to trigger population in tests.
+     */
+    private class TestBeanPopulator implements ComaBeanPopulator {
+
+        @Override
+        public void populate(ComaContent content) {
+            // It's a dummy...
+        }
+
+    } // TestBeanPopulator
+
 
     public ComaHandlerTest() {
+        populators.add(new TestBeanPopulator());
         comaContent = new ComaContent(CONTENT_ID, "Content", null);
         comaBlob = new ComaBlob(BLOB_CONTENT_ID, "data", "image/png", 0, new byte[0]);
         Map<String, Object> properties = new HashMap<>();

@@ -27,6 +27,7 @@ import org.tangram.coma.ComaBeanFactory;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
 import org.tangram.content.Content;
+import org.tangram.mock.content.Topic;
 import org.tangram.util.SystemUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -53,6 +54,9 @@ public class ComaBeanFactoryTest {
      */
     private ComaBeanFactory createFactory(String dbUrl) {
         ComaBeanFactory factory = new ComaBeanFactory();
+        Map<String,String> parents = new HashMap<>();
+        parents.put("Topic", "Linkable");
+        factory.setParents(parents);
         factory.setDbUrl(dbUrl);
         factory.setDbDriver(DB_DRIVER);
         factory.setDbUser(DB_USER);
@@ -104,6 +108,9 @@ public class ComaBeanFactoryTest {
         Map<String, Object> emptyMap = Collections.emptyMap();
         home.putAll(emptyMap);
         Assert.assertNull(home.get("title"), "Unexpected title found");
+        List<Topic> contents = factory.listBeans(Topic.class);
+        Assert.assertNotNull(contents, "There should be some result when listing all beans.");
+        Assert.assertEquals(contents.size(), 2, "We have a certain number of prepared beans available.");
     } // testRepository()
 
 
@@ -137,7 +144,7 @@ public class ComaBeanFactoryTest {
         Assert.assertEquals(factory.getAdditionalProperties().get("additionalProperty"), "Value", "Unexpected id of first topic in list");
         ids = factory.getChildrenIds("1");
         Assert.assertEquals(ids.size(), 3, "Unexpected number of children IDs for root folder.");
-        Assert.assertEquals(factory.getParents().size(), 0, "Unexpected initial parents collection found.");
+        Assert.assertEquals(factory.getParents().size(), 1, "Unexpected initial parents collection found.");
         Map<String, String> parents = new HashMap<>();
         factory.setParents(parents);
         Assert.assertEquals(factory.getParents(), parents, "Unexpected parents collection found.");
