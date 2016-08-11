@@ -26,8 +26,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
@@ -47,6 +45,7 @@ import org.tangram.mock.MockOrmManager;
 import org.tangram.mock.content.ImageData;
 import org.tangram.mock.content.MockContent;
 import org.tangram.mock.content.MockMutableCode;
+import org.tangram.mock.content.RootTopic;
 import org.tangram.mock.content.Topic;
 import org.tangram.mutable.components.test.ToolHandlerTest;
 import org.tangram.protection.AuthorizationService;
@@ -58,8 +57,6 @@ import org.testng.annotations.Test;
 
 
 public class EditingHandlerTest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EditingHandlerTest.class);
 
     private static final String DUMMY_ID = "pling:plong";
 
@@ -314,6 +311,22 @@ public class EditingHandlerTest {
         Assert.assertEquals(target.bean.getClass(), ImageData.class, "Bean of given class expected.");
         Assert.assertEquals(target.action, "edit", "Edit action expected.");
         Assert.assertEquals(target.view, null, "No view expected.");
+
+        MockHttpServletRequest req2 = new MockHttpServletRequest("POST", "/testapp/store");
+        req2.setContextPath("/testapp");
+        response = new MockHttpServletResponse();
+        req2.addParameter("title", "Test getObjectViaDescription() in property converter for logo field below");
+        req2.addParameter("logo", "");
+        try {
+            target = handler.store("RootTopic:1", req2, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on storing a code content element.", e);
+        } // try/catch
+        Assert.assertEquals(response.getStatus(), 200, "Again unexpected http response code.");
+        Assert.assertNotNull(target, "Again null target returned unexpectedly.");
+        Assert.assertEquals(target.bean.getClass(), RootTopic.class, "Again bean of given class expected.");
+        Assert.assertEquals(target.action, "edit", "Again edit action expected.");
+        Assert.assertEquals(target.view, null, "Again no view expected.");
     } // testStore()
 
 
