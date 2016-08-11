@@ -113,4 +113,10 @@ static void import
   <id>RootTopic:1</id>
   <bottomLinks><list></list></bottomLinks>
 </RootTopic>
+<ImageData>
+  <id>ImageData:2</id>
+</ImageData>
+<MockMutableCode>
+  <id>MockMutableCode:3</id>
+</MockMutableCode>
 </list>

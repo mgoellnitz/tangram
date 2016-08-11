@@ -64,7 +64,7 @@ public class MockBeanFactory extends AbstractBeanFactory {
         Set<Class<? extends Content>> resolvedClasses = new HashSet<>();
         resolvedClasses.addAll(resolver.getSubclasses(Content.class));
         for (Class<? extends Content> cls : resolvedClasses) {
-            LOG.info("getAllClasses() {}", cls.getName());
+            LOG.info("() {}", cls.getName());
             if (!allClasses.contains(cls)) {
                 allClasses.add(cls);
                 xstream.alias(cls.getSimpleName(), cls);

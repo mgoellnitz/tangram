@@ -162,12 +162,12 @@ public class EditingHandler extends AbstractLinkHandler {
      * @return note indicating the underlying ORM implementation and class modification state
      * @throws SecurityException thrown when we are not able to analyse the methods of the class - should actually never happen.
      */
-    private String getOrmNote(Class<? extends Content> cls) throws SecurityException {
+    public static String getOrmNote(Class<? extends Content> cls) throws SecurityException {
         Method[] methods = cls.getMethods();
         String note = "Plain";
         for (Method method : methods) {
             if (method.getName().startsWith("_ebean")) {
-                note = "EBean enhanced";
+                note = "EBean Enhanced";
             } // if
             if (method.getName().startsWith("dn")) {
                 note = "DataNucleus JDO/JPA Enhanced";
@@ -229,9 +229,12 @@ public class EditingHandler extends AbstractLinkHandler {
     public TargetDescriptor store(@LinkPart(1) String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Store should not be called directly");
         Content bean = beanFactory.getBean(Content.class, id);
+        if (bean==null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "no content with id "+id+" in repository.");
+            return null;
+        } // if
         JavaBean wrapper = new JavaBean(bean);
         Map<String, Object> newValues = new HashMap<>();
-        // List<String> deleteValues = new ArrayList<>();
 
         RequestParameterAccess parameterAccess = viewUtilities.createParameterAccess(request);
         Map<String, String[]> parameterMap = parameterAccess.getParameterMap();

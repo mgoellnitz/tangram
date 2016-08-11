@@ -18,6 +18,7 @@
  */
 package org.tangram.editor.test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
@@ -25,8 +26,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartHttpServletRequest;
+import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
 import org.tangram.components.editor.EditingHandler;
 import org.tangram.components.servlet.ServletViewUtilities;
@@ -39,8 +44,9 @@ import org.tangram.link.TargetDescriptor;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mock.MockMutableBeanFactory;
 import org.tangram.mock.MockOrmManager;
+import org.tangram.mock.content.ImageData;
 import org.tangram.mock.content.MockContent;
-import org.tangram.mock.content.RootTopic;
+import org.tangram.mock.content.MockMutableCode;
 import org.tangram.mock.content.Topic;
 import org.tangram.mutable.components.test.ToolHandlerTest;
 import org.tangram.protection.AuthorizationService;
@@ -52,6 +58,8 @@ import org.testng.annotations.Test;
 
 
 public class EditingHandlerTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EditingHandlerTest.class);
 
     private static final String DUMMY_ID = "pling:plong";
 
@@ -83,6 +91,66 @@ public class EditingHandlerTest {
      * Mock the name pattern of generated ORM classes.
      */
     private class Content$Test extends MockContent { // NOPMD - We need this strange name
+
+    }
+
+
+    /**
+     * Mock the name pattern of EBean ORM classes.
+     */
+    private class ContentEbean extends MockContent {
+
+        public boolean _ebeanNameTest() { // NOPMD - We need this strange name
+            return false;
+        }
+
+    }
+
+
+    /**
+     * Mock the name pattern of DataNucleus ORM classes.
+     */
+    private class ContentDataNucleus extends MockContent {
+
+        public boolean dnNameTest() {
+            return false;
+        }
+
+    }
+
+
+    /**
+     * Mock the name pattern of OpenJPA ORM classes.
+     */
+    private class ContentOpenJPA extends MockContent {
+
+        public boolean pcNameTest() {
+            return false;
+        }
+
+    }
+
+
+    /**
+     * Mock the name pattern of EclipseLink ORM classes.
+     */
+    private class ContentEclipseLink extends MockContent {
+
+        public boolean _persistenceNameTest() { // NOPMD - We need this strange name
+            return false;
+        }
+
+    }
+
+
+    /**
+     * Mock the name pattern of Hibernate ORM classes.
+     */
+    private class ContentHibernate extends MockContent {
+
+        public boolean $$_hibernateNameTest() { // NOPMD - We need this strange name
+            return false;
+        }
 
     }
 
@@ -153,6 +221,16 @@ public class EditingHandlerTest {
 
 
     @Test
+    public void testOrmNotes() {
+        Assert.assertEquals(EditingHandler.getOrmNote(ContentDataNucleus.class), "DataNucleus JDO/JPA Enhanced", "ORM name pattern not detected.");
+        Assert.assertEquals(EditingHandler.getOrmNote(ContentEbean.class), "EBean Enhanced", "ORM name pattern not detected.");
+        Assert.assertEquals(EditingHandler.getOrmNote(ContentEclipseLink.class), "EclipseLink Woven", "ORM name pattern not detected.");
+        Assert.assertEquals(EditingHandler.getOrmNote(ContentHibernate.class), "Hibernate Enhanced", "ORM name pattern not detected.");
+        Assert.assertEquals(EditingHandler.getOrmNote(ContentOpenJPA.class), "OpenJPA Enhanced", "ORM name pattern not detected.");
+    } // testOrmNotes()
+
+
+    @Test
     public void testEdit() {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/edit");
         request.setContextPath("/testapp");
@@ -202,24 +280,77 @@ public class EditingHandlerTest {
 
 
     @Test
-    public void testStore() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/store");
+    public void testStore() throws UnsupportedEncodingException {
+        MockServletContext context = new MockServletContext();
+        MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(context);
+        request.setMethod("POST");
+        request.setRequestURI("/testapp/store");
         request.setContextPath("/testapp");
         HttpServletResponse response = new MockHttpServletResponse();
-        String resourceId = "RootTopic:1";
+        String resourceId = "ImageData:2";
         TargetDescriptor target = null;
-        request.addParameter("title", "Test root topic");
-        request.addParameter("teaser", "<p>Never mind!</p>");
-        request.addParameter("logo", "");
+        request.setContentType("multipart/form-data; boundary=----------tangram");
+        String content = "\r\n------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"title\"\r\n\r\n"
+                +"Test root topic\r\n"
+                +"------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"shortTitle\"\r\n\r\n"
+                +"<p>Never mind!</p>\r\n"
+                +"------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"keywords\"\r\n\r\n"
+                +"\r\n"
+                +"------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"data\"; filename=\"testfile.txt\"\r\n"
+                +"Content-Type: text/plain\r\n\r\n"
+                +"Please test for these contents here.\r\n\r\n"
+                +"------------tangram--\r\n\r\n";
+        byte[] bytes = content.getBytes("ISO-8859-1");
+        request.setContent(bytes);
         try {
             target = handler.store(resourceId, request, response);
         } catch (Exception e) {
             Assert.fail("No exception expected on storing a content element.", e);
         } // try/catch
-        Assert.assertEquals(target.bean.getClass(), RootTopic.class, "Bean of given class bean expected.");
+        Assert.assertEquals(target.bean.getClass(), ImageData.class, "Bean of given class expected.");
         Assert.assertEquals(target.action, "edit", "Edit action expected.");
         Assert.assertEquals(target.view, null, "No view expected.");
     } // testStore()
+
+
+    @Test
+    public void testCreateAndStoreCode() throws UnsupportedEncodingException {
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/testapp/create");
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        TargetDescriptor target = null;
+        request.addParameter(EditingHandler.PARAMETER_CLASS_NAME, MockMutableCode.class.getName());
+        try {
+            target = handler.create(MockMutableCode.class.getName(), request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on storing a code content element.", e);
+        } // try/catch
+        Assert.assertEquals(response.getStatus(), 200, "Unexpected http response code.");
+        Assert.assertNotNull(target, "Null target returned unexpectedly.");
+        Assert.assertEquals(target.bean.getClass(), MockMutableCode.class, "Bean of given class expected.");
+        Assert.assertEquals(target.action, "edit", "Edit action expected.");
+        Assert.assertEquals(target.view, null, "No view expected.");
+
+        request = new MockHttpServletRequest("POST", "/testapp/store");
+        request.setContextPath("/testapp");
+        response = new MockHttpServletResponse();
+        String resourceId = "MockMutableCode:3";
+        request.addParameter("annotation", "don't care");
+        try {
+            target = handler.store(resourceId, request, response);
+        } catch (Exception e) {
+            Assert.fail("No exception expected on storing a code content element.", e);
+        } // try/catch
+        Assert.assertEquals(response.getStatus(), 200, "Again unexpected http response code.");
+        Assert.assertNotNull(target, "Again null target returned unexpectedly.");
+        Assert.assertEquals(target.bean.getClass(), MockMutableCode.class, "Again bean of given class expected.");
+        Assert.assertEquals(target.action, "edit", "Again edit action expected.");
+        Assert.assertEquals(target.view, null, "Again no view expected.");
+    } // testCreateAndStoreCode()
 
 
     @Test
