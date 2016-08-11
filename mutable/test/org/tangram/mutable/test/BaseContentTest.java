@@ -273,6 +273,14 @@ public abstract class BaseContentTest<M extends Object> {
         Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
         Content content = beanFactory.getBean(bean.getId());
         Assert.assertEquals(bean, content, "Untyped content should result in the same bean.");
+        String stringValue = bean.toString();
+        int idx = stringValue.lastIndexOf('/');
+        if (idx > 0) {
+            idx ++;
+            stringValue = stringValue.substring(idx);
+        } // if
+        Assert.assertEquals(stringValue.substring(0, 9), "BaseClass", "Unexpected toString() implementation.");
+        Assert.assertEquals(subBeans.get(0).compareTo(bean), 17, "Unexpected compareTo() implementation.");
     } // test4Components()
 
 

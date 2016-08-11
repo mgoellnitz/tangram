@@ -49,11 +49,7 @@ public abstract class EContent implements Content {
      */
     @Override
     public String getId() {
-        String kind = getClass().getSimpleName();
-        if (kind.indexOf('$')>=0) {
-            kind = getClass().getSuperclass().getSimpleName();
-        } // if
-        return kind+":"+ebeanInternalId;
+        return getClass().getSimpleName()+":"+ebeanInternalId;
     } // getId()
 
 
