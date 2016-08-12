@@ -19,55 +19,43 @@
 package org.tangram.servlet.test;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockFilterChain;
-import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockServletContext;
-import org.tangram.Constants;
-import org.tangram.components.SimpleStatistics;
-import org.tangram.monitor.Statistics;
-import org.tangram.servlet.MeasureTimeFilter;
+import org.tangram.protection.AuthorizationService;
+import org.tangram.servlet.PasswordFilter;
+import org.tangram.test.VoidCallCheck;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
 /**
- * Test aspects of the measure time servlet filter.
+ * Test aspects of the password checking servlet filter.
  */
-public class MeasureTimeFilterTest {
+public class PasswordFilterTest {
 
     @Test
-    public void testMeasureTimeFilter() {
-        MeasureTimeFilter measureTimeFilter = new MeasureTimeFilter();
-        Statistics statistics = new SimpleStatistics();
-
-        ServletContext context = new MockServletContext(".");
-        context.setAttribute(Constants.ATTRIBUTE_STATISTICS, statistics);
-        Set<String> emptyStringSet = Collections.emptySet();
-        measureTimeFilter.setFreeUrls(emptyStringSet);
-        FilterConfig config = new MockFilterConfig(context, "test");
-        try {
-            measureTimeFilter.init(config);
-        } catch (ServletException e) {
-            Assert.fail("init() should not fail.", e);
-        } // try/catch
+    public void testPasswordFilter() throws Exception {
+        PasswordFilter passwordFilter = new PasswordFilter();
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
+        AuthorizationService authorizationService = Mockito.mock(AuthorizationService.class);
+        VoidCallCheck voidCallCheck = new VoidCallCheck();
+        Mockito.doAnswer(voidCallCheck).when(authorizationService).handleRequest(request, response);
         FilterChain chain = new MockFilterChain();
+        passwordFilter.setAuthorizationService(authorizationService);
         try {
-            measureTimeFilter.doFilter(request, response, chain);
+            passwordFilter.doFilter(request, response, chain);
         } catch (IOException|ServletException e) {
             Assert.fail("doFilter() should not fail.", e);
         } // try/catch
-    } // testMeasureTimeFilter
 
-} // MeasureTimeFilterTest
+        Assert.assertTrue(voidCallCheck.isCalled(), "The handle request method should have been called.");
+    } // testPasswordFilter
+
+} // PasswordFilterTest
