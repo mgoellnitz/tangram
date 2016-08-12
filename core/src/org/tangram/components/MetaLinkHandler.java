@@ -357,14 +357,17 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
                 // Map<String, Object> model = createModel(descriptor, request, response);
                 TargetDescriptor resultDescriptor = descriptor;
                 if (descriptor.action!=null) {
-                    LOG.debug("handleRequest() trying to call action {}", descriptor.action);
+                    LOG.debug("handleRequest() Calling {}@{}", descriptor.action, linkHandler.getClass().getSimpleName());
                     Method method = linkFactoryAggregator.findMethod(linkHandler, descriptor.action);
                     resultDescriptor = callAction(request, response, null, method, descriptor, linkHandler);
                     if (resultDescriptor==null) {
+                        LOG.debug("handleRequest() Calling '{}' at descriptor bean values", descriptor.action);
                         for (Object value : createModel(descriptor, request, response).values()) {
                             // This has to be checked because of special null values in context like $null
                             // if the link is already set don't try to call other methods
+                            LOG.debug("handleRequest() trying to find action {} at {}", descriptor.action, value);
                             if ((value!=null)&&(resultDescriptor==null)) {
+                                LOG.debug("handleRequest() trying to call action {}@{}", descriptor.action, value.getClass().getSimpleName());
                                 method = linkFactoryAggregator.findMethod(value, descriptor.action);
                                 resultDescriptor = callAction(request, response, null, method, descriptor, value);
                             } // if

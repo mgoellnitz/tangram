@@ -95,6 +95,8 @@ public class MetaLinkHandlerTest {
     @InjectMocks
     private final MetaLinkHandler metaLinkHandler = new MetaLinkHandler();
 
+    private TestHandler testHandler = new TestHandler();
+
 
     /**
      * Mock test class to bring bean factory aware and line handler together like in real world code.
@@ -165,6 +167,16 @@ public class MetaLinkHandlerTest {
     } // AtActionHandler
 
 
+    public class ActionMethods {
+
+        @LinkAction
+        public TargetDescriptor method() {
+            return new TargetDescriptor(this, "method", null);
+        } // method()
+
+    } // ActionMethods
+
+
     /**
      * Test implementation for a statically registered handler using interface implementation.
      */
@@ -173,7 +185,10 @@ public class MetaLinkHandlerTest {
         @Override
         public TargetDescriptor parseLink(String url, HttpServletResponse response) {
             LOG.debug("TestHandler.parseLink() {}", url);
-            return "/testhandler".equals(url) ? new TargetDescriptor(response, "linkHandler", null) : null;
+            TargetDescriptor view = new TargetDescriptor(response, "linkHandler", null);
+            TargetDescriptor call = new TargetDescriptor(this, null, "methodAtHandler");
+            TargetDescriptor method = new TargetDescriptor(new ActionMethods(), null, "method");
+            return "/testhandler".equals(url) ? view : "/testcall".equals(url) ? call : "/testmethod".equals(url) ? method : null;
         }
 
 
@@ -181,6 +196,12 @@ public class MetaLinkHandlerTest {
         public Link createLink(HttpServletRequest request, HttpServletResponse response, Object bean, String action, String view) {
             return null;
         }
+
+
+        @LinkAction
+        public TargetDescriptor methodAtHandler() {
+            return new TargetDescriptor(this, "method", null);
+        } // method()
 
     } // TestHandler
 
@@ -197,7 +218,6 @@ public class MetaLinkHandlerTest {
         metaLinkHandler.registerLinkHandler(atHandler);
         AtActionHandler atActionHandler = new AtActionHandler();
         metaLinkHandler.registerLinkHandler(atActionHandler);
-        TestHandler testHandler = new TestHandler();
         metaLinkHandler.registerLinkHandler(testHandler);
     } // ()
 
@@ -226,7 +246,7 @@ public class MetaLinkHandlerTest {
 
     @Test
     public void testAtHandler() {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/athandler");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/athandler;jsessionid=1234");
         request.setAttribute("self", "viewit");
         request.setParameter("a", "Hallo");
         request.setParameter("property", "Tangram");
@@ -307,6 +327,44 @@ public class MetaLinkHandlerTest {
         Assert.assertEquals(context.getViewName(), "linkHandler", "Didn't find expected view context.");
         Assert.assertEquals(context.getModel().get("self"), response, "Didn't find expected view context.");
     } // testLinkHandler()
+
+
+    @Test
+    public void testLinkHandlerAction() {
+        LOG.info("testLinkHandlerAction()");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/testcall");
+        HttpServletResponse response = new MockHttpServletResponse();
+        ViewContext context = null;
+        try {
+            context = metaLinkHandler.handleRequest(request, response);
+        } catch (Throwable t) {
+            Assert.fail("Cannot handle request.", t);
+        } // try/catch
+        LOG.info("testLinkHandlerAction() end");
+        Assert.assertNotNull(context, "We expected to get a view context result instance.");
+        Assert.assertEquals(context.getViewName(), "method", "Didn't find expected view context.");
+        Assert.assertEquals(context.getModel().get("self"), testHandler, "Didn't find expected self instance.");
+    } // testLinkHandlerAction()
+
+
+    @Test
+    public void testExternalAction() {
+        LOG.info("testExternalAction()");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/testmethod");
+        HttpServletResponse response = new MockHttpServletResponse();
+        ViewContext context = null;
+        try {
+            context = metaLinkHandler.handleRequest(request, response);
+        } catch (Throwable t) {
+            Assert.fail("Cannot handle request.", t);
+        } // try/catch
+        LOG.info("testExternalAction() end");
+        Assert.assertNotNull(context, "We expected to get a view context result instance.");
+        Assert.assertEquals(context.getViewName(), "method", "Didn't find expected view context.");
+        Object self = context.getModel().get("self");
+        Assert.assertNotNull(self, "Didn't find any self object in view context.");
+        Assert.assertEquals(self.getClass(), ActionMethods.class, "Didn't find expected type for self.");
+    } // testExternalAction()
 
 
     @Test
