@@ -30,7 +30,7 @@ import org.tangram.mutable.MutableBeanFactory;
 
 
 /**
- *
+ * FTP Command handler to store files as content.
  */
 public class StorFtpCommandHandler extends StorCommandHandler {
 
