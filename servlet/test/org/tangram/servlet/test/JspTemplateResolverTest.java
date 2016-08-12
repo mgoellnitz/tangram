@@ -61,8 +61,12 @@ public class JspTemplateResolverTest {
             model.put(Constants.THIS, statistics);
             String template = jspTemplateResolver.resolveTemplate("test", model, Locale.GERMANY);
             Assert.assertEquals(template, "/WEB-INF/view/jsp/org.tangram.monitor/Statistics.test.jsp", "There should be a template called test.jsp.");
+            template = jspTemplateResolver.resolveTemplate("test", model, Locale.GERMANY);
+            Assert.assertEquals(template, "/WEB-INF/view/jsp/org.tangram.monitor/Statistics.test.jsp", "Cached lookup faied.");
             String noTemplate = jspTemplateResolver.resolveTemplate("fail", model, Locale.GERMANY);
             Assert.assertNull(noTemplate, "There should be no template.");
+            noTemplate = jspTemplateResolver.resolveTemplate("fail", model, Locale.GERMANY);
+            Assert.assertNull(noTemplate, "There should be no template in cached second call.");
         } catch (Exception ex) {
             Assert.fail("This exception should not have occured", ex);
         } // try/catch
