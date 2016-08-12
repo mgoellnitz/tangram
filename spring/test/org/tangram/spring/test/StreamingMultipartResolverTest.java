@@ -43,6 +43,12 @@ public class StreamingMultipartResolverTest {
                 +"Content-Disposition: form-data; name=\"field\"\r\n\r\n"
                 +"content of the field\r\n"
                 +"------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"multi\"\r\n\r\n"
+                +"content one\r\n"
+                +"------------tangram\r\n"
+                +"Content-Disposition: form-data; name=\"multi\"\r\n\r\n"
+                +"content two\r\n"
+                +"------------tangram\r\n"
                 +"Content-Disposition: form-data; name=\"file\"; filename=\"testfile.txt\"\r\n"
                 +"Content-Type: text/plain\r\n\r\n"
                 +"Please test for these contents here.\r\n\r\n"
@@ -55,12 +61,16 @@ public class StreamingMultipartResolverTest {
         Assert.assertEquals(resolver.getMaxUploadSize(), 12345, "Cannot customize max upload size.");
         Assert.assertTrue(resolver.isMultipart(request), "We have prepared a multipart request which is not recognized.");
         MultipartHttpServletRequest resolved = resolver.resolveMultipart(request);
-        Assert.assertEquals(resolved.getParameterMap().size(), 1, "Unexpected number of parameters.");
+        Assert.assertEquals(resolved.getParameterMap().size(), 2, "Unexpected number of parameters.");
         Assert.assertEquals(resolved.getFileMap().size(), 1, "Expected one available blob in the request parameters.");
-        Assert.assertEquals(resolved.getParameter("field"), "content of the field", "Unexpected field value");
+        Assert.assertEquals(resolved.getParameter("field"), "content of the field", "Unexpected field value.");
+        String[] values = resolved.getParameterValues("multi");
+        Assert.assertNotNull(values, "Multivalued field should be accessible.");
+        Assert.assertEquals(values.length, 21, "Multivalued field should have two values.");
+        Assert.assertEquals(values[0], "content one", "Multivalued has unexpected contents.");
         MultipartFile file = resolved.getFile("file");
-        Assert.assertEquals(file.getBytes().length, 38, "Unexpected file size");
-        Assert.assertEquals(file.getName(), "testfile.txt", "Unexpected file name");
+        Assert.assertEquals(file.getBytes().length, 38, "Unexpected file size.");
+        Assert.assertEquals(file.getName(), "testfile.txt", "Unexpected file name.");
     } // testMultipartResolver()
 
 } // StreamingMultipartResolverTest
