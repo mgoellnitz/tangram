@@ -71,7 +71,7 @@ public class SpringChainTest {
 
 
     @Test
-    public void testServletViewUtilities() throws Exception {
+    public void testViewUtilities() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/id_RootTopic:1");
         request.setContextPath("/testapp");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -84,12 +84,13 @@ public class SpringChainTest {
         ViewUtilities viewUtilities = appContext.getBean(ViewUtilities.class);
         viewUtilities.render(null, model, null);
         Assert.assertEquals(response.getContentAsString(), "", "The result is empty for mock instances.");
+        Assert.assertNotNull(viewUtilities.getViewContextFactory(), "Even test needs some view context factory.");
 
         TangramViewHandler viewHandler = appContext.getBean(TangramViewHandler.class);
         Assert.assertTrue(viewHandler.isDetectAllModelAwareViewResolvers(), "All view resolvers should be considered.");
         viewHandler.setDetectAllModelAwareViewResolvers(false);
         Assert.assertFalse(viewHandler.isDetectAllModelAwareViewResolvers(), "All view handler recognition should be turned off.");
-    } // testServletViewUtilities()
+    } // testViewUtilities()
 
 
     @Test
