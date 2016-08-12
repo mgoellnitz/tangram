@@ -74,7 +74,7 @@ public class DynamicViewContextFactoryTest {
     private ClassRepository repository; // NOPMD - this field is not really unused
 
     @InjectMocks
-    private DynamicViewContextFactory factory = new TestFactory();
+    private final DynamicViewContextFactory factory = new TestFactory();
 
 
     public DynamicViewContextFactoryTest() throws Exception {
