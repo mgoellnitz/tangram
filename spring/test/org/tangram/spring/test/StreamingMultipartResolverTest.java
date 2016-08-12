@@ -66,7 +66,7 @@ public class StreamingMultipartResolverTest {
         Assert.assertEquals(resolved.getParameter("field"), "content of the field", "Unexpected field value.");
         String[] values = resolved.getParameterValues("multi");
         Assert.assertNotNull(values, "Multivalued field should be accessible.");
-        Assert.assertEquals(values.length, 21, "Multivalued field should have two values.");
+        Assert.assertEquals(values.length, 2, "Multivalued field should have two values.");
         Assert.assertEquals(values[0], "content one", "Multivalued has unexpected contents.");
         MultipartFile file = resolved.getFile("file");
         Assert.assertEquals(file.getBytes().length, 38, "Unexpected file size.");
