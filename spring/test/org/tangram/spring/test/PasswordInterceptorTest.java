@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.tangram.protection.AuthorizationService;
@@ -46,6 +47,7 @@ public class PasswordInterceptorTest {
 
     @Test
     public void testPasswordFilter() throws Exception {
+        MockitoAnnotations.initMocks(this);
         HttpServletRequest request = new MockHttpServletRequest();
         HttpServletResponse response = new MockHttpServletResponse();
         VoidCallCheck voidCallCheck = new VoidCallCheck();
