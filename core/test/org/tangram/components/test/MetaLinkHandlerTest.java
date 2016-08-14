@@ -95,7 +95,7 @@ public class MetaLinkHandlerTest {
     @InjectMocks
     private final MetaLinkHandler metaLinkHandler = new MetaLinkHandler();
 
-    private TestHandler testHandler = new TestHandler();
+    private final TestHandler testHandler = new TestHandler();
 
 
     /**
@@ -167,6 +167,9 @@ public class MetaLinkHandlerTest {
     } // AtActionHandler
 
 
+    /**
+     * Instance carrying methods to react to HTTP calls.
+     */
     public class ActionMethods {
 
         @LinkAction

@@ -157,7 +157,6 @@ public class SpringChainTest {
         request.setContextPath("/testapp");
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setContentType("text/html");
-        // TODO: mock enough stuff to do a real test here.
         ModelAndView result = controller.handleRequest(request, response);
         Assert.assertNull(result, "Meta controller should issue a result.");
     } // testMetaController()

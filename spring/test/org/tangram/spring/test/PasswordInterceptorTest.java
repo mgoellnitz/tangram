@@ -42,7 +42,7 @@ public class PasswordInterceptorTest {
     private AuthorizationService authorizationService;
 
     @InjectMocks
-    private PasswordInterceptor passwordInterceptor = new PasswordInterceptor();
+    private final PasswordInterceptor passwordInterceptor = new PasswordInterceptor();
 
 
     @Test
