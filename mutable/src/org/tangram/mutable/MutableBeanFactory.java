@@ -25,7 +25,7 @@ import org.tangram.content.BeanFactory;
 import org.tangram.content.Content;
 
 
-public interface MutableBeanFactory<M extends Object> extends BeanFactory {
+public interface MutableBeanFactory<M extends Object, Q extends Object> extends BeanFactory<Q> {
 
     /**
      * Returns the root class of all content classes handled by the implementing instance - may be null;
@@ -142,11 +142,12 @@ public interface MutableBeanFactory<M extends Object> extends BeanFactory {
      * which should all be met as a substring of the property.
      *
      * @param cls class this resulting query is about
+     * @param <F> content type constraint
      * @param filterProperty of the property to filter for
      * @param filterValues space separated list of values which should all be met
      * @return implementation specific query expression
      */
-    String getFilterQuery(Class<?> cls, String filterProperty, String filterValues);
+    <F extends Content> String getFilterQuery(Class<F> cls, String filterProperty, String filterValues);
 
 
     /**

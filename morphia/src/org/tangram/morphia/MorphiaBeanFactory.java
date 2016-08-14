@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
+import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -45,7 +46,7 @@ import org.tangram.util.SystemUtils;
 
 @Named("beanFactory")
 @Singleton
-public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore> implements MutableBeanFactory<Datastore> {
+public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Query<?>> implements MutableBeanFactory<Datastore, Query<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaBeanFactory.class);
 
@@ -134,29 +135,58 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore> im
 
 
     @Override
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = new ArrayList<>();
+    public Query<?> createQuery(Class<? extends Content> cls, String expression) {
+        Query<? extends Content> query = datastore.createQuery(cls);
+        if (StringUtils.isNotEmpty(expression)) {
+            query.where(expression);
+        } // if
+        return query;
+    } // createQuery()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Class<T> c, String query, String orderProperty, Boolean ascending) {
+        List<T> results = new ArrayList<>();
         try {
-            String shortTypeName = cls.getSimpleName();
-            Query<T> query = datastore.createQuery(cls);
-            // TODO: Query String
-            if (orderProperty!=null) {
-                // TODO
-                // String asc = (ascending) ? " asc" : " desc";
-                query = query.order(orderProperty);
-            } // if
-            // Default is no ordering - not even via IDs
-            LOG.info("listBeansOfExactClass() looking up instances of {}{}", shortTypeName, (queryString==null ? "" : " with condition "+queryString));
-            LOG.info("listBeansOfExactClass() morphia query object is {} ", query);
-            List<T> results = SystemUtils.convert(query.asList());
-            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
-            filterExactClass(cls, results, result);
+            for (Class<T> cls : getImplementingClasses(c)) {
+                String shortTypeName = cls.getSimpleName();
+                Query<T> q = datastore.createQuery(cls);
+                if (StringUtils.isNotEmpty(query)) {
+                    q.where(query);
+                } // if
+                if (orderProperty!=null) {
+                    // TODO: String asc = (ascending) ? " asc" : " desc";
+                    q = q.order(orderProperty);
+                } // if
+                // Default is no ordering - not even via IDs
+                LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (q==null ? "" : " with condition "+q));
+                LOG.info("listBeans() morphia query object is {} ", q);
+                results.addAll(SystemUtils.convert(q.asList()));
+            } // for
+            LOG.info("listBeans() looked up {} raw entries", results.size());
             statistics.increase("list beans");
         } catch (Exception e) {
-            LOG.error("listBeansOfExactClass() query ", e);
+            LOG.error("listBeans() query ", e);
+        } // try/catch/finally
+        return results;
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Query<?> query) {
+        List<T> result = new ArrayList<>();
+        try {
+            String shortTypeName = query.getEntityClass().getSimpleName();
+            LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (query==null ? "" : " with condition "+query));
+            LOG.info("listBeans() morphia query object is {} ", query);
+            List<T> results = SystemUtils.convert(query.asList());
+            LOG.info("listBeans() looked up {} raw entries", results.size());
+            statistics.increase("list beans");
+        } catch (Exception e) {
+            LOG.error("listBeans() query ", e);
         } // try/catch/finally
         return result;
-    } // listBeansOfExactClass()
+    } // listBeans()
 
 
     @Override
@@ -199,8 +229,8 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore> im
 
 
     @Override
-    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
-        return "where "+super.getFilterQuery(cls, filterProperty, filterValues);
+    public <F extends Content> String getFilterQuery(Class<F> cls, String filterProperty, String filterValues) {
+        return "this."+filterProperty+".indexOf('"+filterValues+"') >= 0";
     } // getFilterQuery()
 
 
@@ -220,7 +250,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore> im
             LOG.info("afterPropertiesSet() class {}", c.getName());
             morphia.map(c);
         } // for
-        LOG.info("afterPropertiesSet() access: {} database: {}",mongoUri, mongoDB);
+        LOG.info("afterPropertiesSet() access: {} database: {}", mongoUri, mongoDB);
         MongoClientURI uri = new MongoClientURI(mongoUri);
         MongoClient mongoClient = new MongoClient(uri);
         datastore = morphia.createDatastore(mongoClient, mongoDB);

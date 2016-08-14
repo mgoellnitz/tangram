@@ -47,11 +47,17 @@ def servletContext = module.getServletContext()
 if (servletContext != null) {
   servletContext.setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 }
-module.bind(BeanFactory.class).toInstance(beanFactory)
 Object vehicle = new Object() {
-  MutableBeanFactory<?> v
+  BeanFactory<?> v
 };
 Type interimType = vehicle.getClass().getDeclaredField("v").getGenericType()
+TypeLiteral bf = TypeLiteral.get(interimType)
+module.bind(bf).toInstance(beanFactory)
+module.bind(BeanFactory.class).toInstance(beanFactory)
+Object secondVehicle = new Object() {
+  MutableBeanFactory<?, ?> v
+};
+interimType = secondVehicle.getClass().getDeclaredField("v").getGenericType()
 TypeLiteral mbf = TypeLiteral.get(interimType)
 module.bind(mbf).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)

@@ -80,7 +80,7 @@ public class ToolHandler {
     private Statistics statistics;
 
     @Inject
-    private MutableBeanFactory<?> beanFactory;
+    private MutableBeanFactory<?, ?> beanFactory;
 
     @Inject
     private CodeResourceCache codeResourceCache;

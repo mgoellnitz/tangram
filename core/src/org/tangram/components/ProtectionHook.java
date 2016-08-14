@@ -49,7 +49,7 @@ public class ProtectionHook implements ControllerHook {
     private static final Logger LOG = LoggerFactory.getLogger(ProtectionHook.class);
 
     @Inject
-    private BeanFactory beanFactory;
+    private BeanFactory<?> beanFactory;
 
 
     /**

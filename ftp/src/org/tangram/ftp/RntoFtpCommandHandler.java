@@ -40,10 +40,10 @@ public class RntoFtpCommandHandler extends RntoCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(RntoFtpCommandHandler.class);
 
-    private final MutableBeanFactory<?> beanFactory;
+    private final MutableBeanFactory<?, ?> beanFactory;
 
 
-    public RntoFtpCommandHandler(MutableBeanFactory<?> beanFactory) {
+    public RntoFtpCommandHandler(MutableBeanFactory<?, ?> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

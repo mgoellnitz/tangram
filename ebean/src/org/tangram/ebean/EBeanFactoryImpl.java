@@ -20,6 +20,7 @@ package org.tangram.ebean;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.Query;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.config.ServerConfig;
 import groovy.lang.Singleton;
@@ -44,7 +45,7 @@ import org.tangram.util.SystemUtils;
 
 @Named("beanFactory")
 @Singleton
-public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer> implements MutableBeanFactory<EbeanServer> {
+public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer, Query<?>> implements MutableBeanFactory<EbeanServer, Query<?>> {
 
     private static final Logger LOG = LoggerFactory.getLogger(EBeanFactoryImpl.class);
 
@@ -147,31 +148,52 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer> im
 
 
     @Override
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        List<T> result = new ArrayList<>();
-        try {
-            String shortTypeName = cls.getSimpleName();
+    public Query<? extends Content> createQuery(Class<? extends Content> c, String expression) {
+        return StringUtils.isEmpty(expression) ? server.createQuery(c) : server.createQuery(c, expression);
+    } // createQuery()
 
-            com.avaje.ebean.Query<T> query = server.createQuery(cls);
-            if (StringUtils.isNotEmpty(queryString)) {
-                query.where(queryString);
-            } // if
-            if (orderProperty!=null) {
-                String asc = (ascending) ? " asc" : " desc";
-                query = query.orderBy(orderProperty+asc);
-            } // if
-            // Default is no ordering - not even via IDs
-            LOG.info("listBeansOfExactClass() looking up instances of {}{}", shortTypeName, (queryString==null ? "" : " with condition "+queryString));
-            LOG.info("listBeansOfExactClass() ebean query object is {} ", query);
-            List<T> results = SystemUtils.convert(query.findList());
-            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
-            filterExactClass(cls, results, result);
+
+    @Override
+    public <T extends Content> List<T> listBeans(Class<T> cls, String query, String orderProperty, Boolean ascending) {
+        List<T> results = new ArrayList<>();
+        try {
+            for (Class<T> c : getImplementingBaseClasses(cls)) {
+                String shortTypeName = cls.getSimpleName();
+                Query<T> q = StringUtils.isEmpty(query) ? server.createQuery(c) : server.createQuery(c, query);
+                if (orderProperty!=null) {
+                    String asc = (ascending) ? " asc" : " desc";
+                    q = q.orderBy(orderProperty+asc);
+                } // if
+                // Default is no ordering - not even via IDs
+                LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (q==null ? "" : " with condition "+q));
+                LOG.info("listBeans() ebean query is {} ", q.getGeneratedSql());
+                results.addAll(SystemUtils.convert(q.findList()));
+            } // for
+            LOG.info("listBeans() looked up {} raw entries", results.size());
             statistics.increase("list beans");
         } catch (Exception e) {
-            LOG.error("listBeansOfExactClass() query ", e);
+            LOG.error("listBeans() query ", e);
+        } // try/catch/finally
+        return results;
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Query<?> query) {
+        List<T> result = new ArrayList<>();
+        try {
+            String shortTypeName = query.getBeanType().getSimpleName();
+            // Default is no ordering - not even via IDs
+            LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (query==null ? "" : " with condition "+query));
+            LOG.info("listBeans() ebean query is {} ", query.getGeneratedSql());
+            List<T> results = SystemUtils.convert(query.findList());
+            LOG.info("listBeans() looked up {} raw entries", results.size());
+            statistics.increase("list beans");
+        } catch (Exception e) {
+            LOG.error("listBeans() query ", e);
         } // try/catch/finally
         return result;
-    } // listBeansOfExactClass()
+    } // listBeans()
 
 
     @Override
@@ -211,12 +233,6 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer> im
         } // synchronized
         return allClasses;
     } // getAllClasses()
-
-
-    @Override
-    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
-        return "where "+super.getFilterQuery(cls, filterProperty, filterValues);
-    } // getFilterQuery()
 
 
     @Override

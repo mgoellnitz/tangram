@@ -22,7 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 
-public interface BeanFactory {
+public interface BeanFactory<Q extends Object> {
 
     /**
      * Get a bean of a given type with a given id.
@@ -44,6 +44,16 @@ public interface BeanFactory {
      * @return bean with the given ID or null otherwise
      */
     Content getBean(String id);
+
+
+    /**
+     * Create a underlying storage system specific query object.
+     *
+     * @param cls class of the elements the query should return
+     * @param expression optional expression which might be ignored by he underlying system
+     * @return new query instance
+     */
+    Q createQuery(Class<? extends Content> cls, String expression);
 
 
     /**
@@ -90,6 +100,16 @@ public interface BeanFactory {
      * @return List of all beans of the given class - maybe empty but not null
      */
     <T extends Content> List<T> listBeans(Class<T> cls);
+
+
+    /**
+     * List beans from the repository by means of the underlying storage solution.
+     *
+     * @param query implementation specific query instance
+     * @param <T> Type constraint for the elements of the result list
+     * @return List of all beans of the given class - maybe empty but not null
+     */
+    <T extends Content> List<T> listBeans(Q query);
 
 
     /**

@@ -36,7 +36,7 @@ import org.tangram.mutable.test.content.SubInterface;
 import org.testng.annotations.Test;
 
 
-public class JpaContentTest extends BaseContentTest<EntityManager> {
+public class JpaContentTest extends BaseContentTest<EntityManager, String> {
 
     static {
         org.apache.openjpa.enhance.InstrumentationFactory.setDynamicallyInstallAgent(false);
@@ -51,13 +51,13 @@ public class JpaContentTest extends BaseContentTest<EntityManager> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<EntityManager> beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<EntityManager, String> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory<EntityManager> beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<EntityManager, String> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 
@@ -75,9 +75,9 @@ public class JpaContentTest extends BaseContentTest<EntityManager> {
 
 
     @Override
-    protected String getCondition() {
+    protected String getCondition(MutableBeanFactory<EntityManager, String> beanFactory) {
         return "select x from SubClass x where x.subtitle = 'great'";
-    }
+    } // getCondition()
 
 
     @Override

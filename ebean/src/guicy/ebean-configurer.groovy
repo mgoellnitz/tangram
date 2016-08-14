@@ -57,7 +57,7 @@ beanFactory.setServerConfig(serverConfig)
 module.getServletContext().setAttribute(Constants.ATTRIBUTE_BEAN_FACTORY, beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
 Object vehicle = new Object() {
-  MutableBeanFactory<?> v
+  MutableBeanFactory<?, ?> v
 };
 Type interimType = vehicle.getClass().getDeclaredField("v").getGenericType()
 TypeLiteral mbf = TypeLiteral.get(interimType)

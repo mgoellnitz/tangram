@@ -17,6 +17,8 @@
  *
  */
 import com.google.inject.name.Names;
+import com.google.inject.TypeLiteral
+import java.lang.reflect.Type
 import org.tangram.PersistentRestartCache
 import org.tangram.content.BeanFactory
 import org.tangram.mock.content.MockBeanFactory
@@ -28,6 +30,12 @@ log.info "starting"
 
 log.info "configuring bean facory"
 BeanFactory beanFactory = MockBeanFactory.getInstance()
+Object vehicle = new Object() {
+  BeanFactory<?> v
+};
+Type interimType = vehicle.getClass().getDeclaredField("v").getGenericType()
+TypeLiteral bf = TypeLiteral.get(interimType)
+module.bind(bf).toInstance(beanFactory)
 module.bind(BeanFactory.class).toInstance(beanFactory)
 
 log.info "configuring property converter"

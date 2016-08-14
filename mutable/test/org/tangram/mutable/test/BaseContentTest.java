@@ -39,11 +39,12 @@ import org.tangram.mutable.MutableCode;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
 import org.tangram.protection.SimplePasswordProtection;
+import org.tangram.util.SystemUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public abstract class BaseContentTest<M extends Object> {
+public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseContentTest.class);
 
@@ -176,10 +177,15 @@ public abstract class BaseContentTest<M extends Object> {
     protected abstract <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception;
 
 
-    protected abstract BaseInterface createBaseBean(MutableBeanFactory<M> beanFactory) throws Exception;
+    private MutableBeanFactory<M, Q> getMutableBeanFactory(boolean create) throws Exception {
+        return SystemUtils.convert(getInstance(MutableBeanFactory.class, create));
+    } // getMutableBeanFactory
 
 
-    protected abstract SubInterface createSubBean(MutableBeanFactory<M> beanFactory) throws Exception;
+    protected abstract BaseInterface createBaseBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;
+
+
+    protected abstract SubInterface createSubBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;
 
 
     protected abstract Class<? extends BaseInterface> getBaseClass();
@@ -196,9 +202,10 @@ public abstract class BaseContentTest<M extends Object> {
     /**
      * Return the query element to retrieve the subinterface instance.
      *
+     * @param beanFactory bean factory to be used to generated the query instance
      * @return implementation specific condition string
      */
-    protected abstract String getCondition();
+    protected abstract String getCondition(MutableBeanFactory<M, Q> beanFactory);
 
 
     protected abstract void setPeers(BaseInterface base, SubInterface sub);
@@ -215,9 +222,9 @@ public abstract class BaseContentTest<M extends Object> {
     protected abstract int getNumberOfClasses();
 
 
-    @Test(priority = 1)
+    @Test(priority = 2)
     public void test2Factory() throws Exception {
-        MutableBeanFactory<M> beanFactory = getInstance(MutableBeanFactory.class, true);
+        MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Object manager = beanFactory.getManager();
         Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
@@ -225,17 +232,12 @@ public abstract class BaseContentTest<M extends Object> {
         Assert.assertTrue(managerClassName.startsWith(getManagerPrefix()), "The factory should have a correctly typed manager instance.");
         List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
         Assert.assertEquals(codeClasses.size(), 1, "We have one code class.");
-        Class<MutableCode> codeClass = codeClasses.get(0);
-        String filterQuery = beanFactory.getFilterQuery(codeClass, "annotation", "tangram");
-        Assert.assertNotNull(filterQuery, "There should be some filter query");
-        Assert.assertTrue(filterQuery.indexOf("annotation")>0, "Unexpected contents of filter query");
-        Assert.assertTrue(filterQuery.indexOf("tangram")>0, "Unexpected contents of filter query");
     } // test1Factory()
 
 
     @Test(priority = 3)
     public void test3CreateTestContent() throws Exception {
-        MutableBeanFactory<M> beanFactory = getInstance(MutableBeanFactory.class, true);
+        MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         int numberOfAllClasses = getNumberOfAllClasses();
         // Assert.assertEquals(beanFactory.getAllClasses().toString(), "[interface org.tangram.feature.protection.Protection, interface org.tangram.feature.protection.ProtectedContent, interface org.tangram.mutable.test.content.SubInterface, interface org.tangram.mutable.MutableCode, interface org.tangram.content.CodeResource, class org.tangram.ebean.EContent, interface org.tangram.mutable.test.content.BaseInterface, class org.tangram.content.TransientCode, class org.tangram.ebean.Code, interface org.tangram.content.Content, class org.tangram.ebean.test.content.BaseClass, class org.tangram.ebean.test.content.SubClass]", "Discovered strange list of classes as strings.");
@@ -251,6 +253,7 @@ public abstract class BaseContentTest<M extends Object> {
         beanFactory.commitTransaction();
         BaseInterface beanB = createBaseBean(beanFactory);
         Assert.assertNotNull(beanB, "Could not create beanB.");
+        beanB.setTitle("filter");
         setPeers(beanB, beanA);
         beanFactory.persist(beanB);
         beanFactory.commitTransaction();
@@ -259,24 +262,26 @@ public abstract class BaseContentTest<M extends Object> {
 
     @Test(priority = 4)
     public void test4Components() throws Exception {
-        MutableBeanFactory<?> beanFactory = getInstance(MutableBeanFactory.class, false);
-        Assert.assertNotNull(beanFactory, "Need factory for beans.");
-        List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
+        MutableBeanFactory<M, Q> factory = getMutableBeanFactory(false);
+        Assert.assertNotNull(factory, "Need factory for beans.");
+        LOG.info("test4Components() obtaining instances of base interface.");
+        List<? extends BaseInterface> allBeans = factory.listBeans(BaseInterface.class);
+        LOG.info("test4Components() obtained instances of base interface.");
         Assert.assertEquals(allBeans.size(), 2, "We have prepared a fixed number of beans.");
-        List<SubInterface> subBeans = beanFactory.listBeans(SubInterface.class, getCondition(), "subtitle", true);
+        List<SubInterface> subBeans = factory.listBeans(SubInterface.class, getCondition(factory), "subtitle", true);
         Assert.assertEquals(subBeans.size(), 1, "We have prepared a fixed number of sub beans.");
         // this contains is necessary due to possible subclassing in some of the APIs
         Assert.assertTrue(subBeans.get(0).getClass().getSimpleName().contains("SubClass"), "Peer of base beans is a sub bean.");
-        List<? extends Content> baseBeans = beanFactory.listBeansOfExactClass(getBaseClass());
+        List<? extends Content> baseBeans = factory.listBeansOfExactClass(getBaseClass());
         Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans.");
-        BaseInterface bean = beanFactory.getBean(getBaseClass(), baseBeans.get(0).getId());
+        BaseInterface bean = factory.getBean(getBaseClass(), baseBeans.get(0).getId());
         Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
-        Content content = beanFactory.getBean(bean.getId());
+        Content content = factory.getBean(bean.getId());
         Assert.assertEquals(bean, content, "Untyped content should result in the same bean.");
         String stringValue = bean.toString();
         int idx = stringValue.lastIndexOf('/');
-        if (idx > 0) {
-            idx ++;
+        if (idx>0) {
+            idx++;
             stringValue = stringValue.substring(idx);
         } // if
         Assert.assertEquals(stringValue.substring(0, 9), "BaseClass", "Unexpected toString() implementation.");
@@ -285,8 +290,21 @@ public abstract class BaseContentTest<M extends Object> {
 
 
     @Test(priority = 5)
-    public void test5Code() throws Exception {
-        MutableBeanFactory<M> beanFactory = getInstance(MutableBeanFactory.class, false);
+    public void test5Filter() throws Exception {
+        LOG.info("test5Filter()");
+        MutableBeanFactory<M, Q> factory = getMutableBeanFactory(false);
+        Assert.assertNotNull(factory, "Need factory for beans.");
+        String filter = factory.getFilterQuery(getBaseClass(), "title", "filter");
+        LOG.info("test5Filter() end");
+        Assert.assertNotNull(filter, "There should be some filter query");
+        List<? extends BaseInterface> filteredBeans = factory.listBeansOfExactClass(getBaseClass(), filter, null, true);
+        Assert.assertEquals(filteredBeans.size(), 1, "Unexpected contents for filter query");
+    } // test5Filter()
+
+
+    @Test(priority = 6)
+    public void test6Code() throws Exception {
+        MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
         Assert.assertNotNull(classesMap, "We have a classes map.");
@@ -327,11 +345,11 @@ public abstract class BaseContentTest<M extends Object> {
             LOG.info("test3Code() exception occured - only relevant for ebean AFAIK", e);
         } // try/catch
         Assert.assertNull(bean, "Despite the correct ID there should have been no code result.");
-    } // test5Code()
+    } // test6Code()
 
 
-    @Test(priority = 6)
-    public void test6ObtainCode() throws Exception {
+    @Test(priority = 7)
+    public void test7ObtainCode() throws Exception {
         ClassRepository repository = getInstance(ClassRepository.class, false);
         Assert.assertNotNull(repository, "Could not find class repository.");
         Map<String, Class<Object>> annotatedClasses = repository.getAnnotated(Named.class);
@@ -346,12 +364,12 @@ public abstract class BaseContentTest<M extends Object> {
         Assert.assertEquals(emptyClassBytes.length, 2372, "Unexpected number of bytes for class found.");
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
-    } // test6ObtainCode()
+    } // test7ObtainCode()
 
 
-    @Test(priority = 7)
-    public void test7DeleteComponents() throws Exception {
-        MutableBeanFactory<?> beanFactory = getInstance(MutableBeanFactory.class, false);
+    @Test(priority = 8)
+    public void test8DeleteComponents() throws Exception {
+        MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends Content> subBeans = beanFactory.listBeans(SubInterface.class);
         beanFactory.beginTransaction();
@@ -359,6 +377,6 @@ public abstract class BaseContentTest<M extends Object> {
         Assert.assertTrue(result, "Item should have been deleted.");
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals(allBeans.size(), 1, "There should be less beans after deleting one item.");
-    } // test7DeleteComponents()
+    } // test8DeleteComponents()
 
 } // BaseContentTest

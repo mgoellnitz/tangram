@@ -43,7 +43,7 @@ import org.tangram.util.SystemUtils;
 /**
  * Mock a bean factory returning some instances to provides means for other component's tests.
  */
-public class MockBeanFactory extends AbstractBeanFactory {
+public class MockBeanFactory extends AbstractBeanFactory<StringBuilder> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockBeanFactory.class);
 
@@ -152,6 +152,12 @@ public class MockBeanFactory extends AbstractBeanFactory {
 
 
     @Override
+    public StringBuilder createQuery(Class<? extends Content> cls, String expression) {
+        return new StringBuilder(expression);
+    } // createQuery()
+
+
+    @Override
     public <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
         LOG.debug("listBeans() :{} {} {} {}", cls.getSimpleName(), optionalQuery, orderProperty, ascending);
         List<T> result = new ArrayList<>();
@@ -163,6 +169,12 @@ public class MockBeanFactory extends AbstractBeanFactory {
             } // if
         } // for
         return result;
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(StringBuilder query) {
+        return listBeans(null, query.toString(), null, null);
     } // listBeans()
 
 

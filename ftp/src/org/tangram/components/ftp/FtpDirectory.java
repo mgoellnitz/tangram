@@ -44,7 +44,7 @@ public class FtpDirectory {
     private TangramFtpServer ftpServerStub;
 
     @Inject
-    private BeanFactory beanFactory;
+    private BeanFactory<?> beanFactory;
 
     @Inject
     private CodeResourceCache codeResourceCache;

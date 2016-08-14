@@ -46,7 +46,7 @@ import org.testng.annotations.Test;
  */
 public class IncludeTagTest {
 
-    private final BeanFactory beanFactory;
+    private final BeanFactory<?> beanFactory;
 
 
     public IncludeTagTest() throws FileNotFoundException {

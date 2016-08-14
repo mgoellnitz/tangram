@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 public class DefaultHandlerTest {
 
     @Mock
-    private BeanFactory beanFactory; // NOPMD - this field is not really unused
+    private BeanFactory<?> beanFactory; // NOPMD - this field is not really unused
 
     @InjectMocks
     private final DefaultHandler defaultHandler = new DefaultHandler();

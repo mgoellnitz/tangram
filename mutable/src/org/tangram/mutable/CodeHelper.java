@@ -212,7 +212,7 @@ public final class CodeHelper {
      * @param modificationTime time of last modification of the code item in milliseconds since the epoche
      * @throws Exception IO and class lookup related exceptions may occur but are unlikely
      */
-    public static void updateCode(MutableBeanFactory<?> beanFactory, CodeResourceCache codeResourceCache, String mimetype, String filename, byte[] contents, long modificationTime) throws Exception {
+    public static void updateCode(MutableBeanFactory<?, ?> beanFactory, CodeResourceCache codeResourceCache, String mimetype, String filename, byte[] contents, long modificationTime) throws Exception {
         // This hopefully is one really just one class effectively
         Class<? extends MutableCode> codeClass = beanFactory.getImplementingClasses(MutableCode.class).get(0);
         String annotation = CodeHelper.getAnnotation(filename);

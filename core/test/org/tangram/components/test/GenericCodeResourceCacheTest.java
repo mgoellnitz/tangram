@@ -48,7 +48,7 @@ public class GenericCodeResourceCacheTest {
     private final PersistentRestartCache restartCache = new DummyRestartCache(); // NOPMD - this field is not really unused
 
     @Spy
-    private BeanFactory factory;
+    private BeanFactory<StringBuilder> factory;
 
     @InjectMocks
     private final GenericCodeResourceCache codeResourceCache = new GenericCodeResourceCache();

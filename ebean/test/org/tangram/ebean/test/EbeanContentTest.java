@@ -19,6 +19,7 @@
 package org.tangram.ebean.test;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Query;
 import dinistiq.Dinistiq;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public class EbeanContentTest extends BaseContentTest<EbeanServer> {
+public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
 
     @Override
     protected Map<String, Object> getBeansForContentCreate() {
@@ -68,13 +69,13 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<EbeanServer> beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<EbeanServer, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory<EbeanServer> beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<EbeanServer, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 
@@ -92,9 +93,9 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer> {
 
 
     @Override
-    protected String getCondition() {
+    protected String getCondition(MutableBeanFactory<EbeanServer, Query<?>> beanFactory) {
         return "subtitle='great'";
-    }
+    } // getCondition()
 
 
     @Override
@@ -120,7 +121,7 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer> {
     /**
      * From time to time we ran into the problem that classes didn't get enhanced correctly
      */
-    @Test(priority = 0)
+    @Test(priority = 1)
     public void test0IsEnhanced() {
         Method[] methods = Code.class.getMethods();
         Assert.assertTrue(BaseContentTest.checkMethodPrefixOccurs(methods, "_ebean"), "Classes were not enhanced.");

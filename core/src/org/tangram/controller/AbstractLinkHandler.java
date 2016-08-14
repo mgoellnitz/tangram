@@ -49,7 +49,7 @@ public abstract class AbstractLinkHandler implements LinkFactory {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractLinkHandler.class);
 
     @Inject
-    protected BeanFactory beanFactory;
+    protected BeanFactory<?> beanFactory;
 
     @Inject
     protected ViewContextFactory viewContextFactory;
@@ -62,7 +62,7 @@ public abstract class AbstractLinkHandler implements LinkFactory {
     @Inject
     private LinkHandlerRegistry linkHandlerRegistry;
 
-    public BeanFactory getBeanFactory() {
+    public BeanFactory<?> getBeanFactory() {
         return beanFactory;
     }
 

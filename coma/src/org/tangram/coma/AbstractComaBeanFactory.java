@@ -41,7 +41,7 @@ import org.tangram.content.Content;
 import org.tangram.util.SystemUtils;
 
 
-public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
+public abstract class AbstractComaBeanFactory extends AbstractBeanFactory<StringBuilder> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractComaBeanFactory.class);
 
@@ -156,7 +156,14 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     /**
-     * @see BeanFactory#getBean(java.lang.Class, java.lang.String)
+     * Get a bean of a given type with a given id.
+     *
+     * The resulting bean must adhere to both conditions: id and type.
+     *
+     * @param cls class of the bean to obtain
+     * @param <T> type constraint for the above class
+     * @param id id of the bean to obtain
+     * @return bean with the given ID and type or null otherwise
      */
     @Override
     public <T extends Content> T getBean(Class<T> cls, String id) {
@@ -165,23 +172,27 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     /**
-     * @see BeanFactory#listBeansOfExactClass(java.lang.Class, java.lang.String, java.lang.String, java.lang.Boolean)
+     * Create a underlying storage system specific query object.
+     *
+     * @param cls class of the elements the query should return
+     * @param expression optional expression which might be ignored by he underlying system
+     * @return new query instance
      */
     @Override
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
-        List<T> result = new ArrayList<>();
-        String typeName = cls.getSimpleName();
-        if (parents.keySet().contains(typeName)) {
-            for (String id : listIds(typeName, optionalQuery, orderProperty, ascending)) {
-                result.add(convert(cls, getBean(id)));
-            } // for
-        } // if
-        return result;
-    } // listBeansOfExactClass()
+    public StringBuilder createQuery(Class<? extends Content> cls, String expression) {
+        return new StringBuilder(expression);
+    } // createQuery()
 
 
     /**
-     * @see BeanFactory#listBeans(java.lang.Class, java.lang.String, java.lang.String, java.lang.Boolean)
+     * List beans from the repository.
+     *
+     * @param cls beans class to query for
+     * @param <T> type constraint for the above class
+     * @param optionalQuery query string specific to the underlying storage system - may be null
+     * @param orderProperty name of a attribute of the bean to be used for ascending ordering
+     * @param ascending sort ascending or not (descending)
+     * @return List of beans adhering the conditions - maybe empty but not null
      */
     @Override
     public <T extends Content> List<T> listBeans(Class<T> cls, String optionalQuery, String orderProperty, Boolean ascending) {
@@ -190,7 +201,43 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
 
 
     /**
-     * supporting methods for implementing CM style access to content *
+     * List beans from the repository by means of the underlying storage solution.
+     *
+     * @param query implementation specific query instance
+     * @param <T> Type constraint for the elements of the result list
+     * @return List of all beans of the given class - maybe empty but not null
+     */
+    @Override
+    public <T extends Content> List<T> listBeans(StringBuilder query) {
+        return SystemUtils.convert(listBeans(Content.class, query.toString()));
+    } // listBeans()
+
+
+    /**
+     * List beans from the repository of an exact type. Does not take sublcasses into account.
+     *
+     * @param cls Type requirement to be met.
+     * @param <T> Type constraint for the elements of the result list
+     * @param query query according to the underlying storage layer - may be null
+     * @param orderProperty the resulting list may be ordered according to this property
+     * @param ascending sort following orderProperty ascending if true or descending if false - may be null
+     * @return list of content elements of exactly the given type T.
+     */
+    @Override
+    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String query, String orderProperty, Boolean ascending) {
+        List<T> result = new ArrayList<>();
+        String typeName = cls.getSimpleName();
+        if (parents.keySet().contains(typeName)) {
+            for (String id : listIds(typeName, query, orderProperty, ascending)) {
+                result.add(convert(cls, getBean(id)));
+            } // for
+        } // if
+        return result;
+    } // listBeansOfExactClass()
+
+
+    /**
+     * supporting methods for implementing CM style access to content
      */
     /**
      * Create a transient blob object from content instance.
@@ -215,7 +262,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
      * @param id id of the content to fetch properties map for
      * @return map mapping the property names to their respective values
      */
-    public Map<String, Object> getProperties(BeanFactory factory, String type, String id) {
+    public Map<String, Object> getProperties(BeanFactory<StringBuilder> factory, String type, String id) {
         Map<String, Object> properties = new HashMap<>();
         if ((type==null)||(type.length()==0)) {
             // it's most likely a folder
@@ -528,7 +575,7 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory {
         try {
             Class.forName(dbDriver).newInstance();
         } catch (RuntimeException|ClassNotFoundException|InstantiationException|IllegalAccessException ex) {
-            LOG.error("afterPropertiesSet() error loading driver "+dbDriver+ "("+this+")", ex);
+            LOG.error("afterPropertiesSet() error loading driver "+dbDriver+"("+this+")", ex);
         } // try/catch
         try {
             dbConnection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);

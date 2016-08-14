@@ -74,7 +74,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private static final Logger LOG = LoggerFactory.getLogger(MetaLinkHandler.class);
 
     @Inject
-    private BeanFactory beanFactory;
+    private BeanFactory<?> beanFactory;
 
     @Inject
     private ClassRepository classRepository;

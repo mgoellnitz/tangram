@@ -141,7 +141,7 @@ public class SpringChainTest {
             result = true;
         } // try/catch
         Assert.assertTrue(result, "Bean wrapping with spring is not (yet) used.");
-        BeanFactory beanFactory = appContext.getBean(BeanFactory.class);
+        BeanFactory<?> beanFactory = appContext.getBean(BeanFactory.class);
         Assert.assertEquals(TangramSpringServices.getBeanFromContext(BeanFactory.class), beanFactory, "Didn't find mock bean factory.");
         ViewUtilities viewUtilities = appContext.getBean(ViewUtilities.class);
         ViewUtilities beanFromContext = TangramSpringServices.getBeanFromContext(ViewUtilities.class, "viewUtilities");

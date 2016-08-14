@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class AbstractBeanFactory implements BeanFactory {
+
+public abstract class AbstractBeanFactory<Q extends Object> implements BeanFactory<Q> {
 
     /**
      * Helper method to keep areas with suppressed warnings small.
@@ -36,12 +37,6 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     protected <T extends Object> T convert(Class<? extends T> cls, Object bean) {
         return (T) bean;
     } // convert()
-
-
-    @Override
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls) {
-        return listBeansOfExactClass(cls, null, null, null);
-    } // listBeans()
 
 
     @Override
@@ -61,6 +56,12 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     @Override
     public <T extends Content> List<T> listBeans(Class<T> cls) {
         return listBeans(cls, null, null, null);
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls) {
+        return listBeansOfExactClass(cls, null, null, null);
     } // listBeans()
 
 } // AbstractBeanFactory

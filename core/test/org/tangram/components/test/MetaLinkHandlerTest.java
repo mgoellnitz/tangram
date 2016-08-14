@@ -103,17 +103,17 @@ public class MetaLinkHandlerTest {
      */
     public class MockLinkHandler implements org.tangram.link.LinkHandler, BeanFactoryAware {
 
-        private BeanFactory beanFactory;
+        private BeanFactory<?> beanFactory;
 
 
         @Override
-        public void setBeanFactory(BeanFactory factory) {
+        public void setBeanFactory(BeanFactory<?> factory) {
             beanFactory = factory;
             LOG.debug("MockLinkHandler.setBeanFactory() {} {}", beanFactory, factory);
         }
 
 
-        public BeanFactory getBeanFactory() {
+        public BeanFactory<?> getBeanFactory() {
             LOG.info("MockLinkHandler.getBeanFactory() {}", beanFactory);
             return beanFactory;
         }

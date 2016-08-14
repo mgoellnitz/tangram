@@ -47,7 +47,7 @@ import org.testng.annotations.Test;
 public class ProtectionHookTest {
 
     @Spy
-    private BeanFactory beanFactory; // NOPMD - this field is not really unused
+    private BeanFactory<?> beanFactory; // NOPMD - this field is not really unused
 
     @InjectMocks
     private final ProtectionHook protectionHook = new ProtectionHook();

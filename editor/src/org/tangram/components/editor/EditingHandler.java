@@ -69,7 +69,7 @@ import org.tangram.view.ViewUtilities;
 @Named
 @Singleton
 @LinkHandler
-public class EditingHandler extends AbstractLinkHandler {
+public class EditingHandler<Q extends Object> extends AbstractLinkHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(EditingHandler.class);
 
@@ -194,8 +194,8 @@ public class EditingHandler extends AbstractLinkHandler {
     } // setDeleteMethodEnabled()
 
 
-    private MutableBeanFactory<?> getMutableBeanFactory() {
-        return (MutableBeanFactory) getBeanFactory();
+    private MutableBeanFactory<?, Q> getMutableBeanFactory() {
+        return SystemUtils.convert(getBeanFactory());
     } // getMutableBeanFactory()
 
 
@@ -418,7 +418,7 @@ public class EditingHandler extends AbstractLinkHandler {
             filterQuery = getFilterQuery(request, filterProperty, filterValue, cls, filterQuery);
             LOG.info("list() filter query {} for {}", filterQuery, filterProperty);
             contents = beanFactory.listBeansOfExactClass(cls, filterQuery, null, true);
-            // contents = beanFactory.listBeansOfExactClass(cls, filterQuery, filterProperty, true);
+            // TODO: contents = beanFactory.listBeansOfExactClass(cls, filterQuery, filterProperty, true);
             try {
                 Collections.sort(contents);
             } catch (Exception e) {

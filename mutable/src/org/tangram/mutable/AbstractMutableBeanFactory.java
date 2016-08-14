@@ -47,7 +47,7 @@ import org.tangram.util.SystemUtils;
 /**
  * Common stuff for all bean factories dealing with mutable content.
  */
-public abstract class AbstractMutableBeanFactory<M extends Object> extends AbstractBeanFactory implements MutableBeanFactory<M> {
+public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Object> extends AbstractBeanFactory<Q> implements MutableBeanFactory<M, Q> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractMutableBeanFactory.class);
 
@@ -444,8 +444,17 @@ public abstract class AbstractMutableBeanFactory<M extends Object> extends Abstr
     } // appendItem()
 
 
+    /**
+     * Generic filter expression generation for a filter query.
+     *
+     * This implementation is sufficient for many ORMs to generate where clauses.
+     *
+     * @param filterProperty property to filter for
+     * @param filterValues values to filter for
+     * @return parts of a string based query expression
+     */
     @Override
-    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
+    public <F extends Content> String getFilterQuery(Class<F> cls, String filterProperty, String filterValues) {
         String[] values = filterValues.split(" ");
         StringBuffer result = new StringBuffer(64);
         appendItem(result, filterProperty, values[0]);
@@ -456,7 +465,7 @@ public abstract class AbstractMutableBeanFactory<M extends Object> extends Abstr
             } // for
         } // if
         return result.toString();
-    } // getFilterQuery()
+    } // getFilterExpression()
 
 
     protected List<Class<? extends Content>> getImplementingClassesForModelClass(Class<? extends Content> baseClass) {
@@ -520,23 +529,43 @@ public abstract class AbstractMutableBeanFactory<M extends Object> extends Abstr
     } // getImplementingClasses()
 
 
-    private <T> String getCacheKey(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
-        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+queryString;
+    protected <T> String getCacheKey(Class<T> cls, String query, String orderProperty, Boolean ascending) {
+        return cls.getName()+":"+orderProperty+":"+(ascending==Boolean.TRUE ? "asc" : "desc")+":"+query;
     } // getCacheKey()
 
 
+    protected <T extends Content> List<Class<T>> getImplementingBaseClasses(Class<T> cls) {
+        List<Class<T>> result = new ArrayList<>();
+        List<Class<T>> implementingClasses = getImplementingClasses(cls);
+        for (Class<T> c : implementingClasses) {
+            boolean add = true;
+            Class<?> cx = c;
+            while (cx!=null) {
+                cx = cx.getSuperclass();
+                if (implementingClasses.contains(cx)) {
+                    add = false;
+                } // if
+            } // while
+            if (add) {
+                result.add(c);
+            } // if
+        } // for
+        return result;
+    } // getImplementingBaseClasses()
+
+
     @Override
-    public <T extends Content> List<T> listBeans(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
+    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String query, String orderProperty, Boolean ascending) {
         List<T> result = null;
         if (LOG.isInfoEnabled()) {
-            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()+(queryString==null ? "" : " with condition "+queryString));
+            LOG.info("listBeansOfExactClass() looking up instances of "+cls.getSimpleName()+(query==null ? "" : " with condition "+query+" :"+query.getClass().getSimpleName()));
         } // if
         String key = null;
         if (isActivateQueryCaching()) {
-            key = getCacheKey(cls, queryString, orderProperty, ascending);
+            key = getCacheKey(cls, query, orderProperty, ascending);
             List<String> idList = queryCache.get(key);
             if (idList!=null) {
-                LOG.info("listBeans() found in cache {}", idList);
+                LOG.info("listBeansOfExactClass() found in cache {}", idList);
                 // old style
                 result = new ArrayList<>(idList.size());
                 for (String id : idList) {
@@ -549,13 +578,8 @@ public abstract class AbstractMutableBeanFactory<M extends Object> extends Abstr
         } // if
         if (result==null) {
             result = new ArrayList<>();
-            for (Class<? extends Content> cx : getClasses()) {
-                if (cls.isAssignableFrom(cx)) {
-                    Class<? extends T> c = SystemUtils.convert(cx);
-                    List<? extends T> beans = listBeansOfExactClass(c, queryString, orderProperty, ascending);
-                    result.addAll(beans);
-                } // if
-            } // for
+            List<? extends T> beans = listBeans(cls, query, orderProperty, ascending);
+            filterExactClass(cls, beans, result);
             if (isActivateQueryCaching()) {
                 List<String> idList = new ArrayList<>(result.size());
                 for (T content : result) {
@@ -566,9 +590,9 @@ public abstract class AbstractMutableBeanFactory<M extends Object> extends Abstr
             } // if
             statistics.increase("query beans uncached");
         } // if
-        LOG.info("listBeans() looked up {} raw entries", result.size());
+        LOG.info("listBeansOfExactClass() looked up {} entries", result.size());
         return result;
-    } // listBeans()
+    } // listBeansOfExactClass()
 
 
     @Override

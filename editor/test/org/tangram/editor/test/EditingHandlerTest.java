@@ -81,7 +81,7 @@ public class EditingHandlerTest {
     private ClassRepository repository; // NOPMD - this field is not really unused
 
     @InjectMocks
-    private final EditingHandler handler = new EditingHandler();
+    private final EditingHandler<StringBuilder> handler = new EditingHandler<StringBuilder>();
 
 
     /**

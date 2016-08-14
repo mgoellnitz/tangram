@@ -54,7 +54,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
     private DateFormat dateFormat = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
 
     @Inject
-    private BeanFactory beanFactory;
+    private BeanFactory<?> beanFactory;
 
     @Inject
     private ViewUtilities viewUtilties;

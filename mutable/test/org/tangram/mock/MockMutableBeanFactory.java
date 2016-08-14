@@ -38,7 +38,7 @@ import org.tangram.mutable.MutableCode;
 /**
  * Mock utility class for mutable bean factory instances needed in tests.
  */
-public class MockMutableBeanFactory extends MockBeanFactory implements MutableBeanFactory<MockOrmManager> {
+public class MockMutableBeanFactory extends MockBeanFactory implements MutableBeanFactory<MockOrmManager, StringBuilder> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockMutableBeanFactory.class);
 
@@ -96,7 +96,6 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public <T extends Content> boolean delete(T bean) {
-        // TODO: Really delete this
         return true;
     }
 
@@ -161,9 +160,9 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
 
     @Override
-    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
+    public <F extends Content> String getFilterQuery(Class<F> cls, String filterProperty, String filterValues) {
         return "<mock mutable bean factory does not do query expressions>";
-    }
+    } // getFilterQuery()
 
 
     @Override

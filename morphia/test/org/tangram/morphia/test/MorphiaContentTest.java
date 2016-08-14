@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.query.Query;
 import org.tangram.morphia.Code;
 import org.tangram.morphia.test.content.BaseClass;
 import org.tangram.morphia.test.content.SubClass;
@@ -35,7 +36,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public class MorphiaContentTest extends BaseContentTest<Datastore> {
+public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
@@ -48,13 +49,13 @@ public class MorphiaContentTest extends BaseContentTest<Datastore> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<Datastore> beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<Datastore, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory<Datastore> beanFactory) throws Exception {
+    protected SubInterface createSubBean(MutableBeanFactory<Datastore, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 
@@ -72,9 +73,9 @@ public class MorphiaContentTest extends BaseContentTest<Datastore> {
 
 
     @Override
-    protected String getCondition() {
-        return "where subtitle='great'";
-    }
+    protected String getCondition(MutableBeanFactory<Datastore, Query<?>> beanFactory) {
+        return "subtitle='great'";
+    } // getCondition()
 
 
     @Override
@@ -99,11 +100,11 @@ public class MorphiaContentTest extends BaseContentTest<Datastore> {
 
     @Test(priority = 10)
     public void test10WipeContent() throws Exception {
-        MutableBeanFactory<?> beanFactory = getInstance(MutableBeanFactory.class, true);
+        MutableBeanFactory<?, ?> beanFactory = getInstance(MutableBeanFactory.class, true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Object manager = beanFactory.getManager();
         Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
-        Datastore datastore = (Datastore)manager;
+        Datastore datastore = (Datastore) manager;
         datastore.getCollection(Code.class).drop();
         datastore.getCollection(BaseClass.class).drop();
         datastore.getCollection(SubClass.class).drop();

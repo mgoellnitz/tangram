@@ -46,7 +46,7 @@ import org.testng.annotations.Test;
  */
 public class LinkTagTest {
 
-    private final BeanFactory beanFactory;
+    private final BeanFactory<?> beanFactory;
 
 
     public LinkTagTest() throws FileNotFoundException {

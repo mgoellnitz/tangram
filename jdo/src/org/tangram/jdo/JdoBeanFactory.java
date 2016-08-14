@@ -20,6 +20,7 @@ package org.tangram.jdo;
 
 import java.util.Collection;
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
 
@@ -27,7 +28,7 @@ import org.tangram.mutable.MutableBeanFactory;
 /**
  * All BeanFactories dealing with Java Data Objects implement this interface.
  */
-public interface JdoBeanFactory extends MutableBeanFactory<PersistenceManager> {
+public interface JdoBeanFactory extends MutableBeanFactory<PersistenceManager, Query<?>> {
 
     /**
      * set a list of classes to be used as model classes in addition to the statically scanned ones.

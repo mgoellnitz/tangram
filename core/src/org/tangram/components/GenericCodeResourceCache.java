@@ -61,7 +61,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
     private PersistentRestartCache startupCache;
 
     @Inject
-    private BeanFactory factory;
+    private BeanFactory<?> factory;
 
     private long lastResetTime;
 

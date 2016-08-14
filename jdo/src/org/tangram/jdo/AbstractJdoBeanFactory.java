@@ -41,7 +41,7 @@ import org.tangram.util.ClassResolver;
 import org.tangram.util.SystemUtils;
 
 
-public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<PersistenceManager> implements JdoBeanFactory {
+public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<PersistenceManager, Query<?>> implements JdoBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractJdoBeanFactory.class);
 
@@ -185,23 +185,85 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
 
 
     @Override
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
+    public Query<?> createQuery(Class<? extends Content> cls, String expression) {
+        Extent<? extends Content> extent = manager.getExtent(cls, false);
+        return manager.newQuery(extent, expression);
+    } // createQuery()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Class<T> cls, String query, String orderProperty, Boolean ascending) {
+        List<T> result = null;
+        if (LOG.isInfoEnabled()) {
+            LOG.info("listBeans() looking up instances of "+cls.getSimpleName()+(query==null ? "" : " with condition "+query));
+        } // if
+        String key = null;
+        if (isActivateQueryCaching()) {
+            key = getCacheKey(cls, query, orderProperty, ascending);
+            List<String> idList = queryCache.get(key);
+            if (idList!=null) {
+                LOG.info("listBeans() found in cache {}", idList);
+                // old style
+                result = new ArrayList<>(idList.size());
+                for (String id : idList) {
+                    result.add(getBean(cls, id));
+                } // for
+                // New style with lazy content list - perhaps will work some day
+                // result = new LazyContentList<T>(this, idList);
+                statistics.increase("query beans cached");
+            } // if
+        } // if
+        if (result==null) {
+            result = new ArrayList<>();
+            for (Class<? extends Content> cx : getClasses()) {
+                if (cls.isAssignableFrom(cx)) {
+                    Class<? extends T> c = SystemUtils.convert(cx);
+                    List<? extends T> beans = listBeansOfExactClass(c, query, orderProperty, ascending);
+                    result.addAll(beans);
+                } // if
+            } // for
+            if (isActivateQueryCaching()) {
+                List<String> idList = new ArrayList<>(result.size());
+                for (T content : result) {
+                    idList.add(content.getId());
+                } // for
+                queryCache.put(key, idList);
+                startupCache.put(QUERY_CACHE_KEY, queryCache);
+            } // if
+            statistics.increase("query beans uncached");
+        } // if
+        LOG.info("listBeans() looked up {} raw entries", result.size());
+        return result;
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Query<?> query) {
+        LOG.info("listBeans() looking up instances of with query {}.", query);
+        List<T> result = SystemUtils.convert(query.execute());
+        LOG.info("listBeans() looked up {} raw entries", result.size());
+        return result;
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String query, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<>();
         try {
             Extent<T> extent = manager.getExtent(cls, false);
-            Query<?> query = queryString==null ? manager.newQuery(extent) : manager.newQuery(extent, queryString);
+            Query<?> q = query == null ? manager.newQuery(extent) : manager.newQuery(extent, query);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
                 String order = orderProperty+(ascending ? " asc" : " desc");
-                query.setOrdering(order);
+                q.setOrdering(order);
             } // if
             // Will be extended once we decide to introduce start/end
             // if (end!=null) {
             // long from = start!=null ? start : 0;
             // query.setRange(from, end+1);
             // } // if
-            LOG.info("listBeansOfExactClass() looking up instances of {} {}", cls.getSimpleName(), (queryString==null ? "-" : " with condition "+queryString));
-            List<T> results = SystemUtils.convert(query.execute());
+            LOG.info("listBeansOfExactClass() looking up instances of {} {}", cls.getSimpleName(), (q==null ? "-" : " with condition "+q));
+            List<T> results = SystemUtils.convert(q.execute());
             LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
             for (T o : results) {
                 if (o instanceof BeanFactoryAware) {

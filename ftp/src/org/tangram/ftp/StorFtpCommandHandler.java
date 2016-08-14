@@ -36,12 +36,12 @@ public class StorFtpCommandHandler extends StorCommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(StorFtpCommandHandler.class);
 
-    private final MutableBeanFactory<?> beanFactory;
+    private final MutableBeanFactory<?, ?> beanFactory;
 
     private final CodeResourceCache codeResourceCache;
 
 
-    public StorFtpCommandHandler(MutableBeanFactory<?> beanFactory, CodeResourceCache codeResourceCache) {
+    public StorFtpCommandHandler(MutableBeanFactory<?, ?> beanFactory, CodeResourceCache codeResourceCache) {
         this.beanFactory = beanFactory;
         this.codeResourceCache = codeResourceCache;
     } // StorFtpCommandHandler()

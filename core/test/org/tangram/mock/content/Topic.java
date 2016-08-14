@@ -38,7 +38,7 @@ public class Topic extends Linkable implements ProtectedContent {
 
     private char[] teaser;
 
-    private BeanFactory beanFactory;
+    private BeanFactory<StringBuilder> beanFactory;
 
     private RootTopic rootTopic = null;
 
@@ -103,7 +103,7 @@ public class Topic extends Linkable implements ProtectedContent {
     }
 
 
-    public void setBeanFactory(BeanFactory beanFactory) {
+    public void setBeanFactory(BeanFactory<StringBuilder> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

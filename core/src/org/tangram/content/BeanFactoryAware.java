@@ -30,6 +30,6 @@ public interface BeanFactoryAware {
      *
      * @param factory bean factory instance to attach
      */
-    void setBeanFactory(BeanFactory factory);
+    void setBeanFactory(BeanFactory<?> factory);
 
 } // BeanFactoryAware

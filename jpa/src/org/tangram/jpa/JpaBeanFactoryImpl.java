@@ -49,7 +49,7 @@ import org.tangram.util.SystemUtils;
  */
 @Named("beanFactory")
 @Singleton
-public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager> implements MutableBeanFactory<EntityManager> {
+public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager, String> implements MutableBeanFactory<EntityManager, String> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JpaBeanFactoryImpl.class);
 
@@ -183,29 +183,52 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
 
 
     @Override
-    public <T extends Content> List<T> listBeansOfExactClass(Class<T> cls, String queryString, String orderProperty, Boolean ascending) {
+    public String createQuery(Class<? extends Content> cls, String expression) {
+        return expression;
+    } // createQuery()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Class<T> c, String queryString, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<>();
         try {
-            String simpleName = cls.getSimpleName();
-            queryString = queryString==null ? "select x from "+simpleName+" x" : queryString;
-            // Default is no ordering - not even via IDs
-            if (orderProperty!=null) {
-                String boundName = queryString.substring(7);
-                int idx = boundName.indexOf(' ');
-                boundName = boundName.substring(0, idx);
-                queryString += " order by "+boundName+"."+orderProperty+(ascending ? " asc" : " desc");
-            } // if
-            LOG.info("listBeansOfExactClass() looking up instances of {} with condition {}", simpleName, queryString);
-            Query query = manager.createQuery(queryString, cls);
-            List<Object> results = SystemUtils.convert(query.getResultList());
-            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
-            filterExactClass(cls, results, result);
+            for (Class<T> cls : getImplementingBaseClasses(c)) {
+                String simpleName = cls.getSimpleName();
+                queryString = queryString==null ? "select x from "+simpleName+" x" : queryString;
+                // Default is no ordering - not even via IDs
+                if (orderProperty!=null) {
+                    String boundName = queryString.substring(7);
+                    int idx = boundName.indexOf(' ');
+                    boundName = boundName.substring(0, idx);
+                    queryString += " order by "+boundName+"."+orderProperty+(ascending ? " asc" : " desc");
+                } // if
+                LOG.info("listBeans() looking up instances of {} with condition {}", simpleName, queryString);
+                Query query = manager.createQuery(queryString, cls);
+                result.addAll(SystemUtils.convert(query.getResultList()));
+            } // for
+            LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
-            LOG.error("listBeansOfExactClass() query ", e);
+            LOG.error("listBeans() query ", e);
         } // try/catch/finally
         return result;
-    } // listBeansOfExactClass()
+    } // listBeans()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(String queryString) {
+        List<T> result = new ArrayList<>();
+        try {
+            Query query = manager.createQuery(queryString);
+            LOG.info("listBeans() looking up instances with query {}", queryString);
+            List<Object> results = SystemUtils.convert(query.getResultList());
+            LOG.info("listBeans() looked up {} raw entries", results.size());
+            statistics.increase("list beans");
+        } catch (Exception e) {
+            LOG.error("listBeans() query ", e);
+        } // try/catch/finally
+        return result;
+    } // listBeans()
 
 
     @Override
@@ -246,8 +269,9 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
 
 
     @Override
-    public String getFilterQuery(Class<?> cls, String filterProperty, String filterValues) {
-        return "select f from "+cls.getSimpleName()+" f WHERE "+super.getFilterQuery(cls, "f."+filterProperty, filterValues);
+    public <F extends Content> String getFilterQuery(Class<F> cls, String filterProperty, String filterValues) {
+        String baseClause = super.getFilterQuery(cls, "f."+filterProperty, filterValues);
+        return createQuery(cls, "select f from "+cls.getSimpleName()+" f WHERE "+baseClause);
     } // getFilterQuery()
 
 

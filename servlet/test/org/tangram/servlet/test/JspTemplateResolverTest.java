@@ -44,7 +44,7 @@ public class JspTemplateResolverTest {
     @Test
     public void testJspLookup() {
         try {
-            BeanFactory beanFactory = Mockito.mock(BeanFactory.class);
+            BeanFactory<?> beanFactory = Mockito.mock(BeanFactory.class);
             ServletContext servletContext = Mockito.mock(ServletContext.class);
             Mockito.when(servletContext.getRealPath("")).thenReturn(new File("test").getAbsolutePath());
             Map<String, Object> initialBeans = new HashMap<>();
