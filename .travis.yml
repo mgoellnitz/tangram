@@ -36,7 +36,9 @@ cache:
     - $HOME/.gradle/wrapper/
 
 after_success:
-  - gradle versionEyeUpdate jacocoCombinedReport coveralls generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle jacocoCombinedReport coveralls
+  - gradle generatePomFileForMavenJavaPublication artifactoryPublish
+  - gradle versionEyeUpdate
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
