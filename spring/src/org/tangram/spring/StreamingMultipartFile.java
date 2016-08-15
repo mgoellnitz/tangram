@@ -68,7 +68,7 @@ public class StreamingMultipartFile implements MultipartFile {
 
     @Override
     public long getSize() {
-        if (size>0) {
+        if (size<0) {
             try {
                 return getBytes().length;
             } catch (IOException e) {
