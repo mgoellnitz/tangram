@@ -70,7 +70,10 @@ public class StreamingMultipartResolverTest {
         Assert.assertEquals(values[0], "content one", "Multivalued has unexpected contents.");
         MultipartFile file = resolved.getFile("file");
         Assert.assertEquals(file.getBytes().length, 38, "Unexpected file size.");
+        Assert.assertEquals(file.getSize(), 38, "Unexpected file size.");
         Assert.assertEquals(file.getName(), "testfile.txt", "Unexpected file name.");
+        Assert.assertEquals(file.getOriginalFilename(), "file", "Unexpected original file name.");
+        Assert.assertFalse(file.isEmpty(), "Unexpected empty flag result.");
     } // testMultipartResolver()
 
 } // StreamingMultipartResolverTest
