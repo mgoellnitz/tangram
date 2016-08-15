@@ -39,6 +39,7 @@ import org.tangram.components.spring.TangramViewHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.spring.MeasureTimeInterceptor;
 import org.tangram.spring.StreamingMultipartResolver;
+import org.tangram.spring.view.SpringViewUtilities;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
 import org.tangram.view.ViewUtilities;
@@ -77,20 +78,29 @@ public class SpringChainTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         response.setContentType("text/html");
 
+        SpringViewUtilities viewUtilities = appContext.getBean(SpringViewUtilities.class);
+        Assert.assertNotNull(viewUtilities.getViewContextFactory(), "Even test needs some view context factory.");
+
         Object bean = new Throwable("Test Code");
         ViewContextFactory viewContextFactory = appContext.getBean(ViewContextFactory.class);
         Map<String, Object> model = viewContextFactory.createModel(bean, request, response);
-
-        ViewUtilities viewUtilities = appContext.getBean(ViewUtilities.class);
         viewUtilities.render(null, model, null);
         Assert.assertEquals(response.getContentAsString(), "", "The result is empty for mock instances.");
-        Assert.assertNotNull(viewUtilities.getViewContextFactory(), "Even test needs some view context factory.");
 
+        response = new MockHttpServletResponse();
+        response.setContentType("text/html");
+        viewUtilities.render(null, bean, null, request, response);
+        Assert.assertEquals(response.getContentAsString(), "", "The second result is empty for mock instances.");
+    } // testViewUtilities()
+
+
+    @Test
+    public void testViewHandler() throws Exception {
         TangramViewHandler viewHandler = appContext.getBean(TangramViewHandler.class);
         Assert.assertTrue(viewHandler.isDetectAllModelAwareViewResolvers(), "All view resolvers should be considered.");
         viewHandler.setDetectAllModelAwareViewResolvers(false);
         Assert.assertFalse(viewHandler.isDetectAllModelAwareViewResolvers(), "All view handler recognition should be turned off.");
-    } // testViewUtilities()
+    } // testViewHandler()
 
 
     @Test
