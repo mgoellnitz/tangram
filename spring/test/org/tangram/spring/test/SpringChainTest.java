@@ -18,7 +18,10 @@
  */
 package org.tangram.spring.test;
 
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.slf4j.Logger;
@@ -29,9 +32,12 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
+import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.tangram.Constants;
 import org.tangram.components.SimpleStatistics;
 import org.tangram.components.spring.MetaController;
 import org.tangram.components.spring.TangramSpringServices;
@@ -39,6 +45,7 @@ import org.tangram.components.spring.TangramViewHandler;
 import org.tangram.content.BeanFactory;
 import org.tangram.spring.MeasureTimeInterceptor;
 import org.tangram.spring.StreamingMultipartResolver;
+import org.tangram.spring.TangramServlet;
 import org.tangram.spring.view.SpringViewUtilities;
 import org.tangram.view.RequestParameterAccess;
 import org.tangram.view.ViewContextFactory;
@@ -191,5 +198,46 @@ public class SpringChainTest {
         Assert.assertNotNull(avg, "There should be an average page render time after test.");
         // Assert.assertEquals((long) avg, 0L, "There should be an average page render time of 0.");
     } // testMeasureTimeInterceptor()
+
+
+    /**
+     * Create derived class to reach proteced methods.
+     */
+    private class TestServlet extends TangramServlet {
+
+        public View execute(String view, Map<String, Object> model, Locale locale, HttpServletRequest request) throws Exception {
+            return resolveViewName(view, model, locale, request);
+        }
+
+    }
+
+
+    @Test
+    public void testTangramServlet() throws Exception {
+        MockServletConfig config = new MockServletConfig(servletContext, "test");
+        config.addInitParameter("contextConfigLocation", "/tangram/tangram-configurer.xml,/tangram/mutable-configurer.xml,/tangram/tangram-test-configurer.xml");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        TestServlet tangramServlet = new TestServlet();
+        tangramServlet.init(config);
+        Map<String, Object> model = new HashMap<>();
+        Object bean = new Object() {
+            @Override
+            public String toString() {
+                return "<bean>";
+            }
+
+        };
+        model.put(Constants.THIS, bean);
+        String exceptionMessage = null;
+        try {
+            tangramServlet.execute("view", model, Locale.GERMANY, request);
+        } catch (Exception e) {
+            exceptionMessage = e.getMessage();
+        } // try/catch
+        Assert.assertNotNull(exceptionMessage, "The handler should not find a view.");
+        Assert.assertEquals(exceptionMessage, "Cannot find view view for <bean>", "Unexpected handler result message.");
+    } // testTangramServlet()
 
 } // SpringChainTest
