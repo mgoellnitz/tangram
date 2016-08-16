@@ -290,20 +290,31 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
 
     @Test(priority = 5)
-    public void test5Filter() throws Exception {
-        LOG.info("test5Filter()");
+    public void test5Query() throws Exception {
         MutableBeanFactory<M, Q> factory = getMutableBeanFactory(false);
         Assert.assertNotNull(factory, "Need factory for beans.");
-        String filter = factory.getFilterQuery(getBaseClass(), "title", "filter");
-        LOG.info("test5Filter() end");
-        Assert.assertNotNull(filter, "There should be some filter query");
-        List<? extends BaseInterface> filteredBeans = factory.listBeansOfExactClass(getBaseClass(), filter, null, true);
-        Assert.assertEquals(filteredBeans.size(), 1, "Unexpected contents for filter query");
-    } // test5Filter()
+        LOG.info("test5Query() obtaining instances of base class.");
+        List<? extends BaseInterface> allBeans = factory.listBeans(factory.createQuery(getBaseClass(), null));
+        LOG.info("test5Query() obtained instances of base class.");
+        Assert.assertTrue(allBeans.size()> 0, "We have prepared a fixed number of beans.");
+    } // test5Query()
 
 
     @Test(priority = 6)
-    public void test6Code() throws Exception {
+    public void test6Filter() throws Exception {
+        LOG.info("test6Filter()");
+        MutableBeanFactory<M, Q> factory = getMutableBeanFactory(false);
+        Assert.assertNotNull(factory, "Need factory for beans.");
+        String filter = factory.getFilterQuery(getBaseClass(), "title", "filter");
+        LOG.info("test6Filter() end");
+        Assert.assertNotNull(filter, "There should be some filter query");
+        List<? extends BaseInterface> filteredBeans = factory.listBeansOfExactClass(getBaseClass(), filter, null, true);
+        Assert.assertEquals(filteredBeans.size(), 1, "Unexpected contents for filter query");
+    } // test6Filter()
+
+
+    @Test(priority = 7)
+    public void test7Code() throws Exception {
         MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Map<Class<? extends Content>, List<Class<? extends Content>>> classesMap = beanFactory.getImplementingClassesMap();
@@ -345,11 +356,11 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
             LOG.info("test3Code() exception occured - only relevant for ebean AFAIK", e);
         } // try/catch
         Assert.assertNull(bean, "Despite the correct ID there should have been no code result.");
-    } // test6Code()
+    } // test7Code()
 
 
-    @Test(priority = 7)
-    public void test7ObtainCode() throws Exception {
+    @Test(priority = 8)
+    public void test8ObtainCode() throws Exception {
         ClassRepository repository = getInstance(ClassRepository.class, false);
         Assert.assertNotNull(repository, "Could not find class repository.");
         Map<String, Class<Object>> annotatedClasses = repository.getAnnotated(Named.class);
@@ -364,11 +375,11 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertEquals(emptyClassBytes.length, 2372, "Unexpected number of bytes for class found.");
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
-    } // test7ObtainCode()
+    } // test8ObtainCode()
 
 
-    @Test(priority = 8)
-    public void test8DeleteComponents() throws Exception {
+    @Test(priority = 9)
+    public void test9DeleteComponents() throws Exception {
         MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends Content> subBeans = beanFactory.listBeans(SubInterface.class);
@@ -377,6 +388,6 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertTrue(result, "Item should have been deleted.");
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals(allBeans.size(), 1, "There should be less beans after deleting one item.");
-    } // test8DeleteComponents()
+    } // test9DeleteComponents()
 
 } // BaseContentTest

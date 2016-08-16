@@ -186,8 +186,8 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer, Qu
             // Default is no ordering - not even via IDs
             LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (query==null ? "" : " with condition "+query));
             LOG.info("listBeans() ebean query is {} ", query.getGeneratedSql());
-            List<T> results = SystemUtils.convert(query.findList());
-            LOG.info("listBeans() looked up {} raw entries", results.size());
+            result.addAll(SystemUtils.convert(query.findList()));
+            LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
             LOG.error("listBeans() query ", e);

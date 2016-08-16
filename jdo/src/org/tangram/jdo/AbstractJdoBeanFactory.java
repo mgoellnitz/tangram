@@ -32,6 +32,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.annotations.PersistenceCapable;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanFactoryAware;
@@ -187,7 +188,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
     @Override
     public Query<?> createQuery(Class<? extends Content> cls, String expression) {
         Extent<? extends Content> extent = manager.getExtent(cls, false);
-        return manager.newQuery(extent, expression);
+        return StringUtils.isEmpty(expression) ? manager.newQuery(extent) : manager.newQuery(extent, expression);
     } // createQuery()
 
 
@@ -239,9 +240,15 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
 
     @Override
     public <T extends Content> List<T> listBeans(Query<?> query) {
-        LOG.info("listBeans() looking up instances of with query {}.", query);
-        List<T> result = SystemUtils.convert(query.execute());
-        LOG.info("listBeans() looked up {} raw entries", result.size());
+        List<T> result = new ArrayList<>();
+        try {
+            LOG.info("listBeans() looking up instances of with query {}.", query);
+            result.addAll(SystemUtils.convert(query.execute()));
+            LOG.info("listBeans() looked up {} raw entries", result.size());
+            statistics.increase("list beans");
+        } catch (Exception e) {
+            LOG.error("listBeans() query ", e);
+        } // try/catch/finally
         return result;
     } // listBeans()
 
@@ -251,7 +258,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
         List<T> result = new ArrayList<>();
         try {
             Extent<T> extent = manager.getExtent(cls, false);
-            Query<?> q = query == null ? manager.newQuery(extent) : manager.newQuery(extent, query);
+            Query<?> q = query==null ? manager.newQuery(extent) : manager.newQuery(extent, query);
             // Default is no ordering - not even via IDs
             if (orderProperty!=null) {
                 String order = orderProperty+(ascending ? " asc" : " desc");

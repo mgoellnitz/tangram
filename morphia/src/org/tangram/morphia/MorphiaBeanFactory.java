@@ -179,8 +179,8 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
             String shortTypeName = query.getEntityClass().getSimpleName();
             LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (query==null ? "" : " with condition "+query));
             LOG.info("listBeans() morphia query object is {} ", query);
-            List<T> results = SystemUtils.convert(query.asList());
-            LOG.info("listBeans() looked up {} raw entries", results.size());
+            result.addAll(SystemUtils.convert(query.asList()));
+            LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
             LOG.error("listBeans() query ", e);

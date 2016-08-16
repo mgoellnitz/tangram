@@ -183,18 +183,19 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
 
 
     @Override
-    public String createQuery(Class<? extends Content> cls, String expression) {
-        return expression;
+    public String createQuery(Class<? extends Content> cls, String queryString) {
+        String simpleName = cls.getSimpleName();
+        return queryString==null ? "select x from "+simpleName+" x" : queryString;
     } // createQuery()
 
 
     @Override
-    public <T extends Content> List<T> listBeans(Class<T> c, String queryString, String orderProperty, Boolean ascending) {
+    public <T extends Content> List<T> listBeans(Class<T> c, String query, String orderProperty, Boolean ascending) {
         List<T> result = new ArrayList<>();
         try {
             for (Class<T> cls : getImplementingBaseClasses(c)) {
                 String simpleName = cls.getSimpleName();
-                queryString = queryString==null ? "select x from "+simpleName+" x" : queryString;
+                String queryString = query==null ? "select x from "+simpleName+" x" : query;
                 // Default is no ordering - not even via IDs
                 if (orderProperty!=null) {
                     String boundName = queryString.substring(7);
@@ -203,8 +204,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
                     queryString += " order by "+boundName+"."+orderProperty+(ascending ? " asc" : " desc");
                 } // if
                 LOG.info("listBeans() looking up instances of {} with condition {}", simpleName, queryString);
-                Query query = manager.createQuery(queryString, cls);
-                result.addAll(SystemUtils.convert(query.getResultList()));
+                Query q = manager.createQuery(queryString, cls);
+                result.addAll(SystemUtils.convert(q.getResultList()));
             } // for
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
@@ -221,8 +222,8 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
         try {
             Query query = manager.createQuery(queryString);
             LOG.info("listBeans() looking up instances with query {}", queryString);
-            List<Object> results = SystemUtils.convert(query.getResultList());
-            LOG.info("listBeans() looked up {} raw entries", results.size());
+            result.addAll(SystemUtils.convert(query.getResultList()));
+            LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
             LOG.error("listBeans() query ", e);
