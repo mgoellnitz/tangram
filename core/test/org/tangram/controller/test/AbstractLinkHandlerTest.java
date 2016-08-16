@@ -46,7 +46,7 @@ import org.testng.annotations.Test;
 public class AbstractLinkHandlerTest {
 
     @Mock
-    private LinkFactoryAggregator linkFactoryAggregator;
+    private LinkFactoryAggregator linkFactoryAggregator; // NOPMD - this field is not really unused
 
     @Spy
     private final Set<ControllerHook> controllerHooks = new HashSet<>();
@@ -70,7 +70,7 @@ public class AbstractLinkHandlerTest {
         }
 
 
-        public Map<String, Object> doTest(HttpServletRequest request, HttpServletResponse response, TargetDescriptor descriptor) throws Exception {
+        public Map<String, Object> execute(HttpServletRequest request, HttpServletResponse response, TargetDescriptor descriptor) throws Exception {
             return this.createModel(descriptor, request, response);
         }
 
@@ -91,7 +91,7 @@ public class AbstractLinkHandlerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         TargetDescriptor descriptor = new TargetDescriptor(this, null, null);
-        Map<String, Object> result = handler.doTest(request, response, descriptor);
+        Map<String, Object> result = handler.execute(request, response, descriptor);
         Assert.assertNotNull(result, "Some result map required.");
         Object self = result.get(Constants.THIS);
         Assert.assertNotNull(self, "Some result required.");
