@@ -274,6 +274,8 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertTrue(subBeans.get(0).getClass().getSimpleName().contains("SubClass"), "Peer of base beans is a sub bean.");
         List<? extends Content> baseBeans = factory.listBeansOfExactClass(getBaseClass());
         Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans.");
+        baseBeans = factory.listBeansOfExactClass(getBaseClass());
+        Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans cached.");
         BaseInterface bean = factory.getBean(getBaseClass(), baseBeans.get(0).getId());
         Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
         Content content = factory.getBean(bean.getId());
