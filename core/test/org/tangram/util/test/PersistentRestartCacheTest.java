@@ -32,7 +32,7 @@ public class PersistentRestartCacheTest {
 
     private static final String CACHE_FILE_NAME = "build/restart-cache-test.ser";
 
-    private static final String MARKER_RESOURCE_NAME = PersistentRestartCacheTest.class.getPackage().getName().replace('.', '/');
+    private static final String MARKER_RESOURCE_NAME = Assert.class.getPackage().getName().replace('.', '/');
 
 
     @Test(priority = 1)
