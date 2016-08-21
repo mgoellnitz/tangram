@@ -49,7 +49,7 @@ import org.tangram.util.SystemUtils;
  */
 @Named("beanFactory")
 @Singleton
-public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager, String> implements MutableBeanFactory<EntityManager, String> {
+public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager, Query> implements MutableBeanFactory<EntityManager, Query> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JpaBeanFactoryImpl.class);
 
@@ -183,9 +183,9 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
 
 
     @Override
-    public String createQuery(Class<? extends Content> cls, String queryString) {
+    public Query createQuery(Class<? extends Content> cls, String queryString) {
         String simpleName = cls.getSimpleName();
-        return queryString==null ? "select x from "+simpleName+" x" : queryString;
+        return manager.createQuery(queryString==null ? "select x from "+simpleName+" x" : queryString, cls);
     } // createQuery()
 
 
@@ -217,11 +217,10 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
 
 
     @Override
-    public <T extends Content> List<T> listBeans(String queryString) {
+    public <T extends Content> List<T> listBeans(Query query) {
         List<T> result = new ArrayList<>();
         try {
-            Query query = manager.createQuery(queryString);
-            LOG.info("listBeans() looking up instances with query {}", queryString);
+            LOG.info("listBeans() looking up instances with query {}", query);
             result.addAll(SystemUtils.convert(query.getResultList()));
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
@@ -272,7 +271,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
     @Override
     public <F extends Content> String getFilterQuery(Class<F> cls, String filterProperty, String filterValues) {
         String baseClause = super.getFilterQuery(cls, "f."+filterProperty, filterValues);
-        return createQuery(cls, "select f from "+cls.getSimpleName()+" f WHERE "+baseClause);
+        return "select f from "+cls.getSimpleName()+" f WHERE "+baseClause;
     } // getFilterQuery()
 
 
