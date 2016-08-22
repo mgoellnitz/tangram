@@ -22,6 +22,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Transient;
+import org.tangram.content.BeanFactory;
 import org.tangram.mutable.test.content.SubInterface;
 
 
@@ -35,14 +37,31 @@ public class SubClass extends BaseClass implements SubInterface {
 
     private String subtitle;
 
+    @Transient
+    private BeanFactory<?> beanFactory;
 
+
+    @Override
     public String getSubtitle() {
         return subtitle;
     }
 
 
+    @Override
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+
+    @Override
+    public BeanFactory<?> getBeanFactory() {
+        return beanFactory;
+    }
+
+
+    @Override
+    public void setBeanFactory(BeanFactory<?> beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
 } // SubClass

@@ -206,6 +206,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
                 LOG.info("listBeans() looking up instances of {} with condition {}", simpleName, queryString);
                 Query q = manager.createQuery(queryString, cls);
                 result.addAll(SystemUtils.convert(q.getResultList()));
+                injectBeanFactory(result);
             } // for
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
@@ -222,6 +223,7 @@ public class JpaBeanFactoryImpl extends AbstractMutableBeanFactory<EntityManager
         try {
             LOG.info("listBeans() looking up instances with query {}", query);
             result.addAll(SystemUtils.convert(query.getResultList()));
+            injectBeanFactory(result);
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {

@@ -162,6 +162,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
                 LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (q==null ? "" : " with condition "+q));
                 LOG.info("listBeans() morphia query object is {} ", q);
                 results.addAll(SystemUtils.convert(q.asList()));
+                injectBeanFactory(results);
             } // for
             LOG.info("listBeans() looked up {} raw entries", results.size());
             statistics.increase("list beans");
@@ -180,6 +181,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
             LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (query==null ? "" : " with condition "+query));
             LOG.info("listBeans() morphia query object is {} ", query);
             result.addAll(SystemUtils.convert(query.asList()));
+            injectBeanFactory(result);
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {

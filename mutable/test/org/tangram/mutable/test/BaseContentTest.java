@@ -288,6 +288,9 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         } // if
         Assert.assertEquals(stringValue.substring(0, 9), "BaseClass", "Unexpected toString() implementation.");
         Assert.assertEquals(subBeans.get(0).compareTo(bean), 17, "Unexpected compareTo() implementation.");
+        // TODO:
+        // Assert.assertNotNull(subBeans.get(0).getBeanFactory(), "Bean factory aware beans should have a factory injected.");
+        // Assert.assertEquals(subBeans.get(0).getBeanFactory(), factory, "Unexpected bean factory found.");
     } // test4Components()
 
 
@@ -298,7 +301,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         LOG.info("test5Query() obtaining instances of base class.");
         List<? extends BaseInterface> allBeans = factory.listBeans(factory.createQuery(getBaseClass(), null));
         LOG.info("test5Query() obtained instances of base class.");
-        Assert.assertTrue(allBeans.size()> 0, "We have prepared a fixed number of beans.");
+        Assert.assertTrue(allBeans.size()>0, "We have prepared a fixed number of beans.");
     } // test5Query()
 
 

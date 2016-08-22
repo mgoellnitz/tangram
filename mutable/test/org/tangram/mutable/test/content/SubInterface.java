@@ -18,15 +18,24 @@
  */
 package org.tangram.mutable.test.content;
 
+import org.tangram.content.BeanFactory;
+import org.tangram.content.BeanFactoryAware;
+
 
 /**
  * Persistent bean sub class just for test purposes.
  */
-public interface SubInterface extends BaseInterface {
+public interface SubInterface extends BaseInterface, BeanFactoryAware {
 
     String getSubtitle();
 
 
     void setSubtitle(String subtitle);
+
+
+    BeanFactory<?> getBeanFactory();
+
+
+    void setBeanFactory(BeanFactory<?> beanFactory);
 
 } // SubInterface

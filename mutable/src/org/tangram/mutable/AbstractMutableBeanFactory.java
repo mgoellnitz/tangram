@@ -595,6 +595,20 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
     } // listBeansOfExactClass()
 
 
+    /**
+     * Inject bean factory for objects requesting this.
+     *
+     * @param results list of optionally bean aware objects
+     */
+    protected void injectBeanFactory(List<? extends Content> results) {
+        for (Object t : results) {
+            if (t instanceof BeanFactoryAware) {
+                ((BeanFactoryAware) t).setBeanFactory(this);
+            } // if
+        } // for
+    } // injectBeanFactory()
+
+
     @Override
     public Collection<Class<? extends Content>> getClasses() {
         synchronized (this) {

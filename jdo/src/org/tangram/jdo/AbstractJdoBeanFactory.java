@@ -35,7 +35,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
 import org.tangram.mutable.AbstractMutableBeanFactory;
 import org.tangram.util.ClassResolver;
@@ -244,6 +243,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
         try {
             LOG.info("listBeans() looking up instances of with query {}.", query);
             result.addAll(SystemUtils.convert(query.execute()));
+            injectBeanFactory(result);
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
@@ -270,14 +270,9 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
             // query.setRange(from, end+1);
             // } // if
             LOG.info("listBeansOfExactClass() looking up instances of {} {}", cls.getSimpleName(), (q==null ? "-" : " with condition "+q));
-            List<T> results = SystemUtils.convert(q.execute());
-            LOG.info("listBeansOfExactClass() looked up {} raw entries", results.size());
-            for (T o : results) {
-                if (o instanceof BeanFactoryAware) {
-                    ((BeanFactoryAware) o).setBeanFactory(this);
-                } // if
-                result.add(o);
-            } // for
+            result.addAll(SystemUtils.convert(q.execute()));
+            injectBeanFactory(result);
+            LOG.info("listBeansOfExactClass() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
             LOG.error("listBeansOfExactClass() query ", e);

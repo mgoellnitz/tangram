@@ -168,6 +168,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer, Qu
                 LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (q==null ? "" : " with condition "+q));
                 LOG.info("listBeans() ebean query is {} ", q.getGeneratedSql());
                 results.addAll(SystemUtils.convert(q.findList()));
+                injectBeanFactory(results);
             } // for
             LOG.info("listBeans() looked up {} raw entries", results.size());
             statistics.increase("list beans");
@@ -187,6 +188,7 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer, Qu
             LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (query==null ? "" : " with condition "+query));
             LOG.info("listBeans() ebean query is {} ", query.getGeneratedSql());
             result.addAll(SystemUtils.convert(query.findList()));
+            injectBeanFactory(result);
             LOG.info("listBeans() looked up {} raw entries", result.size());
             statistics.increase("list beans");
         } catch (Exception e) {
