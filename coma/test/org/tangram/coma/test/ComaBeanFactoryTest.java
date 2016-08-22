@@ -18,14 +18,19 @@
  */
 package org.tangram.coma.test;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.tangram.coma.ComaBeanFactory;
+import org.tangram.coma.ComaBeanPopulator;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
+import org.tangram.components.coma.test.ComaTestCodeBeanPopulator;
+import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mock.content.Topic;
 import org.tangram.util.SystemUtils;
@@ -54,13 +59,27 @@ public class ComaBeanFactoryTest {
      */
     private ComaBeanFactory createFactory(String dbUrl) {
         ComaBeanFactory factory = new ComaBeanFactory();
-        Map<String,String> parents = new HashMap<>();
+        Map<String, String> parents = new HashMap<>();
         parents.put("Topic", "Linkable");
         factory.setParents(parents);
         factory.setDbUrl(dbUrl);
         factory.setDbDriver(DB_DRIVER);
         factory.setDbUser(DB_USER);
         factory.setDbPassword(DB_PASSWORD);
+        Set<String> codeTypeNames = new HashSet<>(1);
+        codeTypeNames.add("Topic");
+        codeTypeNames.add("RootTopic");
+        factory.setCodeTypeNames(codeTypeNames);
+        Set<ComaBeanPopulator> populators = new HashSet<>(1);
+        populators.add(new ComaTestCodeBeanPopulator());
+        try {
+            Field populatorField = factory.getClass().getDeclaredField("populators");
+            populatorField.setAccessible(true);
+            populatorField.set(factory, populators);
+            populatorField.setAccessible(false);
+        } catch (NoSuchFieldException|IllegalAccessException e) {
+            Assert.fail("could not create coma bean factory for some unexpected reason", e);
+        } // try/catch
         factory.afterPropertiesSet();
         return factory;
     } // createFactory()
@@ -111,6 +130,22 @@ public class ComaBeanFactoryTest {
         Assert.assertNotNull(contents, "There should be some result when listing all beans.");
         Assert.assertEquals(contents.size(), 2, "We have a certain number of prepared beans available.");
     } // testRepository()
+
+
+    /**
+     * Test code related methods.
+     */
+    @Test
+    public void testCodes() {
+        ComaBeanFactory factory = createFactory(DB_URL);
+        List<CodeResource> contents = factory.listBeans(CodeResource.class);
+        Assert.assertNotNull(contents, "There should be some result when listing code resources.");
+        Assert.assertEquals(contents.size(), 2, "We have a fixed number of code resources available.");
+        CodeResource code = contents.get(1);
+        Assert.assertEquals(code.getAnnotation(), "org.tangram.example.Topic", "Unexpected annotation for code.");
+        Assert.assertEquals(code.getMimeType(), "text/html", "Unexpected mime type for code.");
+        Assert.assertEquals(code.getSize(), 58, "Unexpected size for code.");
+    } // testCodes()
 
 
     @Test

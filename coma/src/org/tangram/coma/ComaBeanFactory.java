@@ -18,18 +18,36 @@
  */
 package org.tangram.coma;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanListener;
+import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
+import org.tangram.util.SystemUtils;
 
 
 public class ComaBeanFactory extends AbstractComaBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaBeanFactory.class);
+
+    @Inject
+    private Set<ComaBeanPopulator> populators;
+
+    /**
+     * set of document type names holding codes.
+     */
+    private Set<String> codeTypeNames = new HashSet<>();
+
+
+    public void setCodeTypeNames(Set<String> codeTypeNames) {
+        this.codeTypeNames = codeTypeNames;
+    }
 
 
     @Override
@@ -42,6 +60,29 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
     public Content createContent(String id, String type, Map<String, Object> properties) {
         return new ComaContent(id, type, properties);
     } // createContent()
+
+
+    public <T extends Content> List<T> listCode() {
+        List<T> result = new ArrayList<>();
+        for (String typeName : codeTypeNames) {
+            for (String id : listIds(typeName, null, null, false)) {
+                ComaCode code = new ComaCode(id, typeName, getProperties(this, typeName, id));
+                for (ComaBeanPopulator populator : populators) {
+                    populator.populate(code);
+                } // if
+                if (code.containsKey("annotation")&&code.containsKey("mimeType")) {
+                    result.add(SystemUtils.convert(code));
+                } // if
+            } // for
+        } // for
+        return result;
+    } // listCode()
+
+
+    @Override
+    public <T extends Content> List<T> listBeans(Class<T> cls) {
+        return cls==CodeResource.class ? listCode() : super.listBeans(cls);
+    } // listBeans()
 
 
     public Set<Content> getChildrenWithType(String parentId, String type) {
