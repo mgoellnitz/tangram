@@ -92,7 +92,7 @@ public class NucleusContentTest extends BaseContentTest<PersistenceManager, Quer
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 6;
+        return 8;
     }
 
 

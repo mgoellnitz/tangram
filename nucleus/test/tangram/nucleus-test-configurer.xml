@@ -25,7 +25,6 @@
   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="locations">
       <list>
-        <value>classpath*:/tangram/*.properties</value>
         <value>tangram/*.properties</value>
       </list>
     </property>
