@@ -4,12 +4,12 @@
 <id>CodeResource:6</id>
 <annotation>org.tangram.example.Topic</annotation>
 <mimeType>application/x-groovy</mimeType>
-<codeText>package org.tangram.nucleus.test
+<codeText>package org.tangram.morphia.test
 
-import javax.jdo.annotations.PersistenceCapable
-import org.tangram.nucleus.test.content.BaseClass
+import org.mongodb.morphia.annotations.Entity
+import org.tangram.morphia.test.content.BaseClass
 
-@PersistenceCapable
+@Entity
 public class NewsArticle extends BaseClass {
 
   private String additionalField

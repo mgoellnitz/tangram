@@ -332,7 +332,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
         Set<Class<? extends Content>> classSet = new HashSet<>();
         if (classes!=null) {
             for (Class<? extends Content> cls : classes) {
-                if ((JdoContent.class.isAssignableFrom(cls))&&(cls.getAnnotation(PersistenceCapable.class)!=null)) {
+                if ((getBaseClass().isAssignableFrom(cls))&&(cls.getAnnotation(PersistenceCapable.class)!=null)) {
                     classSet.add(cls);
                 } // if
             } // for

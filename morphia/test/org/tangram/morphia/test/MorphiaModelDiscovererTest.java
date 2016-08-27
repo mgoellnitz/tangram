@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.nucleus.test;
+package org.tangram.morphia.test;
 
 import java.io.FileNotFoundException;
 import org.mockito.InjectMocks;
@@ -24,11 +24,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.tangram.components.nucleus.ClassRepositoryEnhancer;
+import org.tangram.components.morphia.MorphiaModelDiscoverer;
 import org.tangram.components.test.GroovyClassRepositoryTest;
-import org.tangram.jdo.JdoBeanFactory;
 import org.tangram.logic.ClassRepository;
-import org.tangram.mutable.test.BaseContentTest;
+import org.tangram.morphia.MorphiaBeanFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -36,33 +35,32 @@ import org.testng.annotations.Test;
 /**
  * Test the enhancing of classes from the runtime repository.
  */
-public class ClassRepositoryEnhancerTest {
+public class MorphiaModelDiscovererTest {
 
     @Mock
-    private JdoBeanFactory beanFactory = Mockito.mock(JdoBeanFactory.class); // NOPMD - this field is not really unused
+    private MorphiaBeanFactory beanFactory = Mockito.mock(MorphiaBeanFactory.class); // NOPMD - this field is not really unused
 
     @Spy
     private ClassRepository classRepository; // NOPMD - this field is not really unused
 
     @InjectMocks
-    private final ClassRepositoryEnhancer enhancer = new ClassRepositoryEnhancer();
+    private final MorphiaModelDiscoverer discoverer = new MorphiaModelDiscoverer();
 
 
-    public ClassRepositoryEnhancerTest() throws FileNotFoundException {
-        classRepository = new GroovyClassRepositoryTest("/jdo-enhancer-content.xml").getInstance();
+    public MorphiaModelDiscovererTest() throws FileNotFoundException {
+        classRepository = new GroovyClassRepositoryTest("/morphia-model-content.xml").getInstance();
         MockitoAnnotations.initMocks(this);
-        enhancer.afterPropertiesSet();
+        discoverer.afterPropertiesSet();
     } // ()
 
 
     @Test
-    public void testClassRepositoryEnhancer() {
+    public void testModelDiscoverer() {
         Assert.assertEquals(classRepository.get().size(), 1, "There should be one class in the repository.");
-        Assert.assertEquals(""+classRepository.get(), "[org.tangram.nucleus.test.NewsArticle]", "Unexpected list of class names.");
-        Class<? extends Object> cls = classRepository.get("org.tangram.nucleus.test.NewsArticle");
+        Assert.assertEquals(""+classRepository.get(), "[org.tangram.morphia.test.NewsArticle]", "Unexpected list of class names.");
+        Class<? extends Object> cls = classRepository.get("org.tangram.morphia.test.NewsArticle");
         Assert.assertNotNull(cls, "There should be some class representation.");
-        Assert.assertEquals(cls.getName(), "org.tangram.nucleus.test.NewsArticle", "Unexpected class name.");
-        Assert.assertTrue(BaseContentTest.checkMethodPrefixOccurs(cls.getMethods(), "dn"), "Classes were not enhanced.");
-    } // testClassRepositoryEnhancer()
+        Assert.assertEquals(cls.getName(), "org.tangram.morphia.test.NewsArticle", "Unexpected class name.");
+    } // testModelDiscoverer()
 
 } // ClassRepositoryEnhancerTest

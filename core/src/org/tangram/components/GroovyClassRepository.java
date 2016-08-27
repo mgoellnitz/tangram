@@ -118,7 +118,7 @@ public class GroovyClassRepository implements ClassRepository, BeanListener {
                             GroovyClass groovyClass = classList.get(0);
                             byteCodes.put(groovyClass.getName(), groovyClass.getBytes());
                             Class<? extends Object> clazz = SystemUtils.convert(classLoader.defineClass(groovyClass.getName(), groovyClass.getBytes()));
-                            LOG.info("fillClasses() defining {}"+clazz.getName());
+                            LOG.info("fillClasses() defining {}", clazz.getName());
                             classes.put(clazz.getName(), clazz);
                         } // if
                     } catch (CompilationFailedException cfe) {

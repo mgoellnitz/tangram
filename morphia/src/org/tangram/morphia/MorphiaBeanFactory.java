@@ -23,6 +23,8 @@ import com.mongodb.MongoClientURI;
 import groovy.lang.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +35,10 @@ import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.ObjectFactory;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.mapping.DefaultCreator;
+import org.mongodb.morphia.mapping.MapperOptions;
 import org.mongodb.morphia.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,9 +55,13 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
 
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaBeanFactory.class);
 
+    private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
     private Datastore datastore;
 
     protected List<Class<? extends Content>> allClasses = null;
+
+    private Collection<Class<? extends Content>> additionalClasses = Collections.emptySet();
 
     private String mongoUri = "mongodb://localhost:27017/tangram";
 
@@ -221,6 +230,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
                             allClasses.add(cls);
                         } // for
                     } // if
+                    allClasses.addAll(additionalClasses);
                 } catch (Exception e) {
                     LOG.error("getAllClasses() outer", e);
                 } // try/catch
@@ -228,6 +238,61 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
         } // synchronized
         return allClasses;
     } // getAllClasses()
+
+
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    } // setClassLoader()
+
+
+    private void init() {
+        ObjectFactory factory = new DefaultCreator() {
+            @Override
+            protected ClassLoader getClassLoaderForClass() {
+                return classLoader;
+            }
+
+        };
+        MapperOptions options = new MapperOptions();
+        options.setObjectFactory(factory);
+        Morphia morphia = new Morphia();
+        for (Class<?> c : getClasses()) {
+            LOG.info("afterPThread.currentThread().getContextClassLoader()ropertiesSet() class {}", c.getName());
+            morphia.map(c);
+        } // for
+        LOG.info("afterPropertiesSet() access: {} database: {}", mongoUri, mongoDB);
+        MongoClientURI uri = new MongoClientURI(mongoUri);
+        MongoClient mongoClient = new MongoClient(uri);
+        datastore = morphia.createDatastore(mongoClient, mongoDB);
+        datastore.ensureIndexes();
+    } // init()
+
+
+    private void reset() {
+        cache = new HashMap<>();
+        queryCache = new HashMap<>();
+        implementingClassesMap = null;
+        modelClasses = null;
+        init();
+    } // reset()
+
+
+    public void setAdditionalClasses(Collection<Class<? extends Content>> classes) {
+        Set<Class<? extends Content>> classSet = new HashSet<>();
+        if (classes!=null) {
+            for (Class<? extends Content> cls : classes) {
+                if ((getBaseClass().isAssignableFrom(cls))&&(cls.getAnnotation(Entity.class)!=null)) {
+                    classSet.add(cls);
+                } // if
+            } // for
+        } // if
+        additionalClasses = classSet;
+        synchronized (this) {
+            allClasses = null;
+            modelClasses = null;
+        } // synchronized
+        reset();
+    } // setAdditionalClasses()
 
 
     @Override
@@ -245,19 +310,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
     @PostConstruct
     public void afterPropertiesSet() {
         LOG.debug("afterPropertiesSet()");
-        Morphia morphia = new Morphia();
-
-        // morphia.mapPackage("org.mongodb.morphia.example");
-        for (Class<? extends Content> c : getClasses()) {
-            LOG.info("afterPropertiesSet() class {}", c.getName());
-            morphia.map(c);
-        } // for
-        LOG.info("afterPropertiesSet() access: {} database: {}", mongoUri, mongoDB);
-        MongoClientURI uri = new MongoClientURI(mongoUri);
-        MongoClient mongoClient = new MongoClient(uri);
-        datastore = morphia.createDatastore(mongoClient, mongoDB);
-        datastore.ensureIndexes();
-
+        init();
         Map<String, List<String>> c = SystemUtils.convert(startupCache.get(QUERY_CACHE_KEY, queryCache.getClass()));
         if (c!=null) {
             queryCache = c;
