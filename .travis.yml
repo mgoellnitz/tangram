@@ -37,6 +37,7 @@ cache:
 
 after_success:
   - gradle jacocoCombinedReport coveralls
+  - bash <(curl -s https://codecov.io/bash)
   - gradle generatePomFileForMavenJavaPublication artifactoryPublish
   - gradle versionEyeUpdate
 
