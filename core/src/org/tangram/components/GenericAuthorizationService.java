@@ -102,6 +102,8 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
 
     private Set<String> effectiveAdminUsers;
 
+    private Set<String> effectiveAllowedUsers;
+
 
     @Override
     public boolean isAdminUser(HttpServletRequest request, HttpServletResponse response) {
@@ -137,12 +139,12 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String thisURL = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         LOG.debug("handleRequest({}) detected URI {}", this, thisURL);
-        LOG.debug("handleRequest() allowed users {} ({})", allowedUsers, allowedUsers.size());
+        LOG.debug("handleRequest() allowed users {} ({})", effectiveAllowedUsers, effectiveAllowedUsers.size());
         LOG.debug("handleRequest() free urls {}", freeUrls != null);
         LOG.debug("handleRequest() free urls {} ({})", freeUrls, freeUrls.size());
         if (!freeUrls.contains(thisURL)) {
             Set<User> users = authenticationService.getUsers(request, response);
-            boolean closedSystem = !allowedUsers.isEmpty();
+            boolean closedSystem = !effectiveAllowedUsers.isEmpty();
             if (isAdminUser(request, response)) {
                 request.setAttribute("tangramAdminUser", true);
             } // if
@@ -157,7 +159,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
                 boolean allowed = false;
                 request.setAttribute("tangramLogoutUrl", authenticationService.getLogoutLink(request, response).getUrl());
                 for (User user : users) {
-                    allowed = allowed||allowedUsers.contains(user.getId());
+                    allowed = allowed||effectiveAllowedUsers.contains(user.getId());
                 } // for
                 if ((closedSystem)&&(!allowed)) {
                     LOG.warn("handleRequest() user not allowed to access page: {}", users);
@@ -171,6 +173,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
     @Override
     public void reset() {
         effectiveAdminUsers = new HashSet<>(adminUsers);
+        effectiveAllowedUsers = new HashSet<>(allowedUsers);
         try {
             LOG.info("reset() reading repository based additional admin users");
             CodeResource code = codeResourceCache.getTypeCache("text/plain").get("users.properties");
@@ -179,7 +182,9 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
                 p.load(code.getStream());
             } // if
             effectiveAdminUsers.addAll(SystemUtils.stringSetFromParameterString(p.getProperty("adminUsers")));
+            effectiveAllowedUsers.addAll(p.stringPropertyNames());
             LOG.info("reset() effective admin user list is {}", effectiveAdminUsers);
+            LOG.info("reset() effective allowed user list is {}", effectiveAllowedUsers);
         } catch (Exception e) {
             LOG.error("validate() error while reading admin user list", e);
         } // try/catch
