@@ -110,8 +110,8 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
         Set<User> users = authenticationService.getUsers(request, response);
         boolean result = false;
         for (User user : users) {
-            LOG.info("isAdminUser() {} in {}?", user, effectiveAdminUsers);
             result = result||effectiveAdminUsers.contains(user.getId());
+            LOG.info("isAdminUser() {} in {}? {}", user, effectiveAdminUsers, result);
         } // for
         return result;
     } // isAdminUser()
@@ -160,6 +160,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
                 request.setAttribute("tangramLogoutUrl", authenticationService.getLogoutLink(request, response).getUrl());
                 for (User user : users) {
                     allowed = allowed||effectiveAllowedUsers.contains(user.getId());
+                    LOG.info("handleRequest() check user {}: {}", user, allowed);
                 } // for
                 if ((closedSystem)&&(!allowed)) {
                     LOG.warn("handleRequest() user not allowed to access page: {}", users);
@@ -182,7 +183,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
                 p.load(code.getStream());
             } // if
             effectiveAdminUsers.addAll(SystemUtils.stringSetFromParameterString(p.getProperty("adminUsers")));
-            effectiveAllowedUsers.addAll(p.stringPropertyNames());
+            effectiveAllowedUsers.addAll(SystemUtils.stringSetFromParameterString(p.getProperty("allowedUsers")));
             LOG.info("reset() effective admin user list is {}", effectiveAdminUsers);
             LOG.info("reset() effective allowed user list is {}", effectiveAllowedUsers);
         } catch (Exception e) {
