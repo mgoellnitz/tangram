@@ -59,7 +59,7 @@ public class MetaServletTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         ViewContext context = Mockito.mock(ViewContext.class);
-        Mockito.when(context.getModel()).thenReturn(new HashMap<>());
+        Mockito.when(context.getModel()).thenReturn(new HashMap<String, Object>());
         Mockito.when(context.getViewName()).thenReturn("viewName");
         Mockito.when(metaLinkHandler.handleRequest(request, response)).thenReturn(context);
 
@@ -73,14 +73,14 @@ public class MetaServletTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         ViewContext context = Mockito.mock(ViewContext.class);
-        Mockito.when(context.getModel()).thenReturn(new HashMap<>());
+        Mockito.when(context.getModel()).thenReturn(new HashMap<String, Object>());
         RuntimeException runtimeException = new RuntimeException("Hi!");
         Mockito.when(context.getViewName()).thenThrow(runtimeException);
         Mockito.when(metaLinkHandler.handleRequest(request, response)).thenReturn(context);
         ViewContextFactory factory = Mockito.mock(ViewContextFactory.class);
         Mockito.when(viewUtilities.getViewContextFactory()).thenReturn(factory);
         ViewContext vc = Mockito.mock(ViewContext.class);
-        Mockito.when(vc.getModel()).thenReturn(new HashMap<>());
+        Mockito.when(vc.getModel()).thenReturn(new HashMap<String, Object>());
         Mockito.when(vc.getViewName()).thenReturn("error");
         Mockito.when(factory.createViewContext(runtimeException, request, response)).thenReturn(vc);
 
