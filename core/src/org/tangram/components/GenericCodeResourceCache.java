@@ -215,4 +215,4 @@ public class GenericCodeResourceCache implements CodeResourceCache {
         factory.addListener(CodeResource.class, this);
     } // afterPropertiesSet()
 
-} // CodeResourceCache
+} // GenericCodeResourceCache
