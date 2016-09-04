@@ -476,6 +476,21 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory<String
     } // listIds()
 
 
+    public String getParentId(String childId) {
+        String id = null;
+        String query = "SELECT * FROM Resources WHERE id_ = "+childId;
+        try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
+            if (resultSet.next()) {
+                id = ""+resultSet.getInt("folderid_");
+                LOG.debug("getChildId() {}: {}", childId, id);
+            } // if
+        } catch (SQLException se) {
+            LOG.error("getChildId() "+query, se);
+        } // try/catch
+        return id;
+    } // getParentId()
+
+
     public String getChildId(String name, String parentId) {
         String id = null;
         String query = "SELECT * FROM Resources WHERE folderid_ = "+parentId+" AND name_ = '"+name+"'";
