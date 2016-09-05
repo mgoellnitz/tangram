@@ -42,7 +42,7 @@ public class TangramVersions {
   String pac4j = '1.8.8'
   String mockftpserver = '2.6'
   String tomcat = '8.0.36'
-  String codemirror = '5.16.0'
+  String codemirror = '5.18.2'
   String ckeditor = '4.5.10'
 
   // For testing purposes
@@ -57,7 +57,7 @@ public class TangramVersions {
   String guice = '4.1.0'
   String mycila_guice = '4.0.rc1'
 
-  String springframework = '4.3.1.RELEASE'
+  String springframework = '4.3.2.RELEASE'
 
   String weld = '2.3.5.Final'
   String openwebbeans = '1.6.3'
