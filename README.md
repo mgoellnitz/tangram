@@ -77,12 +77,8 @@ http://oss.jfrog.org/oss-snapshot-local/
 
 To make all this work you need
 
-- Java 7 or 8
-- Gradle 2.2.1 or later
-
-Gradle 1.x can only be used, if you recompile dinistiq and tangram with that very Gradle
-version due to some incompatibilities with the groovy version used. Ubuntu LTS users be
-warned not use the Gradle version referenced by their Version 12 LTS install.
+- Java 8
+- Gradle 2.13 or later
 
 For all the rest simply type
 
