@@ -52,7 +52,7 @@ public class CodeHelperTest {
         Assert.assertEquals(CodeHelper.getMimetype("js"), "application/javascript", "MimeType for folder js is application/javascript.");
         Assert.assertEquals(CodeHelper.getMimetype("groovy"), "application/x-groovy", "MimeType for folder groovy is application/x-groovy.");
         Assert.assertEquals(CodeHelper.getAnnotation("screen.css.new"), "screen", "Annotation for CSS file is its filename without extension.");
-        Assert.assertEquals(CodeHelper.getAnnotation("script.js"), "script", "Annotation for JavaScrit file is its filename without extension.");
+        Assert.assertEquals(CodeHelper.getAnnotation("script.js"), "script", "Annotation for JavaScript file is its filename without extension.");
         Assert.assertEquals(CodeHelper.getAnnotation("org.tangram.example.TestClass.groovy.old"), "org.tangram.example.TestClass", "Annotation for groovy code is its filename without extension.");
         Assert.assertEquals(CodeHelper.getAnnotation("org.tangram.example.TestClass.vtl"), "org.tangram.example.TestClass", "Annotation for velocity template code is its filename without extension.");
         Assert.assertEquals(CodeHelper.getAnnotation("org.tangram.example.TestClass.md"), "org.tangram.example.TestClass", "Annotation for markdown template code is its filename without extension.");
