@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.UsernamePasswordCredentials;
-import org.pac4j.core.credentials.authenticator.UsernamePasswordAuthenticator;
+import org.pac4j.core.credentials.authenticator.Authenticator;
 import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
@@ -40,13 +40,13 @@ import org.tangram.util.SystemUtils;
 
 
 /**
- * Quite too simple username/password authenticator implementation.
+ * Very simple username/password authenticator implementation.
  *
- * Using a string/string map to map usernames to their respective passwords.
+ * Using a string/string map to map usernames to their respective password SHA256 hashes.
  */
 @Named("usernamePasswordAuthenticator")
 @Singleton
-public class SimpleAuthenticator implements UsernamePasswordAuthenticator {
+public class SimpleAuthenticator implements Authenticator<UsernamePasswordCredentials> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SimpleAuthenticator.class);
 

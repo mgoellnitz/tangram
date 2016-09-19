@@ -54,7 +54,7 @@ import org.pac4j.http.client.indirect.IndirectBasicAuthClient
 import org.pac4j.http.client.indirect.FormClient
 import org.pac4j.core.profile.creator.ProfileCreator
 import org.pac4j.core.profile.creator.AuthenticatorProfileCreator
-import org.pac4j.core.credentials.authenticator.UsernamePasswordAuthenticator
+import org.pac4j.core.credentials.authenticator.Authenticator
 
 log.info "starting"
 String dispatcherPath = config.getProperty("dispatcherPath", "/s")
@@ -96,8 +96,8 @@ if (servletContext != null) {
 module.bind(Statistics.class).toInstance(statistics)
 
 log.info("configuring simple name password mapper")
-UsernamePasswordAuthenticator authenticator = new SimpleAuthenticator()
-module.bind(UsernamePasswordAuthenticator.class).toInstance(authenticator)
+Authenticator authenticator = new SimpleAuthenticator()
+module.bind(Authenticator.class).toInstance(authenticator)
 
 ProfileCreator profileCreator = new AuthenticatorProfileCreator()
 
