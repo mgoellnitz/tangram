@@ -61,7 +61,7 @@ public class TangramVersions {
 
   String springframework = '4.3.2.RELEASE'
 
-  String weld = '2.3.5.Final'
+  String weld = '2.4.0.Final'
   String openwebbeans = '1.7.0'
 
   // Storage options
@@ -71,7 +71,7 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.2'
 
   String openjpa = '2.4.1'
-  String eclipselink = '2.6.3'
+  String eclipselink = '2.6.4'
   String hibernate = '5.2.2.Final'
   String hibernate_ogm = '5.0.1.Final'
 
