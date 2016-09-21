@@ -29,5 +29,5 @@ appender('CONSOLE', ConsoleAppender) {
 appenders.add('CONSOLE')
 
 root WARN, appenders
-logger "dinistiq", DEBUG, appenders, false
-logger "org.tangram", DEBUG, appenders, false
+logger "dinistiq", INFO, appenders, false
+logger "org.tangram", INFO, appenders, false

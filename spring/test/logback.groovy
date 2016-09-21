@@ -29,4 +29,4 @@ appender('CONSOLE', ConsoleAppender) {
 appenders.add('CONSOLE')
 
 root WARN, appenders
-logger "org.tangram", DEBUG, appenders, false
+logger "org.tangram", INFO, appenders, false
