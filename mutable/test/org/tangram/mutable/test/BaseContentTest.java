@@ -201,7 +201,7 @@ public abstract class BaseContentTest {
     protected abstract String getCondition();
 
 
-    protected abstract void setPeers(BaseInterface base, SubInterface sub);
+    protected abstract void setPeers(BaseInterface base, BaseInterface sub);
 
 
     protected abstract int getNumberOfAllClasses();
@@ -244,15 +244,18 @@ public abstract class BaseContentTest {
         Collection<Class<? extends Content>> ormClasses = beanFactory.getClasses();
         LOG.info("test1CreateTestContent() non abstract model classes {}", ormClasses);
         Assert.assertEquals(ormClasses.size(), numberOfClasses, "Discovered unexpected number of non abstract model classes.");
+
+        BaseInterface beanB = createBaseBean(beanFactory);
+        Assert.assertNotNull(beanB, "Could not create beanB.");
+        beanB.setTitle("filter");
+        beanFactory.persist(beanB);
+        beanFactory.commitTransaction();
+
         SubInterface beanA = createSubBean(beanFactory);
         beanA.setSubtitle("great");
         Assert.assertNotNull(beanA, "Could not create bean.");
+        setPeers(beanA, beanB);
         beanFactory.persist(beanA);
-        beanFactory.commitTransaction();
-        BaseInterface beanB = createBaseBean(beanFactory);
-        Assert.assertNotNull(beanB, "Could not create beanB.");
-        setPeers(beanB, beanA);
-        beanFactory.persist(beanB);
         beanFactory.commitTransaction();
     } // test3CreateTestContent()
 
