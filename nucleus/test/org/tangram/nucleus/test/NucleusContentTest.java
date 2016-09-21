@@ -83,7 +83,7 @@ public class NucleusContentTest extends BaseContentTest<PersistenceManager, Quer
 
 
     @Override
-    protected void setPeers(BaseInterface base, SubInterface peer) {
+    protected void setPeers(BaseInterface base, BaseInterface peer) {
         List<BaseClass> peers = new ArrayList<>();
         peers.add((BaseClass) peer);
         ((BaseClass) base).setPeers(peers);

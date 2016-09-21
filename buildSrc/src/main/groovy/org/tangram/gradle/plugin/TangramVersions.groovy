@@ -78,7 +78,7 @@ public class TangramVersions {
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
   // String datanucleus = '4.1.0-release'
-  String datanucleus = '5.0.0-release'
+  String datanucleus = '5.0.2'
 
   String ebean = '8.1.1'
   String ebean_datasource = '1.1'

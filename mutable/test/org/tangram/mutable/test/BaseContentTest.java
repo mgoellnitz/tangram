@@ -208,7 +208,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
     protected abstract String getCondition(MutableBeanFactory<M, Q> beanFactory);
 
 
-    protected abstract void setPeers(BaseInterface base, SubInterface sub);
+    protected abstract void setPeers(BaseInterface base, BaseInterface sub);
 
 
     protected abstract int getNumberOfAllClasses();
@@ -246,16 +246,18 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Collection<Class<? extends Content>> ormClasses = beanFactory.getClasses();
         LOG.info("test1CreateTestContent() non abstract model classes {}", ormClasses);
         Assert.assertEquals(ormClasses.size(), numberOfClasses, "Discovered unexpected number of non abstract model classes.");
-        SubInterface beanA = createSubBean(beanFactory);
-        beanA.setSubtitle("great");
-        Assert.assertNotNull(beanA, "Could not create bean.");
-        beanFactory.persist(beanA);
-        beanFactory.commitTransaction();
+
         BaseInterface beanB = createBaseBean(beanFactory);
         Assert.assertNotNull(beanB, "Could not create beanB.");
         beanB.setTitle("filter");
-        setPeers(beanB, beanA);
         beanFactory.persist(beanB);
+        beanFactory.commitTransaction();
+
+        SubInterface beanA = createSubBean(beanFactory);
+        beanA.setSubtitle("great");
+        Assert.assertNotNull(beanA, "Could not create bean.");
+        setPeers(beanA, beanB);
+        beanFactory.persist(beanA);
         beanFactory.commitTransaction();
     } // test3CreateTestContent()
 
@@ -264,12 +266,12 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
     public void test4Components() throws Exception {
         MutableBeanFactory<M, Q> factory = getMutableBeanFactory(false);
         Assert.assertNotNull(factory, "Need factory for beans.");
+        List<SubInterface> subBeans = factory.listBeans(SubInterface.class, getCondition(factory), "subtitle", true);
+        Assert.assertEquals(subBeans.size(), 1, "We have prepared a fixed number of sub beans.");
         LOG.info("test4Components() obtaining instances of base interface.");
         List<? extends BaseInterface> allBeans = factory.listBeans(BaseInterface.class);
         LOG.info("test4Components() obtained instances of base interface.");
         Assert.assertEquals(allBeans.size(), 2, "We have prepared a fixed number of beans.");
-        List<SubInterface> subBeans = factory.listBeans(SubInterface.class, getCondition(factory), "subtitle", true);
-        Assert.assertEquals(subBeans.size(), 1, "We have prepared a fixed number of sub beans.");
         // this contains is necessary due to possible subclassing in some of the APIs
         Assert.assertTrue(subBeans.get(0).getClass().getSimpleName().contains("SubClass"), "Peer of base beans is a sub bean.");
         List<? extends Content> baseBeans = factory.listBeansOfExactClass(getBaseClass());

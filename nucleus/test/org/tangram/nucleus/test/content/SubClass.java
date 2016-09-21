@@ -18,6 +18,8 @@
  */
 package org.tangram.nucleus.test.content;
 
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.content.BeanFactory;
 import org.tangram.mutable.test.content.SubInterface;
@@ -27,6 +29,7 @@ import org.tangram.mutable.test.content.SubInterface;
  * Persistent bean sub class just for test purposes.
  */
 @PersistenceCapable
+@Inheritance(strategy = InheritanceStrategy.SUPERCLASS_TABLE)
 public class SubClass extends BaseClass implements SubInterface {
 
     private String subtitle;

@@ -19,6 +19,10 @@
 package org.tangram.nucleus.test.content;
 
 import java.util.List;
+import javax.jdo.annotations.Discriminator;
+import javax.jdo.annotations.DiscriminatorStrategy;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.mutable.test.content.BaseInterface;
@@ -28,6 +32,8 @@ import org.tangram.nucleus.NucleusContent;
  * Persistent bean class just for test purposes.
  */
 @PersistenceCapable
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@Discriminator(value = "TXD",strategy = DiscriminatorStrategy.CLASS_NAME)
 public class BaseClass extends NucleusContent implements BaseInterface {
 
     private String title;
@@ -46,7 +52,7 @@ public class BaseClass extends NucleusContent implements BaseInterface {
     }
 
 
-    public List<? extends BaseInterface> getPeers() {
+    public List<? extends BaseClass> getPeers() {
         return peers;
     }
 
