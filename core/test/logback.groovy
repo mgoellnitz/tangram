@@ -31,3 +31,5 @@ appenders.add('CONSOLE')
 root WARN, appenders
 logger "dinistiq", INFO, appenders, false
 logger "org.tangram", INFO, appenders, false
+logger "guicy", DEBUG, appenders, false
+logger "openjpa", DEBUG, appenders, false
