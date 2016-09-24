@@ -272,6 +272,8 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         List<? extends BaseInterface> allBeans = factory.listBeans(BaseInterface.class);
         LOG.info("test4Components() obtained instances of base interface.");
         Assert.assertEquals(allBeans.size(), 2, "We have prepared a fixed number of beans.");
+        allBeans = factory.listBeans(BaseInterface.class);
+        Assert.assertEquals(allBeans.size(), 2, "We have prepared a fixed number of beans cached.");
         // this contains is necessary due to possible subclassing in some of the APIs
         Assert.assertTrue(subBeans.get(0).getClass().getSimpleName().contains("SubClass"), "Peer of base beans is a sub bean.");
         List<? extends Content> baseBeans = factory.listBeansOfExactClass(getBaseClass());
@@ -290,6 +292,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         } // if
         Assert.assertEquals(stringValue.substring(0, 9), "BaseClass", "Unexpected toString() implementation.");
         Assert.assertEquals(subBeans.get(0).compareTo(bean), 17, "Unexpected compareTo() implementation.");
+        Content subBean = factory.getBean(subBeans.get(0).getId());
         // TODO:
         // Assert.assertNotNull(subBeans.get(0).getBeanFactory(), "Bean factory aware beans should have a factory injected.");
         // Assert.assertEquals(subBeans.get(0).getBeanFactory(), factory, "Unexpected bean factory found.");
