@@ -20,6 +20,8 @@ package org.tangram.guicy.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import javax.servlet.ServletContext;
+import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
 import org.tangram.guicy.TangramServletModule;
 import org.tangram.guicy.postconstruct.PostConstructModule;
@@ -38,6 +40,7 @@ public class TangramServletModuleTest {
     public class TestServletModule extends TangramServletModule {
 
         public void wrapConfigureServlets() {
+            bind(ServletContext.class).toInstance(new MockServletContext());
             configureServlets();
             Object aggregator = getServletContext().getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
             Assert.assertNotNull(aggregator, "We need a link factory aggregator.");
