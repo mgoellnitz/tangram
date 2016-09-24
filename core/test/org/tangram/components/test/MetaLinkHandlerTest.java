@@ -101,19 +101,19 @@ public class MetaLinkHandlerTest {
     /**
      * Mock test class to bring bean factory aware and line handler together like in real world code.
      */
-    public class MockLinkHandler implements org.tangram.link.LinkHandler, BeanFactoryAware {
+    public class MockLinkHandler implements org.tangram.link.LinkHandler, BeanFactoryAware<StringBuilder> {
 
-        private BeanFactory<?> beanFactory;
+        private BeanFactory<StringBuilder> beanFactory;
 
 
         @Override
-        public void setBeanFactory(BeanFactory<?> factory) {
+        public void setBeanFactory(BeanFactory<StringBuilder> factory) {
             beanFactory = factory;
             LOG.debug("MockLinkHandler.setBeanFactory() {} {}", beanFactory, factory);
         }
 
 
-        public BeanFactory<?> getBeanFactory() {
+        public BeanFactory<StringBuilder> getBeanFactory() {
             LOG.info("MockLinkHandler.getBeanFactory() {}", beanFactory);
             return beanFactory;
         }

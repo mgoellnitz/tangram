@@ -23,13 +23,13 @@ package org.tangram.content;
  *
  * This is used for codes in the code repository since those don't get automatic dependency injection.
  */
-public interface BeanFactoryAware {
+public interface BeanFactoryAware<Q extends Object> {
 
     /**
      * attach bean factory to implementing instance.
      *
      * @param factory bean factory instance to attach
      */
-    void setBeanFactory(BeanFactory<?> factory);
+    void setBeanFactory(BeanFactory<Q> factory);
 
 } // BeanFactoryAware

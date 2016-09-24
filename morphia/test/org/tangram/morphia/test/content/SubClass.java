@@ -20,6 +20,7 @@ package org.tangram.morphia.test.content;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Transient;
+import org.mongodb.morphia.query.Query;
 import org.tangram.content.BeanFactory;
 import org.tangram.mutable.test.content.SubInterface;
 
@@ -28,7 +29,7 @@ import org.tangram.mutable.test.content.SubInterface;
  * Persistent bean sub class just for test purposes.
  */
 @Entity
-public class SubClass extends BaseClass implements SubInterface {
+public class SubClass extends BaseClass implements SubInterface<Query> {
 
     private String subtitle;
 
@@ -55,7 +56,7 @@ public class SubClass extends BaseClass implements SubInterface {
 
 
     @Override
-    public void setBeanFactory(BeanFactory<?> beanFactory) {
+    public void setBeanFactory(BeanFactory<Query> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

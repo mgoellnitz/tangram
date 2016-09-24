@@ -18,6 +18,7 @@
  */
 package org.tangram.ebean.test.content;
 
+import com.avaje.ebean.Query;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -33,7 +34,7 @@ import org.tangram.mutable.test.content.SubInterface;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorValue("SubClass")
-public class SubClass extends BaseClass implements SubInterface {
+public class SubClass extends BaseClass implements SubInterface<Query> {
 
     private String subtitle;
 
@@ -60,7 +61,7 @@ public class SubClass extends BaseClass implements SubInterface {
 
 
     @Override
-    public void setBeanFactory(BeanFactory<?> beanFactory) {
+    public void setBeanFactory(BeanFactory<Query> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

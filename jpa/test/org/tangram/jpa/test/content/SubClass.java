@@ -21,6 +21,7 @@ package org.tangram.jpa.test.content;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Query;
 import javax.persistence.Transient;
 import org.tangram.content.BeanFactory;
 import org.tangram.mutable.test.content.SubInterface;
@@ -32,7 +33,7 @@ import org.tangram.mutable.test.content.SubInterface;
 @Entity
 // Annotation needed for OpenJPA
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class SubClass extends BaseClass implements SubInterface {
+public class SubClass extends BaseClass implements SubInterface<Query> {
 
     private String subtitle;
 
@@ -59,7 +60,7 @@ public class SubClass extends BaseClass implements SubInterface {
 
 
     @Override
-    public void setBeanFactory(BeanFactory<?> beanFactory) {
+    public void setBeanFactory(BeanFactory<Query> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

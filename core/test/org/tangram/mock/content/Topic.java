@@ -23,6 +23,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.content.BeanFactory;
+import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.Content;
 import org.tangram.protection.ProtectedContent;
 
@@ -30,7 +31,7 @@ import org.tangram.protection.ProtectedContent;
 /**
  * Navigation topic for the data model used in tests.
  */
-public class Topic extends Linkable implements ProtectedContent {
+public class Topic extends Linkable implements ProtectedContent, BeanFactoryAware<StringBuilder> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Topic.class);
 

@@ -25,7 +25,7 @@ import org.tangram.content.BeanFactoryAware;
 /**
  * Persistent bean sub class just for test purposes.
  */
-public interface SubInterface extends BaseInterface, BeanFactoryAware {
+public interface SubInterface<Q extends Object> extends BaseInterface, BeanFactoryAware<Q> {
 
     String getSubtitle();
 
@@ -36,6 +36,6 @@ public interface SubInterface extends BaseInterface, BeanFactoryAware {
     BeanFactory<?> getBeanFactory();
 
 
-    void setBeanFactory(BeanFactory<?> beanFactory);
+    void setBeanFactory(BeanFactory<Q> beanFactory);
 
 } // SubInterface
