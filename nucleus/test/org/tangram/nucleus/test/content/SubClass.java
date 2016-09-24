@@ -21,6 +21,7 @@ package org.tangram.nucleus.test.content;
 import javax.jdo.Query;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import org.tangram.content.BeanFactory;
 import org.tangram.mutable.test.content.SubInterface;
@@ -35,7 +36,8 @@ public class SubClass extends BaseClass implements SubInterface<Query> {
 
     private String subtitle;
 
-    private BeanFactory<?> beanFactory;
+    @NotPersistent
+    private BeanFactory<Query> beanFactory;
 
 
     @Override
@@ -51,7 +53,7 @@ public class SubClass extends BaseClass implements SubInterface<Query> {
 
 
     @Override
-    public BeanFactory<?> getBeanFactory() {
+    public BeanFactory<Query> getBeanFactory() {
         return beanFactory;
     }
 

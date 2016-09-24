@@ -34,7 +34,7 @@ public class SubClass extends BaseClass implements SubInterface<Query> {
     private String subtitle;
 
     @Transient
-    private BeanFactory<?> beanFactory;
+    private BeanFactory<Query> beanFactory;
 
 
     @Override
@@ -50,7 +50,7 @@ public class SubClass extends BaseClass implements SubInterface<Query> {
 
 
     @Override
-    public BeanFactory<?> getBeanFactory() {
+    public BeanFactory<Query> getBeanFactory() {
         return beanFactory;
     }
 
