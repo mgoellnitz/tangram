@@ -53,7 +53,6 @@ import org.tangram.content.Content;
 import org.tangram.link.LinkHandlerRegistry;
 import org.tangram.link.TargetDescriptor;
 import org.tangram.monitor.Statistics;
-import org.tangram.mutable.AppEngineXStream;
 import org.tangram.mutable.CodeHelper;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.protection.AuthorizationService;
@@ -220,7 +219,7 @@ public class ToolHandler {
         response.setContentType(Constants.MIME_TYPE_XML);
         response.setCharacterEncoding("UTF-8");
         // The pure reflection provider is used because of Google App Engines API limitations
-        XStream xstream = new AppEngineXStream(new StaxDriver());
+        XStream xstream = new XStream(new StaxDriver());
         Collection<Class<? extends Content>> classes = beanFactory.getClasses();
 
         // Dig out root class of all this evil to find out where the id field is defined
@@ -299,7 +298,7 @@ public class ToolHandler {
         Reader input = new StringReader(new String(xmlfile, "UTF-8"));
 
         beanFactory.beginTransaction();
-        XStream xstream = new AppEngineXStream(new StaxDriver());
+        XStream xstream = new XStream(new StaxDriver());
         Collection<Class<? extends Content>> classes = beanFactory.getClasses();
         for (Class<? extends Content> c : classes) {
             xstream.alias(c.getSimpleName(), c);

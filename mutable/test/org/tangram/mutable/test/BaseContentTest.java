@@ -185,7 +185,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
     protected abstract BaseInterface createBaseBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;
 
 
-    protected abstract SubInterface createSubBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;
+    protected abstract SubInterface<Q> createSubBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;
 
 
     protected abstract Class<? extends BaseInterface> getBaseClass();
@@ -253,7 +253,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         beanFactory.persist(beanB);
         beanFactory.commitTransaction();
 
-        SubInterface beanA = createSubBean(beanFactory);
+        SubInterface<Q> beanA = createSubBean(beanFactory);
         beanA.setSubtitle("great");
         Assert.assertNotNull(beanA, "Could not create bean.");
         setPeers(beanA, beanB);

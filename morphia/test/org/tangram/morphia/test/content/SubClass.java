@@ -29,12 +29,12 @@ import org.tangram.mutable.test.content.SubInterface;
  * Persistent bean sub class just for test purposes.
  */
 @Entity
-public class SubClass extends BaseClass implements SubInterface<Query> {
+public class SubClass extends BaseClass implements SubInterface<Query<?>> {
 
     private String subtitle;
 
     @Transient
-    private BeanFactory<Query> beanFactory;
+    private BeanFactory<Query<?>> beanFactory;
 
 
     @Override
@@ -50,13 +50,13 @@ public class SubClass extends BaseClass implements SubInterface<Query> {
 
 
     @Override
-    public BeanFactory<Query> getBeanFactory() {
+    public BeanFactory<Query<?>> getBeanFactory() {
         return beanFactory;
     }
 
 
     @Override
-    public void setBeanFactory(BeanFactory<Query> beanFactory) {
+    public void setBeanFactory(BeanFactory<Query<?>> beanFactory) {
         this.beanFactory = beanFactory;
     }
 

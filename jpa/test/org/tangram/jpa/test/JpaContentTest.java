@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.tangram.guicy.TangramServletModule;
 import org.tangram.guicy.postconstruct.PostConstructModule;
 import org.tangram.jpa.protection.PasswordProtection;
@@ -36,7 +37,7 @@ import org.tangram.mutable.test.content.SubInterface;
 import org.testng.annotations.Test;
 
 
-public class JpaContentTest extends BaseContentTest<EntityManager, String> {
+public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
 
     static {
         org.apache.openjpa.enhance.InstrumentationFactory.setDynamicallyInstallAgent(false);
@@ -51,13 +52,13 @@ public class JpaContentTest extends BaseContentTest<EntityManager, String> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<EntityManager, String> beanFactory) throws Exception {
+    protected BaseInterface createBaseBean(MutableBeanFactory<EntityManager, Query> beanFactory) throws Exception {
         return beanFactory.createBean(BaseClass.class);
     }
 
 
     @Override
-    protected SubInterface createSubBean(MutableBeanFactory<EntityManager, String> beanFactory) throws Exception {
+    protected SubInterface<Query> createSubBean(MutableBeanFactory<EntityManager, Query> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
 
@@ -75,7 +76,7 @@ public class JpaContentTest extends BaseContentTest<EntityManager, String> {
 
 
     @Override
-    protected String getCondition(MutableBeanFactory<EntityManager, String> beanFactory) {
+    protected String getCondition(MutableBeanFactory<EntityManager, Query> beanFactory) {
         return "select x from SubClass x where x.subtitle = 'great'";
     } // getCondition()
 

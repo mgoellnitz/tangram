@@ -386,7 +386,7 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
             } // if
             if (instanceClass.isAssignableFrom(cls)) {
                 if (o instanceof BeanFactoryAware) {
-                    ((BeanFactoryAware) o).setBeanFactory(this);
+                    ((BeanFactoryAware<Q>) o).setBeanFactory(this);
                 } // if
                 filteredList.add((T) o);
             } else {
