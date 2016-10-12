@@ -23,5 +23,5 @@ dependencies {
   compile "dinistiq:dinistiq:$versions.dinistiq"
 
   testCompile "org.testng:testng:$versions.testng"
-  testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.mockito:mockito-core:$versions.mockito"
 }

@@ -29,7 +29,7 @@ dependencies {
   testCompile "org.testng:testng:$versions.testng"
   // test logging at debug level through special logback.groovy
   testCompile "ch.qos.logback:logback-classic:$versions.logback"
-  testCompile "org.mockito:mockito-all:$versions.mockito"
+  testCompile "org.mockito:mockito-core:$versions.mockito"
   // more or less a dummy for the various autoscanned and auto injected beans
   testCompile project (':tangram-dinistiq')
   testCompile project (':tangram-mutable').sourceSets.test.output
