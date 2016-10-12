@@ -17,4 +17,4 @@
 #
 # last public JDK 7: /opt/jdk1.7.0_80
 #
-gradle -Pjdk=/opt/jdk1.8.0_92 -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
+gradle -Pjdk=/opt/jdk1.8.0_102 -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
