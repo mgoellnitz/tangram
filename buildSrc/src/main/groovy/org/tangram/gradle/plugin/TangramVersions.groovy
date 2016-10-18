@@ -43,7 +43,7 @@ public class TangramVersions {
   String mockito = '1.10.19'
   String xstream = '1.4.9'
   String pac4j = '1.9.2'
-  String mockftpserver = '2.6'
+  String mockftpserver = '2.7'
   String tomcat = '8.0.37'
   String codemirror = '5.19.0'
   String ckeditor = '4.5.11'
