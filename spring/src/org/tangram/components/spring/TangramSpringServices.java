@@ -27,7 +27,6 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.convert.ConversionService;
 
 
 @Named
@@ -40,16 +39,6 @@ public final class TangramSpringServices implements ApplicationContextAware {
 
 
     private TangramSpringServices() {
-    }
-
-
-    /**
-     * Static ontainer class for thread safe singleton pattern.
-     */
-    private static class ConversionServiceHolder {
-
-        public static final ConversionService INSTANCE = getBeanFromContext(ConversionService.class);
-
     }
 
 
@@ -86,35 +75,13 @@ public final class TangramSpringServices implements ApplicationContextAware {
 
 
     /**
-     * Returns the system wide conversation service instance.
-     * This more or less is an implementation of @Autowired(required=false).
-     *
-     * @return May return null,
-     */
-    public static ConversionService getConversionService() {
-        return ConversionServiceHolder.INSTANCE;
-    } // getConversionService()
-
-
-    /**
-     * Create a bean wrapper instance from a bean object and prepare it with a conversion service if available.
+     * Create a bean wrapper instance from a bean object.
      *
      * @param bean any object to be wrapped for java bean access
      * @return wrapper for the given bean
      */
     public static BeanWrapper createWrapper(Object bean) {
-        BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(bean);
-        try {
-            ConversionService converter = TangramSpringServices.getConversionService();
-            if (converter!=null) {
-                wrapper.setConversionService(converter);
-            } // if
-            LOG.info("createWrapper() conversion service {}", wrapper.getConversionService());
-        } catch (Exception e) {
-            // This is not an error since conversion services are optional.
-            LOG.warn("createWrapper()", e);
-        } // try/catch
-        return wrapper;
+        return PropertyAccessorFactory.forBeanPropertyAccess(bean);
     } // createWrapper()
 
 } // TangramSpringServices
