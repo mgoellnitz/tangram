@@ -47,6 +47,7 @@ public class RntoFtpCommandHandlerTest extends AbstractThreadedTest {
         MockMutableCode code = helper.getBeanFactory().getBean(MockMutableCode.class, id);
         Assert.assertEquals(code.getAnnotation(), "org.tangram.link.LinkHandler", "unexpected initial value for annotation.");
         RntoFtpCommandHandler rntoFtpCommandHandler = (RntoFtpCommandHandler) helper.getHandler();
+        Assert.assertNotNull(rntoFtpCommandHandler, "Command handler may not be null.");
         List<String> params = new ArrayList<>();
         params.add("org.tangram.link.GroovyLinkHandler.groovy");
         Command command = helper.getCommand(params);
