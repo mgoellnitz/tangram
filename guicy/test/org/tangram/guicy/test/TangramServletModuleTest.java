@@ -20,8 +20,6 @@ package org.tangram.guicy.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import javax.servlet.ServletContext;
-import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
 import org.tangram.guicy.TangramServletModule;
 import org.tangram.guicy.postconstruct.PostConstructModule;
@@ -39,9 +37,7 @@ public class TangramServletModuleTest {
      */
     public class TestServletModule extends TangramServletModule {
 
-        public void wrapConfigureServlets() {
-            bind(ServletContext.class).toInstance(new MockServletContext());
-            configureServlets();
+        public void checkModule() {
             Object aggregator = getServletContext().getAttribute(Constants.ATTRIBUTE_LINK_FACTORY_AGGREGATOR);
             Assert.assertNotNull(aggregator, "We need a link factory aggregator.");
             Object viewSettins = getServletContext().getAttribute(Constants.ATTRIBUTE_VIEW_SETTINGS);
@@ -50,7 +46,7 @@ public class TangramServletModuleTest {
             Assert.assertNotNull(statistics, "We need a statistics instance.");
             Object viewUtilities = getServletContext().getAttribute(Constants.ATTRIBUTE_VIEW_UTILITIES);
             Assert.assertNotNull(viewUtilities, "We need a view utilities.");
-        } // wrapConfigureServlets()
+        } // checkModule()
 
     } // TestServletModule
 
@@ -60,6 +56,7 @@ public class TangramServletModuleTest {
         TestServletModule servletModule = new TestServletModule();
         Injector injector = Guice.createInjector(new PostConstructModule(), servletModule);
         Assert.assertNotNull(injector, "The injector must not be null.");
+        servletModule.checkModule();
     } // testTangramServletModule()
 
 } // TangramServletModuleTest
