@@ -66,7 +66,7 @@ public class TangramVersions {
   String jdo_api = 'javax.jdo:jdo-api:3.1'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
-  String persistence_api = 'org.datanucleus:javax.persistence:2.1.2'
+  String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
 
   String openjpa = '2.4.1'
   String eclipselink = '2.6.3'
