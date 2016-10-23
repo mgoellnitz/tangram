@@ -26,7 +26,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -149,15 +148,6 @@ public class SpringChainTest {
     @Test
     public void testSpringServices() throws Exception {
         Assert.assertEquals(TangramSpringServices.getApplicationContext(), appContext, "Expected the hand made context.");
-        boolean result = false;
-        try {
-            Object bean = new Object();
-            BeanWrapper wrap = TangramSpringServices.createWrapper(bean);
-            Assert.assertNull(wrap, "Bean wrapping with spring is not (yet) used.");
-        } catch (ExceptionInInitializerError e) {
-            result = true;
-        } // try/catch
-        Assert.assertTrue(result, "Bean wrapping with spring is not (yet) used.");
         BeanFactory<?> beanFactory = appContext.getBean(BeanFactory.class);
         Assert.assertEquals(TangramSpringServices.getBeanFromContext(BeanFactory.class), beanFactory, "Didn't find mock bean factory.");
         ViewUtilities viewUtilities = appContext.getBean(ViewUtilities.class);

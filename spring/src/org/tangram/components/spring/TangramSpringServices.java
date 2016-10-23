@@ -23,8 +23,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -72,16 +70,5 @@ public final class TangramSpringServices implements ApplicationContextAware {
         } // if
         return result;
     } // getBeanFromContext()
-
-
-    /**
-     * Create a bean wrapper instance from a bean object.
-     *
-     * @param bean any object to be wrapped for java bean access
-     * @return wrapper for the given bean
-     */
-    public static BeanWrapper createWrapper(Object bean) {
-        return PropertyAccessorFactory.forBeanPropertyAccess(bean);
-    } // createWrapper()
 
 } // TangramSpringServices
