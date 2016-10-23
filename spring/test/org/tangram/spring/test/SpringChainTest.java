@@ -103,15 +103,6 @@ public class SpringChainTest {
     @Test
     public void testSpringServices() throws Exception {
         Assert.assertEquals(TangramSpringServices.getApplicationContext(), appContext, "Expected the hand made context.");
-        boolean result = false;
-        try {
-            Object bean = new Object();
-            BeanWrapper wrap = TangramSpringServices.createWrapper(bean);
-            Assert.assertNull(wrap, "Bean wrapping with spring is not (yet) used.");
-        } catch (ExceptionInInitializerError e) {
-            result = true;
-        } // catch
-        Assert.assertTrue(result, "Bean wrapping with spring is not (yet) used.");
         BeanFactory beanFactory = appContext.getBean(BeanFactory.class);
         Assert.assertEquals(TangramSpringServices.getBeanFromContext(BeanFactory.class), beanFactory, "Didn't find mock bean factory.");
         ViewUtilities viewUtilities = appContext.getBean(ViewUtilities.class);
