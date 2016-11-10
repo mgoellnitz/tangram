@@ -21,6 +21,7 @@ import org.tangram.util.SystemUtils
 import org.tangram.view.PropertyConverter
 import org.tangram.content.BeanFactory
 import org.tangram.morphia.MorphiaBeanFactory
+import org.tangram.components.morphia.MorphiaModelDiscoverer
 import org.tangram.mutable.MutableBeanFactory
 import org.tangram.view.GenericPropertyConverter
 import com.google.inject.TypeLiteral
@@ -52,6 +53,10 @@ interimType = secondVehicle.getClass().getDeclaredField("v").getGenericType()
 TypeLiteral mbf = TypeLiteral.get(interimType)
 module.bind(mbf).toInstance(beanFactory)
 module.bind(MutableBeanFactory.class).toInstance(beanFactory)
+module.bind(MorphiaBeanFactory.class).toInstance(beanFactory)
+
+log.info "configuring model discoverer"
+module.bind(MorphiaModelDiscoverer.class).toInstance(new MorphiaModelDiscoverer())
 
 log.info "done."
 println "morphia done."

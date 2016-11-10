@@ -257,10 +257,10 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
         options.setObjectFactory(factory);
         Morphia morphia = new Morphia();
         for (Class<?> c : getClasses()) {
-            LOG.info("afterPThread.currentThread().getContextClassLoader()ropertiesSet() class {}", c.getName());
+            LOG.info("init() class {}", c.getName());
             morphia.map(c);
         } // for
-        LOG.info("afterPropertiesSet() access: {} database: {}", mongoUri, mongoDB);
+        LOG.info("init() access: {} database: {}", mongoUri, mongoDB);
         MongoClientURI uri = new MongoClientURI(mongoUri);
         MongoClient mongoClient = new MongoClient(uri);
         datastore = morphia.createDatastore(mongoClient, mongoDB);
@@ -282,12 +282,13 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
         if (classes!=null) {
             for (Class<? extends Content> cls : classes) {
                 if ((getBaseClass().isAssignableFrom(cls))&&(cls.getAnnotation(Entity.class)!=null)) {
+                    LOG.info("setAdditionalClasses() additional class {}", cls.getSimpleName());
                     classSet.add(cls);
                 } // if
             } // for
         } // if
-        additionalClasses = classSet;
         synchronized (this) {
+            additionalClasses = classSet;
             allClasses = null;
             modelClasses = null;
         } // synchronized
