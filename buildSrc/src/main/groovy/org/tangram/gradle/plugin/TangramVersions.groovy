@@ -52,14 +52,14 @@ public class TangramVersions {
   String junit = '4.12'
   String testng = '6.9.13.6' // Gradle 3.0 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.192'
+  String h2db = '1.4.193'
 
   // The dependency injection options
   String dinistiq = '0.6'
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.3.RELEASE'
+  String springframework = '4.3.4.RELEASE'
 
   String weld = '2.4.0.Final'
   String openwebbeans = '1.7.0'
@@ -73,7 +73,7 @@ public class TangramVersions {
   String openjpa = '2.4.1'
   String eclipselink = '2.6.4'
   String hibernate = '5.2.4.Final'
-  String hibernate_ogm = '5.0.2.Final'
+  String hibernate_ogm = '5.0.3.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
