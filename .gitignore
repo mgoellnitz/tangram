@@ -14,3 +14,6 @@
 /editor/codemirror*
 /editor/ckeditor*
 /jacoco
+/.trackdown
+/redmine-issues.md
+/roadmap.md
