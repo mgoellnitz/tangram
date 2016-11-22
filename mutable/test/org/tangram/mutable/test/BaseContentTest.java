@@ -293,9 +293,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertEquals(stringValue.substring(0, 9), "BaseClass", "Unexpected toString() implementation.");
         Assert.assertEquals(subBeans.get(0).compareTo(bean), 17, "Unexpected compareTo() implementation.");
         Content subBean = factory.getBean(subBeans.get(0).getId());
-        // TODO:
-        // Assert.assertNotNull(subBeans.get(0).getBeanFactory(), "Bean factory aware beans should have a factory injected.");
-        // Assert.assertEquals(subBeans.get(0).getBeanFactory(), factory, "Unexpected bean factory found.");
+        Assert.assertEquals(subBeans.get(0), subBean, "Directly fetched bean should be the one from the list.");
     } // test4Components()
 
 
