@@ -164,8 +164,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
                     q.where(query);
                 } // if
                 if (orderProperty!=null) {
-                    // TODO: String asc = (ascending) ? " asc" : " desc";
-                    q = q.order(orderProperty);
+                    q = q.order((ascending?"":"-")+orderProperty);
                 } // if
                 // Default is no ordering - not even via IDs
                 LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (q==null ? "" : " with condition "+q));
