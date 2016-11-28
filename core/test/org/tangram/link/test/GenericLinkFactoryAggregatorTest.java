@@ -51,6 +51,18 @@ public class GenericLinkFactoryAggregatorTest {
     private final GenericLinkFactoryAggregator linkFactoryAggregator = new GenericLinkFactoryAggregator();
 
 
+    public GenericLinkFactoryAggregatorTest() {
+        statistics.increase("dummy");
+        MockitoAnnotations.initMocks(this);
+        linkFactoryAggregator.setDispatcherPath("/x");
+    }
+
+
+    public GenericLinkFactoryAggregator getInstance() {
+        return linkFactoryAggregator;
+    }
+
+
     @LinkAction("/test")
     public TargetDescriptor linkAction() {
         return null;
@@ -59,10 +71,6 @@ public class GenericLinkFactoryAggregatorTest {
 
     @Test
     public void testGenericLinkFactoryAggregator() {
-        statistics.increase("dummy");
-        MockitoAnnotations.initMocks(this);
-        linkFactoryAggregator.setDispatcherPath("/x");
-
         Method method = linkFactoryAggregator.findMethod(this, "linkAction");
         Assert.assertNotNull(method, "Didn't find expected method.");
         Assert.assertEquals(method.getName(), "linkAction", "Found unexpected method name.");

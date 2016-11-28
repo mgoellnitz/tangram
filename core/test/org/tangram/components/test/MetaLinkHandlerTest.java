@@ -38,13 +38,13 @@ import org.tangram.annotate.LinkAction;
 import org.tangram.annotate.LinkHandler;
 import org.tangram.annotate.LinkPart;
 import org.tangram.components.MetaLinkHandler;
-import org.tangram.components.SimpleStatistics;
 import org.tangram.content.BeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.controller.ControllerHook;
 import org.tangram.link.GenericLinkFactoryAggregator;
 import org.tangram.link.Link;
 import org.tangram.link.TargetDescriptor;
+import org.tangram.link.test.GenericLinkFactoryAggregatorTest;
 import org.tangram.logic.ClassRepository;
 import org.tangram.mock.content.MockBeanFactory;
 import org.tangram.monitor.Statistics;
@@ -69,19 +69,17 @@ public class MetaLinkHandlerTest {
     @Spy
     private final MockBeanFactory beanFactory;
 
-    @Spy
-    private final Statistics statistics = new SimpleStatistics(); // NOPMD - this field is not really unused
+    @Mock
+    private Statistics statistics; // NOPMD - this field is not really unused
 
     @Spy
     private final PropertyConverter propertyConverter = new GenericPropertyConverter(); // NOPMD - this field is not really unused
 
     @Spy
-    @InjectMocks
     private final DynamicViewContextFactory viewContextFactory = new DynamicViewContextFactory();
 
     @Spy
-    @InjectMocks
-    private final GenericLinkFactoryAggregator aggregator = new GenericLinkFactoryAggregator();
+    private final GenericLinkFactoryAggregator aggregator = new GenericLinkFactoryAggregatorTest().getInstance();
 
     @Spy
     private ClassRepository repository; // NOPMD - this field is not really unused
@@ -214,6 +212,8 @@ public class MetaLinkHandlerTest {
 
         repository = new GroovyClassRepositoryTest().getInstance();
         beanFactory = MockBeanFactory.getInstance();
+        MockitoAnnotations.initMocks(viewContextFactory);
+        MockitoAnnotations.initMocks(aggregator);
         MockitoAnnotations.initMocks(this);
         viewContextFactory.afterPropertiesSet();
         metaLinkHandler.afterPropertiesSet();

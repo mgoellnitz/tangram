@@ -52,7 +52,6 @@ public class AbstractLinkHandlerTest {
     private final Set<ControllerHook> controllerHooks = new HashSet<>();
 
     @Spy
-    @InjectMocks
     private final DynamicViewContextFactory viewContextFactory = new DynamicViewContextFactory();
 
     @InjectMocks
@@ -86,6 +85,7 @@ public class AbstractLinkHandlerTest {
             }
         };
         controllerHooks.add(hook);
+        MockitoAnnotations.initMocks(viewContextFactory);
         MockitoAnnotations.initMocks(this);
         viewContextFactory.afterPropertiesSet();
         MockHttpServletRequest request = new MockHttpServletRequest();
