@@ -41,7 +41,7 @@ public class TangramVersions {
   String xstream = '1.4.9'
   String pac4j = '1.8.9'
   String mockftpserver = '2.7'
-  String tomcat = '8.0.38'
+  String tomcat = '8.0.39'
   String codemirror = '5.20.2'
   String ckeditor = '4.5.11'
 
@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String springframework = '4.3.4.RELEASE'
 
-  String weld = '2.3.5.Final'
+  String weld = '2.4.1.Final'
   String openwebbeans = '1.6.3'
 
   // Storage options
