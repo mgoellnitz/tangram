@@ -40,7 +40,7 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String logback = '1.1.7'
   String yui = '2.4.7'
-  String mockito = '2.2.21'
+  String mockito = '2.2.26'
   String xstream = '1.4.9'
   String pac4j = '1.9.4'
   String mockftpserver = '2.7'
@@ -78,7 +78,7 @@ public class TangramVersions {
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
   // String datanucleus = '4.1.0-release'
-  String datanucleus = '5.0.4'
+  String datanucleus = '5.0.5'
 
   String ebean = '8.1.1'
   String ebean_datasource = '1.1'
