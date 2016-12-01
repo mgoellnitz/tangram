@@ -18,12 +18,12 @@
  */
 package org.tangram.gradle.plugin
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
 import org.hibernate.bytecode.enhance.spi.DefaultEnhancementContext;
 import org.hibernate.bytecode.enhance.spi.EnhancementContext;
 import org.hibernate.bytecode.enhance.spi.Enhancer;
+import org.hibernate.bytecode.enhance.spi.UnloadedClass;
+import org.hibernate.bytecode.enhance.spi.UnloadedField;
+import org.hibernate.cfg.Environment
 import org.gradle.api.Project
 import org.datanucleus.enhancer.DataNucleusEnhancer
 import org.gradle.api.GradleException
@@ -315,60 +315,6 @@ class TangramUtilities {
   } // eclipselinkWeave()
 
 
-  private CtClass getJavassistClass(File file, ClassPool classPool) {
-    try {
-      InputStream is = new FileInputStream(file.absolutePath)
-      try {
-        return classPool.makeClass(is)
-      } catch (IOException e) {
-        throw new GradleException("Could not load class file for enhancing "+file.absolutePath, e)
-      } finally {
-        try {
-          is.close()
-        } catch (IOException e) {
-          println "Could not close class file "+file.absolutePath
-        }
-      }
-    } catch (FileNotFoundException e) {
-      // should never happen, but...
-      throw new GradleException("Could not find class file "+file.absolutePath, e)
-    }
-  }
-
-
-  private void writeEnhancedClassFile(byte[] enhancedBytecode, CtClass jClass, File file) {
-    try {
-      if (file.delete()) {
-        if (!file.createNewFile()) {
-          println "Could not create class file "+jClass.name
-        }
-      } else {
-        println "Could not delete class file "+jClass.name
-      }
-    } catch (IOException e) {
-      println "Could not prepare file for enhanced class "+jClass.name
-    }
-
-    try {
-      FileOutputStream outputStream = new FileOutputStream(file, false)
-      try {
-        outputStream.write(enhancedBytecode)
-        outputStream.flush()
-      } catch (IOException e) {
-        throw new GradleException("Error writing enhanced class "+jClass.name+" to file "+file.absolutePath, e)
-      } finally {
-        try {
-          outputStream.close()
-          jClass.detach()
-        } catch (IOException ignore) {
-        }
-      }
-    } catch (FileNotFoundException e) {
-      throw new GradleException("Error writing to class file "+file.absolutePath, e)
-    }
-  }
-
-
   private void hibernateEnhance(String dir) {
     if (dir == null) {
       dir = project.sourceSets['main'].output.classesDir.canonicalPath
@@ -380,32 +326,29 @@ class TangramUtilities {
         return classLoader
       }
       @Override
-      public boolean doBiDirectionalAssociationManagement(CtField field) {
+      public boolean doBiDirectionalAssociationManagement(UnloadedField field) {
         return true
       }
       @Override
-      public boolean doDirtyCheckingInline(CtClass classDescriptor) {
+      public boolean doDirtyCheckingInline(UnloadedClass classDescriptor) {
         return true
       }
       @Override
-      public boolean hasLazyLoadableAttributes(CtClass classDescriptor) {
+      public boolean hasLazyLoadableAttributes(UnloadedClass classDescriptor) {
         return true
       }
       @Override
-      public boolean isLazyLoadable(CtField field) {
+      public boolean isLazyLoadable(UnloadedField field) {
         return true
       }
     };
-    final Enhancer enhancer = new Enhancer(enhancementContext)
-    final ClassPool classPool = new ClassPool(false)
+    final Enhancer enhancer = Environment.getEnhancer(enhancementContext)
     final FileTree fileTree = project.fileTree(dir)
     for (File file : fileTree) {
       if (file.name.endsWith(".class")) {
-        CtClass jClass = getJavassistClass(file, classPool)
-        if (enhancementContext.isEntityClass(jClass)||enhancementContext.isCompositeClass(jClass)) {
-          final byte[] enhancedBytecode = enhancer.enhance(jClass.name, jClass.toBytecode())
-          writeEnhancedClassFile(enhancedBytecode, jClass, file)
-        }
+        // if (enhancementContext.isEntityClass(jClass)||enhancementContext.isCompositeClass(jClass)) {
+          final byte[] enhancedBytecode = enhancer.enhance(file)
+        // }
       }
     }
   }

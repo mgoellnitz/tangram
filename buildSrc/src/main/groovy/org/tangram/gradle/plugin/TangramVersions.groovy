@@ -72,7 +72,7 @@ public class TangramVersions {
 
   String openjpa = '2.4.1'
   String eclipselink = '2.6.4'
-  String hibernate = '5.2.4.Final'
+  String hibernate = '5.2.5.Final'
   String hibernate_ogm = '5.0.3.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
