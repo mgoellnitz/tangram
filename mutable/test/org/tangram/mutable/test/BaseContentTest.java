@@ -237,6 +237,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
     @Test(priority = 3)
     public void test3CreateTestContent() throws Exception {
+        LOG.info("test3CreateTestContent() start.");
         MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(true);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         int numberOfAllClasses = getNumberOfAllClasses();
@@ -259,11 +260,13 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         setPeers(beanA, beanB);
         beanFactory.persist(beanA);
         beanFactory.commitTransaction();
+        LOG.info("test3CreateTestContent() completed.");
     } // test3CreateTestContent()
 
 
     @Test(priority = 4)
     public void test4Components() throws Exception {
+        LOG.info("test4Components() start.");
         MutableBeanFactory<M, Q> factory = getMutableBeanFactory(false);
         Assert.assertNotNull(factory, "Need factory for beans.");
         List<SubInterface> subBeans = factory.listBeans(SubInterface.class, getCondition(factory), "subtitle", true);
@@ -278,8 +281,12 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertTrue(subBeans.get(0).getClass().getSimpleName().contains("SubClass"), "Peer of base beans is a sub bean.");
         List<? extends Content> baseBeans = factory.listBeansOfExactClass(getBaseClass());
         Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans.");
+        LOG.info("test4Components() base beans {}", baseBeans);
+        BaseInterface b = factory.getBean(getBaseClass(), baseBeans.get(0).getId());
+        Assert.assertNotNull(b, "Bean should also be retrievable via ID.");
         baseBeans = factory.listBeansOfExactClass(getBaseClass());
         Assert.assertEquals(baseBeans.size(), 1, "We have prepared a fixed number of base beans cached.");
+        LOG.info("test4Components() {} {} {}", factory, getBaseClass(), baseBeans);
         BaseInterface bean = factory.getBean(getBaseClass(), baseBeans.get(0).getId());
         Assert.assertNotNull(bean, "Bean should also be retrievable via ID.");
         Content content = factory.getBean(bean.getId());
@@ -361,7 +368,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         try {
             bean = beanFactory.getBean(TransientCode.class, codeResource.getId());
         } catch (Exception e) {
-            LOG.info("test3Code() exception occured - only relevant for ebean AFAIK", e);
+            LOG.info("test3Code() exception occured - only relevant for ebean and objectify AFAIK", e);
         } // try/catch
         Assert.assertNull(bean, "Despite the correct ID there should have been no code result.");
     } // test7Code()

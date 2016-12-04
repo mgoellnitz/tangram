@@ -86,5 +86,9 @@ public class TangramVersions {
 
   String mongodb = '3.0.2'
   String morphia = '1.2.1'
+  
+  String objectify = '5.1.13'
 
+  String appengine = '1.9.46'
+  
 } // TangramVersions
