@@ -87,7 +87,7 @@ public final class Code extends ObjectifyContent implements MutableCode {
 
     @Override
     public String getCodeText() {
-        return code==null ? null : new String(code);
+        return code;
     }
 
 
