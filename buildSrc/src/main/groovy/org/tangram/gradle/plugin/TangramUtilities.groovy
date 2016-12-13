@@ -23,6 +23,7 @@ import org.hibernate.bytecode.enhance.spi.EnhancementContext;
 import org.hibernate.bytecode.enhance.spi.Enhancer;
 import org.hibernate.bytecode.enhance.spi.UnloadedClass;
 import org.hibernate.bytecode.enhance.spi.UnloadedField;
+import org.hibernate.bytecode.spi.BytecodeProvider
 import org.hibernate.cfg.Environment
 import org.gradle.api.Project
 import org.datanucleus.enhancer.DataNucleusEnhancer
@@ -134,7 +135,7 @@ class TangramUtilities {
    */
   private ClassLoader getClassLoader() {
     // collect compile output paths as URLs
-    List<URL> urlList = new ArrayList<URL>()
+    List<URL> urlList = new ArrayList<>()
     project.sourceSets['main'].output.files.each {
       String urlstring = it.toURI().toURL()
       // println "url: $urlstring"
@@ -169,8 +170,8 @@ class TangramUtilities {
   private nucleusEnhance(String api, String dir) {
     try {
       // Collect output paths and files
-      List<String> fileList = new ArrayList<String>()
-      List<URL> urlList = new ArrayList<URL>()
+      List<String> fileList = new ArrayList<>()
+      List<URL> urlList = new ArrayList<>()
       project.sourceSets['main'].output.files.each {
         String urlstring = it.toURI().toURL()
         urlList.add(new URL(urlstring))
@@ -319,7 +320,7 @@ class TangramUtilities {
     if (dir == null) {
       dir = project.sourceSets['main'].output.classesDir.canonicalPath
     } // if
-    final ClassLoader classLoader = getClassLoader()
+    ClassLoader classLoader = getClassLoader()
     EnhancementContext enhancementContext = new DefaultEnhancementContext() {
       @Override
       public ClassLoader getLoadingClassLoader() {
@@ -341,13 +342,22 @@ class TangramUtilities {
       public boolean isLazyLoadable(UnloadedField field) {
         return true
       }
+      @Override
+      public boolean doExtendedEnhancement(UnloadedClass classDescriptor) {
+        return false;
+      }
     };
-    final Enhancer enhancer = Environment.getEnhancer(enhancementContext)
-    final FileTree fileTree = project.fileTree(dir)
+    Properties p = new Properties();
+    p.setProperty(Environment.BYTECODE_PROVIDER, Environment.BYTECODE_PROVIDER_NAME_BYTEBUDDY);
+    BytecodeProvider bytecodeProvider = Environment.buildBytecodeProvider(p);
+    Enhancer enhancer = bytecodeProvider.getEnhancer(enhancementContext);
+    println enhancer.class.name
+    FileTree fileTree = project.fileTree(dir)
     for (File file : fileTree) {
       if (file.name.endsWith(".class")) {
+        print "file: $file.path $file.name \n"
         // if (enhancementContext.isEntityClass(jClass)||enhancementContext.isCompositeClass(jClass)) {
-          final byte[] enhancedBytecode = enhancer.enhance(file)
+        byte[] enhancedBytecode = enhancer.enhance(file)
         // }
       }
     }
