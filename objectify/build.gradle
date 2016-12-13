@@ -24,7 +24,8 @@ evaluationDependsOn(':tangram-mutable')
 dependencies {
   compile project (':tangram-mutable')
 
-  compile "org.mongodb.morphia:morphia:$versions.morphia"
+  compile "com.googlecode.objectify:objectify:$versions.objectify"
+  compile "com.google.appengine:appengine-api-1.0-sdk:$versions.appengine"
 
   testCompile "org.testng:testng:$versions.testng"
   // test logging at debug level through special logback.groovy
@@ -36,4 +37,6 @@ dependencies {
   testCompile project (':tangram-core').sourceSets.test.output
   testCompile "org.springframework:spring-core:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"
+  testCompile "com.google.appengine:appengine-testing:$versions.appengine"
+  testCompile "com.google.appengine:appengine-api-stubs:$versions.appengine"
 }
