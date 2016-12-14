@@ -33,8 +33,6 @@ build_modules:
   - gradle generatePomFileForMavenJavaPublication artifactoryPublish
   - gradle versionEyeUpdate
   artifacts:
-    paths:
-    - */build/libs/*
     expire_in: 5 days
     name: ${CI_BUILD_STAGE}
 
