@@ -45,10 +45,15 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-def bootClasspathStr = "${project.hasProperty('jdk') ? jdk : System.env.JAVA_HOME}/jre/lib/rt.jar"
-project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
-    ac.options.bootClasspath = bootClasspathStr
-})
+if (project.hasProperty('jdk')) {
+  def bootClasspathStr = "${jdk}/jre/lib/rt.jar"
+  //println "Defining boot class path $bootClasspathStr"
+  project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
+      ac.options.bootClasspath = bootClasspathStr
+  })
+  // } else {
+  //  println "Default Java"
+}
 
 // Project specific default output directory
 eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/classes/main") }
@@ -59,7 +64,7 @@ if (release) {
     ruleSetFiles = files("$project.rootProject.projectDir/pmd.xml")
     sourceSets = [sourceSets.main]
     // Used to override the latest working version on travi-ci.
-    // Latest Version 5.5.x ist buggy with respect to slf4j logging.
+    // Latest Version 5.5.x is buggy with respect to slf4j logging.
     toolVersion = project.hasProperty('pmdversion') ? pmdversion : '5.4.2'
   }
 }
