@@ -28,6 +28,7 @@ import com.googlecode.objectify.cmd.Query;
 import dinistiq.Dinistiq;
 import java.io.Closeable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,7 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
+import org.tangram.objectify.ObjectifyBeanFactory;
 import org.tangram.objectify.test.content.BaseClass;
 import org.tangram.objectify.test.content.SubClass;
 import org.testng.Assert;
@@ -65,6 +67,8 @@ public class ObjectifyContentTest extends BaseContentTest<Objectify, Query<?>> {
         Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
         dinistiq = new Dinistiq(packages, getBeansForContentCheck());
+        ObjectifyBeanFactory factory = dinistiq.findBean(ObjectifyBeanFactory.class);
+        factory.setAdditionalClasses(Collections.emptyList());
     } // beforeClass()
 
 
