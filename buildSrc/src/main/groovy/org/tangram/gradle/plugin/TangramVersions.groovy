@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.4.RELEASE'
+  String springframework = '4.3.5.RELEASE'
 
   String weld = '2.4.1.Final'
   String openwebbeans = '1.7.0'
