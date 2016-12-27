@@ -14,6 +14,13 @@ to form a basis for web applications which need the following core elements:
 - Quick path to get something running
 - Long path to keep it alive and let the application grow
 
+A growing set of documentation items can be found in the wiki of this project:
+
+[https://github.com/mgoellnitz/tangram/wiki](https://github.com/mgoellnitz/tangram/wiki)
+
+with the current open [ideas and issues collection](https://github.com/mgoellnitz/tangram/issues)
+and [roadmap](https://github.com/mgoellnitz/tangram/roadmap).
+
 While the core forms a stable plattform basis for web applications to provide
 long time maintainable applications, anything from CSS, JavaScript, URL Scheme,
 Business Logic, Actions, to even the Model can be changed at runtime.
@@ -58,10 +65,6 @@ much makes sense for applications using JPA, JDO, or EBean, needing some WAR fil
 resources in their webapps folder.
 
 [http://qiqiaoban.blogspot.de/2015/10/gradle-plugin-in-tangram-now-grown-up.html](http://qiqiaoban.blogspot.de/2015/10/gradle-plugin-in-tangram-now-grown-up.html)
-
-A growing set of documentation items can be found in the wiki of this project:
-
-[https://github.com/mgoellnitz/tangram/wiki](https://github.com/mgoellnitz/tangram/wiki)
 
 ## Maven Repositories
 
