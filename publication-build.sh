@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-# last public JDK 7: /opt/jdk1.7.0_80
+# Script has a boot lib switch "jdk":
+#   gradle -Pjdk=/usr/lib/jvm/default-java ...
 #
-gradle -Pjdk=/opt/jdk1.8.0_102 -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
+#   last public JDK 7: /opt/jdk1.7.0_80
+#   JDK 8: /opt/jdk1.8.0_112
+#
+gradle -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
