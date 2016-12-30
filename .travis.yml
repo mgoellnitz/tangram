@@ -39,7 +39,7 @@ after_success:
   - gradle jacocoCombinedReport coveralls
   - bash <(curl -s https://codecov.io/bash)
   - gradle generatePomFileForMavenJavaPublication artifactoryPublish
-  - gradle versionEyeUpdate
+  - gradle -Ppmdversion=5.5.2 versionEyeUpdate
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
