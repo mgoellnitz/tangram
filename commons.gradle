@@ -65,7 +65,7 @@ if (release) {
     sourceSets = [sourceSets.main]
     // Used to override the latest working version on travi-ci.
     // Latest Version 5.5.x is buggy with respect to slf4j logging.
-    toolVersion = project.hasProperty('pmdversion') ? pmdversion : '5.4.2'
+    toolVersion = project.hasProperty('pmdversion') ? pmdversion : '5.5.2'
   }
 }
 

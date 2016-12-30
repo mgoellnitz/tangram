@@ -190,7 +190,9 @@ public class ToolHandler {
                     mimetype = CodeHelper.getMimetype(pathAndName[0]);
                 } // if
                 if (CodeHelper.getCodeMimeTypes().contains(mimetype)) {
-                    LOG.info("codeImport() {}: {} / {} ({}) ({}/{})", pathAndName[0], pathAndName.length>1 ? pathAndName[1] : "*", mimetype, entry.getComment(), entry.getCompressedSize(), entry.getSize());
+                    LOG.info("codeImport() {}: {} / {} ({}) ({}/{})",
+                            pathAndName[0], (pathAndName.length>1 ? pathAndName[1] : "*"), mimetype,
+                            entry.getComment(), entry.getCompressedSize(), entry.getSize());
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     byte[] buffer = new byte[1024];
                     for (int len = zip.read(buffer); len>=0; len = zip.read(buffer)) {

@@ -165,7 +165,8 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
                     LOG.debug("getClients() login link {}", loginLink);
                     formClient.setLoginUrl(loginLink.getUrl());
                 } catch (Exception e) {
-                    LOG.warn("getClients() {} :{}", e.getMessage(), e.getClass().getSimpleName());
+                    String simpleName = e.getClass().getSimpleName();
+                    LOG.warn("getClients() {} :{}", e.getMessage(), simpleName);
                 } // try/catch
             }  // if
         } // synchronized

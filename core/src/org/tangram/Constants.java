@@ -180,7 +180,7 @@ public final class Constants {
                 VERSIONS.put(s.substring(8, s.length()-SUFFIX_LENGTH), p.getProperty(Constants.PROPERTY_VERSION_BUILD));
             } // for
         } catch (Exception e) {
-            LOG.error("{} error while reading all modules building properties", e);
+            LOG.error("Error while reading all modules building properties", e);
         } // try/catch
         StringBuilder versionBuilder = new StringBuilder(128);
         versionBuilder.append(VERSION_MAJOR);
