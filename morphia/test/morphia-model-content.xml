@@ -4,10 +4,10 @@
 <id>CodeResource:6</id>
 <annotation>org.tangram.example.Topic</annotation>
 <mimeType>application/x-groovy</mimeType>
-<codeText>package org.tangram.morphia.test
+<codeText>package org.tangram.test.morphia.content
 
 import org.mongodb.morphia.annotations.Entity
-import org.tangram.morphia.test.content.BaseClass
+import org.tangram.test.morphia.content.BaseClass
 
 @Entity
 public class NewsArticle extends BaseClass {

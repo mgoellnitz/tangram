@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.morphia.test;
+package org.tangram.test.morphia;
 
 import java.io.FileNotFoundException;
 import org.mockito.InjectMocks;
@@ -57,10 +57,10 @@ public class MorphiaModelDiscovererTest {
     @Test
     public void testModelDiscoverer() {
         Assert.assertEquals(classRepository.get().size(), 1, "There should be one class in the repository.");
-        Assert.assertEquals(""+classRepository.get(), "[org.tangram.morphia.test.NewsArticle]", "Unexpected list of class names.");
-        Class<? extends Object> cls = classRepository.get("org.tangram.morphia.test.NewsArticle");
+        Assert.assertEquals(""+classRepository.get(), "[org.tangram.test.morphia.content.NewsArticle]", "Unexpected list of class names.");
+        Class<? extends Object> cls = classRepository.get("org.tangram.test.morphia.content.NewsArticle");
         Assert.assertNotNull(cls, "There should be some class representation.");
-        Assert.assertEquals(cls.getName(), "org.tangram.morphia.test.NewsArticle", "Unexpected class name.");
+        Assert.assertEquals(cls.getName(), "org.tangram.test.morphia.content.NewsArticle", "Unexpected class name.");
     } // testModelDiscoverer()
 
 } // ClassRepositoryEnhancerTest

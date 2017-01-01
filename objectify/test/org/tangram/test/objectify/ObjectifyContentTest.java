@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.objectify.test;
+package org.tangram.test.objectify;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -28,19 +28,19 @@ import com.googlecode.objectify.cmd.Query;
 import dinistiq.Dinistiq;
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.content.Content;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
 import org.tangram.objectify.ObjectifyBeanFactory;
-import org.tangram.objectify.test.content.BaseClass;
-import org.tangram.objectify.test.content.SubClass;
+import org.tangram.test.objectify.content.BaseClass;
+import org.tangram.test.objectify.content.SubClass;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -68,7 +68,9 @@ public class ObjectifyContentTest extends BaseContentTest<Objectify, Query<?>> {
         packages.add("org.tangram.components");
         dinistiq = new Dinistiq(packages, getBeansForContentCheck());
         ObjectifyBeanFactory factory = dinistiq.findBean(ObjectifyBeanFactory.class);
-        factory.setAdditionalClasses(Collections.emptyList());
+        Set<Class<? extends Content>> additionalClasses = new HashSet<>();
+        additionalClasses.add(AdditionalClass.class);
+        factory.setAdditionalClasses(additionalClasses);
     } // beforeClass()
 
 
@@ -128,19 +130,19 @@ public class ObjectifyContentTest extends BaseContentTest<Objectify, Query<?>> {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 6;
+        return 7;
     }
 
 
     @Override
     protected int getNumberOfClasses() {
-        return 3;
+        return 4;
     }
 
 
     @Test
     public void testDummy() {
-        Assert.assertEquals(getNumberOfClasses(), 3, "Unexpected number of classes in dummy test.");
+        Assert.assertEquals(getNumberOfClasses(), 4, "Unexpected number of classes in dummy test.");
     }
 
 } // ObjectifyContentTest
