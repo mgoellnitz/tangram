@@ -18,8 +18,8 @@ A growing set of documentation items can be found in the wiki of this project:
 
 [https://github.com/mgoellnitz/tangram/wiki](https://github.com/mgoellnitz/tangram/wiki)
 
-with the current open [ideas and issues collection](https://github.com/mgoellnitz/tangram/issues)
-and [roadmap](https://github.com/mgoellnitz/tangram/roadmap).
+with the current open [ideas and issues collection](https://github.com/mgoellnitz/tangram/wiki/issues)
+and [roadmap](https://github.com/mgoellnitz/tangram/wiki/roadmap).
 
 While the core forms a stable plattform basis for web applications to provide
 long time maintainable applications, anything from CSS, JavaScript, URL Scheme,
@@ -55,7 +55,7 @@ Examples are presented for JDO with RDBMS (hsqldb is used for the example conten
 JDO on Google App Engine, JPA, EBean (with h2), and CoreMedia CMS's most simple example
 application.
 
-[https://github.com/mgoellnitz/tangram-examples](https://github.com/mgoellnitz/tangram-examples]
+[https://github.com/mgoellnitz/tangram-examples](https://github.com/mgoellnitz/tangram-examples)
 
 To make things easier for applications using this framework we provide a Gradle plugin now.
 
