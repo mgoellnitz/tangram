@@ -15,5 +15,5 @@
 /editor/ckeditor*
 /jacoco
 /.trackdown
-/redmine-issues.md
+/issues.md
 /roadmap.md

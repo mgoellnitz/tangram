@@ -140,7 +140,7 @@ public class GenericAuthorizationService implements AuthorizationService, BeanLi
         String thisURL = request.getRequestURI().substring(Utils.getUriPrefix(request).length());
         LOG.debug("handleRequest({}) detected URI {}", this, thisURL);
         LOG.debug("handleRequest() allowed users {} ({})", effectiveAllowedUsers, effectiveAllowedUsers.size());
-        LOG.debug("handleRequest() free urls {}", freeUrls != null);
+        LOG.debug("handleRequest() free urls {}", (freeUrls != null));
         LOG.debug("handleRequest() free urls {} ({})", freeUrls, freeUrls.size());
         if (!freeUrls.contains(thisURL)) {
             Set<User> users = authenticationService.getUsers(request, response);

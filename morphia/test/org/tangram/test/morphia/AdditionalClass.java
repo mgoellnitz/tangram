@@ -1,6 +1,6 @@
-/**
+/*
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,44 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.morphia.test.content;
+package org.tangram.test.morphia;
 
-import java.util.List;
 import org.mongodb.morphia.annotations.Entity;
 import org.tangram.morphia.MorphiaContent;
-import org.tangram.mutable.test.content.BaseInterface;
+
 
 /**
- * Persistent bean class just for test purposes.
+ *
  */
 @Entity
-public class BaseClass extends MorphiaContent implements BaseInterface {
+public class AdditionalClass extends MorphiaContent {
 
-    private String title;
-
-    private List<BaseClass> peers;
-
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
-    @Override
-    public List<? extends BaseInterface> getPeers() {
-        return peers;
-    }
-
-
-    public void setPeers(List<BaseClass> peers) {
-        this.peers = peers;
-    }
-
-} // BaseClass
+}

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -36,17 +36,17 @@ public class TangramVersions {
   String groovy = '2.4.7'
   String asm = '5.1'
   String velocity = '1.7'
-  String slf4j = '1.7.21'
+  String slf4j = '1.7.22'
   String log4j = '1.2.17'
   String logback = '1.1.8'
   String yui = '2.4.7'
-  String mockito = '2.3.0'
+  String mockito = '2.5.5'
   String xstream = '1.4.9'
   String pac4j = '1.9.4'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.39'
-  String codemirror = '5.21.0'
-  String ckeditor = '4.6.0'
+  String codemirror = '5.22.0'
+  String ckeditor = '4.6.1'
 
   // For testing purposes
   String junit = '4.12'
@@ -59,10 +59,10 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.4.RELEASE'
+  String springframework = '4.3.5.RELEASE'
 
   String weld = '2.4.1.Final'
-  String openwebbeans = '1.7.0'
+  String openwebbeans = '1.7.1'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m6'
@@ -70,15 +70,15 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
 
-  String openjpa = '2.4.1'
+  String openjpa = '2.4.2'
   String eclipselink = '2.6.4'
   String hibernate = '5.2.5.Final'
-  String hibernate_ogm = '5.0.3.Final'
+  String hibernate_ogm = '5.0.4.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
   // String datanucleus = '4.1.0-release'
-  String datanucleus = '5.0.5'
+  String datanucleus = '5.0.6'
 
   String ebean = '8.1.1'
   String ebean_datasource = '1.1'

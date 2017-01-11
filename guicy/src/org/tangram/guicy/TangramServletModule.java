@@ -150,12 +150,14 @@ public class TangramServletModule extends ServletModule {
         try {
             configuration.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(GUICY_DEFAULTS));
         } catch (Exception ex) {
-            LOG.error("configureServlets() could not read config defaults: {}", ex.getMessage());
+            String message = ex.getMessage();
+            LOG.error("configureServlets() could not read config defaults: {}", message);
         } // try/catch
         try {
             configuration.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(GUICY_PROPERTIES));
         } catch (Exception ex) {
-            LOG.error("configureServlets() could not read configuration: {}", ex.getMessage());
+            String message = ex.getMessage();
+            LOG.error("configureServlets() could not read configuration: {}", message);
         } // try/catch
         Names.bindProperties(binder(), configuration);
 

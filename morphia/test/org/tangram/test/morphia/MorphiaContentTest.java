@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.tangram.morphia.test;
+package org.tangram.test.morphia;
 
 import dinistiq.Dinistiq;
 import java.util.ArrayList;
@@ -25,24 +25,39 @@ import java.util.List;
 import java.util.Set;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.tangram.content.Content;
 import org.tangram.morphia.Code;
-import org.tangram.morphia.test.content.BaseClass;
-import org.tangram.morphia.test.content.SubClass;
+import org.tangram.morphia.MorphiaBeanFactory;
 import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
+import org.tangram.test.morphia.content.BaseClass;
+import org.tangram.test.morphia.content.SubClass;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
 
-    @Override
-    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+    private Dinistiq dinistiq;
+
+
+    @BeforeClass
+    protected void beforeClass() throws Exception {
         Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
+        dinistiq = new Dinistiq(packages, getBeansForContentCheck());
+        MorphiaBeanFactory factory = dinistiq.findBean(MorphiaBeanFactory.class);
+        Set<Class<? extends Content>> additionalClasses = new HashSet<>();
+        additionalClasses.add(AdditionalClass.class);
+        factory.setAdditionalClasses(additionalClasses);
+    } // getInstance()
+
+
+    @Override
+    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
         Assert.assertNotNull(dinistiq, "Need dinistiq instance for execute tests.");
         return dinistiq.findBean(type);
     } // getInstance()
@@ -88,13 +103,13 @@ public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
 
     @Override
     protected int getNumberOfAllClasses() {
-        return 6;
+        return 7;
     }
 
 
     @Override
     protected int getNumberOfClasses() {
-        return 3;
+        return 4;
     }
 
 
