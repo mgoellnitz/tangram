@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2016 Martin Goellnitz
+ * Copyright 2011-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -66,8 +66,8 @@ allprojects {
     useTestNG()
   }
   dependencies {
-    jacocoAgent "org.jacoco:org.jacoco.agent:0.7.7+"
-    jacocoAnt "org.jacoco:org.jacoco.ant:0.7.7+"
+    jacocoAgent "org.jacoco:org.jacoco.agent:0.7.8+"
+    jacocoAnt "org.jacoco:org.jacoco.ant:0.7.8+"
   }
 }
 

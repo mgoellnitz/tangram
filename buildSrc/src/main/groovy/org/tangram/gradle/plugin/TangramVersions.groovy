@@ -34,7 +34,7 @@ public class TangramVersions {
   String javax_json = '1.0'
   String gson = '2.7'
   String groovy = '2.4.7'
-  String asm = '5.1'
+  String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.22'
   String log4j = '1.2.17'
@@ -87,7 +87,7 @@ public class TangramVersions {
   String mongodb = '3.0.2'
   String morphia = '1.3.0'
   
-  String objectify = '5.1.13'
+  String objectify = '5.1.14'
 
   String appengine = '1.9.48'
   
