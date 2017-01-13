@@ -1,5 +1,5 @@
 # 
-# Copyright 2016 Martin Goellnitz
+# Copyright 2016-2017 Martin Goellnitz
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,7 @@
 # TANGRAM_MORPHIA_INTEGRATION_TEST
 # ORG_GRADLE_PROJECT_release=true
 #
-image: dominikhastrich/java-gitlab-cd
+image: provocon/gitlabci-gradle-java
 
 stages:
   - modules
