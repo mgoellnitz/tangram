@@ -56,8 +56,8 @@ class TangramUtilities {
    */
   public isFilterable(input) {
     return (input.displayName.startsWith('file') &&
-           (input.name.endsWith('.css') || input.name.endsWith('.js') ||
-            input.name.endsWith('.html') || input.name.endsWith('.txt') || input.name.endsWith('.jsp')))
+      (input.name.endsWith('.css') || input.name.endsWith('.js') ||
+        input.name.endsWith('.html') || input.name.endsWith('.txt') || input.name.endsWith('.jsp')))
   }
 
   public isCss(input) {
@@ -148,6 +148,7 @@ class TangramUtilities {
     }
     // Add compile class path elements as urls
     project.configurations.compile.files.each {
+      // println "dependency: $it"
       String urlstring = it.toURI().toURL()
       urlList.add(new URL(urlstring))
     }
@@ -316,6 +317,38 @@ class TangramUtilities {
   } // eclipselinkWeave()
 
 
+  private void writeEnhancedClassFile(byte[] enhancedBytecode, File file) {
+    try {
+      if (file.delete()) {
+        if (!file.createNewFile()) {
+          println "Could not create class file "+file.name
+        }
+      } else {
+        println "Could not delete class file "+file.name
+      }
+    } catch (IOException e) {
+      println "Could not prepare file for enhanced class "+file.name
+    }
+
+    try {
+      FileOutputStream outputStream = new FileOutputStream(file, false)
+      try {
+        outputStream.write(enhancedBytecode)
+        outputStream.flush()
+      } catch (IOException e) {
+        throw new GradleException("Error writing enhanced class to file "+file.absolutePath, e)
+      } finally {
+        try {
+          outputStream.close()
+        } catch (IOException ignore) {
+        }
+      }
+    } catch (FileNotFoundException e) {
+      throw new GradleException("Error writing to class file "+file.absolutePath, e)
+    }
+  }
+
+
   private void hibernateEnhance(String dir) {
     if (dir == null) {
       dir = project.sourceSets['main'].output.classesDir.canonicalPath
@@ -324,6 +357,7 @@ class TangramUtilities {
     EnhancementContext enhancementContext = new DefaultEnhancementContext() {
       @Override
       public ClassLoader getLoadingClassLoader() {
+        println "returning class loader $classLoader"
         return classLoader
       }
       @Override
@@ -353,12 +387,28 @@ class TangramUtilities {
     Enhancer enhancer = bytecodeProvider.getEnhancer(enhancementContext);
     println enhancer.class.name
     FileTree fileTree = project.fileTree(dir)
+    def base = dir.length() + 1
     for (File file : fileTree) {
       if (file.name.endsWith(".class")) {
-        print "file: $file.path $file.name \n"
-        // if (enhancementContext.isEntityClass(jClass)||enhancementContext.isCompositeClass(jClass)) {
-        byte[] enhancedBytecode = enhancer.enhance(file)
-        // }
+        def path = file.absolutePath
+        String className = path.substring(base, path.length()-".class".length()).replace(File.separator, '.')
+        print "class: $className file: $file.name dir: $dir\n"
+        ByteArrayOutputStream originalBytes = new ByteArrayOutputStream()
+        FileInputStream fileInputStream = new FileInputStream(file)
+        try {
+          byte[] buffer = new byte[1024]
+          int length
+          while ((length = fileInputStream.read(buffer)) != -1) {
+            originalBytes.write(buffer, 0, length)
+          }
+        }
+        finally {
+          fileInputStream.close()
+        }
+        byte[] enhancedBytecode = enhancer.enhance(className, originalBytes.toByteArray())
+        if (enhancedBytecode != null) {
+          writeEnhancedClassFile(enhancedBytecode, file)
+        }
       }
     }
   }

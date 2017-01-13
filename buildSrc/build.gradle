@@ -73,7 +73,7 @@ dependencies {
   compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
   // For the direct hibernate enhancer
   // compile 'org.javassist:javassist:3.20.0-GA'
-  compile 'net.bytebuddy:byte-buddy:1.5.7'
+  compile 'net.bytebuddy:byte-buddy:1.5.4'
   compile "org.hibernate:hibernate-core:$versions.hibernate"
 }
 
