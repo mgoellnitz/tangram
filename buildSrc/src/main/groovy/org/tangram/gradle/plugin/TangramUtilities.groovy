@@ -357,7 +357,6 @@ class TangramUtilities {
     EnhancementContext enhancementContext = new DefaultEnhancementContext() {
       @Override
       public ClassLoader getLoadingClassLoader() {
-        println "returning class loader $classLoader"
         return classLoader
       }
       @Override
@@ -385,14 +384,13 @@ class TangramUtilities {
     p.setProperty(Environment.BYTECODE_PROVIDER, Environment.BYTECODE_PROVIDER_NAME_BYTEBUDDY);
     BytecodeProvider bytecodeProvider = Environment.buildBytecodeProvider(p);
     Enhancer enhancer = bytecodeProvider.getEnhancer(enhancementContext);
-    println enhancer.class.name
     FileTree fileTree = project.fileTree(dir)
     def base = dir.length() + 1
     for (File file : fileTree) {
       if (file.name.endsWith(".class")) {
         def path = file.absolutePath
         String className = path.substring(base, path.length()-".class".length()).replace(File.separator, '.')
-        print "class: $className file: $file.name dir: $dir\n"
+        // print "class: $className file: $file.name dir: $dir\n"
         ByteArrayOutputStream originalBytes = new ByteArrayOutputStream()
         FileInputStream fileInputStream = new FileInputStream(file)
         try {
