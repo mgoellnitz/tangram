@@ -45,7 +45,7 @@ public class TangramVersions {
   String pac4j = '1.9.4'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.39'
-  String codemirror = '5.23.0'
+  String codemirror = '5.24.0'
   String ckeditor = '4.6.2'
 
   // For testing purposes
