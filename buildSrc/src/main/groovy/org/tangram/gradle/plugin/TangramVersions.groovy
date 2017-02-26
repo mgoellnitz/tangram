@@ -42,7 +42,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '2.7.11'
   String xstream = '1.4.9'
-  String pac4j = '1.9.4'
+  String pac4j = '1.9.5'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.39'
   String codemirror = '5.24.0'
@@ -59,9 +59,9 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.5.RELEASE'
+  String springframework = '4.3.6.RELEASE'
 
-  String weld = '2.4.1.Final'
+  String weld = '2.4.2.SP1'
   String openwebbeans = '1.7.2'
 
   // Storage options
@@ -73,12 +73,9 @@ public class TangramVersions {
   String openjpa = '2.4.2'
   String eclipselink = '2.6.4'
   String hibernate = '5.2.6.Final'
-  String hibernate_ogm = '5.0.4.Final'
+  String hibernate_ogm = '5.1.0.CR1'
 
-  // The last DataNucleus Access Plattform version to include all necessary modules
-  // DataNucleus does not provide all artifacts for every released version.
-  // String datanucleus = '4.1.0-release'
-  String datanucleus = '5.0.6'
+  String datanucleus = '5.0.7'
 
   String ebean = '8.1.1'
   String ebean_datasource = '1.1'
@@ -89,6 +86,6 @@ public class TangramVersions {
   
   String objectify = '5.1.14'
 
-  String appengine = '1.9.48'
+  String appengine = '1.9.49'
   
 } // TangramVersions
