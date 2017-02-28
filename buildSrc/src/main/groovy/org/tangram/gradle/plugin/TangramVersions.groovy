@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,15 +27,15 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.12'
+  String lombok = '1.16.14'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String groovy = '2.4.7'
   String asm = '5.1'
   String velocity = '1.7'
-  String slf4j = '1.7.21'
+  String slf4j = '1.7.24'
   String log4j = '1.2.17'
-  String logback = '1.1.8'
+  String logback = '1.2.1'
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.9'
@@ -57,10 +57,10 @@ public class TangramVersions {
   String guice = '4.1.0'
   String mycila_guice = '4.0.rc1'
 
-  String springframework = '4.3.5.RELEASE'
+  String springframework = '4.3.6.RELEASE'
 
   String weld = '2.4.1.Final'
-  String openwebbeans = '1.6.3'
+  String openwebbeans = '1.7.2'
 
   // Storage options
   String jdo_api = 'javax.jdo:jdo-api:3.1'
@@ -68,8 +68,8 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
 
-  String openjpa = '2.4.1'
-  String eclipselink = '2.6.3'
+  String openjpa = '2.4.2'
+  String eclipselink = '2.6.4'
   String hibernate = '5.1.2.Final'
   String hibernate_ogm = '5.0.3.Final'
 
@@ -83,6 +83,6 @@ public class TangramVersions {
   String ebean_agent = '4.11.1'
 
   String mongodb = '3.0.2'
-  String morphia = '1.3.0'
+  String morphia = '1.3.1'
 
 } // TangramVersions
