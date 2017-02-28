@@ -42,7 +42,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '2.7.12'
   String xstream = '1.4.9'
-  String pac4j = '1.9.5'
+  String pac4j = '1.9.6'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.39'
   String codemirror = '5.24.0'
@@ -85,7 +85,7 @@ public class TangramVersions {
   String mongodb = '3.0.2'
   String morphia = '1.3.1'
   
-  String objectify = '5.1.14'
+  String objectify = '5.1.15'
 
   String appengine = '1.9.49'
   
