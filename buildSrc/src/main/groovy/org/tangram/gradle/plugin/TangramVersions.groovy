@@ -36,11 +36,11 @@ public class TangramVersions {
   String groovy = '2.4.8'
   String asm = '5.2'
   String velocity = '1.7'
-  String slf4j = '1.7.23'
+  String slf4j = '1.7.24'
   String log4j = '1.2.17'
   String logback = '1.2.1'
   String yui = '2.4.7'
-  String mockito = '2.7.11'
+  String mockito = '2.7.12'
   String xstream = '1.4.9'
   String pac4j = '1.9.5'
   String mockftpserver = '2.7.1'
@@ -75,7 +75,7 @@ public class TangramVersions {
   String hibernate = '5.2.6.Final'
   String hibernate_ogm = '5.1.0.CR1'
 
-  String datanucleus = '5.0.7'
+  String datanucleus = '[5.0,5.1)'
 
   String ebean = '8.1.1'
   String ebean_datasource = '1.1'
