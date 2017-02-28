@@ -46,6 +46,9 @@ import org.tangram.util.SystemUtils;
 
 /**
  * Common stuff for all bean factories dealing with mutable content.
+ *
+ * @param <Q> query type constraint
+ * @param <M> manager type constraint
  */
 public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Object> extends AbstractBeanFactory<Q> implements MutableBeanFactory<M, Q> {
 

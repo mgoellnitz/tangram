@@ -42,6 +42,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplate
     private ViewResolver delegate;
 
 
+    @Override
     public int getOrder() {
         return order;
     }
@@ -62,6 +63,7 @@ public class ModelAwareRepositoryViewResolver extends AbstractRepositoryTemplate
     }
 
 
+    @Override
     protected View getNotFoundDummy() {
         return SpringViewUtilities.NOT_FOUND_DUMMY;
     } // getNotFoundDummy()
