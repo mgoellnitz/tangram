@@ -87,6 +87,4 @@ public class TangramVersions {
   
   String objectify = '5.1.15'
 
-  String appengine = '1.9.49'
-  
 } // TangramVersions
