@@ -165,7 +165,7 @@ public class ComaBeanFactoryTest {
         Assert.assertEquals(homeFolderId, "9", "Unexpected id for home folder.");
         Set<Content> topicSet = factory.getChildrenWithType(homeFolderId, "Topic");
         Assert.assertEquals(topicSet.size(), 2, "Unexpected number of topics.");
-        Set<String> topicIds = factory.listIds("Topic", "AND lastname_ = 'coconat.php'", null, true);
+        Set<String> topicIds = factory.listIds("Topic", "lastname_ = 'coconat.php'", null, true);
         Assert.assertEquals(topicIds.size(), 1, "Unexpected number of topics with a certain name.");
         Assert.assertEquals(factory.getParentId(topicIds.iterator().next()), "9", "Unexpected parent id.");
         Set<Content> children = factory.getChildren("9", "coco.*");

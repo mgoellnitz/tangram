@@ -449,8 +449,10 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory<String
 
     public Set<String> listIds(String typeName, String optionalQuery, String orderProperty, Boolean ascending) {
         Set<String> ids = new HashSet<>();
-        String query = "SELECT id_ FROM Resources WHERE documenttype_ = '"+typeName+"' ";
+        String query = "SELECT id_ FROM Resources WHERE documenttype_ ";
+        query += (typeName==null) ? "IS NULL " : "= '"+typeName+"' ";
         if (optionalQuery!=null) {
+            query += "AND ";
             query += optionalQuery;
         } // if
         if (orderProperty!=null) {
@@ -461,13 +463,12 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory<String
             String order = orderProperty+" "+asc;
             query += " ORDER BY "+order;
         } // if
+        LOG.debug("listIds() {}", query);
         try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             while (resultSet.next()) {
-                if (LOG.isInfoEnabled()) {
-                    int contentId = resultSet.getInt("id_");
-                    ids.add(""+contentId);
-                    LOG.debug("getBean() {}", contentId);
-                } // if
+                int contentId = resultSet.getInt("id_");
+                ids.add(""+contentId);
+                LOG.debug("getBean() {}", contentId);
             } // while
         } catch (SQLException se) {
             LOG.error("listIds() "+query, se);
@@ -515,7 +516,8 @@ public abstract class AbstractComaBeanFactory extends AbstractBeanFactory<String
         Set<String> result = new HashSet<>();
         String query = "SELECT * FROM Resources WHERE folderid_ = "+parentId;
         if (type!=null) {
-            query += " AND documenttype_ = '"+type+"'";
+            query += " AND documenttype_ ";
+            query += (type==null) ? "IS NULL" : "= '"+type+"'";
         } // if
         try (Statement s = dbConnection.createStatement(); ResultSet resultSet = s.executeQuery(query)) {
             while (resultSet.next()) {

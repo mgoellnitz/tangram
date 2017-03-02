@@ -19,6 +19,7 @@
 package org.tangram.coma;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +45,21 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
      */
     private Set<String> codeTypeNames = new HashSet<>();
 
+    /**
+     * Id of the base folder to hold all codes relevant to tangram.
+     * This is meant for laege repositories where otherwise too many objects might get queried.
+     * Slows things down while keeping the needed amount of memory calculatable.
+     */
+    private String codeBaseFolderId = "1";
+
 
     public void setCodeTypeNames(Set<String> codeTypeNames) {
         this.codeTypeNames = codeTypeNames;
+    }
+
+
+    public void setCodeBaseFolderId(String codeBaseFolderId) {
+        this.codeBaseFolderId = codeBaseFolderId;
     }
 
 
@@ -62,17 +75,31 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
     } // createContent()
 
 
+    public void collectSubFoldersRecursive(Collection<String> collectedIds, String folder) {
+        Set<String> folderIds = listIds(null, "folderid_="+folder, null, false);
+        collectedIds.addAll(folderIds);
+        for (String id : folderIds) {
+            collectSubFoldersRecursive(collectedIds, id);
+        } // for
+    } // collectSubFoldersRecursive()
+
+
     public <T extends Content> List<T> listCode() {
+        Collection<String> folders = new HashSet<>();
+        collectSubFoldersRecursive(folders, codeBaseFolderId);
+        LOG.info("listCode() folders={}", folders);
         List<T> result = new ArrayList<>();
-        for (String typeName : codeTypeNames) {
-            for (String id : listIds(typeName, null, null, false)) {
-                ComaCode code = new ComaCode(id, typeName, getProperties(this, typeName, id));
-                for (ComaBeanPopulator populator : populators) {
-                    populator.populate(code);
-                } // if
-                if (code.containsKey("annotation")&&code.containsKey("mimeType")) {
-                    result.add(SystemUtils.convert(code));
-                } // if
+        for (String folder : folders) {
+            for (String typeName : codeTypeNames) {
+                for (String id : listIds(typeName, "folderid_ = "+folder, null, false)) {
+                    ComaCode code = new ComaCode(id, typeName, getProperties(this, typeName, id));
+                    for (ComaBeanPopulator populator : populators) {
+                        populator.populate(code);
+                    } // if
+                    if (code.containsKey("annotation")&&code.containsKey("mimeType")) {
+                        result.add(SystemUtils.convert(code));
+                    } // if
+                } // for
             } // for
         } // for
         return result;
