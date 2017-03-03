@@ -30,6 +30,7 @@ import org.tangram.coma.ComaBeanPopulator;
 import org.tangram.coma.ComaBlob;
 import org.tangram.coma.ComaContent;
 import org.tangram.components.coma.test.ComaTestCodeBeanPopulator;
+import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mock.content.Topic;
@@ -133,6 +134,22 @@ public class ComaBeanFactoryTest {
 
 
     /**
+     * Bean listener implementation just to check of underlying factory call listeners.
+     */
+    private class TestBeanListener implements BeanListener {
+
+        public boolean gotCalled = false;
+
+
+        @Override
+        public void reset() {
+            gotCalled = true;
+        }
+
+    }
+
+
+    /**
      * Test code related methods.
      */
     @Test
@@ -145,6 +162,9 @@ public class ComaBeanFactoryTest {
         Assert.assertEquals(code.getAnnotation(), "org.tangram.example.Topic", "Unexpected annotation for code.");
         Assert.assertEquals(code.getMimeType(), "text/html", "Unexpected mime type for code.");
         Assert.assertEquals(code.getSize(), 58, "Unexpected size for code.");
+        TestBeanListener tbl = new TestBeanListener();
+        factory.addListener(Content.class, tbl);
+        Assert.assertTrue(tbl.gotCalled, "Missed to call listener on registration");
     } // testCodes()
 
 
