@@ -25,9 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
@@ -156,5 +158,16 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
         listener.reset();
         LOG.info("addListener() {}: {}", cls.getSimpleName(), attachedListeners.get(cls).size());
     } // addListener()
+
+
+    @PostConstruct
+    public void afterPropertiesSet() {
+        super.afterPropertiesSet();
+        for (ComaBeanPopulator populator : populators) {
+            if (populator instanceof BeanFactoryAware) {
+                ((BeanFactoryAware<StringBuilder>) populator).setBeanFactory(this);
+            }
+        }
+    } // afterPropertiesSet()
 
 } // ComaBeanFactory
