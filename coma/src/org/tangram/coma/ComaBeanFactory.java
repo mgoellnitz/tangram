@@ -20,6 +20,7 @@ package org.tangram.coma;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,8 @@ import org.tangram.util.SystemUtils;
 public class ComaBeanFactory extends AbstractComaBeanFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComaBeanFactory.class);
+
+    private final Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<>();
 
     @Inject
     private Set<ComaBeanPopulator> populators;
@@ -134,14 +137,24 @@ public class ComaBeanFactory extends AbstractComaBeanFactory {
 
 
     /**
-     * Empty implementation.
-     * Coma is read only and does not even deal with external changes.
+     * Attach a listener for any changes dealing with classes of the given type.
+     * Coma is read only and does not even deal with external changes so far.
      *
-     * @see org.tangram.content.BeanFactory#addListener(java.lang.Class, org.tangram.content.BeanListener)
+     * @param cls class to be notified when instances of that class have been changed
+     * @param listener listener to be notified about changes
      */
     @Override
     public void addListener(Class<? extends Content> cls, BeanListener listener) {
-        // Since we don't have any changes, we don't need to register listeners
+        synchronized (attachedListeners) {
+            List<BeanListener> listeners = attachedListeners.get(cls);
+            if (listeners==null) {
+                listeners = new ArrayList<>();
+                attachedListeners.put(cls, listeners);
+            } // if
+            listeners.add(listener);
+        } // synchronized
+        listener.reset();
+        LOG.info("addListener() {}: {}", cls.getSimpleName(), attachedListeners.get(cls).size());
     } // addListener()
 
 } // ComaBeanFactory
