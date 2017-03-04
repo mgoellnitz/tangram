@@ -43,7 +43,7 @@ public class VelocityLogTest {
         log.log(VelocityLog.WARN_ID, "just trigger log", t);
         log.log(VelocityLog.ERROR_ID, "just trigger log", t);
 
-        Assert.assertFalse(log.isLevelEnabled(VelocityLog.DEBUG_ID), "Level debug should be enabled during test.");
+        Assert.assertTrue(log.isLevelEnabled(VelocityLog.DEBUG_ID), "Level debug should be enabled during test.");
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.ERROR_ID), "Level error should be enabled during test.");
         Assert.assertTrue(log.isLevelEnabled(VelocityLog.INFO_ID), "Level info should be enabled during test.");
         Assert.assertFalse(log.isLevelEnabled(VelocityLog.TRACE_ID), "Level trace should be disabled during test.");
