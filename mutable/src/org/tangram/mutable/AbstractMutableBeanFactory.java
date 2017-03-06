@@ -194,10 +194,8 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
         beginTransaction();
 
         LOG.debug("createBean() creating new instance of {}", cls.getName());
-        T bean = cls.newInstance();
-
         statistics.increase("create bean");
-        return bean;
+        return cls.newInstance();
     } // createBean()
 
 
