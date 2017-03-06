@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2016 Martin Goellnitz
+ * Copyright 2011-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -164,24 +164,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
     protected <T extends Content> void apiDelete(T bean) {
         manager.deletePersistent(bean);
     } // apiDelete()
-
-
-    /**
-     * remember that the newly created bean has to be persisted in the now open transaction!
-     *
-     * @see JdoBeanFactory
-     */
-    @Override
-    public <T extends Content> T createBean(Class<T> cls) {
-        LOG.debug("createBean() beginning transaction");
-        beginTransaction();
-
-        LOG.debug("createBean() creating new instance of {}", cls.getName());
-        T bean = manager.newInstance(cls);
-
-        statistics.increase("create bean");
-        return bean;
-    } // createBean()
 
 
     @Override

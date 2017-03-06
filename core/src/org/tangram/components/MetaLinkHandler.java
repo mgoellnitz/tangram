@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2016 Martin Goellnitz
+ * Copyright 2014-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -297,7 +297,7 @@ public class MetaLinkHandler implements LinkHandlerRegistry, LinkFactory, BeanLi
     private <T extends Object> T createInstance(Class<T> clazz) throws InstantiationException, IllegalAccessException {
         LOG.info("createInstance() {} is marked @LinkHandler", clazz.getName());
         T instance = clazz.newInstance();
-        LOG.info("createInstance() {} instanciated", clazz.getName());
+        LOG.info("createInstance() {} instanciated", instance.getClass().getName());
         return instance;
     } // createInstance()
 

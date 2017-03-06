@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,8 +21,6 @@ package org.tangram.components.spring;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -30,8 +28,6 @@ import org.springframework.context.ApplicationContextAware;
 @Named
 @Singleton
 public final class TangramSpringServices implements ApplicationContextAware {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TangramSpringServices.class);
 
     private static ApplicationContext applicationContext;
 
