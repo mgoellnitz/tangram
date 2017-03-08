@@ -33,24 +33,24 @@ public class TangramVersions {
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.4.8'
+  String groovy = '2.4.9'
   String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.24'
   String log4j = '1.2.17'
   String logback = '1.2.1'
   String yui = '2.4.7'
-  String mockito = '2.7.12'
+  String mockito = '2.7.14'
   String xstream = '1.4.9'
   String pac4j = '1.9.6'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.39'
-  String codemirror = '5.24.0'
+  String codemirror = '5.24.2'
   String ckeditor = '4.6.2'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.10' // Gradle 3.4 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.11' // Gradle 3.4 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.193'
 
@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.6.RELEASE'
+  String springframework = '4.3.7.RELEASE'
 
   String weld = '2.4.2.SP1'
   String openwebbeans = '1.7.2'
@@ -73,7 +73,7 @@ public class TangramVersions {
   String openjpa = '2.4.2'
   String eclipselink = '2.6.4'
   String hibernate = '5.2.8.Final'
-  String hibernate_ogm = '5.1.0.CR1'
+  String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '1.6.9'
 
   String datanucleus = '[5.0,5.1)'
