@@ -30,7 +30,7 @@ public class TangramVersions {
   String lombok = '1.16.14'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
-  String groovy = '2.4.7'
+  String groovy = '2.4.9'
   String asm = '5.1'
   String velocity = '1.7'
   String slf4j = '1.7.24'
@@ -47,7 +47,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.10' // Gradle 3.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.11' // Gradle 3.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.193'
 
@@ -57,7 +57,7 @@ public class TangramVersions {
   String guice = '4.1.0'
   String mycila_guice = '4.0.rc1'
 
-  String springframework = '4.3.6.RELEASE'
+  String springframework = '4.3.7.RELEASE'
 
   String weld = '2.4.1.Final'
   String openwebbeans = '1.7.2'
