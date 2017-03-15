@@ -3,6 +3,7 @@
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/tangram.svg)](https://github.com/mgoellnitz/tangram/releases/latest)
 [![Build Status](https://api.travis-ci.org/mgoellnitz/tangram.svg?branch=master)](https://travis-ci.org/mgoellnitz/tangram)
 [![Coverage Status](https://coveralls.io/repos/github/mgoellnitz/tangram/badge.svg?branch=master)](https://coveralls.io/github/mgoellnitz/tangram?branch=master)
+[![Coverage Status](http://codecov.io/github/mgoellnitz/tangram/coverage.svg?branch=master)](https://codecov.io/gh/mgoellnitz/tangram)
 
 Tangram is a framework comprised of an assembly of proven Java library modules
 to form a basis for web applications which need the following core elements:
