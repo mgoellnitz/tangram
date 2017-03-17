@@ -44,7 +44,7 @@ public class TangramVersions {
   String xstream = '1.4.9'
   String pac4j = '1.9.6'
   String mockftpserver = '2.7.1'
-  String tomcat = '8.0.39'
+  String tomcat = '8.0.42'
   String codemirror = '5.24.2'
   String ckeditor = '4.6.2'
 
@@ -52,7 +52,7 @@ public class TangramVersions {
   String junit = '4.12'
   String testng = '6.11' // Gradle 3.4 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.193'
+  String h2db = '1.4.194'
 
   // The dependency injection options
   String dinistiq = '0.6'
