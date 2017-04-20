@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.7.RELEASE'
+  String springframework = '4.3.8.RELEASE'
 
   String weld = '2.4.2.SP1'
   String openwebbeans = '1.7.2'
@@ -72,7 +72,7 @@ public class TangramVersions {
 
   String openjpa = '2.4.2'
   String eclipselink = '2.6.4'
-  String hibernate = '5.2.9.Final'
+  String hibernate = '5.2.10.Final'
   String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '[1.6,1.7)'
 
