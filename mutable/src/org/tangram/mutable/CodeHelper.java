@@ -46,6 +46,7 @@ public final class CodeHelper {
 
 
     static {
+        // These two are in fact FTP module related.
         EXTENSION_TO_CUT.add(".new");
         EXTENSION_TO_CUT.add(".old");
 
