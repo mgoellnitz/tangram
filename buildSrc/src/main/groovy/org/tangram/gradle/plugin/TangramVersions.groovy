@@ -52,7 +52,7 @@ public class TangramVersions {
   String junit = '4.12'
   String testng = '6.11' // Gradle 3.4 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.194'
+  String h2db = '1.4.195'
 
   // The dependency injection options
   String dinistiq = '0.6'
@@ -62,7 +62,7 @@ public class TangramVersions {
   String springframework = '4.3.8.RELEASE'
 
   String weld = '2.4.2.SP1'
-  String openwebbeans = '1.7.2'
+  String openwebbeans = '1.7.3'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m6'
