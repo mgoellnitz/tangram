@@ -33,7 +33,7 @@ public class TangramVersions {
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.4.10'
+  String groovy = '2.4.11'
   String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.25'
@@ -42,7 +42,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '2.7.22'
   String xstream = '1.4.9'
-  String pac4j = '1.9.6'
+  String pac4j = '1.9.7'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.43'
   String codemirror = '5.25.2'
