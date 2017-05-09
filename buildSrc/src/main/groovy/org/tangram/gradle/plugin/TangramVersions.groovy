@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -78,6 +78,6 @@ public class TangramVersions {
   String ebean = '7.2.3'
   String ebean_agent = '4.9.2'
 
-  String appengine = '1.9.46'
+  String appengine = '1.9.52'
 
 } // TangramVersions
