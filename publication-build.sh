@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2015-2016 Martin Goellnitz
+# Copyright 2015-2017 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -21,4 +21,4 @@
 #   last public JDK 7: /opt/jdk1.7.0_80
 #   JDK 8: /opt/jdk1.8.0_112
 #
-gradle -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
+./gradlew -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
