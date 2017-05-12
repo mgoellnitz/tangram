@@ -21,7 +21,8 @@ import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.PublishArtifact
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.internal.java.JavaLibrary
-import org.gradle.api.internal.component.Usage
+import org.gradle.api.attributes.Usage
+import org.gradle.api.internal.component.UsageContext
 import org.gradle.api.internal.component.SoftwareComponentInternal
 import org.gradle.api.tasks.compile.AbstractCompile
 import groovy.util.Node
@@ -61,8 +62,7 @@ if (release) {
     ruleSets = []
     ruleSetFiles = files("$project.rootProject.projectDir/pmd.xml")
     sourceSets = [sourceSets.main]
-    // Used to override the latest working version on travi-ci.
-    toolVersion = project.hasProperty('pmdversion') ? pmdversion : '5.5.4'
+    toolVersion = '5.6.1'
   }
 }
 
@@ -98,19 +98,24 @@ artifactory {
   }
 }
 
-class WrappedRuntimeUsage implements Usage {
+class WrappedRuntimeUsage implements UsageContext {
 
-  private Usage delegate
+  private UsageContext delegate
 
   private DefaultConfiguration configuration
 
-  WrappedRuntimeUsage(Usage usage, DefaultConfiguration conf) {
+  WrappedRuntimeUsage(UsageContext usage, DefaultConfiguration conf) {
     delegate = usage
     configuration = conf
   }
 
   public String getName() {
     return delegate.name
+  }
+
+
+  public Usage getUsage() {
+    return delegate.usage
   }
 
 
@@ -156,8 +161,8 @@ class WrappedLibrary implements SoftwareComponentInternal {
     return delegate.name
   }
 
-  public Set<Usage> getUsages() {
-    Set<Usage> result = new HashSet<>()
+  public Set<UsageContext> getUsages() {
+    Set<UsageContext> result = new HashSet<>()
     delegate.usages.each {
       result.add(new WrappedRuntimeUsage(it, configuration))
     }

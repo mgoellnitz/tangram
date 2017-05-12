@@ -141,13 +141,16 @@ public class BufferResponse implements HttpServletResponse {
         return false;
     }
 
+    /**
+     * Wrap a simple byte array output stream as a servlet output stream.
+     */
+    private class ServletOutputStreamWrapper extends ServletOutputStream {
 
-    @Override
-    public final void reset() {
-        LOG.debug("reset()");
-        out = new ByteArrayOutputStream(bufferSize);
+            private final ByteArrayOutputStream out;
 
-        stream = new ServletOutputStream() {
+            public ServletOutputStreamWrapper(ByteArrayOutputStream o) {
+                out = o;
+            }
 
             @Override
             public void write(int b) throws IOException {
@@ -166,8 +169,14 @@ public class BufferResponse implements HttpServletResponse {
                 throw new UnsupportedOperationException("NYI");
             }
 
-        };
+    }
 
+
+    @Override
+    public final void reset() {
+        LOG.debug("reset()");
+        out = new ByteArrayOutputStream(bufferSize);
+        stream = new ServletOutputStreamWrapper(out);
         writer = new PrintWriter(stream);
     } // reset()
 

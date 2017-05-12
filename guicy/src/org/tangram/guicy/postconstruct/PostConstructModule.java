@@ -16,17 +16,13 @@
  */
 package org.tangram.guicy.postconstruct;
 
-import java.lang.reflect.Method;
-
-import javax.annotation.PostConstruct;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.reflect.Method;
+import javax.annotation.PostConstruct;
 
 
 /**
@@ -34,9 +30,9 @@ import org.slf4j.LoggerFactory;
  */
 public class PostConstructModule extends AbstractModule {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PostConstructModule.class);
+    // private static final Logger LOG = LoggerFactory.getLogger(PostConstructModule.class);
 
-
+    
     @Override
     protected void configure() {
         bindListener(Matchers.any(), new TypeListener() {
@@ -48,7 +44,8 @@ public class PostConstructModule extends AbstractModule {
                     for (final Method method : methods) {
                         PostConstruct postConstruct = method.getAnnotation(PostConstruct.class);
                         if (postConstruct!=null) {
-                            LOG.info("hear() found post construct method {}", method);
+                            // Note: results in a PMD warning due to access of 'method'
+                            // LOG.info("hear() found post construct method {}", method);
                             OnInjectionInvoker<I> callback = new OnInjectionInvoker<I>(method);
                             encounter.register(callback);
                         }

@@ -20,7 +20,6 @@ package org.tangram.morphia;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import groovy.lang.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
@@ -164,7 +164,7 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
                     q.where(query);
                 } // if
                 if (orderProperty!=null) {
-                    q = q.order((ascending?"":"-")+orderProperty);
+                    q = q.order((ascending ? "" : "-")+orderProperty);
                 } // if
                 // Default is no ordering - not even via IDs
                 LOG.info("listBeans() looking up instances of {}{}", shortTypeName, (q==null ? "" : " with condition "+q));
@@ -244,14 +244,29 @@ public class MorphiaBeanFactory extends AbstractMutableBeanFactory<Datastore, Qu
     } // setClassLoader()
 
 
-    private void init() {
-        ObjectFactory factory = new DefaultCreator() {
-            @Override
-            protected ClassLoader getClassLoaderForClass() {
-                return classLoader;
-            }
+    /**
+     * Default creator implementation referring to a a given class loader.
+     */
+    private class TangramCreator extends DefaultCreator {
 
-        };
+        private final ClassLoader classLoader;
+
+
+        public TangramCreator(ClassLoader cl) {
+            classLoader = cl;
+        }
+
+
+        @Override
+        protected ClassLoader getClassLoaderForClass() {
+            return classLoader;
+        }
+
+    }
+
+
+    private void init() {
+        ObjectFactory factory = new TangramCreator(classLoader);
         MapperOptions options = new MapperOptions();
         options.setObjectFactory(factory);
         Morphia morphia = new Morphia();
