@@ -46,7 +46,7 @@ compileTestJava.doLast {
 task listLibs(type:Exec) {
   workingDir "$projectDir"
   commandLine 'bash', '-c', \
-    "ls -l ../*/build/libs/"
+    'for i in `ls ../*/build/libs/*SNAPSHOT.jar` ; do unzip -v $i ; done'
 }
 
 compileJava.dependsOn listLibs
