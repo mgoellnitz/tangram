@@ -42,3 +42,11 @@ dependencies {
 compileTestJava.doLast {
   ebeanEnhanceTest()
 }
+
+task listLibs(type:Exec) {
+  workingDir "$projectDir"
+  commandLine 'bash', '-c', \
+    "ls -l ../*/build/libs/"
+}
+
+compileJava.dependsOn listLibs
