@@ -82,12 +82,18 @@ http://oss.jfrog.org/oss-snapshot-local/
 To make all this work you need
 
 - Java 8
-- Gradle 2.13 or later
+- Gradle 3.4 or later (gradle wrapper included)
 
 For all the rest simply type
 
 ```bash
 gradle
+```
+
+or
+
+```bash
+./gradlew
 ```
 
 which again automatically expands to
@@ -99,7 +105,8 @@ gradle clean publishToMavenLocal
 and then you can build and use your projects using tangram or the examples.
 
 If you need to set a runtime library to e.g. compile with Java 8 for target
-systems with Java 7 you can provide a JDK pointer:
+systems with Java 7 you can provide a JDK pointer (e.g. for releases up to 
+version 1.1):
 
 ```bash
 gradle -Pjdk=/opt/jdk1.7.0_80 clean build publishToMavenLocal

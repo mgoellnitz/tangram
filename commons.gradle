@@ -62,7 +62,7 @@ if (release) {
     ruleSets = []
     ruleSetFiles = files("$project.rootProject.projectDir/pmd.xml")
     sourceSets = [sourceSets.main]
-    toolVersion = '5.6.1'
+    toolVersion = '5.7.0'
   }
 }
 
