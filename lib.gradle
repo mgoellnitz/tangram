@@ -18,8 +18,6 @@
  */
 apply from: '../commons.gradle'
 
-def release = project.hasProperty('release')
-
 // Since this is just a lib we need this "providedCompile" stuff explicitly here
 configurations {
   libs
