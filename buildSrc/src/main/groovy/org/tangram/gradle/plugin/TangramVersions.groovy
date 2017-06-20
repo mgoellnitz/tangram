@@ -32,7 +32,7 @@ public class TangramVersions {
   String groovy = '2.4.7'
   String asm = '4.0'
   String velocity = '1.7'
-  String slf4j = '1.7.21'
+  String slf4j = '1.7.25'
   String log4j = '1.2.17'
   String yui = '2.4.7'
   String mockito = '1.10.19'
@@ -51,8 +51,8 @@ public class TangramVersions {
 
   String springframework = '4.2.6.RELEASE'
 
-  String weld = '2.3.5.Final'
-  String openwebbeans = '1.6.2'
+  String weld = '2.4.4.Final'
+  String openwebbeans = '1.7.3'
 
   String guice = '4.0'
   String mycila_guice = '3.6.ga'
@@ -78,6 +78,6 @@ public class TangramVersions {
   String ebean = '7.2.3'
   String ebean_agent = '4.9.2'
 
-  String appengine = '1.9.53'
+  String appengine = '1.9.54'
 
 } // TangramVersions
