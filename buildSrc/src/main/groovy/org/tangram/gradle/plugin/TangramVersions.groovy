@@ -33,19 +33,19 @@ public class TangramVersions {
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.4.11'
+  String groovy = '2.4.12'
   String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.25'
   String log4j = '1.2.17'
   String logback = '1.2.3'
   String yui = '2.4.7'
-  String mockito = '2.8.9'
+  String mockito = '2.8.47'
   String xstream = '1.4.10'
   String pac4j = '1.9.9'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.43'
-  String codemirror = '5.26.0'
+  String codemirror = '5.27.2'
   String ckeditor = '4.7.0'
 
   // For testing purposes
@@ -61,11 +61,11 @@ public class TangramVersions {
 
   String springframework = '4.3.9.RELEASE'
 
-  String weld = '2.4.2.SP1'
+  String weld = '2.4.4.Final'
   String openwebbeans = '1.7.3'
 
   // Storage options
-  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m6'
+  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m7'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
