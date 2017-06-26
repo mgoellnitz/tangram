@@ -69,6 +69,10 @@ allprojects {
     jacocoAgent "org.jacoco:org.jacoco.agent:0.7.9+"
     jacocoAnt "org.jacoco:org.jacoco.ant:0.7.9+"
   }
+  // TODO: Only until https://github.com/stempler/gradle-versioneye-plugin/issues/34 gets fixed
+  versioneye {
+    exclude project.configurations.findAll { !it.canBeResolved }*.name as String[]
+  }
 }
 
 repositories {
