@@ -128,7 +128,6 @@ publishing {
   publications {
     mavenJava(MavenPublication) {
       // remove any dependency for the JPA implementations
-      Object oneDependency = pom.runtimeDependencies.iterator().next()
       def theCopy = pom.runtimeDependencies.clone()
       theCopy.each {
         if (it.groupId.equals('org.apache.openjpa')) {
