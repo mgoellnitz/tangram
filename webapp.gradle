@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -46,14 +46,14 @@ def cmv = "$versions.codemirror".toString()
 if (cmv.lastIndexOf('.') == 1) {
   cmv += ".0"
 }
-jar.doFirst {
+jar {
+  eachFile {
+    if (isFilterable(it)) {
+      filter(ReplaceTokens, tokens: ['codemirror_version': "$cmv".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
+    }
+  }
   into('META-INF/resources') {
     from fileTree("$projectDir/webapp")
-    eachFile {
-      if (isFilterable(it)) {
-        filter(ReplaceTokens, tokens: ['codemirror_version': "$cmv".toString(), 'ckeditor_version': "$versions.ckeditor".toString()])
-      }
-    }
   }
 }
 

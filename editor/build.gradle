@@ -55,10 +55,12 @@ task localWar(type: War, dependsOn: war) {
   classifier = 'local'
 }
 
+def ckeditorBase = "ckeditor_${versions.ckeditor}"
+def codemirrorBase="codemirror-${versions.codemirror}"
+
 localWar.doFirst() {
   overlayWebapp(localWar)
   minifyArchive(localWar)
-  String ckeditorBase = "ckeditor_${versions.ckeditor}"
   if (!(new File("$projectDir/expanded/$ckeditorBase").exists())) {
     String ckeditor = "${ckeditorBase}_standard.zip"
     def ckeditorFile = new File("$projectDir/$ckeditor")
@@ -80,7 +82,6 @@ localWar.doFirst() {
     }
   }
 
-  def codemirrorBase="codemirror-${versions.codemirror}"
   if (!(new File("$projectDir/expanded/$codemirrorBase").exists())) {
     def codemirrorFile = new File("$projectDir/${codemirrorBase}.zip")
     if (!codemirrorFile.exists()) {
@@ -100,6 +101,13 @@ localWar.doFirst() {
       }
     }
   }
+}
+
+localWar {
+  // This is a strange way to get one of the smallest jars as dependency
+  // included in the web archive since empty paths are not allowed here.
+  classpath = 'WEB-INF/lib/javax.inject-1.jar'
+  excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**', 'WEB-INF/include/*.jsp' ]
   into('editor') {
     from fileTree("$projectDir/expanded/$ckeditorBase")
   }
@@ -108,13 +116,6 @@ localWar.doFirst() {
     // deliberately leave out some of the very many modes
     exclude "**/mode/a*/**", "**/mode/cl*/**", "**/mode/e*/**", "**/mode/f*/**", "**/mode/gh*/**", "**/mode/ha*/**", "**/mode/id*/**", "**/mode/jad*/**", "**/mode/n*/**", "**/mode/pe*/**", "**/mode/r*/**", "**/mode/sli*/**", "**/mode/sql*/**", "**/mode/styl*/**", "**/mode/t*/**", "**/mode/veri*/**", "**/mode/xq*/**", "**/mode/y*/**", "**/mode/z*/**"
   }
-}
-
-localWar {
-  // This is a strange way to get one of the smallest jars as dependency
-  // included in the web archive since empty paths are not allowed here.
-  classpath = 'WEB-INF/lib/javax.inject-1.jar'
-  excludes = [ 'WEB-INF/classes/**', 'WEB-INF/lib/**', 'WEB-INF/include/*.jsp' ]
   into ('WEB-INF') {
     from "$projectDir/local"
   }
