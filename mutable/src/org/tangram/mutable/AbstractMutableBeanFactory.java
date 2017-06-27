@@ -437,7 +437,7 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
         String likePattern = isRegexFilterQuery() ? ".*" : "%";
         result.append('(');
         result.append(filterProperty);
-        result.append(" LIKE '");
+        result.append(" like '");
         result.append(likePattern);
         result.append(filterValue);
         result.append(likePattern);

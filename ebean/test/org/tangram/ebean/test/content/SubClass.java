@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014 Martin Goellnitz
+ * Copyright 2014-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,7 +18,7 @@
  */
 package org.tangram.ebean.test.content;
 
-import com.avaje.ebean.Query;
+import io.ebean.Query;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,15 +18,18 @@
  */
 package org.tangram.ebean.test;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.Query;
 import dinistiq.Dinistiq;
+import io.ebean.EbeanServer;
+import io.ebean.Query;
+import io.ebean.config.ServerConfig;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.ebean.Code;
 import org.tangram.ebean.test.content.BaseClass;
 import org.tangram.ebean.test.content.SubClass;
@@ -39,6 +42,9 @@ import org.testng.annotations.Test;
 
 
 public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EbeanContentTest.class);
+
 
     @Override
     protected Map<String, Object> getBeansForContentCreate() {
@@ -88,7 +94,7 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
 
     @Override
     protected String getManagerPrefix() {
-        return "com.avaje.ebean";
+        return "io.ebean";
     }
 
 
@@ -126,5 +132,16 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
         Method[] methods = Code.class.getMethods();
         Assert.assertTrue(BaseContentTest.checkMethodPrefixOccurs(methods, "_ebean"), "Classes were not enhanced.");
     } // test0IsEnhanced()
+
+
+    /**
+     * Check if ebean server config is set up correctly
+     */
+    @Test(priority = 1)
+    public void test1SetUpCorrectly() throws Exception {
+        ServerConfig config = getInstance(ServerConfig.class, false);
+        LOG.info("test1SetCorrectly() {}", config);
+        Assert.assertTrue(config.isH2ProductionMode(), "We must use production mode even in our tests due to their nature.");
+    } // test1SetUpCorrectly()
 
 } // EbeanContentTest

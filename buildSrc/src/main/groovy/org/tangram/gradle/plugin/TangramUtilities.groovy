@@ -31,8 +31,8 @@ import org.gradle.api.GradleException
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.bundling.War
-import com.avaje.ebean.enhance.agent.Transformer
-import com.avaje.ebean.enhance.ant.OfflineFileTransform
+import io.ebean.enhance.Transformer
+import io.ebean.enhance.ant.OfflineFileTransform
 import org.eclipse.persistence.tools.weaving.jpa.StaticWeaveProcessor
 
 
@@ -420,7 +420,7 @@ class TangramUtilities {
     URLClassLoader cl = getClassLoader()
 
     String transformArgs = "debug=1"
-    Transformer t = new Transformer(project.configurations.compile.asPath, transformArgs)
+    Transformer t = new Transformer(cl, transformArgs)
     println "                  path: $project.configurations.compile.asPath"
     String classSource = null
     project.sourceSets['main'].output.files.each {
@@ -441,7 +441,7 @@ class TangramUtilities {
     URLClassLoader cl = getClassLoader()
 
     String transformArgs = "debug=1"
-    Transformer t = new Transformer(project.configurations.testCompile.asPath, transformArgs)
+    Transformer t = new Transformer(cl, transformArgs)
 
     String classSource = null
     project.sourceSets['test'].output.files.each {

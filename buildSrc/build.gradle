@@ -69,8 +69,8 @@ dependencies {
   // for the direct eclipselink enhancer
   compile "org.eclipse.persistence:org.eclipse.persistence.jpa:$versions.eclipselink"
   // For the direct ebean enhancer
-  compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
-  compile "org.avaje.ebeanorm:avaje-ebeanorm-agent:$versions.ebean_agent"
+  compile "io.ebean:ebean:$versions.ebean"
+  compile "io.ebean:ebean-agent:$versions.ebean_agent"
   // For the direct hibernate enhancer
   compile "net.bytebuddy:byte-buddy:$versions.byte_buddy"
   compile "org.hibernate:hibernate-core:$versions.hibernate"

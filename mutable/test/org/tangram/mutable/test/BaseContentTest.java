@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2016 Martin Goellnitz
+ * Copyright 2014-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -232,7 +232,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertTrue(managerClassName.startsWith(getManagerPrefix()), "The factory should have a correctly typed manager instance.");
         List<Class<MutableCode>> codeClasses = beanFactory.getImplementingClasses(MutableCode.class);
         Assert.assertEquals(codeClasses.size(), 1, "We have one code class.");
-    } // test1Factory()
+    } // test2Factory()
 
 
     @Test(priority = 3)
