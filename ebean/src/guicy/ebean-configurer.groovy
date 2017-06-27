@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2015-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  *
  */
 import org.avaje.datasource.DataSourceConfig
-import com.avaje.ebean.config.ServerConfig
+import io.ebean.config.ServerConfig
 import org.tangram.Constants
 import org.tangram.util.SystemUtils
 import org.tangram.view.PropertyConverter

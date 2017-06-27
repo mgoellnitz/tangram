@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
  */
 package org.tangram.ebean;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
-import com.avaje.ebean.Query;
-import com.avaje.ebean.Transaction;
-import com.avaje.ebean.config.ServerConfig;
 import groovy.lang.Singleton;
+import io.ebean.EbeanServer;
+import io.ebean.EbeanServerFactory;
+import io.ebean.Query;
+import io.ebean.Transaction;
+import io.ebean.config.ServerConfig;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -159,7 +159,8 @@ public class EBeanFactoryImpl extends AbstractMutableBeanFactory<EbeanServer, Qu
         try {
             for (Class<T> c : getImplementingBaseClasses(cls)) {
                 String shortTypeName = cls.getSimpleName();
-                Query<T> q = StringUtils.isEmpty(query) ? server.createQuery(c) : server.createQuery(c, query);
+                LOG.info("listBeans() ebean source query is {} ", query);
+                Query<T> q = StringUtils.isEmpty(query) ? server.createQuery(c) : server.createQuery(c, "where "+query);
                 if (orderProperty!=null) {
                     String asc = (ascending) ? " asc" : " desc";
                     q = q.orderBy(orderProperty+asc);

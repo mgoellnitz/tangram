@@ -24,7 +24,7 @@ evaluationDependsOn(':tangram-mutable')
 dependencies {
   compile project (':tangram-mutable')
 
-  compile "org.avaje.ebeanorm:avaje-ebeanorm:$versions.ebean"
+  compile "io.ebean:ebean:$versions.ebean"
   compile "org.avaje:avaje-datasource-api:$versions.ebean_datasource"
 
   testCompile "org.testng:testng:$versions.testng"

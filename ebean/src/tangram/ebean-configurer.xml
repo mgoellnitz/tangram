@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
- Copyright 2013-2016 Martin Goellnitz
+ Copyright 2013-2017 Martin Goellnitz
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@
     <property name="maxConnections" value="${tangram.ebean.max.connections}"/>
   </bean>
 
-  <bean id="serverConfig" class="com.avaje.ebean.config.ServerConfig">
+  <bean id="serverConfig" class="io.ebean.config.ServerConfig">
     <property name="name" value="tangram"/>
     <property name="defaultServer" value="false"/>
     <property name="register" value="false"/>
