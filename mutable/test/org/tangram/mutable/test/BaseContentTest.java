@@ -398,9 +398,13 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         MutableBeanFactory<M, Q> beanFactory = getMutableBeanFactory(false);
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         List<? extends Content> subBeans = beanFactory.listBeans(SubInterface.class);
-        beanFactory.beginTransaction();
-        boolean result = beanFactory.delete(subBeans.get(0));
-        Assert.assertTrue(result, "Item should have been deleted.");
+        int size = subBeans.size();
+        Assert.assertEquals(size, 1, "We expected to have exactly one bean of type SubInterface.");
+        if (size>0) {
+            beanFactory.beginTransaction();
+            boolean result = beanFactory.delete(subBeans.get(0));
+            Assert.assertTrue(result, "Item should have been deleted.");
+        } // if
         List<? extends BaseInterface> allBeans = beanFactory.listBeans(getBaseClass());
         Assert.assertEquals(allBeans.size(), 1, "There should be less beans after deleting one item.");
     } // test9DeleteComponents()
