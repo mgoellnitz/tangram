@@ -27,7 +27,7 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.16'
+  String lombok = '1.16.18'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20160810' // not used in tangram internally
@@ -45,12 +45,12 @@ public class TangramVersions {
   String pac4j = '1.9.9'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.43'
-  String codemirror = '5.27.2'
+  String codemirror = '5.27.4'
   String ckeditor = '4.7.0'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.11' // Gradle 3.4 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.11' // Gradle 4.0 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.196'
 
