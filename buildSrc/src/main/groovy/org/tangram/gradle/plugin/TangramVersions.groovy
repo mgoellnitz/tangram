@@ -42,7 +42,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '2.8.47'
   String xstream = '1.4.10'
-  String pac4j = '1.9.9'
+  String pac4j = '2.0.0'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.43'
   String codemirror = '5.27.4'
@@ -62,13 +62,13 @@ public class TangramVersions {
   String springframework = '4.3.9.RELEASE'
 
   String weld = '2.4.4.Final'
-  String openwebbeans = '1.7.3'
+  String openwebbeans = '2.0.0'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m7'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
-  String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
+  String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
 
   String openjpa = '2.4.2'
   String eclipselink = '2.6.4'
@@ -78,7 +78,7 @@ public class TangramVersions {
 
   String datanucleus = '[5.0,5.1)'
 
-  String ebean = '10.3.2'
+  String ebean = '10.4.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '10.3.1'
 
