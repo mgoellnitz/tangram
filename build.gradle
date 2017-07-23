@@ -119,10 +119,12 @@ task jacocoCombinedReport(type: JacocoReport) {
   }
 
   reports {
+    File xmldest = new File("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     xml.enabled true
-    xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+    xml.setDestination(xmldest)
     html.enabled true
-    html.destination "${projectDir}/jacoco"
+    File htmldest = new File("${projectDir}/jacoco")
+    html.destination htmldest
     csv.enabled false
   }
 }
