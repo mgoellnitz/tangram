@@ -76,7 +76,7 @@ public class TangramVersions {
   String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '[1.6,1.7)'
 
-  String datanucleus = '[5.0,5.1)'
+  String datanucleus = '[5.1,5.2)'
 
   String ebean = '10.4.1'
   String ebean_datasource = '1.1'

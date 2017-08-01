@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2014 Martin Goellnitz
+ * Copyright 2011-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,12 +27,6 @@ import org.tangram.jdo.AbstractJdoBeanFactory;
 @Named("beanFactory")
 @Singleton
 public class NucleusBeanFactory extends AbstractJdoBeanFactory {
-
-    @Override
-    protected Object getObjectId(String internalId, Class<? extends Content> kindClass, String kind) {
-        return internalId+"[OID]"+kindClass.getName();
-    } // getObjectId()
-
 
     @Override
     public Class<? extends Content> getBaseClass() {

@@ -97,9 +97,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
     }
 
 
-    protected abstract Object getObjectId(String internalId, Class<? extends Content> kindClass, String kind);
-
-
     @Override
     protected <T extends Content> T getBean(Class<T> cls, String kind, String internalId) throws Exception {
         if (modelClasses==null) {
@@ -112,9 +109,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
         if (!(cls.isAssignableFrom(kindClass))) {
             throw new Exception("Passed over class "+cls.getSimpleName()+" does not match "+kindClass.getSimpleName());
         } // if
-        Object oid = getObjectId(internalId, kindClass, kind);
-        LOG.debug("getBean() {} {} oid={}", kindClass.getName(), internalId, oid);
-        return convert(cls, manager.getObjectById(kindClass, oid));
+        LOG.debug("getBean() {}:{}", kindClass.getName(), internalId);
+        return convert(cls, manager.getObjectById(kindClass, internalId));
     } // getBean()
 
 
