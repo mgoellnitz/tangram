@@ -19,6 +19,6 @@
 #   gradle -Pjdk=/usr/lib/jvm/default-java ...
 #
 #   last public JDK 7: /opt/jdk1.7.0_80
-#   JDK 8: /opt/jdk1.8.0_112
+#   JDK 8: /opt/jdk1.8.0_144
 #
 ./gradlew -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
