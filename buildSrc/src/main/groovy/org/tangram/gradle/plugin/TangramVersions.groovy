@@ -40,7 +40,7 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String logback = '1.2.3'
   String yui = '2.4.7'
-  String mockito = '2.8.47'
+  String mockito = '2.9.0'
   String xstream = '1.4.10'
   String pac4j = '2.1.0'
   String mockftpserver = '2.7.1'
@@ -71,7 +71,7 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
 
   String openjpa = '2.4.2'
-  String eclipselink = '2.6.4'
+  String eclipselink = '2.7.0'
   String hibernate = '5.2.10.Final'
   String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '[1.6,1.7)'
