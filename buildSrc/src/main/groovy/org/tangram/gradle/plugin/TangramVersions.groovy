@@ -40,7 +40,7 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String logback = '1.2.3'
   String yui = '2.4.7'
-  String mockito = '2.9.0'
+  String mockito = '2.10.0'
   String xstream = '1.4.10'
   String pac4j = '2.1.0'
   String mockftpserver = '2.7.1'
@@ -78,7 +78,7 @@ public class TangramVersions {
 
   String datanucleus = '[5.1,5.2)'
 
-  String ebean = '10.4.2'
+  String ebean = '10.4.3'
   String ebean_datasource = '1.1'
   String ebean_agent = '10.4.1'
 
