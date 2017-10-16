@@ -50,7 +50,7 @@ public interface AuthenticationService {
      * Authentication services may support more than one underying internal provider to do the actual authentication.
      *
      * @return return a list of symbolic names for providers
-     .*/
+     */
     Set<String> getProviderNames();
 
 
@@ -72,6 +72,7 @@ public interface AuthenticationService {
      * @throws IOException IO related problems may occur on redirection
      */
     void redirectToLogin(HttpServletRequest request, HttpServletResponse response, Set<String> providers) throws IOException;
+
 
     /**
      * Provide a link instance for logout.
