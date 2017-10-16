@@ -421,7 +421,7 @@ class TangramUtilities {
 
     String transformArgs = "debug=1"
     Transformer t = new Transformer(cl, transformArgs)
-    println "                  path: $project.configurations.compile.asPath"
+    // println "                  path: $project.configurations.compile.asPath"
     String classSource = null
     project.sourceSets['main'].output.files.each {
       if (classSource == null) {
