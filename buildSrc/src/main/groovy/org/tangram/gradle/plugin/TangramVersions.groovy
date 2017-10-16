@@ -28,13 +28,13 @@ public class TangramVersions {
 
   // The basics
   String lombok = '1.16.18'
-  String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
+  String servlet_api = 'javax.servlet:javax.servlet-api:4.0.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
   String groovy = '2.4.12'
-  String asm = '5.2'
+  String asm = '6.0'
   String velocity = '1.7'
   String slf4j = '1.7.25'
   String log4j = '1.2.17'
@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '4.3.11.RELEASE'
+  String springframework = '5.0.0.RELEASE'
 
   String weld = '2.4.5.Final'
   String openwebbeans = '2.0.1'
@@ -78,7 +78,7 @@ public class TangramVersions {
 
   String datanucleus = '[5.1,5.2)'
 
-  String ebean = '10.4.7'
+  String ebean = '11.2.1'
   String ebean_datasource = '1.1'
   String ebean_agent = '11.1.1'
 
