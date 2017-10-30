@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2016 Martin Goellnitz
+ * Copyright 2011-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,7 +30,7 @@ dependencies {
   compile "org.slf4j:slf4j-api:$versions.slf4j"
   // Nice to have for some pac4j implementations
   // runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
-  compile "commons-io:commons-io:2.5"
+  compile 'commons-io:commons-io:2.6'
   // Used by velocity:
   compile "commons-collections:commons-collections:3.2.2"
 
