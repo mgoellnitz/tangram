@@ -72,7 +72,7 @@ public class TangramVersions {
 
   String openjpa = '2.4.2'
   String eclipselink = '2.7.0'
-  String hibernate = '5.2.11.Final'
+  String hibernate = '5.2.12.Final'
   String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '[1.6,1.7)'
 
