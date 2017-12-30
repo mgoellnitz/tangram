@@ -69,7 +69,7 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
 
   String openjpa = '2.4.2'
-  String eclipselink = '2.7.0'
+  String eclipselink = '2.6.5'
   String hibernate = '5.1.2.Final'
   String hibernate_ogm = '5.1.0.Final'
 
