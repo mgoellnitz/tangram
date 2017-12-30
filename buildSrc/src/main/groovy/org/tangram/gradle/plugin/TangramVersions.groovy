@@ -42,7 +42,7 @@ public class TangramVersions {
   String yui = '2.4.7'
   String mockito = '2.11.0'
   String xstream = '1.4.10'
-  String pac4j = '2.1.0'
+  String pac4j = '2.2.1'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.47'
   String codemirror = '5.27.4'
@@ -59,7 +59,7 @@ public class TangramVersions {
 
   String guice = '4.1.0'
 
-  String springframework = '5.0.0.RELEASE'
+  String springframework = '4.3.12.RELEASE'
 
   String weld = '2.4.6.Final'
   String openwebbeans = '2.0.3'
@@ -71,7 +71,7 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
 
   String openjpa = '2.4.2'
-  String eclipselink = '2.7.0'
+  String eclipselink = '2.7.1'
   String hibernate = '5.2.12.Final'
   String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '[1.6,1.7)'
