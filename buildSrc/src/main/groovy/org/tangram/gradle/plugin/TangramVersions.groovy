@@ -35,7 +35,7 @@ public class TangramVersions {
   String velocity = '1.7'
   String slf4j = '1.7.25'
   String log4j = '1.2.17'
-  String logback = '1.2.17'
+  String logback = '1.2.3'
   String yui = '2.4.7'
   String mockito = '1.10.19'
   String xstream = '1.4.10'
