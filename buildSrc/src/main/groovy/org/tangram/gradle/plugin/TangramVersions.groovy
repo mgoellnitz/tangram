@@ -49,7 +49,7 @@ public class TangramVersions {
 
   String dinistiq = '0.4'
 
-  String springframework = '4.2.6.RELEASE'
+  String springframework = '4.2.9.RELEASE'
 
   String weld = '2.4.6.Final'
   String openwebbeans = '2.0.3'
@@ -78,6 +78,6 @@ public class TangramVersions {
   String ebean = '7.2.3'
   String ebean_agent = '4.9.2'
 
-  String appengine = '1.9.58'
+  String appengine = '1.9.60'
 
 } // TangramVersions

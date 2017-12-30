@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2017 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,8 +21,10 @@ import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.PublishArtifact
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.internal.java.JavaLibrary
-import org.gradle.api.internal.component.Usage
+import org.gradle.api.attributes.Usage
+import org.gradle.api.internal.component.UsageContext
 import org.gradle.api.internal.component.SoftwareComponentInternal
+import org.gradle.api.tasks.compile.AbstractCompile
 import groovy.util.Node
 
 version = '1.0-SNAPSHOT'
@@ -73,19 +75,24 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from "${buildDir}/docs/javadoc"
 }
 
-class WrappedRuntimeUsage implements Usage {
+class WrappedRuntimeUsage implements UsageContext {
 
-  private Usage delegate
+  private UsageContext delegate
 
   private DefaultConfiguration configuration
 
-  WrappedRuntimeUsage(Usage usage, DefaultConfiguration conf) {
+  WrappedRuntimeUsage(UsageContext usage, DefaultConfiguration conf) {
     delegate = usage
     configuration = conf
   }
 
   public String getName() {
     return delegate.name
+  }
+
+
+  public Usage getUsage() {
+    return delegate.usage
   }
 
 
@@ -100,15 +107,15 @@ class WrappedRuntimeUsage implements Usage {
       if (!result.contains(it)) {
         result.add(it)
       } else {
-        println "Ignoring another $it.group:$it.name:$it.version"
+        // println "Ignoring another $it.group:$it.name:$it.version"
       }
     }
     configuration.dependencies.each {
       if (!result.contains(it)) {
-        println "* Adding $it.group:$it.name:$it.version"
+        // println "* Adding $it.group:$it.name:$it.version"
         result.add(it)
       } else {
-        println "* Ignoring another $it.group:$it.name:$it.version"
+        // println "* Ignoring another $it.group:$it.name:$it.version"
       }
     }
     return result
@@ -131,8 +138,8 @@ class WrappedLibrary implements SoftwareComponentInternal {
     return delegate.name
   }
 
-  public Set<Usage> getUsages() {
-    Set<Usage> result = new HashSet<>()
+  public Set<UsageContext> getUsages() {
+    Set<UsageContext> result = new HashSet<>()
     delegate.usages.each {
       result.add(new WrappedRuntimeUsage(it, configuration))
     }
