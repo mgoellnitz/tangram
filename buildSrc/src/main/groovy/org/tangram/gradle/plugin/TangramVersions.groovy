@@ -27,29 +27,29 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.14'
+  String lombok = '1.16.18'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
-  String groovy = '2.4.9'
+  String groovy = '2.4.13'
   String asm = '5.1'
   String velocity = '1.7'
-  String slf4j = '1.7.24'
+  String slf4j = '1.7.25'
   String log4j = '1.2.17'
-  String logback = '1.2.1'
+  String logback = '1.2.17'
   String yui = '2.4.7'
   String mockito = '1.10.19'
-  String xstream = '1.4.9'
+  String xstream = '1.4.10'
   String pac4j = '1.8.9'
   String mockftpserver = '2.7.1'
-  String tomcat = '8.0.39'
-  String codemirror = '5.24.2'
-  String ckeditor = '4.6.2'
+  String tomcat = '8.0.47'
+  String codemirror = '5.27.4'
+  String ckeditor = '4.7.0'
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.10' // Gradle 3.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.13.1' // Gradle 3.5.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.193'
+  String h2db = '1.4.196'
 
   // The dependency injection options
   String dinistiq = '0.5'
@@ -57,10 +57,10 @@ public class TangramVersions {
   String guice = '4.1.0'
   String mycila_guice = '4.0.rc1'
 
-  String springframework = '4.3.7.RELEASE'
+  String springframework = '4.3.12.RELEASE'
 
-  String weld = '2.4.1.Final'
-  String openwebbeans = '1.7.2'
+  String weld = '2.4.6.Final'
+  String openwebbeans = '2.0.3'
 
   // Storage options
   String jdo_api = 'javax.jdo:jdo-api:3.1'
@@ -69,9 +69,9 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.1.3'
 
   String openjpa = '2.4.2'
-  String eclipselink = '2.6.4'
+  String eclipselink = '2.7.0'
   String hibernate = '5.1.2.Final'
-  String hibernate_ogm = '5.0.3.Final'
+  String hibernate_ogm = '5.1.0.Final'
 
   // The last DataNucleus Access Plattform version to include all necessary modules
   // DataNucleus does not provide all artifacts for every released version.
@@ -83,6 +83,6 @@ public class TangramVersions {
   String ebean_agent = '4.11.1'
 
   String mongodb = '3.0.2'
-  String morphia = '1.3.1'
+  String morphia = '1.3.2'
 
 } // TangramVersions
