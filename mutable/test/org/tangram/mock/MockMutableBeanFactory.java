@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tangram.content.ChangeListener;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.mock.content.MockBeanFactory;
@@ -45,6 +46,8 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
     private final MockOrmManager manager = new MockOrmManager();
 
     private final Collection<Class<? extends Content>> clearedClasses = new HashSet<>();
+
+    private final Collection<ChangeListener> changeListeners = new HashSet<>();
 
 
     public MockMutableBeanFactory() throws FileNotFoundException {
@@ -84,6 +87,9 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public <T extends Content> boolean persistUncommitted(T bean) {
+        for (ChangeListener listener : changeListeners) {
+            listener.update(bean);
+        }
         return true;
     }
 
@@ -96,7 +102,16 @@ public class MockMutableBeanFactory extends MockBeanFactory implements MutableBe
 
     @Override
     public <T extends Content> boolean delete(T bean) {
+        for (ChangeListener listener : changeListeners) {
+            listener.delete(bean);
+        }
         return true;
+    }
+
+
+    @Override
+    public void addListener(ChangeListener listener) {
+        changeListeners.add(listener);
     }
 
 

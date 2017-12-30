@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.tangram.content.BeanFactory;
+import org.tangram.content.ChangeListener;
 import org.tangram.content.Content;
 
 
@@ -160,6 +161,16 @@ public interface MutableBeanFactory<M extends Object, Q extends Object> extends 
      * @param cls class to trigger listeners for
      */
     void clearCacheFor(Class<? extends Content> cls);
+
+
+    /**
+     * Attach a listener to be notified for each change.
+     *
+     * Don't use this if you are not interested in the sequence of changes but typed changes.
+     *
+     * @param listener listener to be notified about changes
+     */
+    void addListener(ChangeListener listener);
 
 
     /**

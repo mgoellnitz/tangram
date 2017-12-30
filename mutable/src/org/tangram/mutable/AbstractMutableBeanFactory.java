@@ -36,6 +36,7 @@ import org.tangram.annotate.Abstract;
 import org.tangram.content.AbstractBeanFactory;
 import org.tangram.content.BeanFactoryAware;
 import org.tangram.content.BeanListener;
+import org.tangram.content.ChangeListener;
 import org.tangram.content.CodeResource;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
@@ -63,6 +64,8 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
     protected PersistentRestartCache startupCache;
 
     private final Map<Class<? extends Content>, List<BeanListener>> attachedListeners = new HashMap<>();
+
+    private final Collection<ChangeListener> changeListeners = new HashSet<>();
 
     /**
      * A set of Java package names used as base packages for model bean discovery.
@@ -218,6 +221,9 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
         try {
             apiPersist(bean);
             rollback = false;
+            for (ChangeListener listener : changeListeners) {
+                listener.update(bean);
+            }
             clearCacheFor(bean.getClass());
             result = true;
         } catch (Exception e) {
@@ -236,6 +242,9 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
         boolean result = false;
         boolean rollback = true;
         try {
+            for (ChangeListener listener : changeListeners) {
+                listener.delete(bean);
+            }
             apiDelete(bean);
             commitTransaction();
             rollback = false;
@@ -309,7 +318,7 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
         cache.clear();
         LOG.info("clearCacheFor() {}", cls.getName());
         try {
-            // clear query cache first since listeners might want to use query to obtain fresh data
+            // clear query cache first since listeners might want to use queries to obtain fresh data
             Collection<String> removeKeys = new HashSet<>();
             for (Object keyObject : queryCache.keySet()) {
                 String key = (String) keyObject;
@@ -364,6 +373,22 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
         } // synchronized
         listener.reset();
         LOG.info("addListener() {}: {}", cls.getSimpleName(), attachedListeners.get(cls).size());
+    } // addListener()
+
+
+    /**
+     * Attach a listener to be notified for each change.
+     *
+     * Don't use this if you are not interested in the sequence of changes but typed changes.
+     *
+     * @param listener listener to be notified about changes
+     */
+    @Override
+    public void addListener(ChangeListener listener) {
+        synchronized (changeListeners) {
+            changeListeners.add(listener);
+        } // synchronized
+        LOG.info("addListener() # of listeners: {}", changeListeners.size());
     } // addListener()
 
 
