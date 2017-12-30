@@ -15,6 +15,17 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
+JDK=`ls -d /opt/*jdk*1.7*|tail -1`
+if [ -z "$JDK" ] ; then
+  JDK=`ls -d /usr/lib/jvm/*java*1.7*|tail -1`
+fi
+if [ ! -z "$JDK" ] ; then
+  export JAVA_HOME=$JDK
+  export PATH=$JAVA_HOME/bin:$PATH
+else
+  echo "Didn't find Java7 - exiting"
+fi
+export JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m"
 cd buildSrc
 ../gradlew -Prelease clean build publishToMavenLocal
 cd ..
