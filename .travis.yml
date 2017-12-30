@@ -19,7 +19,12 @@ sudo: false
 language: java
 
 jdk:
-  - oraclejdk7
+  - openjdk7
+  
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 
 after_success:
-  - gradle jacocoTestReport jacocoCombinedReport coveralls
+  - ./gradlew jacocoTestReport jacocoCombinedReport coveralls
