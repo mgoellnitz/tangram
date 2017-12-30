@@ -33,7 +33,7 @@ public class TangramVersions {
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.4.12'
+  String groovy = '2.4.13'
   String asm = '6.0'
   String velocity = '1.7'
   String slf4j = '1.7.25'
@@ -50,7 +50,7 @@ public class TangramVersions {
 
   // For testing purposes
   String junit = '4.12'
-  String testng = '6.11' // Gradle 4.0 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '6.13.1' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.196'
 
@@ -61,8 +61,8 @@ public class TangramVersions {
 
   String springframework = '5.0.0.RELEASE'
 
-  String weld = '2.4.5.Final'
-  String openwebbeans = '2.0.2'
+  String weld = '2.4.6.Final'
+  String openwebbeans = '2.0.3'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m7'
