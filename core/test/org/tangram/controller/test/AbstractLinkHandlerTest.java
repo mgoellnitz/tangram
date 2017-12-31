@@ -78,12 +78,7 @@ public class AbstractLinkHandlerTest {
 
     @Test
     public void testCreateModel() throws Exception {
-        ControllerHook hook = new ControllerHook() {
-            @Override
-            public boolean intercept(TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-                return false;
-            }
-        };
+        ControllerHook hook = (TargetDescriptor descriptor, Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) -> false;
         controllerHooks.add(hook);
         MockitoAnnotations.initMocks(viewContextFactory);
         MockitoAnnotations.initMocks(this);

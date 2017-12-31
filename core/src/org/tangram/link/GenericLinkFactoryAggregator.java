@@ -21,7 +21,6 @@ package org.tangram.link;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,14 +98,7 @@ public class GenericLinkFactoryAggregator implements LinkFactoryAggregator {
     @Override
     public void registerFactory(LinkFactory factory) {
         factories.add(factory);
-        Collections.sort(factories, new Comparator<LinkFactory>() {
-
-            @Override
-            public int compare(LinkFactory o1, LinkFactory o2) {
-                return (o2 instanceof InternalLinkFactory) ? -1 : 1;
-            } // compare()
-
-        });
+        Collections.sort(factories, (LinkFactory o1, LinkFactory o2) -> (o2 instanceof InternalLinkFactory) ? -1 : 1);
     } // registerFactory()
 
 
