@@ -55,8 +55,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
 
     private Map<Object, Object> configOverrides = null;
 
-    private boolean prefill = true;
-
     private String factoryName = "transactions-optional";
 
 
@@ -74,16 +72,6 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
      */
     public void setConfigOverrides(Map<Object, Object> configOverrides) {
         this.configOverrides = configOverrides;
-    }
-
-
-    public boolean isPrefill() {
-        return prefill;
-    }
-
-
-    public void setPrefill(boolean prefill) {
-        this.prefill = prefill;
     }
 
 
@@ -345,7 +333,7 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
 
     /**
      * post construct method to initialize the bean factory.
-     * persistence manager factory name and prefill option are set after construction of this instance so do this here.
+     * persistence manager factory name is set after construction of this instance so do this here.
      */
     @PostConstruct
     public void afterPropertiesSet() {
@@ -354,11 +342,8 @@ public abstract class AbstractJdoBeanFactory extends AbstractMutableBeanFactory<
         managerFactory = JDOHelper.getPersistenceManagerFactory(overrides, factoryName);
         manager = managerFactory.getPersistenceManager();
 
-        // Just to prefill
-        if (prefill) {
-            Collection<Class<? extends Content>> theClasses = getClasses();
-            LOG.info("afterPropertiesSet() prefilling done for {}: {}", getBasePackages(), theClasses);
-        } // if
+        Collection<Class<? extends Content>> theClasses = getClasses();
+        LOG.info("afterPropertiesSet() initial class resolution done for {}: {}", getBasePackages(), theClasses);
         Map<String, List<String>> c = SystemUtils.convert(startupCache.get(QUERY_CACHE_KEY, queryCache.getClass()));
         if (c!=null) {
             queryCache = c;
