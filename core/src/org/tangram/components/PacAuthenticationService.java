@@ -89,10 +89,6 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
     @SuppressWarnings("rawtypes")
     private Set<Client> clientSet = new HashSet<>(); // NOPMD - this field cannot be final it is referenced via injection
 
-    // TODO: Experimental stuff for JEE CDI test
-    // final private Set<Client> clientSet = new HashSet<>();
-    // @Inject
-    // private FormClient formLogin;
     @Inject
     private LinkHandlerRegistry registry;
 
@@ -312,11 +308,6 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
         registry.registerLinkHandler(this);
         linkFactoryAggregator.registerFactory(this);
         LOG.debug("afterPropertiesSet() collecting clients");
-        // TODO: Experimental JEE CDI Stuff
-        // if (clientSet.isEmpty()) {
-        //     LOG.info("afterPropertiesSet() adding single fall back client {}", formLogin.getName());
-        //     clientSet.add(formLogin);
-        // } // if
         for (Client<?, ?> client : clientSet) {
             LOG.info("afterPropertiesSet() client {}", client.getName());
         } // for

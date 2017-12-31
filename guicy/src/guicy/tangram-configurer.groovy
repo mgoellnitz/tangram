@@ -112,8 +112,6 @@ basicAuthClient.name='basic'
 basicAuthClient.authenticator = authenticator
 basicAuthClient.profileCreator = profileCreator
 module.addClient(basicAuthClient)
-// TODO: Experimental JEE CDI Stuff - Fall Back Client
-// module.bind(FormClient.class).toInstance(formClient)
 
 log.info("configuring provider specific id attributes for external users")
 Map<String,String> mapping = new HashMap<>()
