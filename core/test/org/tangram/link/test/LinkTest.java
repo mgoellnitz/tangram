@@ -42,9 +42,8 @@ public class LinkTest {
         Assert.assertEquals(link.getTarget(), "new", "Unexpected target found.");
         link.setUrl("http://www.example.com/");
         Assert.assertEquals(link.getUrl(), "http://www.example.com/", "Unexpected url found.");
-        // TODO: Doesn't work on travis CI but locally
-        // String expected = "http://www.example.com/@new: {onclick=clock, onload=save}";
-        // Assert.assertEquals(link.toString(), expected, "Unexpected string representation found.");
+        String expected = "http://www.example.com/@new: {onclick=clock, onload=save}";
+        Assert.assertEquals(link.toString(), expected, "Unexpected string representation found.");
     } // testLink()
 
 } // LinkTest
