@@ -160,6 +160,30 @@ public class ToolHandlerTest {
                 zos.closeEntry();
             } // if
 
+            byte[] noBytes = new byte[0];
+
+            ZipEntry folderEntry = new ZipEntry("txt/");
+            folderEntry.setComment("");
+            folderEntry.setSize(0);
+            folderEntry.setTime(System.currentTimeMillis());
+            crc.reset();
+            crc.update(noBytes);
+            folderEntry.setCrc(crc.getValue());
+            zos.putNextEntry(folderEntry);
+            zos.write(noBytes);
+            zos.closeEntry();
+
+            ZipEntry ze = new ZipEntry("txt/provoke_error_and_log_entry.txt");
+            ze.setComment("");
+            ze.setSize(0);
+            ze.setTime(System.currentTimeMillis());
+            crc.reset();
+            crc.update(noBytes);
+            ze.setCrc(crc.getValue());
+            zos.putNextEntry(ze);
+            zos.write(noBytes);
+            zos.closeEntry();
+
             zos.finish();
             zos.close();
             byte[] zipFile = baos.toByteArray();
@@ -173,6 +197,22 @@ public class ToolHandlerTest {
         TargetDescriptor result = new TargetDescriptor(toolHandler, null, null);
         Assert.assertEquals(tool, result, "Code import should go back to import/export page.");
     } // testCodeImport()
+
+
+    @Test
+    public void testNoCodeImport() {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/testapp/codes");
+        request.setContextPath("/testapp");
+        HttpServletResponse response = new MockHttpServletResponse();
+        Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
+        boolean raised = false;
+        try {
+            toolHandler.codeImport(null, request, response);
+        } catch (Exception e) {
+            raised = true;
+        } // try/catch
+        Assert.assertTrue(raised, "Exception should have been raised due to missing input.");
+    } // testNoCodeImport()
 
 
     @Test
