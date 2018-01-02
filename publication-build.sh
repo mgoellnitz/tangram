@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2015-2017 Martin Goellnitz
+# Copyright 2015-2018 Martin Goellnitz
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -19,12 +19,7 @@ JDK=`ls -d /opt/*jdk*1.7*|tail -1`
 if [ -z "$JDK" ] ; then
   JDK=`ls -d /usr/lib/jvm/*java*1.7*|tail -1`
 fi
-if [ ! -z "$JDK" ] ; then
-  echo $JDK
-  export JAVA_HOME=$JDK
-  export PATH=$JAVA_HOME/bin:$PATH
-else
+if [ -z "$JDK" ] ; then
   echo "Didn't find Java7 - exiting"
 fi
-export JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m"
-./gradlew -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
+./gradlew -Pjdk=$JDK -Prelease clean build jacocoTestReport jacocoCombinedReport publishToMavenLocal
