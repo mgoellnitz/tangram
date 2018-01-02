@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
+import org.tangram.content.ChangeListener;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
 import org.tangram.logic.ClassRepository;
@@ -53,6 +54,8 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
     protected static final String TESTPASSWORD = "testpassword";
 
     protected static final String TESTUSER = "testuser";
+
+    private ChangeListener changeListener;
 
 
     /**
@@ -144,6 +147,22 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
     } // checkSimplePasswordProtection()
 
 
+    public BaseContentTest() {
+        changeListener = new ChangeListener() {
+            @Override
+            public void delete(Content content) {
+                LOG.info("delete()");
+            }
+
+
+            @Override
+            public void update(Content content) {
+                LOG.info("update()");
+            }
+        };
+    }
+
+
     protected Map<String, Object> getBeansForContentCreate() {
         Map<String, Object> result = new HashMap<>();
         org.springframework.mock.web.MockServletContext context = new org.springframework.mock.web.MockServletContext() {
@@ -178,7 +197,9 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
 
     private MutableBeanFactory<M, Q> getMutableBeanFactory(boolean create) throws Exception {
-        return SystemUtils.convert(getInstance(MutableBeanFactory.class, create));
+        MutableBeanFactory<M, Q> beanFactory = SystemUtils.convert(getInstance(MutableBeanFactory.class, create));
+        beanFactory.addListener(changeListener);
+        return beanFactory;
     } // getMutableBeanFactory
 
 
