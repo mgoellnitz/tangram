@@ -45,6 +45,14 @@ repositories {
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+if (project.hasProperty('jdk')) {
+  def bootClasspathStr = "${jdk}/jre/lib/rt.jar"
+  println "Defining boot class path $bootClasspathStr"
+  project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
+      ac.options.bootClasspath = bootClasspathStr
+  })
+}
+
 // Project specific default output directory
 eclipse.classpath.conventionMapping.defaultOutputDir = { new File("$buildDir/classes/main") }
 
