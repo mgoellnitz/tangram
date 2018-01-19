@@ -61,7 +61,7 @@ public class TangramVersions {
 
   String springframework = '4.3.12.RELEASE'
 
-  String weld = '2.4.6.Final'
+  String weld = '3.0.2.Final'
   String openwebbeans = '2.0.3'
 
   // Storage options
@@ -82,11 +82,11 @@ public class TangramVersions {
   String ebean_datasource = '1.1'
   String ebean_agent = '11.1.1'
 
-  String mongodb = '3.0.2'
+  String mongodb = '3.6.1'
   String morphia = '1.3.2'
   
-  String objectify = '5.1.15'
+  String objectify = '5.1.21'
   
-  String solr = '6.4.1'  
+  String solr = '7.2.0'
 
 } // TangramVersions
