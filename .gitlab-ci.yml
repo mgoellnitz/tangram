@@ -1,5 +1,5 @@
 # 
-# Copyright 2016-2017 Martin Goellnitz
+# Copyright 2016-2019 Martin Goellnitz
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -31,7 +31,6 @@ build_modules:
   script: 
   - gradle jacocoTestReport jacocoCombinedReport coveralls build
   - gradle generatePomFileForMavenJavaPublication artifactoryPublish
-  - gradle versionEyeUpdate
   artifacts:
     expire_in: 5 days
     name: ${CI_BUILD_STAGE}
