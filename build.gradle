@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2017 Martin Goellnitz
+ * Copyright 2011-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,6 @@ buildscript {
   }
   dependencies {
     classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
-    classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
   }
 }
 
@@ -36,7 +35,6 @@ allprojects {
   defaultTasks 'clean', 'build', 'publishToMavenLocal'
   apply plugin: 'java'
   apply plugin: 'jacoco'
-  apply plugin: 'org.standardout.versioneye'
   // our custom directory layout
   sourceSets {
     main {
@@ -68,10 +66,6 @@ allprojects {
   dependencies {
     jacocoAgent "org.jacoco:org.jacoco.agent:0.7.9+"
     jacocoAnt "org.jacoco:org.jacoco.ant:0.7.9+"
-  }
-  // TODO: Only until https://github.com/stempler/gradle-versioneye-plugin/issues/34 gets fixed
-  versioneye {
-    exclude project.configurations.findAll { !it.canBeResolved }*.name as String[]
   }
 }
 
