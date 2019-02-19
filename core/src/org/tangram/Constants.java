@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2015 Martin Goellnitz
+ * Copyright 2011-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -53,6 +53,8 @@ public final class Constants {
     public static final String MIME_TYPE_PLAIN = "text/plain";
 
     public static final String MIME_TYPE_MARKDOWN = "text/x-markdown";
+
+    public static final String MIME_TYPE_SVG = "image/svg+xml";
 
     /**
      * Default date format string for http headers and the like.
