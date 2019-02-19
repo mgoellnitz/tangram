@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2015 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -197,7 +197,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      */
     public Map<String, CodeResource> getTypeCache(String mimeType) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
-        return (typeCache!=null) ? typeCache : new HashMap<String, CodeResource>();
+        return (typeCache!=null) ? typeCache : new HashMap<>();
     } // getTypeCache();
 
 
