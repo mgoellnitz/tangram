@@ -87,7 +87,7 @@ public final class CodeHelper {
             mimeType = "text/vtl";
         } // if
         if (Constants.MIME_TYPE_SVG.equals(mimeType)) {
-            mimeType = "text/vtl";
+            mimeType = "text/svg";
         } // if
         if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
@@ -191,6 +191,9 @@ public final class CodeHelper {
         } // if
         idx = filename.lastIndexOf('.');
         if (filename.endsWith(".vtl")) {
+            filename = filename.substring(0, idx);
+        } // if
+        if (filename.endsWith(".svg")) {
             filename = filename.substring(0, idx);
         } // if
         if (filename.endsWith(".css")) {

@@ -31,10 +31,11 @@ public class CodeHelperTest {
 
     @Test
     public void testCodeHelper() {
-        Assert.assertEquals(CodeHelper.getCodeMimeTypes().size(), 6, "Unexpected number of special mime types for codes.");
+        Assert.assertEquals(CodeHelper.getCodeMimeTypes().size(), 7, "Unexpected number of special mime types for codes.");
         Assert.assertEquals(CodeHelper.getExtension("text/html"), ".vtl", "Extension for velocity templates is vtl.");
         Assert.assertEquals(CodeHelper.getExtension("text/x-markdown"), ".md", "Extension for markdown templates is md.");
         Assert.assertEquals(CodeHelper.getExtension("application/xml"), ".vtl", "Extension for velocity templates is vtl.");
+        Assert.assertEquals(CodeHelper.getExtension("image/svg+xml"), ".svg", "Extension for svg files is svg.");
         Assert.assertEquals(CodeHelper.getExtension("text/css"), ".css", "Extension for css files is css.");
         Assert.assertEquals(CodeHelper.getExtension("application/javascript"), ".js", "Extension for JavaScript files is js.");
         Assert.assertEquals(CodeHelper.getExtension("application/x-groovy"), ".groovy", "Folder for groovy code is groovy.");
@@ -42,12 +43,14 @@ public class CodeHelperTest {
         Assert.assertEquals(CodeHelper.getFolder("text/html"), "velocity", "Folder for html templates is velocity.");
         Assert.assertEquals(CodeHelper.getFolder("text/x-markdown"), "markdown", "Folder for markdown files is md.");
         Assert.assertEquals(CodeHelper.getFolder("application/xml"), "velocity-xml", "Folder for xml templates is velocity-xml.");
+        Assert.assertEquals(CodeHelper.getFolder("image/svg+xml"), "velocity-svg", "Folder for svg templates is velocity-svg.");
         Assert.assertEquals(CodeHelper.getFolder("text/css"), "css", "Folder for css files is css.");
         Assert.assertEquals(CodeHelper.getFolder("application/javascript"), "js", "Folder for JavaScript files is js.");
         Assert.assertEquals(CodeHelper.getFolder("application/x-groovy"), "groovy", "Folder for groovy code is groovy.");
         Assert.assertEquals(CodeHelper.getMimetype("velocity"), "text/html", "MimeType for folder velocity is text/html.");
         Assert.assertEquals(CodeHelper.getMimetype("markdown"), "text/x-markdown", "MimeType for folder markdown is text/x-markdown.");
         Assert.assertEquals(CodeHelper.getMimetype("velocity-xml"), "application/xml", "MimeType for folder velocity-xml is application/xml.");
+        Assert.assertEquals(CodeHelper.getMimetype("velocity-svg"), "image/svg+xml", "MimeType for folder velocity-svg is image/svg+xml.");
         Assert.assertEquals(CodeHelper.getMimetype("css"), "text/css", "MimeType for folder css is text/css.");
         Assert.assertEquals(CodeHelper.getMimetype("js"), "application/javascript", "MimeType for folder js is application/javascript.");
         Assert.assertEquals(CodeHelper.getMimetype("groovy"), "application/x-groovy", "MimeType for folder groovy is application/x-groovy.");
