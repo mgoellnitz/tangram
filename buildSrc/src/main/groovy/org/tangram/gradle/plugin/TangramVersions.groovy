@@ -61,8 +61,8 @@ public class TangramVersions {
 
   String springframework = '4.3.22.RELEASE'
 
-  String weld = '2.4.6.Final'
-  String openwebbeans = '2.0.3'
+  String weld = '2.4.8.Final'
+  String openwebbeans = '2.0.10'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m10'
@@ -70,22 +70,22 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
 
-  String openjpa = '2.4.2'
-  String eclipselink = '2.7.0'
-  String hibernate = '5.2.12.Final'
+  String openjpa = '2.4.3'
+  String eclipselink = '2.7.4'
+  String hibernate = '5.2.18.Final'
   String hibernate_ogm = '5.1.0.Final'
   String byte_buddy = '[1.6,1.7)'
 
   String datanucleus = '[5.1,5.2)'
 
-  String ebean = '10.4.7'
-  String ebean_datasource = '1.1'
-  String ebean_agent = '11.1.1'
+  String ebean = '11.34.3'
+  String ebean_datasource = '4.5'
+  String ebean_agent = '11.34.1'
 
   String mongodb = '3.0.2'
   String morphia = '1.3.2'
   
-  String objectify = '5.1.15'
+  String objectify = '5.1.22'
   
   String solr = '6.4.1'  
 
