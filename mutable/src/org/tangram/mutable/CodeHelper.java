@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -53,6 +53,7 @@ public final class CodeHelper {
         MIME_TYPES.add(Constants.MIME_TYPE_XML);
         MIME_TYPES.add(Constants.MIME_TYPE_HTML);
         MIME_TYPES.add(Constants.MIME_TYPE_CSS);
+        MIME_TYPES.add(Constants.MIME_TYPE_SVG);
         MIME_TYPES.add(Constants.MIME_TYPE_JS);
         MIME_TYPES.add(Constants.MIME_TYPE_GROOVY);
         MIME_TYPES.add(Constants.MIME_TYPE_MARKDOWN);
@@ -83,6 +84,9 @@ public final class CodeHelper {
             mimeType = "text/vtl";
         } // if
         if (Constants.MIME_TYPE_XML.equals(mimeType)) {
+            mimeType = "text/vtl";
+        } // if
+        if (Constants.MIME_TYPE_SVG.equals(mimeType)) {
             mimeType = "text/vtl";
         } // if
         if (Constants.MIME_TYPE_JS.equals(mimeType)) {
@@ -120,6 +124,9 @@ public final class CodeHelper {
         if (Constants.MIME_TYPE_XML.equals(mimeType)) {
             mimeType = "text/velocity-xml";
         } // if
+        if (Constants.MIME_TYPE_SVG.equals(mimeType)) {
+            mimeType = "text/velocity-svg";
+        } // if
         if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
         } // if
@@ -152,6 +159,9 @@ public final class CodeHelper {
         } // if
         if ("css".equals(directoryName)) {
             result = Constants.MIME_TYPE_CSS;
+        } // if
+        if ("velocity-svg".equals(directoryName)) {
+            result = Constants.MIME_TYPE_SVG;
         } // if
         if ("js".equals(directoryName)) {
             result = Constants.MIME_TYPE_JS;
