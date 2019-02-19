@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2017 Martin Goellnitz
+ * Copyright 2011-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,7 @@ println "Gradle: ${gradle.gradleVersion}"
 
 rootProject.name = 'tangram'
 
-include 'buildSrc', 'core', 'spring', 'servlet', 'dinistiq', 'guicy', 'mutable', 'editor', 'ftp', 'jdo', 'nucleus', 'jpa', 'coma', 'ebean', 'morphia', 'solr'
+include 'buildSrc', 'core', 'spring', 'servlet', 'dinistiq', 'guicy', 'mutable', 'editor', 'ftp', 'jdo', 'nucleus', 'jpa', 'coma', 'ebean', 'morphia'
 
 rootProject.children.each() {
   it.name = it.parent.name + '-' + it.name
