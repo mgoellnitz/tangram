@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,6 +34,4 @@ dependencies {
   testCompile project (':tangram-dinistiq')
   testCompile project (':tangram-mutable').sourceSets.test.output
   testCompile project (':tangram-core').sourceSets.test.output
-  testCompile "org.springframework:spring-core:$versions.springframework"
-  testCompile "org.springframework:spring-test:$versions.springframework"
 }

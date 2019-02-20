@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2017 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,8 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tangram.ebean.Code;
 import org.tangram.ebean.test.content.BaseClass;
 import org.tangram.ebean.test.content.SubClass;
@@ -41,9 +39,6 @@ import org.testng.annotations.Test;
 
 
 public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EbeanContentTest.class);
-
 
     @Override
     protected Map<String, Object> getBeansForContentCreate() {

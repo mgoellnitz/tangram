@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,13 +39,16 @@ import org.testng.annotations.Test;
 public class GroovyClassRepositoryTest {
 
     @Spy
-    private final PersistentRestartCache restartCache = new DummyRestartCache(); // NOPMD - this field is not really unused
+    @SuppressWarnings("PMD.UnusedPrivateField") // The field is needed for injection into the testee
+    private final PersistentRestartCache restartCache = new DummyRestartCache();
 
     @Spy
-    private MockBeanFactory factory; // NOPMD - this field is not really unused
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"}) // The field is needed for injection into the testee
+    private MockBeanFactory factory;
 
     @Spy
-    private CodeResourceCache codeCache; // NOPMD - this field is not really unused
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"}) // The field is needed for injection into the testee
+    private CodeResourceCache codeCache;
 
     @InjectMocks
     private final GroovyClassRepository repository = new GroovyClassRepository();
@@ -90,7 +93,7 @@ public class GroovyClassRepositoryTest {
     public void testGroovyClassRepository() {
         Assert.assertEquals(repository.getClassLoader().getClass(), GroovyClassLoader.class, "Must be a groovy class loader.");
         Assert.assertNotNull(repository.getBytes("org.tangram.test.GroovyTest"), "Expected to find byte code for test class.");
-        Assert.assertEquals(repository.getBytes("org.tangram.test.GroovyTest").length, 2419, "Expected to find byte code for test class.");
+        Assert.assertEquals(repository.getBytes("org.tangram.test.GroovyTest").length, 2705, "Expected to find byte code for test class.");
         Assert.assertEquals(repository.get(Object.class).size(), 6, "Expected to find exactly fixed number of test classes.");
         Assert.assertEquals(repository.getAnnotated(Singleton.class).size(), 1, "Expected to find fixed number of annotated test classes.");
         Assert.assertEquals(repository.getCompilationErrors().size(), 1, "We have one intentional error in the test codes.");

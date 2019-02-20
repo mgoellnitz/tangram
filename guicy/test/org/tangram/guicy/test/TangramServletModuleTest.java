@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,12 @@ package org.tangram.guicy.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceFilter;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import org.springframework.mock.web.MockFilterConfig;
+import org.springframework.mock.web.MockServletContext;
 import org.tangram.Constants;
 import org.tangram.guicy.TangramServletModule;
 import org.tangram.guicy.postconstruct.PostConstructModule;
@@ -52,7 +58,11 @@ public class TangramServletModuleTest {
 
 
     @Test
-    public void testTangramServletModule() {
+    public void testTangramServletModule() throws ServletException {
+        ServletContext servletContext = new MockServletContext();
+        FilterConfig filterConfig = new MockFilterConfig(servletContext, "mockFilter");
+        GuiceFilter filter = new GuiceFilter();
+        filter.init(filterConfig);
         TestServletModule servletModule = new TestServletModule();
         Injector injector = Guice.createInjector(new PostConstructModule(), servletModule);
         Assert.assertNotNull(injector, "The injector must not be null.");

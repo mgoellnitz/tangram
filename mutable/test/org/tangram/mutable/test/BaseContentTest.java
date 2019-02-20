@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2017 Martin Goellnitz
+ * Copyright 2014-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -404,11 +404,11 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
         Assert.assertEquals(annotatedClasses.size(), 1, "Expected one annotated class.");
         byte[] classBytes = repository.getBytes("org.tangram.example.Test");
         Assert.assertNotNull(classBytes, "Could not find class.");
-        Assert.assertEquals(classBytes.length, 2372, "Unexpected number of bytes for class found.");
+        Assert.assertEquals(classBytes.length, 2601, "Unexpected number of bytes for class found.");
         repository.overrideClass("org.tangram.example.Test", classBytes);
         byte[] emptyClassBytes = repository.getBytes("org.tangram.example.Test");
         Assert.assertNotNull(emptyClassBytes, "Could not find class.");
-        Assert.assertEquals(emptyClassBytes.length, 2372, "Unexpected number of bytes for class found.");
+        Assert.assertEquals(emptyClassBytes.length, 2601, "Unexpected number of bytes for class found.");
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
     } // test8ObtainCode()

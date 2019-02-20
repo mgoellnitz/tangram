@@ -27,13 +27,13 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.18'
+  String lombok = '1.18.6'
   String servlet_api = 'javax.servlet:javax.servlet-api:4.0.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.4.13'
+  String groovy = '2.5.6'
   String asm = '6.0'
   String velocity = '1.7'
   String slf4j = '1.7.26'
@@ -51,17 +51,18 @@ public class TangramVersions {
   // For testing purposes
   String junit = '4.12'
   String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
-  String hsqldb = '1.8.1.1'
+  String hsqldb = '2.4.1'  // org.hsqldb group id
   String h2db = '1.4.197'
 
   // The dependency injection options
   String dinistiq = '0.6'
 
-  String guice = '4.1.0'
+  String guice = '4.2.2'
 
   String springframework = '4.3.22.RELEASE'
+  // String springframework = '5.1.5.RELEASE'
 
-  String weld = '3.0.5.Final'
+  String weld = '3.1.0.Final'
   String openwebbeans = '2.0.10'
 
   // Storage options
@@ -70,7 +71,7 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
 
-  String openjpa = '2.4.3'
+  String openjpa = '3.0.0'
   String eclipselink = '2.7.4'
   String hibernate = '5.2.18.Final'
   String hibernate_ogm = '5.1.0.Final'
@@ -85,7 +86,7 @@ public class TangramVersions {
   String mongodb = '3.6.1'
   String morphia = '1.3.2'
   
-  String objectify = '5.1.22'
+  String objectify = '6.0.3'
   
   String solr = '7.2.0'
 

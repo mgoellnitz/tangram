@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,7 +38,7 @@ dependencies {
   testCompile project (':tangram-core').sourceSets.test.output
   testCompile "org.datanucleus:datanucleus-rdbms:$versions.datanucleus"
   testCompile "$versions.jdo_api"
-  testCompile "hsqldb:hsqldb:$versions.hsqldb"
+  testCompile "org.hsqldb:hsqldb:$versions.hsqldb"
 }
 
 compileTestJava.doLast {
