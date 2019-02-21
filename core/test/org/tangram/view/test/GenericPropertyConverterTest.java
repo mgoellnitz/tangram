@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2016 Martin Goellnitz
+ * Copyright 2014-2016 Martin Goellnitz, 2019 Markus Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,7 +52,6 @@ import org.tangram.view.ViewUtilities;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-
 /**
  * This test also includes the abstract property converter.
  */
@@ -71,22 +70,19 @@ public class GenericPropertyConverterTest {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-
         @Override
         public RequestParameterAccess createParameterAccess(HttpServletRequest request) throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-
 
         @Override
         public void render(Writer writer, Map<String, Object> model, String view) throws IOException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
-
         @Override
         public void render(Writer writer, Object bean, String view, ServletRequest request, ServletResponse response) throws IOException {
-            if ((bean instanceof CodeResource)&&("description".equals(view))) {
+            if ((bean instanceof CodeResource) && ("description".equals(view))) {
                 writer.write(((CodeResource) bean).getAnnotation());
             }
         }
@@ -98,12 +94,10 @@ public class GenericPropertyConverterTest {
 
     public List<CodeResource> referenceProperty = new ArrayList<>();
 
-
     public GenericPropertyConverterTest() throws FileNotFoundException {
         beanFactory = MockBeanFactory.getInstance();
         MockitoAnnotations.initMocks(this);
     } // ()
-
 
     @Test
     public void testEditStrings() {
@@ -111,7 +105,6 @@ public class GenericPropertyConverterTest {
             public String getId() {
                 return "Test:123";
             }
-
 
             @Override
             public int compareTo(Content o) {
@@ -139,9 +132,12 @@ public class GenericPropertyConverterTest {
         Assert.assertEquals(c.getEditString(caString.toCharArray()), caString, "The edit string for a char[] should be its string.");
     } // testEditStrings()
 
+    public List<String> forTheReturnType() {
+        return null;
+    }
 
     @Test
-    public void testStorableObjects() {
+    public void testStorableObjects() throws NoSuchMethodException {
         Assert.assertNull(c.getStorableObject(null, null, Object.class, null, null), "Null values should always return null.");
         Assert.assertEquals(c.getStorableObject(null, "Hallo", String.class, null, null), "Hallo", "This should be a string value.");
         Assert.assertNull(c.getStorableObject(null, "", String.class, null, null), "Empty values should return null.");
@@ -160,13 +156,14 @@ public class GenericPropertyConverterTest {
         Assert.assertEquals(c.getStorableObject(null, "false", Boolean.class, null, null), false, "This should be a boolean value.");
         Assert.assertEquals(c.getStorableObject(null, "true", Boolean.class, null, null), true, "This should be a boolean value.");
         Assert.assertEquals(c.getStorableObject(null, "error", Boolean.class, null, null), false, "This should be a boolean value.");
+        Type returnType = this.getClass().getDeclaredMethod("forTheReturnType").getGenericReturnType();
+        Assert.assertTrue(((List<String>) c.getStorableObject(null, "string", List.class, returnType, null)).contains("string"), "This should be a list of strings containing \"string\".");
         Markdown expectedMarkdown = new Markdown("Hallo".toCharArray());
         Assert.assertEquals(c.getStorableObject(null, "Hallo", Markdown.class, null, null).getClass(), Markdown.class, "This should be a markdown instance.");
         Assert.assertEquals(c.getStorableObject(null, "Hallo", Markdown.class, null, null), expectedMarkdown, "This should be a markdown instance.");
         Content bean = beanFactory.getBean("RootTopic:1");
         Assert.assertEquals(c.getStorableObject(null, "RootTopic:1", RootTopic.class, null, null), bean, "This should be root topic instance.");
     } // testStorableObjects()
-
 
     @Test
     public void testTypeChecks() {
@@ -175,7 +172,6 @@ public class GenericPropertyConverterTest {
         Assert.assertTrue(c.isTextType(char[].class), "This should be recognized as text type.");
         Assert.assertFalse(c.isTextType(String.class), "This should not be recognized as text type.");
     } // testTypeChecks()()
-
 
     @Test
     public void testConversions() throws Exception {
