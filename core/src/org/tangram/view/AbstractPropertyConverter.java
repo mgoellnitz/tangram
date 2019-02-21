@@ -214,40 +214,55 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                 value = new Markdown(valueString.toCharArray());
             } else if (cls==List.class) {
                 LOG.debug("getStorableObject() splitting {}", valueString);
-                String[] idStrings = valueString.split(",");
+
+                String[] stringRepresentations = valueString.split(",");
                 List<Object> elements = new ArrayList<>();
-                for (String idString : idStrings) {
-                    idString = idString.trim();
-                    LOG.debug("getStorableObject() idString={}", idString);
-                    if (StringUtils.isNotBlank(idString)) {
-                        Matcher m = createIdMatcher(idString);
-                        ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
-                        Class<? extends Content> elementClass = Content.class;
-                        if ((parameterizedType!=null)&&(parameterizedType.getActualTypeArguments().length==1)) {
-                            Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
-                            LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
-                            if (actualTypeArgument instanceof Class) {
-                                elementClass = SystemUtils.convert(actualTypeArgument);
-                            } // if
-                        } // if
-                        if (m.find()) {
-                            idString = m.group(1);
-                            Content bean = beanFactory.getBean(idString);
-                            LOG.info("getStorableObject() pattern match result {} ({})", idString, bean);
-                            if ((bean!=null)&&((client==null)||(!bean.getId().equals(client.getId())))) {
-                                if (elementClass.isAssignableFrom(bean.getClass())) {
-                                    elements.add(bean);
-                                } // if
-                            } // if
+
+                ParameterizedType parameterizedType = (type instanceof ParameterizedType) ? (ParameterizedType) type : null;
+                Class elementClass = Content.class;
+                if (parameterizedType != null && parameterizedType.getActualTypeArguments().length == 1) {
+                    Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
+
+                    LOG.debug("getStorableObject() actualTypeArgument={}", actualTypeArgument);
+
+                    if (actualTypeArgument instanceof Class) {
+                        elementClass = SystemUtils.convert(actualTypeArgument);
+                    }
+                }
+
+                for (String stringRepresentation : stringRepresentations) {
+                    stringRepresentation = stringRepresentation.trim();
+
+                    LOG.debug("getStorableObject() idString={}", stringRepresentation);
+
+                    if (StringUtils.isNotBlank(stringRepresentation)) {
+                        if (elementClass.isAssignableFrom(Content.class)) {
+                            Matcher m = this.createIdMatcher(stringRepresentation);
+                            if (m.find()) {
+                                stringRepresentation = m.group(1);
+                                Content bean = beanFactory.getBean(stringRepresentation);
+
+                                LOG.info("getStorableObject() pattern match result {} ({})", stringRepresentation, bean);
+
+                                if ((bean != null) && ((client == null) || (!bean.getId().equals(client.getId())))) {
+                                    if (elementClass.isAssignableFrom(bean.getClass())) {
+                                        elements.add(bean);
+                                    }
+                                }
+                            } else {
+                                LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
+
+                                List<? extends Content> results = this.getObjectsViaDescription(elementClass, stringRepresentation, request);
+                                if (results.size() > 0) {
+                                    elements.addAll(results);
+                                }
+                            }
                         } else {
-                            LOG.debug("getStorableObject() parameterizedType={}", parameterizedType);
-                            List<? extends Content> results = getObjectsViaDescription(elementClass, idString, request);
-                            if (results.size()>0) {
-                                elements.addAll(results);
-                            } // if
-                        } // if
-                    } // if
-                } // for
+                            elements.add(this.getStorableObject(client, stringRepresentation, elementClass, null, request));
+                        }
+                    }
+                }
+
                 value = elements;
             } else if (Content.class.isAssignableFrom(cls)) {
                 Class<? extends Content> cc = SystemUtils.convert(cls);
