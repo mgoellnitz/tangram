@@ -47,8 +47,7 @@ public class OnInjectionInvoker<I> implements InjectionListener<I> {
             method.invoke(object);
         } catch (Throwable t) {
             try {
-                String message = t.getMessage();
-                LOG.warn("afterInjection() {}@{}: {}", method, object, message);
+                LOG.warn("afterInjection() {}@{}: {}", method, object, t.getMessage());
             } catch (Exception e) {
                 LOG.error("afterInjection()!", e);
             } // try/catch
