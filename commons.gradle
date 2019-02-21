@@ -51,7 +51,7 @@ if (project.hasProperty('jdk')) {
   println "Defining boot class path $bootClasspathStr"
   project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
       ac.options.bootClasspath = bootClasspathStr
-  })
+    })
 }
 
 // Project specific default output directory
@@ -84,16 +84,18 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   from "${buildDir}/docs/javadoc"
 }
 
-artifactory {
-  contextUrl = 'https://oss.jfrog.org/artifactory'
-  publish {
-    repository {
-      repoKey = version.endsWith('SNAPSHOT') ? 'oss-snapshot-local' : 'oss-release-local'
-      username = "$bintrayUser"
-      password = "$bintrayKey"
-    }
-    defaults {
-      publications ('mavenJava')
+if (project.hasProperty("bintrayUser")&&project.hasProperty("bintrayKey")) {
+  artifactory {
+    contextUrl = 'https://oss.jfrog.org/artifactory'
+    publish {
+      repository {
+        repoKey = version.endsWith('SNAPSHOT') ? 'oss-snapshot-local' : 'oss-release-local'
+        username = "$bintrayUser"
+        password = "$bintrayKey"
+      }
+      defaults {
+        publications ('mavenJava')
+      }
     }
   }
 }
