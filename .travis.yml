@@ -15,12 +15,10 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 # Environment variables needed:
-# ORG_GRADLE_PROJECT_bintrayUser
-# ORG_GRADLE_PROJECT_bintrayKey
-# VERSIONEYE_API_KEY
-# TANGRAM_MORPHIA_INTEGRATION_TEST
-# JAVA_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m" (for Java 7)
-# ORG_GRADLE_PROJECT_release=true
+# ORG_GRADLE_PROJECT_bintrayUser (optional)
+# ORG_GRADLE_PROJECT_bintrayKey (optional)
+# TANGRAM_MORPHIA_INTEGRATION_TEST (for successful integration test points to a MongoDB)
+# ORG_GRADLE_PROJECT_release=true (optional)
 #
 sudo: false
 
