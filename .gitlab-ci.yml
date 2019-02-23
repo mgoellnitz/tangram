@@ -17,7 +17,6 @@
 # Environment variables needed:
 # ORG_GRADLE_PROJECT_bintrayUser
 # ORG_GRADLE_PROJECT_bintrayKey
-# VERSIONEYE_API_KEY
 # TANGRAM_MORPHIA_INTEGRATION_TEST
 # ORG_GRADLE_PROJECT_release=true
 #
