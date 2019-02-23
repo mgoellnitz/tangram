@@ -52,7 +52,7 @@ public class TangramVersions {
   String junit = '4.12'
   String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.197'
+  String h2db = '1.4.196'
 
   // The dependency injection options
   String dinistiq = '0.6'
