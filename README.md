@@ -82,7 +82,7 @@ http://oss.jfrog.org/oss-snapshot-local/
 To make all this work you need
 
 - Java 8
-- Gradle 3.4 or later (gradle wrapper included)
+- Gradle 4.3.1 (gradle wrapper included)
 
 For all the rest simply type
 
@@ -104,12 +104,11 @@ gradle clean publishToMavenLocal
 
 and then you can build and use your projects using tangram or the examples.
 
-If you need to set a runtime library to e.g. compile with Java 8 for target
-systems with Java 7 you can provide a JDK pointer (e.g. for releases up to 
-version 1.1):
+If you need to set a runtime library to compile with a different JDK version you 
+can provide a JDK pointer:
 
 ```bash
-gradle -Pjdk=/opt/jdk1.7.0_80 clean build publishToMavenLocal
+gradle -Pjdk=/opt/jdk1.8.0_191 clean build publishToMavenLocal
 ```
 
 Packaging source code and API documentation is triggered by the "release" switch.
@@ -137,4 +136,4 @@ gradle eclipse
 ```
 (output folders are set to .../build/classes/main not to .../bin)
 
-(We don't recommend using eclipse anymore)
+(We don't recommend using the obsolete eclipse IDE anymore.)

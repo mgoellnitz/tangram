@@ -47,10 +47,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 if (project.hasProperty('jdk')) {
-  def bootClasspathStr = "${jdk}/jre/lib/rt.jar"
-  println "Defining boot class path $bootClasspathStr"
+  def bootstrapClasspathStr = "${jdk}/jre/lib/rt.jar"
+  println "Defining boot class path $bootstrapClasspathStr"
   project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
-      ac.options.bootClasspath = bootClasspathStr
+      ac.options.bootstrapClasspath = bootstrapClasspathStr
     })
 }
 
