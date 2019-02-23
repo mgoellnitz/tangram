@@ -45,7 +45,7 @@ targetCompatibility = 1.8
 
 def bootstrapClasspathStr = "${project.hasProperty('jdk') ? jdk : System.env.JAVA_HOME}/jre/lib/rt.jar"
 project.tasks.withType(AbstractCompile, { AbstractCompile ac ->
-    ac.options.bootstrapClasspath = bootstrapClasspathStr
+    ac.options.bootstrapClasspath = files(bootstrapClasspathStr)
 })
 
 String[] roots = ["${project.projectDir}/src/main/groovy"]
