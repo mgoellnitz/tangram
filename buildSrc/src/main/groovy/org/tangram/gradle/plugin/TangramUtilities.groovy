@@ -276,11 +276,11 @@ class TangramUtilities {
     )
     if (dir != null) {
       project.ant.enhance(classpath : cp, directory : dir) {
-        fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
+        fileset(dir: project.sourceSets['main'].java.outputDir.canonicalPath)
       }
     } else {
       project.ant.enhance(classpath : cp) {
-        fileset(dir: project.sourceSets['main'].output.classesDir.canonicalPath)
+        fileset(dir: project.sourceSets['main'].java.outputDir.canonicalPath)
       }
     } // if
   } // openjpaEnhance()
@@ -296,9 +296,9 @@ class TangramUtilities {
       URLClassLoader cl = getClassLoader()
 
       if (dir == null) {
-        dir = project.sourceSets['main'].output.classesDir.canonicalPath
+        dir = project.sourceSets['main'].java.outputDir.canonicalPath
       } // if
-      StaticWeaveProcessor p = new StaticWeaveProcessor(project.sourceSets['main'].output.classesDir.canonicalPath, dir)
+      StaticWeaveProcessor p = new StaticWeaveProcessor(project.sourceSets['main'].java.outputDir.canonicalPath, dir)
       String persistenceXml = "${project.projectDir}/weave"
       // println "persistence.xml: $persistenceXml"
       File pxml = new File("$persistenceXml/META-INF/persistence.xml")

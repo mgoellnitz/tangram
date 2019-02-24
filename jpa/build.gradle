@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,12 +45,28 @@ dependencies {
   testCompile "org.springframework:spring-core:$versions.springframework"
   testCompile "org.springframework:spring-test:$versions.springframework"
   testCompile "hsqldb:hsqldb:$versions.hsqldb"
+  testCompile "net.bytebuddy:byte-buddy:$versions.byte_buddy"
+  
+  // TODO testProvided - only for datanucleus test.
+  testCompile "org.datanucleus:datanucleus-core:$versions.datanucleus"
+  testCompile "$versions.jdo_api"
+  
+  // TODO testProvided - only for eclipselink test.
+  testCompile "org.eclipse.persistence:org.eclipse.persistence.jpa:$versions.eclipselink"
+  
+  // TODO testProvided - only for hibernate test.
+  testCompile "org.hibernate:hibernate-core:$versions.hibernate"
 }
+
+def javaClassesDir = sourceSets['main'].output.asPath
+def firstPartIndex = javaClassesDir.indexOf('main')
+def outputBaseDir=javaClassesDir.substring(0,firstPartIndex)
+javaClassesDir=javaClassesDir.substring(0,firstPartIndex+4)
 
 // For Java EE environments
 task jeeJar(type: Jar, dependsOn: jar) {
   classifier = 'jee'
-  from "$buildDir/classes/main"
+  from "$javaClassesDir"
   from "$buildDir/resources/main"
   // We need to exlude the beans.xml here and use the one from the application to control the JPA details
   exclude "META-INF/beans.xml"
@@ -59,67 +75,67 @@ task jeeJar(type: Jar, dependsOn: jar) {
   rename ('.*-jee.xml', 'beans.xml')
 }
 
-// For EcliseLink
-task eclipselinkJar(type: Jar, dependsOn: jar) {
-  classifier = 'eclipselink'
-  from "$buildDir/classes/eclipselink"
-  from "$buildDir/resources/main"
-}
-
-eclipselinkJar.doFirst {
-  // uses persistence.xml in weave/ and copies all non Entity classes unchanged
-  eclipselinkWeave("$buildDir/classes/eclipselink")
-}
-
-// For Hibernate - must be the last in the que
-task hibernateJar(type: Jar, dependsOn: eclipselinkJar) {
-  classifier = 'hibernate'
-  from "$buildDir/classes/hibernate"
-  from "$buildDir/resources/main"
-}
-
-hibernateJar.doFirst {
-  copy {
-    from "$buildDir/classes/main"
-    into "$buildDir/classes/hibernate"
-    include '**/**'
-  }
-  hibernateEnhance("$buildDir/classes/hibernate")
-}
-
-// For Datanucleus
-task nucleusJar(type: Jar, dependsOn: hibernateJar) {
-  classifier = 'nucleus'
-  from "$buildDir/classes/nucleus"
+// For DataNucleus
+task datanucleusJar(type: Jar, dependsOn: jar) {
+  classifier = 'datanucleus'
+  from "${outputBaseDir}datanucleus"
   from "$buildDir/resources/main"
   // Otherwise in this step these classes get included
   exclude "org/tangram/jpa/test/**"
 }
 
-nucleusJar.doFirst {
+datanucleusJar.doFirst {
   copy {
-    from "$buildDir/classes/main"
-    into "$buildDir/classes/nucleus"
+    from "$javaClassesDir"
+    into "${outputBaseDir}datanucleus"
     include '**/**'
   }
-  nucleusJpaEnhance("$buildDir/classes/nucleus")
+  nucleusJpaEnhance("${outputBaseDir}datanucleus")
+}
+
+// For EcliseLink
+task eclipselinkJar(type: Jar, dependsOn: datanucleusJar) {
+  classifier = 'eclipselink'
+  from "${outputBaseDir}eclipselink"
+  from "$buildDir/resources/main"
+}
+
+eclipselinkJar.doFirst {
+  // uses persistence.xml in weave/ and copies all non Entity classes unchanged
+  eclipselinkWeave("${outputBaseDir}eclipselink")
+}
+
+// For Hibernate - must be the last in the que
+task hibernateJar(type: Jar, dependsOn: eclipselinkJar) {
+  classifier = 'hibernate'
+  from "${outputBaseDir}hibernate"
+  from "$buildDir/resources/main"
+}
+
+hibernateJar.doFirst {
+  copy {
+    from "$javaClassesDir"
+    into "${outputBaseDir}hibernate"
+    include '**/**'
+  }
+  hibernateEnhance("${outputBaseDir}hibernate")
 }
 
 // For OpenJPA
-task openjpaJar(type: Jar, dependsOn: nucleusJar) {
+task openjpaJar(type: Jar, dependsOn: hibernateJar) {
   classifier = 'openjpa'
-  from "$buildDir/classes/openjpa"
+  from "${outputBaseDir}openjpa"
   from "$buildDir/resources/main"
 }
 
 openjpaJar.doFirst {
   copy {
-    from "$buildDir/classes/main"
-    into "$buildDir/classes/openjpa"
+    from "$javaClassesDir"
+    into "$buildDir/classes/java/openjpa"
     include '**/**'
   }
   // uses persistence.xml in enhance/ and copies all non Entity classes except interfaces unchanged
-  openjpaEnhance("$buildDir/classes/openjpa")
+  openjpaEnhance("${outputBaseDir}openjpa")
 }
 
 assemble.dependsOn openjpaJar
@@ -140,7 +156,7 @@ publishing {
       artifact eclipselinkJar
       artifact hibernateJar
       artifact jeeJar
-      artifact nucleusJar
+      artifact datanucleusJar
       artifact openjpaJar
     }
   }
