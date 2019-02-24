@@ -22,6 +22,9 @@
 #
 image: openjdk:8-jdk-alpine
 
+before_script:
+  - export GRADLE_USER_HOME=/tmp/.gradle
+
 stages:
   - modules
 
@@ -38,5 +41,5 @@ build_modules:
 
 cache:
   paths:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+  - /tmp/.gradle/caches/
+  - /tmp/.gradle/wrapper/
