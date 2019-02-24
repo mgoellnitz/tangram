@@ -351,7 +351,7 @@ class TangramUtilities {
 
   private void hibernateEnhance(String dir) {
     if (dir == null) {
-      dir = project.sourceSets['main'].output.classesDir.canonicalPath
+      dir = project.sourceSets['main'].java.outputDir.canonicalPath
     } // if
     ClassLoader classLoader = getClassLoader()
     EnhancementContext enhancementContext = new DefaultEnhancementContext() {
