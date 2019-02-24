@@ -65,7 +65,7 @@ test {
 }
 
 processTestResources {
-  filter(ReplaceTokens, tokens: [projectVersion: project.version.toString(), projectName: project.name.toString()])
+  filter(ReplaceTokens, tokens: [projectBuildDir: buildDir.toString(), projectVersion: project.version.toString(), projectName: project.name.toString()])
 }
 
 def javaClassesDir = sourceSets['main'].output.asPath
