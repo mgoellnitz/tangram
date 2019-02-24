@@ -253,7 +253,7 @@ public abstract class AbstractPropertyConverter implements PropertyConverter {
                                                 LOG.debug("getStorableObject() idString={}", oneValuString);
 
                                                 if (StringUtils.isNotBlank(oneValuString)) {
-                                                    if (elementClass.isAssignableFrom(Content.class)) {
+                                                    if (Content.class.isAssignableFrom(elementClass)) {
                                                         Matcher m = this.createIdMatcher(oneValuString);
                                                         if (m.find()) {
                                                             oneValuString = m.group(1);
