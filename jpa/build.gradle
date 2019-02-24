@@ -16,6 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import org.apache.tools.ant.filters.ReplaceTokens
+
 apply from: '../lib.gradle'
 
 // This is needed to let the testCompile time dependency work reliably
@@ -56,6 +58,10 @@ dependencies {
   
   // TODO testProvided - only for hibernate test.
   testCompile "org.hibernate:hibernate-core:$versions.hibernate"
+}
+
+processTestResources {
+  filter(ReplaceTokens, tokens: [projectVersion: project.version.toString(), projectName: project.name.toString()])
 }
 
 def javaClassesDir = sourceSets['main'].output.asPath

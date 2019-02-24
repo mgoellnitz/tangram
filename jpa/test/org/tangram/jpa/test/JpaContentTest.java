@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.persistence.EntityManager;
@@ -73,6 +74,10 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
     private static final Collection<Class<?>> ENHANCED_CLASSES = Arrays.asList(JpaContent.class, Code.class);
 
     private Collection<String> baseJarEntries = new ArrayList<>(16);
+
+    private String projectName;
+
+    private String projectVersion;
 
 
     @Override
@@ -133,8 +138,34 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
 
 
     private String getJarName(String jpaLibraryName) {
-        return "build/libs/tangram-jpa-1.2-SNAPSHOT"+(StringUtils.isEmpty(jpaLibraryName) ? "" : "-"+jpaLibraryName)+".jar";
+        return "build/libs/"+projectName+"-"+projectVersion+(StringUtils.isEmpty(jpaLibraryName) ? "" : "-"+jpaLibraryName)+".jar";
     }
+
+
+    @BeforeClass
+    protected void beforeClass() throws Exception {
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getResourceAsStream("/org/tangram/jpa/test/content/test-environment.properties"));
+            Assert.assertEquals(properties.size(), 2, "Unexpected number of test environment properties.");
+            projectName = properties.getProperty("project.name");
+            Assert.assertFalse(StringUtils.isEmpty(projectName), "Project name should be available.");
+            projectVersion = properties.getProperty("project.version");
+            Assert.assertFalse(StringUtils.isEmpty(projectVersion), "Project version should be available.");
+        } catch (IOException ioe) {
+            Assert.fail("Cannot determine test environment values."+ioe.getMessage());
+        }
+        try (ZipInputStream zip = new ZipInputStream(new FileInputStream(getJarName(null)))) {
+            ZipEntry zipEntry = zip.getNextEntry();
+            while (zipEntry!=null) {
+                String name = zipEntry.getName();
+                baseJarEntries.add(name);
+                zipEntry = zip.getNextEntry();
+            }
+        } catch (IOException ioe) {
+            Assert.fail("base JPA JAR as a reference not found: "+ioe.getMessage());
+        }
+    } // getInstance()
 
 
     @Test
@@ -146,21 +177,6 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
         passwordProtection.setProtectedContents(Collections.emptyList());
         checkSimplePasswordProtection(passwordProtection);
     } // testPasswordProtection()
-
-
-    @BeforeClass
-    protected void beforeClass() throws Exception {
-        try (ZipInputStream zip = new ZipInputStream(new FileInputStream(getJarName(null)))) {
-            ZipEntry zipEntry = zip.getNextEntry();
-            while (zipEntry!=null) {
-                String name = zipEntry.getName();
-                baseJarEntries.add(name);
-                zipEntry = zip.getNextEntry();
-            }
-        } catch (IOException ioe) {
-            Assert.fail("base JPA JAR as a reference not found.");
-        }
-    } // getInstance()
 
 
     private ByteArrayClassLoader.ChildFirst readJarFile(String jpaName) {
