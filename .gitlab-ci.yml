@@ -32,6 +32,8 @@ build_modules:
   - ./gradlew generatePomFileForMavenJavaPublication artifactoryPublish
   artifacts:
     expire_in: 5 days
+    paths:
+    - jpa/build
     name: ${CI_BUILD_STAGE}
 
 cache:
