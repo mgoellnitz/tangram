@@ -22,6 +22,9 @@
 #
 image: openjdk:8-jdk-alpine
 
+before_script:
+  - export GRADLE_USER_HOME=/tmp/.gradle
+
 stages:
   - modules
 
@@ -32,9 +35,11 @@ build_modules:
   - ./gradlew generatePomFileForMavenJavaPublication artifactoryPublish
   artifacts:
     expire_in: 5 days
+    paths:
+    - ./jpa/build
     name: ${CI_BUILD_STAGE}
 
 cache:
   paths:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+  - /tmp/.gradle/caches/
+  - /tmp/.gradle/wrapper/
