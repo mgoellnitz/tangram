@@ -79,6 +79,8 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
 
     private String projectVersion;
 
+    private String buildDir;
+
 
     @Override
     protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
@@ -138,7 +140,7 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
 
 
     private String getJarName(String jpaLibraryName) {
-        return "build/libs/"+projectName+"-"+projectVersion+(StringUtils.isEmpty(jpaLibraryName) ? "" : "-"+jpaLibraryName)+".jar";
+        return buildDir+"/libs/"+projectName+"-"+projectVersion+(StringUtils.isEmpty(jpaLibraryName) ? "" : "-"+jpaLibraryName)+".jar";
     }
 
 
@@ -147,11 +149,13 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
         try {
             Properties properties = new Properties();
             properties.load(getClass().getResourceAsStream("/org/tangram/jpa/test/content/test-environment.properties"));
-            Assert.assertEquals(properties.size(), 2, "Unexpected number of test environment properties.");
+            Assert.assertEquals(properties.size(), 3, "Unexpected number of test environment properties.");
             projectName = properties.getProperty("project.name");
             Assert.assertFalse(StringUtils.isEmpty(projectName), "Project name should be available.");
             projectVersion = properties.getProperty("project.version");
             Assert.assertFalse(StringUtils.isEmpty(projectVersion), "Project version should be available.");
+            buildDir = properties.getProperty("project.build.dir");
+            Assert.assertFalse(StringUtils.isEmpty(buildDir), "Project build dir should be available.");
         } catch (IOException ioe) {
             Assert.fail("Cannot determine test environment values."+ioe.getMessage());
         }
