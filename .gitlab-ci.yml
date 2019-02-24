@@ -30,11 +30,10 @@ build_modules:
   script: 
   - ./gradlew jacocoTestReport jacocoCombinedReport coveralls build
   - ./gradlew generatePomFileForMavenJavaPublication artifactoryPublish
-  allow_failure: true
   artifacts:
     expire_in: 5 days
     paths:
-    - jpa/build
+    - ./jpa/build
     name: ${CI_BUILD_STAGE}
 
 cache:
