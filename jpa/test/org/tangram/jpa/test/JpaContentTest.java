@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2016 Martin Goellnitz
+ * Copyright 2014-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,13 +20,29 @@ package org.tangram.jpa.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.guicy.TangramServletModule;
 import org.tangram.guicy.postconstruct.PostConstructModule;
+import org.tangram.jpa.Code;
+import org.tangram.jpa.JpaContent;
 import org.tangram.jpa.protection.PasswordProtection;
 import org.tangram.jpa.test.content.BaseClass;
 import org.tangram.jpa.test.content.SubClass;
@@ -34,14 +50,29 @@ import org.tangram.mutable.MutableBeanFactory;
 import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
+/**
+ * Test the basic content based features based on an OpenJPA integration test with HsqlDB and Guicy / Google Guice
+ * for setup of the test environment.
+ *
+ * Also tests the contents of the enhanced JARs according to some basic rules.
+ */
 public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JpaContentTest.class);
+
 
     static {
         org.apache.openjpa.enhance.InstrumentationFactory.setDynamicallyInstallAgent(false);
     }
+
+    private static final Collection<Class<?>> ENHANCED_CLASSES = Arrays.asList(JpaContent.class, Code.class);
+
+    private Collection<String> baseJarEntries = new ArrayList<>(16);
 
 
     @Override
@@ -101,6 +132,11 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
     }
 
 
+    private String getJarName(String jpaLibraryName) {
+        return "build/libs/tangram-jpa-1.2-SNAPSHOT"+(StringUtils.isEmpty(jpaLibraryName) ? "" : "-"+jpaLibraryName)+".jar";
+    }
+
+
     @Test
     public void testPasswordProtection() {
         PasswordProtection passwordProtection = new PasswordProtection();
@@ -110,5 +146,106 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
         passwordProtection.setProtectedContents(Collections.emptyList());
         checkSimplePasswordProtection(passwordProtection);
     } // testPasswordProtection()
+
+
+    @BeforeClass
+    protected void beforeClass() throws Exception {
+        try (ZipInputStream zip = new ZipInputStream(new FileInputStream(getJarName(null)))) {
+            ZipEntry zipEntry = zip.getNextEntry();
+            while (zipEntry!=null) {
+                String name = zipEntry.getName();
+                baseJarEntries.add(name);
+                zipEntry = zip.getNextEntry();
+            }
+        } catch (IOException ioe) {
+            Assert.fail("base JPA JAR as a reference not found.");
+        }
+    } // getInstance()
+
+
+    private ByteArrayClassLoader.ChildFirst readJarFile(String jpaName) {
+        String context = jpaName.toLowerCase();
+        int idx = context.indexOf('/');
+        if (idx>0) {
+            context = context.substring(0, idx);
+        }
+        Map<String, byte[]> classes = new HashMap<>();
+        String jarName = getJarName(context);
+        try (ZipInputStream zip = new ZipInputStream(new FileInputStream(jarName))) {
+            int count = 0;
+            ZipEntry zipEntry = zip.getNextEntry();
+            while (zipEntry!=null) {
+                String name = zipEntry.getName();
+                if (name.endsWith(".class")) {
+                    String className = name.replace('/', '.').replaceFirst(".class", "");
+                    LOG.info("readJarFile() {}: {}", name, className);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    for (int len = zip.read(buffer); len>=0; len = zip.read(buffer)) {
+                        baos.write(buffer, 0, len);
+                    } // for
+                    byte[] data = baos.toByteArray();
+                    classes.put(className, data);
+                }
+                count++;
+                Assert.assertNotNull(name, "JAR-Entry should have a name.");
+                zipEntry = zip.getNextEntry();
+            }
+            Assert.assertEquals(count, baseJarEntries.size(), "Unexpected number of entries in enhanced JAR for "+jpaName+".");
+        } catch (IOException ioe) {
+            Assert.fail("JAR for "+jpaName+" not found: "+jarName);
+        }
+        return new ByteArrayClassLoader.ChildFirst(Thread.currentThread().getContextClassLoader(), classes);
+    }
+
+
+    private void checkJar(String jpaName, String methodPrefix) throws SecurityException {
+        ClassLoader loader = readJarFile(jpaName);
+        try {
+            for (Class<?> c : ENHANCED_CLASSES) {
+                Class<?> cls = loader.loadClass(c.getName());
+                Method[] methods = cls.getMethods();
+                boolean flag = false;
+                for (Method method : methods) {
+                    LOG.info("checkJar({}) method name in {}.{}", jpaName, c.getName(), method.getName());
+                    if (method.getName().startsWith(methodPrefix)) {
+                        flag = true;
+                    } // if
+                } // for
+                Assert.assertTrue(flag, "Classes not enhanced for "+jpaName+". We miss the method prefix "+methodPrefix+".");
+            }
+        } catch (ClassNotFoundException cnfe) {
+            Assert.fail("JAR for "+jpaName+" does not contain class "+cnfe.getMessage());
+        }
+    }
+
+
+    public void optionaTestJavaEEContainerJar() {
+        readJarFile("JEE");
+    }
+
+
+    @Test
+    public void testDatanucleusJar() {
+        checkJar("Datanucleus/JPA", "dn");
+    }
+
+
+    @Test
+    public void testEclipseLinkJar() {
+        checkJar("EclipseLink", "_persistence");
+    }
+
+
+    @Test
+    public void testHibernateJar() {
+        checkJar("Hibernate", "$$_hibernate");
+    }
+
+
+    @Test
+    public void testOpenJPAJar() {
+        checkJar("OpenJPA", "pc");
+    }
 
 } // JpaContentTest
