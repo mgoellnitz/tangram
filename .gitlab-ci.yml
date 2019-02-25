@@ -31,7 +31,7 @@ stages:
 build_modules:
   stage: modules
   script: 
-  - ./gradlew jacocoTestReport jacocoCombinedReport coveralls build
+  - ./gradlew build jacocoCombinedReport coveralls
   - ./gradlew generatePomFileForMavenJavaPublication artifactoryPublish
   artifacts:
     expire_in: 5 days
