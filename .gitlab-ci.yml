@@ -32,15 +32,18 @@ build_modules:
   stage: modules
   script: 
   - ./gradlew jacocoTestReport jacocoCombinedReport coveralls build
+  - jpa/build/reports/tests/test/classes/org.tangram.jpa.test.JpaContentTest.html
   - ./gradlew generatePomFileForMavenJavaPublication artifactoryPublish
-  allow_failure: true
+  after_script:
+  - cat ./jpa/build/reports/tests/test/classes/org.tangram.jpa.test.JpaContentTest.html
   artifacts:
     expire_in: 5 days
     paths:
-    - ./jpa/build
+    - ./jacoco
     name: ${CI_BUILD_STAGE}
 
 cache:
   paths:
   - /tmp/.gradle/caches/
   - /tmp/.gradle/wrapper/
+3
