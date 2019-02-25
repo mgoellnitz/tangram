@@ -31,8 +31,7 @@ stages:
 build_modules:
   stage: modules
   script: 
-  - ./gradlew jacocoTestReport jacocoCombinedReport coveralls build
-  - jpa/build/reports/tests/test/classes/org.tangram.jpa.test.JpaContentTest.html
+  - ./gradlew build jacocoCombinedReport coveralls
   - ./gradlew generatePomFileForMavenJavaPublication artifactoryPublish
   after_script:
   - cat ./jpa/build/reports/tests/test/classes/org.tangram.jpa.test.JpaContentTest.html
