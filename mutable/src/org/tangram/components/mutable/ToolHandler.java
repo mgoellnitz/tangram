@@ -311,8 +311,9 @@ public class ToolHandler {
         if (contents instanceof List) {
             List<? extends Content> list = SystemUtils.convertList(contents);
             for (Content o : list) {
-                LOG.info("doImport() {}", o);
-                beanFactory.persistUncommitted(o);
+                if (beanFactory.persistUncommitted(o)) {
+                    LOG.info("doImport() {}", o);
+                }
             } // for
         } // if
         beanFactory.commitTransaction();
