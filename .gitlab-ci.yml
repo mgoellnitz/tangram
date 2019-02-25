@@ -36,7 +36,7 @@ build_modules:
   artifacts:
     expire_in: 5 days
     paths:
-    - ./jpa/build
+    - ./jacoco
     name: ${CI_BUILD_STAGE}
 
 cache:
