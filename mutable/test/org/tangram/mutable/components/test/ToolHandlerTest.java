@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -198,11 +198,13 @@ public class ToolHandlerTest {
         HttpServletResponse response = new MockHttpServletResponse();
         Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
         TargetDescriptor tool = null;
+        String exceptionMessage = "";
         try {
-            tool = toolHandler.contentImport(null, request, response);
+            tool = toolHandler.contentImportLink(null, request, response);
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "You missed to select an input file.");
+            exceptionMessage = e.getMessage();
         } // try/catch
+        Assert.assertEquals(exceptionMessage, "You missed to select an input file.", "Content import is expected to fail.");
         Assert.assertNull(tool, "Content export indicates direct writing to writer.");
     } // testEmptyContentImport()
 
@@ -215,11 +217,13 @@ public class ToolHandlerTest {
         Mockito.when(authorizationService.isAdminUser(request, response)).thenReturn(true);
         TargetDescriptor tool = null;
         byte[] xmlfile = new byte[4];
+        String exceptionMessage = "";
         try {
-            tool = toolHandler.contentImport(xmlfile, request, response);
+            tool = toolHandler.contentImportLink(xmlfile, request, response);
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "Insufficient XML input.");
+            exceptionMessage = e.getMessage();
         } // try/catch
+        Assert.assertEquals(exceptionMessage, "Insufficient XML input.", "Content export expected to fail.");
         Assert.assertNull(tool, "Content export indicates direct writing to writer.");
     } // testSmallContentImport()
 
@@ -233,9 +237,9 @@ public class ToolHandlerTest {
         TargetDescriptor tool = null;
         try {
             String xml = "<?xml version=\"1.0\" ?><list><Topic><id>Topic:234</id></Topic></list>";
-            tool = toolHandler.contentImport(xml.getBytes("UTF-8"), request, response);
+            tool = toolHandler.contentImportLink(xml.getBytes("UTF-8"), request, response);
         } catch (Exception e) {
-            Assert.assertEquals(e.getMessage(), "Insufficient XML input.");
+            Assert.fail("Content import is not expecgted to throw any exception like "+e.getMessage());
         } // try/catch
         Assert.assertEquals(tool, TargetDescriptor.DONE, "Content export indicates direct writing to writer.");
         // MockMutableBean factory does not store these values on persist() so far
