@@ -83,7 +83,7 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
 
 
     @Override
-    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+    protected <T extends Object> T getInstance(Class<T> type) throws Exception {
         Injector injector = Guice.createInjector(new PostConstructModule(), new TangramServletModule());
         return injector.getInstance(type);
     } // getInstance()

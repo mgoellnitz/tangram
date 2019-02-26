@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2016-2017 Martin Goellnitz
+ * Copyright 2016-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Set;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tangram.content.Content;
 import org.tangram.morphia.Code;
 import org.tangram.morphia.MorphiaBeanFactory;
@@ -41,6 +43,8 @@ import org.testng.annotations.Test;
 
 public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MorphiaContentTest.class);
+
     private Dinistiq dinistiq;
 
 
@@ -48,17 +52,17 @@ public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
     protected void beforeClass() throws Exception {
         Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
-        dinistiq = new Dinistiq(packages, getBeansForContentCheck());
+        dinistiq = new Dinistiq(packages, getBeansForScope());
         MorphiaBeanFactory factory = dinistiq.findBean(MorphiaBeanFactory.class);
         Set<Class<? extends Content>> additionalClasses = new HashSet<>();
         additionalClasses.add(AdditionalClass.class);
         factory.setAdditionalClasses(additionalClasses);
+        Assert.assertNotNull(dinistiq, "Need dinistiq instance to execute tests.");
     } // getInstance()
 
 
     @Override
-    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
-        Assert.assertNotNull(dinistiq, "Need dinistiq instance for execute tests.");
+    protected <T extends Object> T getInstance(Class<T> type) throws Exception {
         return dinistiq.findBean(type);
     } // getInstance()
 
@@ -113,9 +117,23 @@ public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
     }
 
 
-    @Test(priority = 10)
-    public void test10WipeContent() throws Exception {
-        MutableBeanFactory<?, ?> beanFactory = getInstance(MutableBeanFactory.class, true);
+    @Test(priority = 2)
+    public void test02CheckClasses() throws Exception {
+        LOG.info("test02CheckClasses() start.");
+        MutableBeanFactory<Datastore, Query<?>> beanFactory = getMutableBeanFactory();
+        Assert.assertNotNull(beanFactory, "Need factory for beans.");
+        List<? extends Class<? extends BaseInterface>> baseClasses = beanFactory.getImplementingClasses(getBaseClass());
+        Assert.assertEquals(baseClasses.size(), 2, "Missing implementations for base class.");
+        List<Class<SubInterface>> subClasses = beanFactory.getImplementingClasses(SubInterface.class);
+        Assert.assertEquals(subClasses.size(), 1, "Missing implementation for sub class.");
+        LOG.info("test02CheckClasses() completed.");
+    } // test02CheckClasses()
+
+
+    @Test(priority = 90)
+    public void test90WipeContent() throws Exception {
+        LOG.info("test90WipeContent() start.");
+        MutableBeanFactory<Datastore, Query<?>> beanFactory = getMutableBeanFactory();
         Assert.assertNotNull(beanFactory, "Need factory for beans.");
         Object manager = beanFactory.getManager();
         Assert.assertNotNull(manager, "The factory should have an underlying manager instance.");
@@ -123,6 +141,7 @@ public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
         datastore.getCollection(Code.class).drop();
         datastore.getCollection(BaseClass.class).drop();
         datastore.getCollection(SubClass.class).drop();
-    } // test10WipeContent()
+        LOG.info("test90WipeContent() completed.");
+    } // test90WipeContent()
 
 } // MorphiaContentTest

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2016 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -504,7 +504,9 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
                 if (!implementingClassesMap.containsKey(MutableCode.class)) {
                     implementingClassesMap.put(MutableCode.class, getImplementingClassesForModelClass(MutableCode.class));
                 } // if
-                // implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
+                if (!implementingClassesMap.containsKey(Content.class)) {
+                    implementingClassesMap.put(Content.class, getImplementingClassesForModelClass(Content.class));
+                } // if
                 LOG.info("getImplementingClassesMap() {}", implementingClassesMap);
             } // synchronized
         } // if
@@ -523,6 +525,8 @@ public abstract class AbstractMutableBeanFactory<M extends Object, Q extends Obj
     @SuppressWarnings("unchecked")
     public <T extends Content> List<Class<T>> getImplementingClasses(Class<T> baseClass) {
         List<Class<T>> result = new ArrayList<>();
+        LOG.debug("getImplementingClasses() '{}': {}", baseClass, getImplementingClassesMap());
+        LOG.debug("getImplementingClasses() {}", getImplementingClassesMap().get(baseClass));
         for (Class<? extends Content> c : getImplementingClassesMap().get(baseClass)) {
             result.add((Class<T>) c);
         } // for

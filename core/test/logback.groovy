@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2015-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@ appender('CONSOLE', ConsoleAppender) {
 appenders.add('CONSOLE')
 
 root WARN, appenders
-logger "dinistiq", INFO, appenders, false
+logger "dinistiq", WARN, appenders, false
 logger "org.tangram", DEBUG, appenders, false
 logger "guicy", DEBUG, appenders, false
 logger "openjpa", DEBUG, appenders, false

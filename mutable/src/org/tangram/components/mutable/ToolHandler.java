@@ -233,11 +233,13 @@ public class ToolHandler {
         LOG.info("contentExport() root class to ignore fields in: {}", oneClass.getName());
         xstream.omitField(oneClass, "id");
         xstream.omitField(oneClass, "ebeanInternalId");
+        xstream.omitField(oneClass, "__ebean__intercept");
         final Class<? extends Content> baseClass = beanFactory.getBaseClass();
         if (baseClass!=oneClass) {
             LOG.info("contentExport() additional base class to ignore fields in: {}", oneClass.getName());
             xstream.omitField(baseClass, "id");
             xstream.omitField(baseClass, "ebeanInternalId");
+            xstream.omitField(baseClass, "__ebean__intercept");
             xstream.omitField(baseClass, "beanFactory");
         } // if
 
@@ -245,6 +247,7 @@ public class ToolHandler {
             LOG.info("contentExport() aliasing and ignoring fields for {}", c.getName());
             xstream.omitField(c, "beanFactory");
             xstream.omitField(c, "userServices");
+            xstream.omitField(c, "__ebean__intercept");
             xstream.alias(c.getSimpleName(), c);
         } // for
 
