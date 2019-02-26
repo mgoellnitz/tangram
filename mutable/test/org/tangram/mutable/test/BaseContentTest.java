@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
-import org.tangram.content.ChangeListener;
 import org.tangram.components.mutable.ToolHandler;
+import org.tangram.content.ChangeListener;
 import org.tangram.content.Content;
 import org.tangram.content.TransientCode;
 import org.tangram.logic.ClassRepository;
@@ -195,7 +195,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
     protected abstract <T extends Object> T getInstance(Class<T> type) throws Exception;
 
 
-    private MutableBeanFactory<M, Q> getMutableBeanFactory() throws Exception {
+    protected MutableBeanFactory<M, Q> getMutableBeanFactory() throws Exception {
         MutableBeanFactory<M, Q> beanFactory = SystemUtils.convert(getInstance(MutableBeanFactory.class));
         beanFactory.addListener(changeListener);
         return beanFactory;
