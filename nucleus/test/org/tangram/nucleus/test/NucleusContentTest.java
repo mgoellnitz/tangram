@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2016 Martin Goellnitz
+ * Copyright 2014-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.tangram.mutable.MutableBeanFactory;
@@ -45,8 +47,11 @@ import org.testng.annotations.Test;
  */
 public class NucleusContentTest extends BaseContentTest<PersistenceManager, Query<?>> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(NucleusContentTest.class);
+
+
     @Override
-    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+    protected <T extends Object> T getInstance(Class<T> type) throws Exception {
         ApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"classpath*:tangram/*.xml", "tangram/*.xml"});
         return context.getBean(type);
     } // getInstance()
@@ -103,9 +108,11 @@ public class NucleusContentTest extends BaseContentTest<PersistenceManager, Quer
 
 
     @Test(priority = 1)
-    public void test0IsEnhanced() {
+    public void test01IsEnhanced() {
+        LOG.info("test01IsEnhanced() start.");
         Assert.assertTrue(BaseContentTest.checkMethodPrefixOccurs(NucleusContent.class.getMethods(), "dn"), "Classes were not enhanced.");
-    } // test1IsEnhanced()
+        LOG.info("test01IsEnhanced() completed.");
+    } // test01IsEnhanced()
 
 
     @Test

@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.tangram.ebean.Code;
 import org.tangram.ebean.test.content.BaseClass;
@@ -35,35 +34,29 @@ import org.tangram.mutable.test.BaseContentTest;
 import org.tangram.mutable.test.content.BaseInterface;
 import org.tangram.mutable.test.content.SubInterface;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
 public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
 
-    @Override
-    protected Map<String, Object> getBeansForContentCreate() {
-        Map<String, Object> result = super.getBeansForContentCreate();
-        result.put("ebeanDdlGenerate", Boolean.TRUE);
-        result.put("ebeanDdlRun", Boolean.TRUE);
-        return result;
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(EbeanContentTest.class);
+
+    private Dinistiq dinistiq;
 
 
-    @Override
-    protected Map<String, Object> getBeansForContentCheck() {
-        Map<String, Object> result = super.getBeansForContentCheck();
-        result.put("ebeanDdlGenerate", Boolean.FALSE);
-        result.put("ebeanDdlRun", Boolean.FALSE);
-        return result;
-    }
-
-
-    @Override
-    protected <T extends Object> T getInstance(Class<T> type, boolean create) throws Exception {
+    @BeforeClass
+    protected void beforeClass() throws Exception {
+        LOG.info("beforeClass()");
         Set<String> packages = new HashSet<>();
         packages.add("org.tangram.components");
-        Dinistiq dinistiq = new Dinistiq(packages, create ? getBeansForContentCreate() : getBeansForContentCheck());
-        Assert.assertNotNull(dinistiq, "Need dinistiq instance for execute tests.");
+        dinistiq = new Dinistiq(packages, getBeansForScope());
+        Assert.assertNotNull(dinistiq, "Need dinistiq instance to execute tests.");
+    } // getInstance()
+
+
+    @Override
+    protected <T extends Object> T getInstance(Class<T> type) throws Exception {
         return dinistiq.findBean(type);
     } // getInstance()
 
@@ -122,9 +115,11 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
      * From time to time we ran into the problem that classes didn't get enhanced correctly
      */
     @Test(priority = 1)
-    public void test0IsEnhanced() {
+    public void test01IsEnhanced() {
+        LOG.info("test01IsEnhanced() start.");
         Method[] methods = Code.class.getMethods();
         Assert.assertTrue(BaseContentTest.checkMethodPrefixOccurs(methods, "_ebean"), "Classes were not enhanced.");
-    } // test0IsEnhanced()
+        LOG.info("test01IsEnhanced() completed.");
+    } // test01IsEnhanced()
 
 } // EbeanContentTest

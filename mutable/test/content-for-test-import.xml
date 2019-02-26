@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<list>
+  <BaseClass>
+    <title>handleForTest</title>
+  </BaseClass>
+  <SubClass>
+    <title>subHandleForTest</title>
+    <peers>
+      <BaseClass reference="../../../BaseClass[1]"></BaseClass>
+    </peers>
+  </SubClass>
+</list>
