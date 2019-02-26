@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2016 Martin Goellnitz
+ * Copyright 2011-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@
 package org.tangram.components.mutable;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -236,15 +237,13 @@ public class ToolHandler {
         if (baseClass!=oneClass) {
             LOG.info("contentExport() additional base class to ignore fields in: {}", oneClass.getName());
             xstream.omitField(baseClass, "id");
-            xstream.omitField(baseClass, "beanFactory");
-            xstream.omitField(baseClass, "gaeBeanFactory");
             xstream.omitField(baseClass, "ebeanInternalId");
+            xstream.omitField(baseClass, "beanFactory");
         } // if
 
         for (Class<? extends Content> c : beanFactory.getAllClasses()) {
             LOG.info("contentExport() aliasing and ignoring fields for {}", c.getName());
             xstream.omitField(c, "beanFactory");
-            xstream.omitField(c, "gaeBeanFactory");
             xstream.omitField(c, "userServices");
             xstream.alias(c.getSimpleName(), c);
         } // for
@@ -288,8 +287,40 @@ public class ToolHandler {
     } // contentExport()
 
 
+    /**
+     * This method provides access to the import job.
+     * No access control is applied and no content check is performed to avoid uncontrolled behaviour and exceptions
+     * like with the LinkAction call below.
+     *
+     * @param input Reader to take XML code from.
+     */
+    public void contentImport(Reader input) {
+        beanFactory.beginTransaction();
+        XStream xstream = new XStream(new PureJavaReflectionProvider());
+        Collection<Class<? extends Content>> classes = beanFactory.getClasses();
+        for (Class<? extends Content> c : classes) {
+            xstream.alias(c.getSimpleName(), c);
+        } // for
+
+        Object contents = xstream.fromXML(input);
+        LOG.info("contentImport() implementation map {}", beanFactory.getImplementingClassesMap());
+        if (contents instanceof List) {
+            List<? extends Content> list = SystemUtils.convertList(contents);
+            LOG.info("contentImport() {} objects in list", list.size());
+            for (Content o : list) {
+                if (beanFactory.persistUncommitted(o)) {
+                    LOG.info("contentImport() {}", o);
+                } // if
+            } // for
+        } else {
+            LOG.error("contentImport() Trying to import a non-list");
+        } // if
+        beanFactory.commitTransaction();
+    } // contentImport()
+
+
     @LinkAction("/import")
-    public TargetDescriptor contentImport(@ActionParameter("xmlfile") byte[] xmlfile, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public TargetDescriptor contentImportLink(@ActionParameter("xmlfile") byte[] xmlfile, HttpServletRequest request, HttpServletResponse response) throws Exception {
         authorizationService.throwIfNotAdmin(request, response, "Import should not be called directly");
         if (xmlfile==null) {
             throw new Exception("You missed to select an input file.");
@@ -298,27 +329,9 @@ public class ToolHandler {
             throw new Exception("Insufficient XML input.");
         } // if
         Reader input = new StringReader(new String(xmlfile, "UTF-8"));
-
-        beanFactory.beginTransaction();
-        XStream xstream = new XStream(new StaxDriver());
-        Collection<Class<? extends Content>> classes = beanFactory.getClasses();
-        for (Class<? extends Content> c : classes) {
-            xstream.alias(c.getSimpleName(), c);
-        } // for
-
-        Object contents = xstream.fromXML(input);
-        LOG.info("doImport() {}", contents);
-        if (contents instanceof List) {
-            List<? extends Content> list = SystemUtils.convertList(contents);
-            for (Content o : list) {
-                LOG.info("doImport() {}", o);
-                beanFactory.persistUncommitted(o);
-            } // for
-        } // if
-        beanFactory.commitTransaction();
-
+        contentImport(input);
         return TargetDescriptor.DONE;
-    } // contentImport()
+    } // contentImportLink()
 
 
     @LinkAction("/tools")
