@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  */
 public class ComaTextConverterTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ComaTextConverterTest .class);
+    private static final Logger LOG = LoggerFactory.getLogger(ComaTextConverterTest.class);
 
 
     @Test
@@ -45,9 +45,9 @@ public class ComaTextConverterTest {
         LOG.debug("testConverter() data={}", data.toString());
         String result = ComaTextConverter.convert(text, data);
         LOG.debug("testConverter() result={}", result);
-        Assert.assertNotNull(result, "Result should not be null");
+        Assert.assertNotNull(result, "Result should not be null.");
         String reference = "<div xmlns=\"http://www.coremedia.com/2003/richtext-1.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><p>Enjoy the taste of a duck cutlet combined with caramelized onions. A dream!</p></div>";
-        Assert.assertEquals(result, reference, "Wrong conversion result");
+        Assert.assertEquals(result, reference, "Wrong conversion result.");
     } // testConverter()
 
 } // ComaTextConverterTest

@@ -93,10 +93,10 @@ public class LinkTagTest {
         Assert.assertFalse(linkTag.isHandlers(), "No default handlers expected.");
         Assert.assertFalse(linkTag.isHref(), "href full output is switched of by default.");
         Assert.assertFalse(linkTag.isTarget(), "No default target attribute expected.");
-        Assert.assertNull(linkTag.getAction(), "No default action expected");
-        Assert.assertNull(linkTag.getBean(), "No default bean expected");
-        Assert.assertNull(linkTag.getParent(), "No default parent expected");
-        Assert.assertNull(linkTag.getView(), "No default view expected");
+        Assert.assertNull(linkTag.getAction(), "No default action expected.");
+        Assert.assertNull(linkTag.getBean(), "No default bean expected.");
+        Assert.assertNull(linkTag.getParent(), "No default parent expected.");
+        Assert.assertNull(linkTag.getView(), "No default view expected.");
     } // testRelease()
 
 
@@ -147,7 +147,7 @@ public class LinkTagTest {
         } catch (UnsupportedEncodingException e) {
             Assert.fail("getContentAsString() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(tagContent, url, "Link tag rendering failed");
+        Assert.assertEquals(tagContent, url, "Link tag rendering failed.");
     } // testTagEnd()
 
 
@@ -189,7 +189,7 @@ public class LinkTagTest {
         } catch (UnsupportedEncodingException e) {
             Assert.fail("getContentAsString() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(tagContent, "href=\""+url+"\" target=\"_new\" onclick=\"click();\" ", "Link tag rendering failed");
+        Assert.assertEquals(tagContent, "href=\""+url+"\" target=\"_new\" onclick=\"click();\" ", "Link tag rendering failed.");
     } // testLinkTagEnd()
 
 } // LinkTagTest

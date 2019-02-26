@@ -66,9 +66,9 @@ public class LinkTagTest {
         linkTag.setParent(parent);
         Assert.assertEquals(linkTag.getParent(), parent, "Setting the parent not recognized.");
         linkTag.release();
-        Assert.assertNull(linkTag.getTarget(), "No default target expected");
-        Assert.assertNull(linkTag.getParent(), "No default parent expected");
-        Assert.assertNull(linkTag.getView(), "No default view expected");
+        Assert.assertNull(linkTag.getTarget(), "No default target expected.");
+        Assert.assertNull(linkTag.getParent(), "No default parent expected.");
+        Assert.assertNull(linkTag.getView(), "No default view expected.");
     } // testRelease()
 
 
@@ -119,7 +119,7 @@ public class LinkTagTest {
         } catch (UnsupportedEncodingException e) {
             Assert.fail("getContentAsString() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(tagContent, url, "Link tag rendering failed");
+        Assert.assertEquals(tagContent, url, "Link tag rendering failed.");
     } // testTagEnd()
 
 } // LinkTagTest

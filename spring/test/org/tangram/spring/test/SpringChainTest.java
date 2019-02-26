@@ -139,9 +139,9 @@ public class SpringChainTest {
         Assert.assertNotNull(parameters, "Access instance should have been created.");
         Assert.assertEquals(parameters.getParameterMap().size(), 1, "Unexpected number of parameters.");
         Assert.assertEquals(parameters.getBlobNames().size(), 1, "Expected one available blob in the request parameters.");
-        Assert.assertEquals(parameters.getParameter("field"), "content of the field", "Unexpected field value");
-        Assert.assertEquals(parameters.getData("file").length, 36, "Unexpected file size");
-        Assert.assertEquals(parameters.getOriginalName("file"), "testfile.txt", "Unexpected file name");
+        Assert.assertEquals(parameters.getParameter("field"), "content of the field", "Unexpected field value.");
+        Assert.assertEquals(parameters.getData("file").length, 36, "Unexpected file size.");
+        Assert.assertEquals(parameters.getOriginalName("file"), "testfile.txt", "Unexpected file name.");
     } // testFormEncodedParameterAccess()
 
 

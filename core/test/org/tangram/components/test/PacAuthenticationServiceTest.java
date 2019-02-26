@@ -105,7 +105,7 @@ public class PacAuthenticationServiceTest {
         HttpServletResponse response = new MockHttpServletResponse();
 
         Link link = p.createLink(request, response, p, "logout", null);
-        Assert.assertNotNull(link, "We need a valid logout link to test");
+        Assert.assertNotNull(link, "Valid logout link needed for test.");
         Mockito.when(aggregator.createLink(request, response, p, "logout", null)).thenReturn(link);
         Link reTest = aggregator.createLink(request, response, p, "logout", null);
         Assert.assertEquals(reTest, link, "Logout link should be the one just generated.");
@@ -125,7 +125,7 @@ public class PacAuthenticationServiceTest {
         HttpServletResponse response = new MockHttpServletResponse();
         LOG.info("testRedirectToLogin() loginProviders={}", loginProviders);
         Link link = p.createLink(request, response, p, "form", null);
-        Assert.assertNotNull(link, "We need a valid logout link to test");
+        Assert.assertNotNull(link, "Valid logout link needed for test.");
         Mockito.when(aggregator.createLink(request, response, p, "form", null)).thenReturn(link);
         try {
             p.redirectToLogin(request, response, loginProviders);
