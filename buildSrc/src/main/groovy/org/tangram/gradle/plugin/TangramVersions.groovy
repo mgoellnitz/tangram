@@ -57,7 +57,7 @@ public class TangramVersions {
   // The dependency injection options
   String dinistiq = '0.6'
 
-  String guice = '4.1.0'
+  String guice = '4.2.2'
 
   String springframework = '4.3.22.RELEASE'
 
