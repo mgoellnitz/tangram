@@ -67,9 +67,9 @@ public class IncludeTagTest {
         includeTag.setParent(parent);
         Assert.assertEquals(includeTag.getParent(), parent, "Setting the parent not recognized.");
         includeTag.release();
-        Assert.assertNull(includeTag.getBean(), "No default bean expected");
-        Assert.assertNull(includeTag.getParent(), "No default parent expected");
-        Assert.assertNull(includeTag.getView(), "No default view expected");
+        Assert.assertNull(includeTag.getBean(), "No default bean expected.");
+        Assert.assertNull(includeTag.getParent(), "No default parent expected.");
+        Assert.assertNull(includeTag.getView(), "No default view expected.");
     } // testRelease()
 
 
@@ -116,7 +116,7 @@ public class IncludeTagTest {
         } catch (UnsupportedEncodingException e) {
             Assert.fail("getContentAsString() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(tagContent, "", "Include tag rendering failed");
+        Assert.assertEquals(tagContent, "", "Include tag rendering failed.");
     } // testTagEnd()
 
 
@@ -143,7 +143,7 @@ public class IncludeTagTest {
         } catch (UnsupportedEncodingException e) {
             Assert.fail("getContentAsString() should not issue an exception.", e);
         } // try/catch
-        Assert.assertEquals(tagContent, "", "Include tag rendering failed");
+        Assert.assertEquals(tagContent, "", "Include tag rendering failed.");
     } // testNullBean()
 
 } // IncludeTagTest

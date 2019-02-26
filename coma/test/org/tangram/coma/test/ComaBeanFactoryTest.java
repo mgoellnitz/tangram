@@ -112,21 +112,21 @@ public class ComaBeanFactoryTest {
         Assert.assertEquals(logo.getId(), "10", "Unexpected id for logo.");
         Assert.assertEquals(""+logo, "10 :ImageData", "Unexpected string representation for logo.");
         Object b = logo.get("data");
-        Assert.assertNotNull(b, "no blob found in logo object");
+        Assert.assertNotNull(b, "No blob found in logo object.");
         ComaBlob blob = (ComaBlob) b;
         Assert.assertEquals(blob.getLen(), 10657, "Unexpected number of bytes in blob.");
         Assert.assertEquals(blob.getMimeType(), "image/png", "Unexpected mime type in blob.");
         Assert.assertEquals(blob.getContentId(), "10", "Unexpected content id reference in blob.");
         Assert.assertEquals(blob.getPropertyName(), "data", "Unexpected property name reference in blob.");
         Object s = home.get("subTopics");
-        Assert.assertNotNull(s, "no subtopics found in root topic");
+        Assert.assertNotNull(s, "no subtopics found in root topic.");
         home.remove("title");
-        Assert.assertNull(home.get("title"), "Unexpected title found");
+        Assert.assertNull(home.get("title"), "Unexpected title found.");
         home.put("title", "new title");
-        Assert.assertEquals(home.get("title"), "new title", "Unexpected title found");
+        Assert.assertEquals(home.get("title"), "new title", "Unexpected title found.");
         home.clear();
         home.putAll(Collections.emptyMap());
-        Assert.assertNull(home.get("title"), "Unexpected title found");
+        Assert.assertNull(home.get("title"), "Unexpected title found.");
         List<Topic> contents = factory.listBeans(Topic.class);
         Assert.assertNotNull(contents, "There should be some result when listing all beans.");
         Assert.assertEquals(contents.size(), 2, "We have a certain number of prepared beans available.");
@@ -164,7 +164,7 @@ public class ComaBeanFactoryTest {
         Assert.assertEquals(code.getSize(), 58, "Unexpected size for code.");
         TestBeanListener tbl = new TestBeanListener();
         factory.addListener(Content.class, tbl);
-        Assert.assertTrue(tbl.gotCalled, "Missed to call listener on registration");
+        Assert.assertTrue(tbl.gotCalled, "Missed to call listener on registration.");
     } // testCodes()
 
 

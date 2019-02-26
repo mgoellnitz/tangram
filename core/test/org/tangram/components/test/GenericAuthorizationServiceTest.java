@@ -131,8 +131,8 @@ public class GenericAuthorizationServiceTest {
         } catch (IOException e) {
             Assert.fail("Request handling should not throw an exception");
         } // try/catch
-        Assert.assertEquals(response.getStatus(), 302, "expected redirect to new location");
-        Assert.assertEquals(response.getHeader("Location"), uri, "expected redirect to new location");
+        Assert.assertEquals(response.getStatus(), 302, "Expected redirect to new location.");
+        Assert.assertEquals(response.getHeader("Location"), uri, "Expected redirect to new location.");
     } // testClosedSystem()
 
     @Test
@@ -150,10 +150,10 @@ public class GenericAuthorizationServiceTest {
         try {
             authorizationService.handleRequest(request, response);
         } catch (IOException e) {
-            Assert.fail("Request handling should not throw an exception");
+            Assert.fail("Request handling should not throw an exception.");
         } // try/catch
-        Assert.assertEquals(response.getStatus(), 200, "expected normal status result");
-        Assert.assertEquals(request.getAttribute("tangramLogoutUrl"), uri, "expected correct logout link in attribute");
+        Assert.assertEquals(response.getStatus(), 200, "Expected normal status result.");
+        Assert.assertEquals(request.getAttribute("tangramLogoutUrl"), uri, "Expected correct logout link in attribute.");
     } // testHandleRequest()
 
 } // GenericAuthorizationServiceTest
