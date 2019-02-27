@@ -27,14 +27,14 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.16.18'
+  String lombok = '1.18.6'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.4.13'
-  String asm = '5.2'
+  String groovy = '2.5.6'
+  String asm = '6.0'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String log4j = '1.2.17'
@@ -42,7 +42,7 @@ public class TangramVersions {
   String yui = '2.4.8'
   String mockito = '2.24.5'
   String xstream = '1.4.11.1'
-  String pac4j = '2.1.0'
+  String pac4j = '2.2.1'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.47'
   String codemirror = '5.27.4'
