@@ -58,6 +58,7 @@ public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
         additionalClasses.add(AdditionalClass.class);
         factory.setAdditionalClasses(additionalClasses);
         Assert.assertNotNull(dinistiq, "Need dinistiq instance to execute tests.");
+        super.beforeClass();
     } // getInstance()
 
 

@@ -46,6 +46,7 @@ import org.tangram.mutable.test.content.SubInterface;
 import org.tangram.protection.SimplePasswordProtection;
 import org.tangram.util.SystemUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 
@@ -59,7 +60,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
     protected static final String TESTUSER = "testuser";
 
-    private ChangeListener changeListener;
+private MutableBeanFactory<M, Q> beanFactory;
 
 
     /**
@@ -152,18 +153,6 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
 
     public BaseContentTest() {
-        changeListener = new ChangeListener() {
-            @Override
-            public void delete(Content content) {
-                LOG.info("delete()");
-            }
-
-
-            @Override
-            public void update(Content content) {
-                LOG.info("update()");
-            }
-        };
     }
 
 
@@ -196,8 +185,6 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
 
     protected MutableBeanFactory<M, Q> getMutableBeanFactory() throws Exception {
-        MutableBeanFactory<M, Q> beanFactory = SystemUtils.convert(getInstance(MutableBeanFactory.class));
-        beanFactory.addListener(changeListener);
         return beanFactory;
     } // getMutableBeanFactory
 
@@ -240,6 +227,25 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
      * @return Number of classes excluding interfaces and abstract classes
      */
     protected abstract int getNumberOfClasses();
+
+
+    @BeforeClass
+    protected void beforeClass() throws Exception {
+        ChangeListener changeListener = new ChangeListener() {
+            @Override
+            public void delete(Content content) {
+                LOG.info("delete()");
+            }
+
+
+            @Override
+            public void update(Content content) {
+                LOG.info("update()");
+            }
+        };
+        beanFactory = SystemUtils.convert(getInstance(MutableBeanFactory.class));
+        beanFactory.addListener(changeListener);
+    } // beforeClass()
 
 
     @Test(priority = 2)

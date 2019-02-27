@@ -54,6 +54,7 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
         packages.add("org.tangram.components");
         dinistiq = new Dinistiq(packages, getBeansForScope());
         Assert.assertNotNull(dinistiq, "Need dinistiq instance to execute tests.");
+        super.beforeClass();
     } // getInstance()
 
 

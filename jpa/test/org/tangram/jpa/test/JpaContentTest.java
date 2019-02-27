@@ -169,6 +169,7 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
         } catch (IOException ioe) {
             Assert.fail("base JPA JAR as a reference not found: "+ioe.getMessage());
         }
+        super.beforeClass();
     } // getInstance()
 
 
