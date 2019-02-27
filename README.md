@@ -2,6 +2,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/mgoellnitz/tangram.svg)](https://github.com/mgoellnitz/tangram/releases/latest)
 [![Build Status](https://api.travis-ci.org/mgoellnitz/tangram.svg?branch=master)](https://travis-ci.org/mgoellnitz/tangram)
+[![Build Status](https://gitlab.com/mgoellnitz/tangram/badges/master/build.svg)](https://gitlab.com/mgoellnitz/tangram/pipelines)
 [![Coverage Status](https://coveralls.io/repos/github/mgoellnitz/tangram/badge.svg?branch=master)](https://coveralls.io/github/mgoellnitz/tangram?branch=master)
 [![Coverage Status](http://codecov.io/github/mgoellnitz/tangram/coverage.svg?branch=master)](https://codecov.io/gh/mgoellnitz/tangram)
 
