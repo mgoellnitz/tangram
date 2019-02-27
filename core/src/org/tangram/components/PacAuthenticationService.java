@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2015-2016 Martin Goellnitz
+ * Copyright 2015-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -240,7 +240,8 @@ public class PacAuthenticationService implements AuthenticationService, LinkFact
             session.setAttribute(Constants.ATTRIBUTE_USERS, users);
         } // if
         WebContext context = new J2EContext(request, response);
-        Client<Credentials, ?> client = SystemUtils.convert(getClients(request, response).findClient(context));
+        String provider = request.getParameter("client_name");
+        Client<Credentials, ?> client = SystemUtils.convert(getClients(request, response).findClient(provider));
         LOG.info("callback() client: {}", client);
         try {
             Credentials credentials = client.getCredentials(context);
