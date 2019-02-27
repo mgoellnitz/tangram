@@ -83,7 +83,7 @@ public class TangramVersions {
   String ebean_datasource = '4.5'
   String ebean_agent = '11.34.1'
 
-  String mongodb = '3.6.1'
+  String mongodb = '3.10.1'
   String morphia = '1.3.2'
   
   String objectify = '6.0.3'
