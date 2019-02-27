@@ -28,13 +28,13 @@ public class TangramVersions {
 
   // The basics
   String lombok = '1.18.6'
-  String servlet_api = 'javax.servlet:javax.servlet-api:4.0.0'
-  String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
+  String servlet_api = 'javax.servlet:javax.servlet-api:4.0.1'
+  String jsp_api = 'javax.servlet.jsp:jsp-api:2.2.1-b03'
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
   String groovy = '2.5.6'
-  String asm = '6.0'
+  String asm = '7.0'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String log4j = '1.2.17'
@@ -51,11 +51,11 @@ public class TangramVersions {
   // For testing purposes
   String junit = '4.12'
   String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
-  String hsqldb = '1.8.0.10'  // org.hsqldb group id
-  String h2db = '1.4.197'
+  String hsqldb = '2.4.1'  // org.hsqldb group id
+  String h2db = '1.4.198'
 
   // The dependency injection options
-  String dinistiq = '0.6'
+  String dinistiq = '0.7'
 
   String guice = '4.2.2'
 
@@ -79,7 +79,7 @@ public class TangramVersions {
 
   String datanucleus = '[5.1,5.2)'
 
-  String ebean = '11.34.3'
+  String ebean = '11.35.1'
   String ebean_datasource = '4.5'
   String ebean_agent = '11.34.1'
 
