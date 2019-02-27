@@ -93,7 +93,7 @@ public class GroovyClassRepositoryTest {
     public void testGroovyClassRepository() {
         Assert.assertEquals(repository.getClassLoader().getClass(), GroovyClassLoader.class, "Must be a groovy class loader.");
         Assert.assertNotNull(repository.getBytes("org.tangram.test.GroovyTest"), "Expected to find byte code for test class.");
-        Assert.assertEquals(repository.getBytes("org.tangram.test.GroovyTest").length, 2705, "Expected to find byte code for test class.");
+        Assert.assertEquals(repository.getBytes("org.tangram.test.GroovyTest").length, 2419, "Expected to find byte code for test class.");
         Assert.assertEquals(repository.get(Object.class).size(), 6, "Expected to find exactly fixed number of test classes.");
         Assert.assertEquals(repository.getAnnotated(Singleton.class).size(), 1, "Expected to find fixed number of annotated test classes.");
         Assert.assertEquals(repository.getCompilationErrors().size(), 1, "We have one intentional error in the test codes.");

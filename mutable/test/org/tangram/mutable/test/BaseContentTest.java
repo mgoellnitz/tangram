@@ -418,11 +418,11 @@ private MutableBeanFactory<M, Q> beanFactory;
         Assert.assertEquals(annotatedClasses.size(), 1, "Expected one annotated class.");
         byte[] classBytes = repository.getBytes("org.tangram.example.Test");
         Assert.assertNotNull(classBytes, "Could not find class.");
-        Assert.assertEquals(classBytes.length, 2601, "Unexpected number of bytes for class found.");
+        Assert.assertEquals(classBytes.length, 2372, "Unexpected number of bytes for class found.");
         repository.overrideClass("org.tangram.example.Test", classBytes);
         byte[] emptyClassBytes = repository.getBytes("org.tangram.example.Test");
         Assert.assertNotNull(emptyClassBytes, "Could not find class.");
-        Assert.assertEquals(emptyClassBytes.length, 2601, "Unexpected number of bytes for class found.");
+        Assert.assertEquals(emptyClassBytes.length, 2372, "Unexpected number of bytes for class found.");
         Map<String, String> errors = repository.getCompilationErrors();
         Assert.assertEquals(errors.size(), 0, "Expected no compilation errors.");
     } // test08ObtainCode()
