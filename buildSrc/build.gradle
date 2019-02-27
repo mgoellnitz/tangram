@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2017 Martin Goellnitz
+ * Copyright 2013-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.1.1'
+    classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.9.3'
   }
 }
 
@@ -38,7 +38,7 @@ apply plugin: 'com.jfrog.artifactory'
 
 defaultTasks 'clean', 'publishToMavenLocal'
 
-version '1.3-SNAPSHOT'
+version '2.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -89,10 +89,8 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      if (gradle.gradleVersion != '1.6') {
-        groupId 'tangram'
-        artifactId 'gradle-plugin'
-      }
+      groupId 'tangram'
+      artifactId 'gradle-plugin'
       from components.java
       artifact sourcesJar
       artifact groovydocJar
@@ -129,7 +127,7 @@ publishing {
 pluginBundle {
   website = 'https://github.com/mgoellnitz/tangram/wiki/Plugin'
   vcsUrl = 'https://github.com/mgoellnitz/tangram/'
-  description = 'Generic JPA, JDO, EBean byte code transformation plugin, webapp overlay helper, and minifying plugin developed for Tangram - Verson 1.1.2 is again JDK 1.7 compatible'
+  description = 'Generic JPA, JDO, EBean byte code transformation plugin, webapp overlay helper, and minifying plugin developed for Tangram - Verson 1.1.3 is the last JDK 1.7 compatible one.'
   tags = ['tangram', 'jdo', 'jpa', 'ebean', 'datanucleus', 'eclipselink', 'hibernate', 'openjpa', 'overlay', 'minify']
 
   plugins {
