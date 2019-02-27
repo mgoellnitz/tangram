@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2016 Martin Goellnitz
+ * Copyright 2016-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -77,9 +77,9 @@ public class SimpleAuthenticatorTest {
     public void testSimpleAuthenticator() throws HttpAction {
         Assert.assertEquals(codeCache.getTypeCache("text/plain").size(), 1, "We should have exactly one resource in the cache.");
 
-        UsernamePasswordCredentials c = new UsernamePasswordCredentials("testuser", "testpassword", "dontcare");
+        UsernamePasswordCredentials c = new UsernamePasswordCredentials("testuser", "testpassword");
         simpleAuthenticator.validate(c, null);
-        c = new UsernamePasswordCredentials("testuser", "wrong", "dontcare");
+        c = new UsernamePasswordCredentials("testuser", "wrong");
         boolean result = false;
         try {
             simpleAuthenticator.validate(c, null);
@@ -88,7 +88,7 @@ public class SimpleAuthenticatorTest {
         } // try/catch
         Assert.assertTrue(result, "Invalid logins should throw an exception.");
 
-        c = new UsernamePasswordCredentials("testguy", "irrelevant", "dontcare");
+        c = new UsernamePasswordCredentials("testguy", "irrelevant");
         result = false;
         try {
             simpleAuthenticator.validate(c, null);
