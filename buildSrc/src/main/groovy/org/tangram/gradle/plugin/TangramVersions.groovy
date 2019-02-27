@@ -33,8 +33,8 @@ public class TangramVersions {
   String org_json = '20160810' // not used in tangram internally
   String javax_json = '1.0'
   String gson = '2.7'
-  String groovy = '2.5.6'
-  String asm = '6.0'
+  String groovy = '2.4.13'
+  String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String log4j = '1.2.17'
@@ -78,15 +78,15 @@ public class TangramVersions {
 
   String datanucleus = '[5.1,5.2)'
 
-  String ebean = '11.34.3'
+  String ebean = '11.35.1'
   String ebean_datasource = '4.5'
   String ebean_agent = '11.34.1'
 
-  String mongodb = '3.0.2'
+  String mongodb = '3.10.1'
   String morphia = '1.3.2'
   
-  String objectify = '5.1.22'
+  String objectify = '6.0.3'
   
-  String solr = '6.4.1'  
+  String solr = '7.2.0'
 
 } // TangramVersions
