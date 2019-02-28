@@ -90,12 +90,6 @@ public class JpaContentTest extends BaseContentTest<EntityManager, Query> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<EntityManager, Query> beanFactory) throws Exception {
-        return beanFactory.createBean(BaseClass.class);
-    }
-
-
-    @Override
     protected SubInterface<Query> createSubBean(MutableBeanFactory<EntityManager, Query> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }

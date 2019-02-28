@@ -60,7 +60,7 @@ public abstract class BaseContentTest<M extends Object, Q extends Object> {
 
     protected static final String TESTUSER = "testuser";
 
-private MutableBeanFactory<M, Q> beanFactory;
+    private MutableBeanFactory<M, Q> beanFactory;
 
 
     /**
@@ -189,7 +189,9 @@ private MutableBeanFactory<M, Q> beanFactory;
     } // getMutableBeanFactory
 
 
-    protected abstract BaseInterface createBaseBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;
+    protected BaseInterface createBaseBean(MutableBeanFactory<M, Q> beanFactory) throws Exception {
+        return beanFactory.createBean(getBaseClass());
+    }
 
 
     protected abstract SubInterface<Q> createSubBean(MutableBeanFactory<M, Q> beanFactory) throws Exception;

@@ -58,12 +58,6 @@ public class NucleusContentTest extends BaseContentTest<PersistenceManager, Quer
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<PersistenceManager, Query<?>> beanFactory) throws Exception {
-        return beanFactory.createBean(BaseClass.class);
-    }
-
-
-    @Override
     protected SubInterface<Query<?>> createSubBean(MutableBeanFactory<PersistenceManager, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }

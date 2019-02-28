@@ -69,12 +69,6 @@ public class MorphiaContentTest extends BaseContentTest<Datastore, Query<?>> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<Datastore, Query<?>> beanFactory) throws Exception {
-        return beanFactory.createBean(BaseClass.class);
-    }
-
-
-    @Override
     protected SubInterface<Query<?>> createSubBean(MutableBeanFactory<Datastore, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }

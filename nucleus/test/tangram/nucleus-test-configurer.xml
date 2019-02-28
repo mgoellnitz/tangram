@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
- Copyright 2015-2017 Martin Goellnitz
+ Copyright 2015-2019 Martin Goellnitz
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
@@ -39,10 +39,9 @@
     <constructor-arg>
       <map>
         <entry key="javax.jdo.option.ConnectionDriverName" value="org.hsqldb.jdbcDriver"/>
-        <entry key="javax.jdo.option.ConnectionURL" value="jdbc:hsqldb:mem:datensalat"/>
+        <entry key="javax.jdo.option.ConnectionURL" value="jdbc:hsqldb:mem:./build/tangram-test-db"/>
         <entry key="javax.jdo.option.ConnectionUserName" value="sa"/>
         <entry key="javax.jdo.option.ConnectionPassword" value=""/>
-        <entry key="javax.jdo.option.Mapping" value="hsqldb"/>
       </map>
     </constructor-arg>
   </bean>

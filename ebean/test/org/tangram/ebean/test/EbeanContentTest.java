@@ -65,12 +65,6 @@ public class EbeanContentTest extends BaseContentTest<EbeanServer, Query<?>> {
 
 
     @Override
-    protected BaseInterface createBaseBean(MutableBeanFactory<EbeanServer, Query<?>> beanFactory) throws Exception {
-        return beanFactory.createBean(BaseClass.class);
-    }
-
-
-    @Override
     protected SubInterface<Query<?>> createSubBean(MutableBeanFactory<EbeanServer, Query<?>> beanFactory) throws Exception {
         return beanFactory.createBean(SubClass.class);
     }
