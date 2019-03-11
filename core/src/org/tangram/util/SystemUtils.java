@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2015 Martin Goellnitz
+ * Copyright 2014-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.tangram.content.Content;
 
 
