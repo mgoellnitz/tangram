@@ -40,7 +40,7 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String logback = '1.2.3'
   String yui = '2.4.8'
-  String mockito = '2.24.5'
+  String mockito = '2.28.2'
   String xstream = '1.4.11.1'
   String pac4j = '3.6.1'
   String mockftpserver = '2.7.1'
@@ -65,7 +65,7 @@ public class TangramVersions {
   String openwebbeans = '2.0.10'
 
   // Storage options
-  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m10'
+  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m12'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
