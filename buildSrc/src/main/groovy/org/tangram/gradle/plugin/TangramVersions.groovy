@@ -40,7 +40,7 @@ public class TangramVersions {
   String log4j = '1.2.17'
   String logback = '1.2.3'
   String yui = '2.4.8'
-  String mockito = '2.24.5'
+  String mockito = '2.28.2'
   String xstream = '1.4.11.1'
   String pac4j = '3.6.1'
   String mockftpserver = '2.7.1'
