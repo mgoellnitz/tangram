@@ -79,9 +79,9 @@ public class TangramVersions {
 
   String datanucleus = '[5.1,5.2)'
 
-  String ebean = '11.35.1'
+  String ebean = '11.41.1'
   String ebean_datasource = '4.5'
-  String ebean_agent = '11.34.1'
+  String ebean_agent = '11.39.1'
 
   String mongodb = '3.10.1'
   String morphia = '1.3.2'
