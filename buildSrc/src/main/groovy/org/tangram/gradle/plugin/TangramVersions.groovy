@@ -66,7 +66,7 @@ public class TangramVersions {
   String openwebbeans = '2.0.10'
 
   // Storage options
-  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m10'
+  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m12'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.0-release'
