@@ -148,8 +148,9 @@ class TangramUtilities {
     }
     // Add compile class path elements as urls
     project.configurations.compile.files.each {
-      // println "dependency: $it"
       String urlstring = it.toURI().toURL()
+      // def u=urlstring.substring(urlstring.lastIndexOf('/'))
+      // println "dependency: $u"
       urlList.add(new URL(urlstring))
     }
     // Add test class path elements as urls

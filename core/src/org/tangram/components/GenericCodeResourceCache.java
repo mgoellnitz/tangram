@@ -72,6 +72,9 @@ public class GenericCodeResourceCache implements CodeResourceCache {
     private Map<String, CodeResource> cache;
 
 
+    /**
+     * Resets all cache content and reads inderlying resource anew.
+     */
     @Override
     public void reset() {
         List<CodeResource> resources = null;
@@ -124,6 +127,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      *
      * @return last time of scanning for code resources
      */
+    @Override
     public long getLastUpdate() {
         return lastResetTime;
     } // getLastUpdate()
@@ -136,6 +140,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      * @param annotation annotation of the code resource to be returned
      * @return a code resource if found or null otherwise
      */
+    @Override
     public CodeResource get(String mimeType, String annotation) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
         return (typeCache==null) ? null : typeCache.get(annotation);
@@ -150,6 +155,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      * @param id content id of the code resource instance to obtain
      * @return code resource for the id if found or null otherwise
      */
+    @Override
     public CodeResource get(String id) {
         return cache.get(id);
     } // get()
@@ -160,6 +166,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      *
      * @return set of mimetypes - may be empty but not null
      */
+    @Override
     public Set<String> getTypes() {
         return resourceCache.keySet();
     } // getTypes()
@@ -170,6 +177,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      *
      * @return collection of code resources - may be empty but not null
      */
+    @Override
     public Collection<CodeResource> getCodes() {
         return cache.values();
     } // getCodes()
@@ -183,6 +191,7 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      * @param mimeType mimetype of the code resource instances to collect annotation string from
      * @return list of annotations for the given mimetype - maybe empty but nut null
      */
+    @Override
     public Collection<String> getAnnotations(String mimeType) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
         return (typeCache!=null) ? typeCache.keySet() : new HashSet<String>();
@@ -195,12 +204,14 @@ public class GenericCodeResourceCache implements CodeResourceCache {
      * @param mimeType mime type of the code resources to include into result mapping
      * @return annotation to code resource map for the given mimetype - maybe empty but not null
      */
+    @Override
     public Map<String, CodeResource> getTypeCache(String mimeType) {
         Map<String, CodeResource> typeCache = resourceCache.get(mimeType);
         return (typeCache!=null) ? typeCache : new HashMap<>();
     } // getTypeCache();
 
 
+    @Override
     public void addListener(BeanListener listener) {
         synchronized (attachedListeners) {
             attachedListeners.add(listener);
