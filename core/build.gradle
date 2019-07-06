@@ -40,6 +40,7 @@ dependencies {
   // Another option for markdown
   // compile 'org.pegdown:pegdown:1.6.0'
   compile "org.apache.velocity:velocity:$versions.velocity"
+  compile "org.freemarker:freemarker:$versions.freemarker"
   compile "org.codehaus.groovy:groovy:$versions.groovy"
   // Latest groovy version doesn't include this dependency which is in fact necessary
   compile "org.ow2.asm:asm-analysis:$versions.asm"

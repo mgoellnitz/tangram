@@ -81,10 +81,10 @@ public final class CodeHelper {
             mimeType = "text/groovy";
         } // if
         if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
-            mimeType = "text/vtl";
+            mimeType = "text/ftlh";
         } // if
         if (Constants.MIME_TYPE_XML.equals(mimeType)) {
-            mimeType = "text/vtl";
+            mimeType = "text/ftlx";
         } // if
         if (Constants.MIME_TYPE_SVG.equals(mimeType)) {
             mimeType = "text/svg";
@@ -119,13 +119,13 @@ public final class CodeHelper {
             mimeType = "text/groovy";
         } // if
         if (Constants.MIME_TYPE_HTML.equals(mimeType)) {
-            mimeType = "text/velocity";
+            mimeType = "text/x-freemarker+html";
         } // if
         if (Constants.MIME_TYPE_XML.equals(mimeType)) {
-            mimeType = "text/velocity-xml";
+            mimeType = "text/x-freemarker+xml";
         } // if
         if (Constants.MIME_TYPE_SVG.equals(mimeType)) {
-            mimeType = "text/velocity-svg";
+            mimeType = "text/x-freemarker+svg+xml";
         } // if
         if (Constants.MIME_TYPE_JS.equals(mimeType)) {
             mimeType = "text/js";
@@ -151,16 +151,16 @@ public final class CodeHelper {
     public static String getMimetype(String directoryName) {
         String result = "text/plain";
 
-        if ("velocity".equals(directoryName)) {
+        if ("x-freemarker+html".equals(directoryName)) {
             result = Constants.MIME_TYPE_HTML;
         } // if
-        if ("velocity-xml".equals(directoryName)) {
+        if ("x-freemarker+xml".equals(directoryName)) {
             result = Constants.MIME_TYPE_XML;
         } // if
         if ("css".equals(directoryName)) {
             result = Constants.MIME_TYPE_CSS;
         } // if
-        if ("velocity-svg".equals(directoryName)) {
+        if ("x-freemarker+svg+xml".equals(directoryName)) {
             result = Constants.MIME_TYPE_SVG;
         } // if
         if ("js".equals(directoryName)) {
@@ -190,7 +190,10 @@ public final class CodeHelper {
             filename = filename.substring(0, idx);
         } // if
         idx = filename.lastIndexOf('.');
-        if (filename.endsWith(".vtl")) {
+        if (filename.endsWith(".ftlh")) {
+            filename = filename.substring(0, idx);
+        } // if
+        if (filename.endsWith(".ftlx")) {
             filename = filename.substring(0, idx);
         } // if
         if (filename.endsWith(".svg")) {

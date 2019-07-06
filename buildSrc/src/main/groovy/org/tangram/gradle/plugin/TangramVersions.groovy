@@ -35,6 +35,7 @@ public class TangramVersions {
   String gson = '2.7'
   String groovy = '2.4.13'
   String asm = '5.2'
+  String freemarker = '2.3.28'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String log4j = '1.2.17'
