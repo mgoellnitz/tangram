@@ -40,7 +40,7 @@ public class TangramVersions {
   String yui = '2.4.8'
   String mockito = '2.28.2'
   String xstream = '1.4.11.1'
-  String pac4j = '3.6.1'
+  String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.47'
   String codemirror = '5.48.0'
