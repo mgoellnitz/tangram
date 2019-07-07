@@ -53,7 +53,7 @@ public class TangramVersions {
   String h2db = '1.4.196' // Versions beyond 1.4.196 fail on jetty startup
 
   // The dependency injection options
-  String dinistiq = '0.7'
+  String dinistiq = '0.8'
 
   String guice = '4.2.2'
 
