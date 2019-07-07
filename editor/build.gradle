@@ -27,7 +27,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'de.undercouch:gradle-download-task:3.4.3'
+    classpath 'de.undercouch:gradle-download-task:4.0.0'
   }
 }
 
