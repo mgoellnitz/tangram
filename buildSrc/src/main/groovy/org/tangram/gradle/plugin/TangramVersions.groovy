@@ -34,7 +34,6 @@ public class TangramVersions {
   String javax_json = '1.1.4'
   String gson = '2.8.5'
   String groovy = '2.4.13'
-  String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String logback = '1.2.3'
@@ -72,9 +71,9 @@ public class TangramVersions {
 
   String openjpa = '3.0.0'
   String eclipselink = '2.7.4'
-  String hibernate = '5.2.18.Final'
+  String hibernate = '5.4.3.Final'
   String hibernate_ogm = '5.1.0.Final'
-  String byte_buddy = '[1.6,1.7)'
+  String byte_buddy = '1.9.13'
 
   String datanucleus = '[5.1,5.2)'
 
