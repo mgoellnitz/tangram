@@ -47,7 +47,6 @@ public class TangramVersions {
   String ckeditor = '4.12.1'
 
   // For testing purposes
-  String junit = '4.12'
   String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.0.10' // org.hsqldb group id - newer version fail during test
   String h2db = '1.4.199'
