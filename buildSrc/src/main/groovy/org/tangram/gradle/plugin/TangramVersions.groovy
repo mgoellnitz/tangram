@@ -33,7 +33,7 @@ public class TangramVersions {
   String org_json = '20180813' // not used in tangram internally
   String javax_json = '1.1.4'
   String gson = '2.8.5'
-  String groovy = '2.4.13'
+  String groovy = '2.5.7'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String logback = '1.2.3'

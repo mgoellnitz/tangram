@@ -41,11 +41,6 @@ dependencies {
   // compile 'org.pegdown:pegdown:1.6.0'
   compile "org.apache.velocity:velocity:$versions.velocity"
   compile "org.codehaus.groovy:groovy:$versions.groovy"
-  // Latest groovy version doesn't include this dependency which is in fact necessary
-  compile "org.ow2.asm:asm-analysis:$versions.asm"
-  compile "org.ow2.asm:asm-commons:$versions.asm"
-  compile "org.ow2.asm:asm-tree:$versions.asm"
-  compile "org.ow2.asm:asm-util:$versions.asm"
   compile("com.yahoo.platform.yui:yuicompressor:$versions.yui") {
     exclude module: 'js'
   }
