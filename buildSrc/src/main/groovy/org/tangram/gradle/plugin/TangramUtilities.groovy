@@ -270,9 +270,11 @@ class TangramUtilities {
    */
   public openjpaEnhance(String dir) {
     String cp = project.sourceSets['main'].runtimeClasspath.asPath+File.pathSeparator+"${project.projectDir}/enhance"
+    def acp = project.ant.path { }
+    acp.path = cp
     project.ant.taskdef(
       name : 'enhance',
-      classpath : cp,
+      classpath : acp,
       classname : 'org.apache.openjpa.ant.PCEnhancerTask'
     )
     if (dir != null) {
@@ -350,7 +352,7 @@ class TangramUtilities {
   }
 
 
-  private void hibernateEnhance(String dir) {
+  public void hibernateEnhance(String dir) {
     if (dir == null) {
       dir = project.sourceSets['main'].java.outputDir.canonicalPath
     } // if

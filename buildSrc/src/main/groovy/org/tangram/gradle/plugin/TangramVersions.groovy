@@ -33,7 +33,7 @@ public class TangramVersions {
   String org_json = '20180813' // not used in tangram internally
   String javax_json = '1.1.4'
   String gson = '2.8.5'
-  String groovy = '2.4.13'
+  String groovy = '2.5.7'
   String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.26'
@@ -61,8 +61,8 @@ public class TangramVersions {
 
   String springframework = '4.3.24.RELEASE'
 
-  String weld = '2.4.8.Final'
-  String openwebbeans = '2.0.10'
+  String weld = '3.1.0.Final'
+  String openwebbeans = '2.0.11'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m12'

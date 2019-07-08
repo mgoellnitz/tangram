@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2017 Martin Goellnitz
+ * Copyright 2011-2019 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ configurations {
 }
 
 dependencies {
-  compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1'
+  compile 'javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.2'
   compile 'org.apache.taglibs:taglibs-standard-impl:1.2.5'
   compile "javax.inject:javax.inject:1"
 
@@ -39,11 +39,6 @@ dependencies {
   // compile 'org.pegdown:pegdown:1.6.0'
   compile "org.apache.velocity:velocity:$versions.velocity"
   compile "org.codehaus.groovy:groovy:$versions.groovy"
-  // Latest groovy version doesn't include this dependency which is in fact necessary
-  compile "org.ow2.asm:asm-analysis:$versions.asm"
-  compile "org.ow2.asm:asm-commons:$versions.asm"
-  compile "org.ow2.asm:asm-tree:$versions.asm"
-  compile "org.ow2.asm:asm-util:$versions.asm"
   compile("com.yahoo.platform.yui:yuicompressor:$versions.yui") {
     exclude module: 'js'
   }
