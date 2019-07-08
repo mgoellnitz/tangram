@@ -86,22 +86,6 @@ task groovydocJar(type: Jar, dependsOn: groovydoc) {
   from "${buildDir}/docs/groovydoc"
 }
 
-if (project.hasProperty("bintrayUser")&&project.hasProperty("bintrayKey")) {
-  artifactory {
-    contextUrl = 'https://oss.jfrog.org/artifactory'
-    publish {
-      repository {
-        repoKey = version.endsWith('SNAPSHOT') ? 'oss-snapshot-local' : 'oss-release-local'
-        username = "$bintrayUser"
-        password = "$bintrayKey"
-      }
-      defaults {
-        publications ('mavenJava')
-      }
-    }
-  }
-}
-
 publishing {
   publications {
     mavenJava(MavenPublication) {
