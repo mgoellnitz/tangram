@@ -60,7 +60,7 @@ public class TangramVersions {
   // String springframework = '5.1.5.RELEASE'
 
   String weld = '3.1.0.Final'
-  String openwebbeans = '2.0.10'
+  String openwebbeans = '2.0.11'
 
   // Storage options
   String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m12'
