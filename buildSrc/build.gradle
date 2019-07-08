@@ -127,7 +127,7 @@ publishing {
 pluginBundle {
   website = 'https://github.com/mgoellnitz/tangram/wiki/Plugin'
   vcsUrl = 'https://github.com/mgoellnitz/tangram/'
-  description = 'Generic JPA, JDO, EBean byte code transformation plugin, webapp overlay helper, and minifying plugin developed for Tangram - Verson 1.1.3 is the last JDK 1.7 compatible one.'
+  description = 'Generic JPA, JDO, EBean byte code transformation plugin, webapp overlay helper, and minifying plugin developed for Tangram.'
   tags = ['tangram', 'jdo', 'jpa', 'ebean', 'datanucleus', 'eclipselink', 'hibernate', 'openjpa', 'overlay', 'minify']
 
   plugins {
