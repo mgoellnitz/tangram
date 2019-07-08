@@ -70,10 +70,10 @@ public class TangramVersions {
   String openjpa = '3.0.0'
   String eclipselink = '2.7.4'
   String hibernate = '5.4.3.Final'
-  String hibernate_ogm = '5.1.0.Final'
+  String hibernate_ogm = '5.4.1.Final'
   String byte_buddy = '1.9.13'
 
-  String datanucleus = '[5.1,5.2)'
+  String datanucleus = '[5.2,5.3)'
 
   String ebean = '11.41.1'
   String ebean_datasource = '4.5'
