@@ -34,7 +34,6 @@ public class TangramVersions {
   String javax_json = '1.1.4'
   String gson = '2.8.5'
   String groovy = '2.5.7'
-  String asm = '5.2'
   String velocity = '1.7'
   String slf4j = '1.7.26'
   String log4j = '1.2.17'
@@ -42,20 +41,19 @@ public class TangramVersions {
   String yui = '2.4.8'
   String mockito = '2.28.2'
   String xstream = '1.4.11.1'
-  String pac4j = '3.6.1'
+  String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.47'
   String codemirror = '5.48.0'
   String ckeditor = '4.12.1'
 
   // For testing purposes
-  String junit = '4.12'
   String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.196'
+  String h2db = '1.4.199'
 
   // The dependency injection options
-  String dinistiq = '0.6'
+  String dinistiq = '0.7'
 
   String guice = '4.2.2'
 
