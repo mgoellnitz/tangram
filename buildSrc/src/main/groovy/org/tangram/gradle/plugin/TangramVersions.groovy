@@ -42,7 +42,7 @@ public class TangramVersions {
   String xstream = '1.4.11.1'
   String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
-  String tomcat = '8.0.47'
+  String tomcat = '8.0.53'
   String codemirror = '5.48.0'
   String ckeditor = '4.12.1'
 
@@ -71,7 +71,7 @@ public class TangramVersions {
   String openjpa = '3.0.0'
   String eclipselink = '2.7.4'
   String hibernate = '5.4.3.Final'
-  String hibernate_ogm = '5.1.0.Final'
+  String hibernate_ogm = '5.4.1.Final'
   String byte_buddy = '1.9.13'
 
   String datanucleus = '[5.2,5.3)'
