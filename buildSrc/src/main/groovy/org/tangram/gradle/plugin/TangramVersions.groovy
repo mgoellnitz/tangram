@@ -36,14 +36,13 @@ public class TangramVersions {
   String groovy = '2.5.7'
   String velocity = '1.7'
   String slf4j = '1.7.26'
-  String log4j = '1.2.17'
   String logback = '1.2.3'
   String yui = '2.4.8'
   String mockito = '2.28.2'
   String xstream = '1.4.11.1'
   String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
-  String tomcat = '8.0.47'
+  String tomcat = '8.0.53'
   String codemirror = '5.48.0'
   String ckeditor = '4.12.1'
 
@@ -68,11 +67,11 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.2'
 
-  String openjpa = '2.4.3'
+  String openjpa = '3.0.0'
   String eclipselink = '2.7.4'
-  String hibernate = '5.2.18.Final'
+  String hibernate = '5.4.3.Final'
   String hibernate_ogm = '5.1.0.Final'
-  String byte_buddy = '[1.6,1.7)'
+  String byte_buddy = '1.9.13'
 
   String datanucleus = '[5.1,5.2)'
 
