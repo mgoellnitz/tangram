@@ -27,27 +27,27 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.18.8'
+  String lombok = '1.18.10'
   String servlet_api = 'javax.servlet:javax.servlet-api:4.0.1'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2.1-b03'
   String org_json = '20180813' // not used in tangram internally
   String javax_json = '1.1.4'
   String gson = '2.8.5'
-  String groovy = '2.5.7'
+  String groovy = '2.5.8'
   String velocity = '1.7'
-  String slf4j = '1.7.26'
+  String slf4j = '1.7.28'
   String logback = '1.2.3'
   String yui = '2.4.8'
-  String mockito = '2.28.2'
+  String mockito = '3.0.0'
   String xstream = '1.4.11.1'
-  String pac4j = '3.7.0'
+  String pac4j = '3.8.0'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.53'
   String codemirror = '5.48.0'
   String ckeditor = '4.12.1'
 
   // For testing purposes
-  String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '7.0.0' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.0.10' // org.hsqldb group id - newer version fail during test
   String h2db = '1.4.199'
 
@@ -72,7 +72,7 @@ public class TangramVersions {
   String eclipselink = '2.7.4'
   String hibernate = '5.4.3.Final'
   String hibernate_ogm = '5.4.1.Final'
-  String byte_buddy = '1.9.13'
+  String byte_buddy = '1.9.14'
 
   String datanucleus = '[5.2,5.3)'
 
