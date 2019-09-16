@@ -27,23 +27,23 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.18.8'
+  String lombok = '1.18.10'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20180813' // not used in tangram internally
   String javax_json = '1.1.4'
   String gson = '2.8.5'
-  String groovy = '2.5.7'
+  String groovy = '2.5.8'
   String velocity = '1.7'
-  String slf4j = '1.7.26'
+  String slf4j = '1.7.28'
   String logback = '1.2.3'
   String yui = '2.4.8'
-  String mockito = '2.28.2'
+  String mockito = '3.0.0'
   String xstream = '1.4.11.1'
   String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.53'
-  String codemirror = '5.48.0'
+  String codemirror = '5.48.4'
   String ckeditor = '4.12.1'
 
   // For testing purposes
@@ -56,7 +56,7 @@ public class TangramVersions {
 
   String guice = '4.2.2'
 
-  String springframework = '4.3.24.RELEASE'
+  String springframework = '4.3.25.RELEASE'
 
   String weld = '3.1.0.Final'
   String openwebbeans = '2.0.11'
