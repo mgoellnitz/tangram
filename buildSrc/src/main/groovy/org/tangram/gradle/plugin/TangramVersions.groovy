@@ -35,10 +35,10 @@ public class TangramVersions {
   String gson = '2.8.5'
   String groovy = '2.5.8'
   String velocity = '1.7'
-  String slf4j = '1.7.28'
+  String slf4j = '1.7.29'
   String logback = '1.2.3'
   String yui = '2.4.8'
-  String mockito = '3.0.0'
+  String mockito = '3.1.0'
   String xstream = '1.4.11.1'
   String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
@@ -47,9 +47,9 @@ public class TangramVersions {
   String ckeditor = '4.12.1'
 
   // For testing purposes
-  String testng = '6.14.3' // Gradle 4.2.1 has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '7.0.0' // Gradle still has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
-  String h2db = '1.4.199'
+  String h2db = '1.4.200'
 
   // The dependency injection options
   String dinistiq = '0.7'
@@ -67,16 +67,16 @@ public class TangramVersions {
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.2'
 
-  String openjpa = '3.0.0'
-  String eclipselink = '2.7.4'
-  String hibernate = '5.4.3.Final'
+  String openjpa = '3.1.0'
+  String eclipselink = '2.7.5'
+  String hibernate = '5.4.8.Final'
   String hibernate_ogm = '5.4.1.Final'
   String byte_buddy = '1.9.13'
 
   String datanucleus = '[5.2,5.3)'
 
   String ebean = '11.41.1'
-  String ebean_datasource = '4.5'
+  String ebean_datasource = '4.6'
   String ebean_agent = '11.39.1'
 
   String mongodb = '3.10.1'
