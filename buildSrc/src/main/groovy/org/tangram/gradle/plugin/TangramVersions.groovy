@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2013-2019 Martin Goellnitz
+ * Copyright 2013-2020 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,10 +35,10 @@ public class TangramVersions {
   String gson = '2.8.5'
   String groovy = '2.5.8'
   String velocity = '1.7'
-  String slf4j = '1.7.29'
+  String slf4j = '1.7.30'
   String logback = '1.2.3'
   String yui = '2.4.8'
-  String mockito = '3.1.0'
+  String mockito = '3.3.3'
   String xstream = '1.4.11.1'
   String pac4j = '3.7.0'
   String mockftpserver = '2.7.1'
@@ -47,29 +47,29 @@ public class TangramVersions {
   String ckeditor = '4.12.1'
 
   // For testing purposes
-  String testng = '7.0.0' // Gradle still has 6.3.1 - tests using e.g. testng listeners fail with other versions
+  String testng = '7.1.0' // Gradle still has 6.3.1 - tests using e.g. testng listeners fail with other versions
   String hsqldb = '1.8.1.1'
   String h2db = '1.4.200'
 
   // The dependency injection options
   String dinistiq = '0.7'
 
-  String guice = '4.2.2'
+  String guice = '4.2.3'
 
-  String springframework = '4.3.25.RELEASE'
+  String springframework = '4.3.26.RELEASE'
 
   String weld = '3.1.0.Final'
   String openwebbeans = '2.0.11'
 
   // Storage options
-  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m12'
+  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m13'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.2'
 
-  String openjpa = '3.1.0'
-  String eclipselink = '2.7.5'
-  String hibernate = '5.4.8.Final'
+  String openjpa = '3.1.1'
+  String eclipselink = '2.7.6'
+  String hibernate = '5.4.12.Final'
   String hibernate_ogm = '5.4.1.Final'
   String byte_buddy = '1.9.13'
 
