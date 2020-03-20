@@ -54,7 +54,7 @@ public class TangramVersions {
   // The dependency injection options
   String dinistiq = '0.8'
 
-  String guice = '4.2.2'
+  String guice = '4.2.3'
 
   String springframework = '4.3.26.RELEASE'
   // String springframework = '5.2.1.RELEASE'
@@ -63,7 +63,7 @@ public class TangramVersions {
   String openwebbeans = '2.0.11'
 
   // Storage options
-  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m12'
+  String jdo_api = 'org.datanucleus:javax.jdo:3.2.0-m13'
   // There is no official source for a JPA API jar so we decide to use one of them
   // String persistence_api = 'org.eclipse.persistence:javax.persistence:2.1.1'
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.2'
