@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2019 Martin Goellnitz, Markus Goellnitz
+ * Copyright 2011-2020 Martin Goellnitz, Markus Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.Constants;

@@ -31,6 +31,8 @@ dependencies {
   // Nice to have for some pac4j implementations
   // runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
   compile 'commons-io:commons-io:2.6'
+  // To reference the latest version
+  compile 'org.apache.commons:commons-lang3:3.9'
   // Used by velocity:
   compile "commons-collections:commons-collections:3.2.2"
 
