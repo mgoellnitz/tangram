@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2019 Martin Goellnitz, Markus Goellnitz
+ * Copyright 2011-2020 Martin Goellnitz, Markus Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by

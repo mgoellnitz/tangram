@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2019 Martin Goellnitz
+ * Copyright 2013-2020 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
-import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2014-2019 Martin Goellnitz
+ * Copyright 2014-2020 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,7 +37,7 @@ import java.util.zip.ZipInputStream;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tangram.guicy.TangramServletModule;
