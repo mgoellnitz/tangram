@@ -71,7 +71,7 @@ public class TangramVersions {
   String eclipselink = '2.7.6'
   String hibernate = '5.4.12.Final'
   String hibernate_ogm = '5.4.1.Final'
-  String byte_buddy = '1.9.13'
+  String byte_buddy = '1.9.14'
 
   String datanucleus = '[5.2,5.3)'
 
