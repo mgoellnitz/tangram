@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2011-2019 Martin Goellnitz
+ * Copyright 2011-2020 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@ import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.PublishArtifact
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 import org.gradle.api.internal.java.JavaLibrary
+import org.gradle.api.attributes.AttributeContainer
 import org.gradle.api.attributes.Usage
 import org.gradle.api.internal.component.UsageContext
 import org.gradle.api.internal.component.SoftwareComponentInternal
@@ -123,6 +124,26 @@ class WrappedRuntimeUsage implements UsageContext {
 
   public Set<PublishArtifact> getArtifacts() {
     return delegate.artifacts
+  }
+
+
+  public Set getGlobalExcludes() {
+    return delegate.globalExcludes
+  }
+
+
+  public Set getDependencyConstraints() {
+    return delegate.dependencyConstraints
+  }
+
+
+  public Set getCapabilities() {
+    return delegate.apabilities
+  }
+
+
+  public AttributeContainer getAttributes() {
+    return delegate.attributes
   }
 
 
