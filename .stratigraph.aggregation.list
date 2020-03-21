@@ -1,0 +1,12 @@
+#org.tangram.nucleus
+#org.tangram.jpa
+#org.tangram.ebean
+#org.tangram.coma
+#org.tangram.components
+#org.tangram.spring
+org.mockftpserver
+com.thoughtworks.xstream
+org.pac4j
+com.google.inject
+org.apache.velocity
+org.springframework
