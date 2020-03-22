@@ -27,12 +27,8 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.18.12'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
-  String org_json = '20180813' // not used in tangram internally
-  String javax_json = '1.1.4'
-  String gson = '2.8.6'
   String groovy = '2.5.8'
   String velocity = '1.7'
   String slf4j = '1.7.30'
@@ -45,6 +41,12 @@ public class TangramVersions {
   String tomcat = '8.0.53'
   String codemirror = '5.48.4'
   String ckeditor = '4.12.1'
+  
+  // Not used internally but recommended
+  String lombok = '1.18.12'
+  String org_json = '20190722'
+  String javax_json = '1.1.4'
+  String gson = '2.8.6'
 
   // For testing purposes
   String testng = '7.1.0' // Gradle still has 6.3.1 - tests using e.g. testng listeners fail with other versions
