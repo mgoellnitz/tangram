@@ -32,7 +32,7 @@ public class TangramVersions {
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20180813' // not used in tangram internally
   String javax_json = '1.1.4'
-  String gson = '2.8.5'
+  String gson = '2.8.6'
   String groovy = '2.5.8'
   String velocity = '1.7'
   String slf4j = '1.7.30'
