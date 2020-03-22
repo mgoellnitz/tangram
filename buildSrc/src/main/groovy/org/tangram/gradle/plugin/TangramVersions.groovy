@@ -27,7 +27,7 @@ package org.tangram.gradle.plugin;
 public class TangramVersions {
 
   // The basics
-  String lombok = '1.18.10'
+  String lombok = '1.18.12'
   String servlet_api = 'javax.servlet:javax.servlet-api:3.1.0'
   String jsp_api = 'javax.servlet.jsp:jsp-api:2.2'
   String org_json = '20180813' // not used in tangram internally
