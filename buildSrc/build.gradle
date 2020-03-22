@@ -1,6 +1,6 @@
 /**
  *
- * Copyright 2013-2019 Martin Goellnitz
+ * Copyright 2013-2020 Martin Goellnitz
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,6 +30,7 @@ buildscript {
 
 plugins {
   id 'com.gradle.plugin-publish' version '0.10.1'
+  id 'java-gradle-plugin'
 }
 
 apply plugin: 'groovy'
@@ -124,6 +125,15 @@ publishing {
   }
 }
 
+gradlePlugin {
+  plugins {
+    tangramTools {
+      id = 'tangram.tools'
+      implementationClass = 'org.tangram.gradle.plugin.TangramPlugin'
+    }
+  }
+}
+
 pluginBundle {
   website = 'https://github.com/mgoellnitz/tangram/wiki/Plugin'
   vcsUrl = 'https://github.com/mgoellnitz/tangram/'
@@ -131,9 +141,9 @@ pluginBundle {
   tags = ['tangram', 'jdo', 'jpa', 'ebean', 'datanucleus', 'eclipselink', 'hibernate', 'openjpa', 'overlay', 'minify']
 
   plugins {
-    greetingsPlugin {
-      id = 'tangram.tools'
-      displayName = 'Tangram Gradle plugin'
+    tangramTools {
+      // id = 'tangram.tools'
+      displayName = 'Tangram Tools Gradle Plugin'
     }
   }
 }
