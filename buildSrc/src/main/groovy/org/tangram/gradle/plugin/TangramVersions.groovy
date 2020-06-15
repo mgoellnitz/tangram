@@ -35,12 +35,12 @@ public class TangramVersions {
   String logback = '1.2.3'
   String yui = '2.4.8'
   String mockito = '3.3.3'
-  String xstream = '1.4.11.1'
+  String xstream = '1.4.12'
   String pac4j = '3.8.3'
   String mockftpserver = '2.7.1'
   String tomcat = '8.0.53'
-  String codemirror = '5.48.4'
-  String ckeditor = '4.12.1'
+  String codemirror = '5.54.0'
+  String ckeditor = '4.14.0'
   
   // Not used internally but recommended
   String lombok = '1.18.12'
@@ -54,7 +54,7 @@ public class TangramVersions {
   String h2db = '1.4.199'
 
   // The dependency injection options
-  String dinistiq = '0.8'
+  String dinistiq = '0.8.1'
 
   String guice = '4.2.3'
 
@@ -71,10 +71,10 @@ public class TangramVersions {
   String persistence_api = 'org.datanucleus:javax.persistence:2.2.2'
 
   String openjpa = '3.1.1'
-  String eclipselink = '2.7.6'
-  String hibernate = '5.4.12.Final'
+  String eclipselink = '2.7.7'
+  String hibernate = '5.4.17.Final'
   String hibernate_ogm = '5.4.1.Final'
-  String byte_buddy = '1.9.14'
+  String byte_buddy = '1.10.11'
 
   String datanucleus = '[5.2,5.3)'
 
