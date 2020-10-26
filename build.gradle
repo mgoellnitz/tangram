@@ -28,7 +28,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.github.kt3k.coveralls' version '2.8.2'
+  id 'com.github.kt3k.coveralls' version '2.10.2'
 }
 
 allprojects {
@@ -64,8 +64,8 @@ allprojects {
     useTestNG()
   }
   dependencies {
-    jacocoAgent "org.jacoco:org.jacoco.agent:0.8.5"
-    jacocoAnt "org.jacoco:org.jacoco.ant:0.8.5"
+    jacocoAgent "org.jacoco:org.jacoco.agent:0.8.6"
+    jacocoAnt "org.jacoco:org.jacoco.ant:0.8.6"
   }
 }
 
