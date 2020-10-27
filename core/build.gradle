@@ -30,9 +30,9 @@ dependencies {
   compile "org.slf4j:slf4j-api:$versions.slf4j"
   // Nice to have for some pac4j implementations
   // runtime "org.slf4j:jcl-over-slf4j:$versions.slf4j"
-  compile 'commons-io:commons-io:2.6'
+  compile 'commons-io:commons-io:2.8.0'
   // To reference the latest version
-  compile 'org.apache.commons:commons-lang3:3.9'
+  compile 'org.apache.commons:commons-lang3:3.11'
   // Used by velocity:
   compile "commons-collections:commons-collections:3.2.2"
 
