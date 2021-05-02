@@ -32,15 +32,11 @@
     <property name="dispatcherPath" value="${tangram.servlet.path}" />
   </bean>
 
-  <bean id="viewSettings" class="java.util.HashMap">
-    <constructor-arg>
-      <map>
-        <entry key="cssCacheTime" value="${css.cache.time}" />
-        <entry key="jsCacheTime" value="${js.cache.time}" />
-        <entry key="imageCacheTime" value="${image.cache.time}" />
-      </map>
-    </constructor-arg>
-  </bean>
+  <util:map id="viewSettings" key-type="java.lang.String" value-type="java.lang.String">
+      <entry key="cssCacheTime" value="${css.cache.time}" />
+      <entry key="jsCacheTime" value="${js.cache.time}" />
+      <entry key="imageCacheTime" value="${image.cache.time}" />
+  </util:map>
 
   <!--  generic base for dynamic velocity  -->
 
